@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${title}">Titulka</title>
+</head>
+<body>
+<!--/*@thymesVar id="board" type="com.github.njuro.models.Board"*/-->
+<th:block th:each="board: ${boards}" th:inline="text">
+        /[[${board.label}]]/ - [[${board.name}]] <br />
+</th:block>
+</body>
+</html>
