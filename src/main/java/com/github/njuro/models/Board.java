@@ -1,6 +1,7 @@
 package com.github.njuro.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Entity representing a board
@@ -14,9 +15,17 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Basic
+    @Column(unique = true)
     private String label;
+    @Basic
     private String name;
+    @Enumerated(value = EnumType.STRING)
     private BoardType type;
+
+    @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board")
+    private List<Thread> threads;
 
     public Board() {
 
@@ -58,6 +67,14 @@ public class Board {
 
     public void setType(BoardType type) {
         this.type = type;
+    }
+
+    public List<Thread> getThreads() {
+        return threads;
+    }
+
+    public void setThreads(List<Thread> threads) {
+        this.threads = threads;
     }
 
     @Override

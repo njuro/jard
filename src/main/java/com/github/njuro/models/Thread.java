@@ -1,6 +1,8 @@
 package com.github.njuro.models;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Entity representing a thread
@@ -16,15 +18,23 @@ public class Thread {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Basic
     private String subject;
+    @Basic
     private boolean locked;
+    @Basic
     private boolean stickied;
 
-    @ManyToOne
+    @Column(name = "created_date")
+    private LocalDateTime dateTime;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private Board board;
 
-    public Thread() {
+    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY)
+    private List<Post> posts;
 
+    public Thread() {
     }
 
     public Thread(String subject, boolean locked, boolean stickied, Board board) {
@@ -72,6 +82,14 @@ public class Thread {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @Override
