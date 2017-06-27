@@ -15,12 +15,18 @@ public class Post {
     private Long id;
 
     @Basic
+    private String name;
+
+    @Basic
+    private String tripcode;
+
+    @Basic
     private String body;
 
     @Column(name = "created_date")
     private LocalDateTime dateTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY)
     private Thread thread;
 
     public Long getId() {
@@ -29,6 +35,22 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTripcode() {
+        return tripcode;
+    }
+
+    public void setTripcode(String tripcode) {
+        this.tripcode = tripcode;
     }
 
     public String getBody() {

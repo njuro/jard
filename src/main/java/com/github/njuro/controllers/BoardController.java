@@ -1,9 +1,12 @@
 package com.github.njuro.controllers;
 
+import com.github.njuro.models.Board;
 import com.github.njuro.services.BoardService;
+import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,8 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class BoardController {
 
+    private final BoardService boardService;
+
+    private final ThreadService threadService;
+
     @Autowired
-    private BoardService boardService;
+    public BoardController(BoardService boardService, ThreadService threadService) {
+        this.boardService = boardService;
+        this.threadService = threadService;
+    }
 
     @RequestMapping("/")
     public String showBoards(Model model) {
@@ -27,10 +37,17 @@ public class BoardController {
     }
 
     @RequestMapping("/{board}")
-    public String showBoard(@PathVariable String board, Model model) {
-        model.addAttribute("board", boardService.getBoard(board));
+    public String showBoard(@PathVariable(name = "board") String label, Model model) {
+        Board board = boardService.getBoard(label);
+        model.addAttribute("title", "/" + label + "/ - " + board.getName());
+        model.addAttribute("board", board);
+        model.addAttribute("threads", threadService.getThreadsFromBoard(label));
         return "board";
     }
 
+    @GetMapping("/dev/forms")
+    public String showForms(Model model) {
+        return "fragments/forms";
+    }
 
 }

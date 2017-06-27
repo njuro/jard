@@ -22,6 +22,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+        <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>3.0.6</thymeleaf-layout-dialect.version>
 	</properties>
 
 	<dependencies>

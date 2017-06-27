@@ -3,7 +3,9 @@ package com.github.njuro.services;
 import com.github.njuro.models.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +16,13 @@ import java.util.List;
  * @author njuro
  */
 
+@Repository
 interface BoardRepository extends CrudRepository<Board, Long> {
     Board findByLabel(String label);
 }
 
 @Service
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
