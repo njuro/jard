@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title th:text="${title}">Titulka</title>
-</head>
-<body>
-<!--/*@thymesVar id="board" type="com.github.njuro.models.Board"*/-->
-<th:block th:each="board: ${boards}" th:inline="text">
-        /[[${board.label}]]/ - [[${board.name}]] <br />
-</th:block>
-</body>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head th:include="~{fragments/base :: head(${title})}"></head>
+  <body>
+    <nav th:include="~{fragments/base :: navigation}"></nav>
+    <main>
+      JBoard - currently active <th:block
+      th:text="${#lists.size(@boardService.getAllBoards())}">0</th:block> boards.<br>
+      The date is: <th:block th:text="${#dates.createNow()}">1.1.1970</th:block>
+    </main>
+    <footer th:include="~{fragments/base :: footer}"></footer>
+  </body>
 </html>

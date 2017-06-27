@@ -1,0 +1,19 @@
+* {
+  max-width: 100%;
+}
+
+header, main {
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+#post {
+  margin-left: 20px;
+}
+
+.subject {
+}
+
+.name {
+  font-weight: bold;
+}
