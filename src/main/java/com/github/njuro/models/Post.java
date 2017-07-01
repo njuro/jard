@@ -29,6 +29,15 @@ public class Post {
     @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY)
     private Thread thread;
 
+    public Post() {
+    }
+
+    public Post(String name, String tripcode, String body) {
+        this.name = name;
+        this.tripcode = tripcode;
+        this.body = body;
+    }
+
     public Long getId() {
         return id;
     }

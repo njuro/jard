@@ -1,10 +1,16 @@
 * {
   max-width: 100%;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 header, main {
   margin-left: 10px;
   margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#thread-form {
+  padding-bottom: 10px;
 }
 
 #post {

@@ -4,8 +4,30 @@
   <body>
     <nav th:include="~{fragments/base :: navigation}"></nav>
     <main>
-      <form th:fragment="post-form" id="post-form">
-        hahaha
+      <!--/*@thymesVar id="threadForm" type="com.github.njuro.models.dto.ThreadForm"*/-->
+      <form class="ui form" th:object="${threadForm}" th:fragment="thread-form" id="thread-form" method="post"
+            th:action="@{/thread/submit}">
+        <h4 class="ui dividing header">Create new thread</h4>
+        <div class="two fields">
+          <div class="field">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Name">
+          </div>
+          <div class="field">
+            <label>Tripcode</label>
+            <input type="text" name="tripcode" placeholder="Tripcode">
+          </div>
+        </div>
+        <div class="field">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="Subject">
+        </div>
+        <div class="field">
+          <label>Comment</label>
+          <textarea name="comment" rows="8"></textarea>
+        </div>
+        <input type="hidden" name="board" th:value="b">
+        <button class="ui right floated button" tabindex="0" type="submit">Create thread</button>
       </form>
     </main>
     <footer th:include="~{fragments/base :: footer}"></footer>

@@ -7,6 +7,13 @@
       <h1 class="ui center aligned header" th:text="${board.name}"></h1>
     </header>
     <main>
+      <button class="small ui basic button" id="thread-form-btn">
+        <i class="plus icon"></i> <strong>New thread</strong>
+      </button>
+      <div class="ui modal" id="thread-form">
+        <div class="content" th:insert="~{fragments/forms :: thread-form}">
+        </div>
+      </div>
       <th:block th:each="thread: ${board.getThreads()}" th:insert="~{fragments/thread :: thread(${thread})}"></th:block>
     </main>
     <footer th:include="~{fragments/base :: footer}"></footer>

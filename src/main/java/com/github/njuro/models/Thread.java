@@ -37,6 +37,11 @@ public class Thread {
     public Thread() {
     }
 
+    public Thread(String subject, Board board) {
+        this.subject = subject;
+        this.board = board;
+    }
+
     public Thread(String subject, boolean locked, boolean stickied, Board board) {
         this.subject = subject;
         this.locked = locked;

@@ -6,7 +6,6 @@ import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -43,11 +42,6 @@ public class BoardController {
         model.addAttribute("board", board);
         model.addAttribute("threads", threadService.getThreadsFromBoard(label));
         return "board";
-    }
-
-    @GetMapping("/dev/forms")
-    public String showForms(Model model) {
-        return "fragments/forms";
     }
 
 }

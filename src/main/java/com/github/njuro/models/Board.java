@@ -25,6 +25,7 @@ public class Board {
     private BoardType type;
 
     @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board")
+    @OrderBy("dateTime DESC")
     private List<Thread> threads;
 
     public Board() {
@@ -88,6 +89,6 @@ public class Board {
     }
 
     public enum BoardType {
-        IMAGE, TEXT;
+        IMAGE, TEXT
     }
 }

@@ -2,7 +2,7 @@ package com.github.njuro.services;
 
 import com.github.njuro.models.Thread;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @Repository
-interface ThreadRepository extends CrudRepository<Thread, Long> {
+interface ThreadRepository extends JpaRepository<Thread, Long> {
     List<Thread> findByBoardLabel(String label);
 }
 
@@ -40,6 +40,10 @@ public class ThreadService {
 
     public List<Thread> getThreadsFromBoard(String board) {
         return threadRepository.findByBoardLabel(board);
+    }
+
+    public Thread createThread(Thread thread) {
+        return threadRepository.save(thread);
     }
 
 }
