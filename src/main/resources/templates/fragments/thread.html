@@ -17,7 +17,7 @@
             <div class="meta">
               <span class="name" th:text="*{name}"></span>
               <span class="subject" th:if="${iter.first}" th:text="${thread.subject}"></span>
-              <span class="date" th:if="${iter.first}" th:text="${thread.dateTime}"></span>
+              <span class="date" th:text="${#temporals.format(thread.dateTime, 'dd.MM.yyyy HH:mm:ss')}"></span>
               <span class="post-number" th:text="'No. ' + ${post.postNumber}"></span>
               <button class="circular mini ui basic icon button reply-form-btn"
                       th:data-thread-id="${thread.originalPost.postNumber}">
