@@ -20,6 +20,8 @@ import java.util.List;
 @Repository
 interface ThreadRepository extends JpaRepository<Thread, Long> {
     List<Thread> findByBoardLabel(String label);
+
+    Thread findByBoardLabelAndOriginalPostPostNumber(String label, Long postNumber);
 }
 
 @Service
@@ -48,8 +50,8 @@ public class ThreadService {
         return threadRepository.save(thread);
     }
 
-    public Thread getThread(Long threadNumber) {
-        return threadRepository.getOne(threadNumber);
+    public Thread getThread(String board, Long threadNumber) {
+        return threadRepository.findByBoardLabelAndOriginalPostPostNumber(board, threadNumber);
     }
 
 }

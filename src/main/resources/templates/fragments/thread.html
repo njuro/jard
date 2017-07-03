@@ -17,9 +17,10 @@
             <div class="meta">
               <span class="name" th:text="*{name}"></span>
               <span class="subject" th:if="${iter.first}" th:text="${thread.subject}"></span>
-              <span class="date" th:if="${iter.first}" th:text="${thread.getDateTime()}"></span>
-              <span class="post-number" th:text="'No. ' + ${post.getId()}"></span>
-              <button class="circular mini ui basic icon button reply-form-btn" th:data-thread-id="${thread.id}">
+              <span class="date" th:if="${iter.first}" th:text="${thread.dateTime}"></span>
+              <span class="post-number" th:text="'No. ' + ${post.postNumber}"></span>
+              <button class="circular mini ui basic icon button reply-form-btn"
+                      th:data-thread-id="${thread.originalPost.postNumber}">
                 <i class="reply icon"></i>
               </button>
             </div>

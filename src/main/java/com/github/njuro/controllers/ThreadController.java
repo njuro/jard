@@ -36,30 +36,34 @@ public class ThreadController {
     }
 
     @PostMapping("/submit")
-    public String submitThread(@ModelAttribute(name = "threadForm") ThreadForm threadForm, BindingResult result) {
+    public String submitThread(@PathVariable("board") String board,
+                               @ModelAttribute(name = "threadForm") ThreadForm threadForm, BindingResult result) {
 
         Thread thread = new Thread(threadForm.getSubject(), boardService.getBoard(threadForm.getBoard()));
-        threadService.createThread(thread);
 
         Post post = new Post(threadForm.getName(), threadForm.getTripcode(), threadForm.getComment());
         post.setThread(thread);
-        postService.createPost(post);
+        postService.createPost(board, post);
 
-        return "redirect:/board/" + threadForm.getBoard();
+        thread.setOriginalPost(post);
+        threadService.createThread(thread);
+
+        return "redirect:/board/" + board + "/" + post.getPostNumber();
     }
 
     @PostMapping("/{threadNo}/reply")
     public String replyToThread(@PathVariable("board") String board,
                                 @PathVariable("threadNo") Long threadNumber, @ModelAttribute(name = "post") Post post) {
-        post.setThread(threadService.getThread(threadNumber));
-        postService.createPost(post);
+        post.setThread(threadService.getThread(board, threadNumber));
+        postService.createPost(board, post);
 
         return "redirect:/board/" + board + "/" + threadNumber;
     }
 
     @GetMapping("/{threadNo}")
-    public String viewThread(@PathVariable("threadNo") Long threadNumber, Model model) {
-        Thread thread = threadService.getThread(threadNumber);
+    public String viewThread(@PathVariable("board") String board,
+                             @PathVariable("threadNo") Long threadNumber, Model model) {
+        Thread thread = threadService.getThread(board, threadNumber);
         model.addAttribute("thread", thread);
 
         return "fragments/thread";

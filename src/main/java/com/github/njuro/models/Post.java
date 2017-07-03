@@ -26,12 +26,13 @@ public class Post {
     private String tripcode;
 
     @Basic
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     @Column(name = "created_date")
     private LocalDateTime dateTime;
 
-    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Thread thread;
 
     public Post() {

@@ -22,15 +22,21 @@ interface PostRepository extends JpaRepository<Post, Long> {
 @Transactional
 public class PostService {
 
+    private final BoardService boardService;
+
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, BoardService boardService) {
         this.postRepository = postRepository;
+        this.boardService = boardService;
     }
 
-    public Post createPost(Post post) {
+    public Post createPost(String board, Post post) {
         post.setDateTime(LocalDateTime.now());
+        post.setPostNumber(boardService.getPostNumber(board));
+        boardService.increasePostNumber(board);
+
         return postRepository.save(post);
     }
 }

@@ -34,6 +34,9 @@ public class Thread {
     @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Post> posts;
 
+    @OneToOne(targetEntity = Post.class, fetch = FetchType.LAZY)
+    private Post originalPost;
+
     public Thread() {
     }
 
@@ -103,6 +106,14 @@ public class Thread {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public Post getOriginalPost() {
+        return originalPost;
+    }
+
+    public void setOriginalPost(Post originalPost) {
+        this.originalPost = originalPost;
     }
 
     @Override
