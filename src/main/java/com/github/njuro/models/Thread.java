@@ -31,7 +31,7 @@ public class Thread {
     @ManyToOne(fetch = FetchType.EAGER)
     private Board board;
 
-    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Post> posts;
 
     public Thread() {

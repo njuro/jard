@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Created by juro on 6/17/17.
+ * Entity representing a post in thread
+ *
+ * @author njuro
  */
 @Entity
 @Table(name = "posts")
@@ -13,6 +15,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Basic
+    private Long postNumber;
 
     @Basic
     private String name;
@@ -44,6 +49,14 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getPostNumber() {
+        return postNumber;
+    }
+
+    public void setPostNumber(Long postNumber) {
+        this.postNumber = postNumber;
     }
 
     public String getName() {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for board pages
+ * Controller for boards
  *
  * @author njuro
  */
@@ -35,7 +35,7 @@ public class BoardController {
         return "index";
     }
 
-    @RequestMapping("/{board}")
+    @RequestMapping("/board/{board}")
     public String showBoard(@PathVariable(name = "board") String label, Model model) {
         Board board = boardService.getBoard(label);
         model.addAttribute("title", "/" + label + "/ - " + board.getName());

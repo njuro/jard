@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ThreadService {
 
     public List<Thread> getAllThreads() {
         List<Thread> threads = new ArrayList<>();
-        threadRepository.findAll().forEach(threads::add);
+        threads.addAll(threadRepository.findAll());
         return threads;
     }
 
@@ -43,7 +44,12 @@ public class ThreadService {
     }
 
     public Thread createThread(Thread thread) {
+        thread.setDateTime(LocalDateTime.now());
         return threadRepository.save(thread);
+    }
+
+    public Thread getThread(Long threadNumber) {
+        return threadRepository.getOne(threadNumber);
     }
 
 }

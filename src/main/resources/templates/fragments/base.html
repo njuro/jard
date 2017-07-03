@@ -25,7 +25,7 @@
           <a th:href="@{/}" class="header item">JBoard</a>
         <!--/*@thymesVar id="board" type="com.github.njuro.models.Board"*/-->
             <a class="item" th:each="board: ${@boardService.getAllBoards()}" th:object="${board}"
-               th:href="@{'/' + *{label}}" th:text="|/*{label}/ - *{name}|" th:title="*{name}">/label/ - Board</a>
+               th:href="@{'/board/' + *{label}}" th:text="|/*{label}/ - *{name}|" th:title="*{name}">/label/ - Board</a>
       </div>
     </nav>
     <footer th:fragment="footer">

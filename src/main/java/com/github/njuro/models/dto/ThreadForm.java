@@ -1,7 +1,9 @@
 package com.github.njuro.models.dto;
 
 /**
- * Created by juro on 6/29/17.
+ * Data transfer object for "new thread" form
+ *
+ * @author njuro
  */
 public class ThreadForm {
 

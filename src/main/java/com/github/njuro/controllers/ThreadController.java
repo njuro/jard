@@ -8,44 +8,62 @@ import com.github.njuro.services.PostService;
 import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.time.LocalDateTime;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * Created by juro on 6/28/17.
+ * Controller for threads
+ *
+ * @author njuro
  */
 
 @Controller
-@RequestMapping("/thread")
+@RequestMapping(value = "/board/{board}")
 public class ThreadController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    private final ThreadService threadService;
+
+    private final BoardService boardService;
 
     @Autowired
-    private ThreadService threadService;
-
-    @Autowired
-    private BoardService boardService;
+    public ThreadController(PostService postService, ThreadService threadService, BoardService boardService) {
+        this.postService = postService;
+        this.threadService = threadService;
+        this.boardService = boardService;
+    }
 
     @PostMapping("/submit")
     public String submitThread(@ModelAttribute(name = "threadForm") ThreadForm threadForm, BindingResult result) {
-        LocalDateTime now = LocalDateTime.now();
 
         Thread thread = new Thread(threadForm.getSubject(), boardService.getBoard(threadForm.getBoard()));
-        thread.setDateTime(now);
         threadService.createThread(thread);
 
         Post post = new Post(threadForm.getName(), threadForm.getTripcode(), threadForm.getComment());
-        post.setDateTime(now);
         post.setThread(thread);
         postService.createPost(post);
 
-        return "redirect:/" + threadForm.getBoard();
+        return "redirect:/board/" + threadForm.getBoard();
     }
+
+    @PostMapping("/{threadNo}/reply")
+    public String replyToThread(@PathVariable("board") String board,
+                                @PathVariable("threadNo") Long threadNumber, @ModelAttribute(name = "post") Post post) {
+        post.setThread(threadService.getThread(threadNumber));
+        postService.createPost(post);
+
+        return "redirect:/board/" + board + "/" + threadNumber;
+    }
+
+    @GetMapping("/{threadNo}")
+    public String viewThread(@PathVariable("threadNo") Long threadNumber, Model model) {
+        Thread thread = threadService.getThread(threadNumber);
+        model.addAttribute("thread", thread);
+
+        return "fragments/thread";
+    }
+
 
 }

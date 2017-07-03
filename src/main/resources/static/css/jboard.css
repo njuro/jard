@@ -9,7 +9,7 @@ header, main {
   margin-bottom: 20px;
 }
 
-#thread-form {
+#thread-form-modal, #reply-form-modal {
   padding-bottom: 10px;
 }
 

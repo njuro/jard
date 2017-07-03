@@ -19,14 +19,19 @@ public class Board {
     @Basic
     @Column(unique = true)
     private String label;
+
     @Basic
     private String name;
+
     @Enumerated(value = EnumType.STRING)
     private BoardType type;
 
     @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board")
     @OrderBy("dateTime DESC")
     private List<Thread> threads;
+
+    @Basic
+    private Long postNumber;
 
     public Board() {
 
@@ -76,6 +81,14 @@ public class Board {
 
     public void setThreads(List<Thread> threads) {
         this.threads = threads;
+    }
+
+    public Long getPostNumber() {
+        return postNumber;
+    }
+
+    public void setPostNumber(Long postNumber) {
+        this.postNumber = postNumber;
     }
 
     @Override

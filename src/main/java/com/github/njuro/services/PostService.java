@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 /**
- * Created by juro on 6/30/17.
+ * Service for CRUD operations with posts.
+ *
+ * @author njuro
  */
 @Repository
 interface PostRepository extends JpaRepository<Post, Long> {
@@ -26,6 +30,7 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
+        post.setDateTime(LocalDateTime.now());
         return postRepository.save(post);
     }
 }

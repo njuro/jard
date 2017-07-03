@@ -10,8 +10,13 @@
       <button class="small ui basic button" id="thread-form-btn">
         <i class="plus icon"></i> <strong>New thread</strong>
       </button>
-      <div class="ui modal" id="thread-form">
-        <div class="content" th:insert="~{fragments/forms :: thread-form}">
+      <div class="ui modal" id="thread-form-modal">
+        <div class="content" th:insert="~{fragments/forms :: thread-form(${board.label})}">
+        </div>
+      </div>
+
+      <div class="ui modal" id="reply-form-modal">
+        <div class="content" th:insert="~{fragments/forms :: reply-form(${board.label})}">
         </div>
       </div>
       <th:block th:each="thread: ${board.getThreads()}" th:insert="~{fragments/thread :: thread(${thread})}"></th:block>
