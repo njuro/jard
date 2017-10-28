@@ -1,6 +1,7 @@
 package com.github.njuro.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,19 +20,22 @@ public class Thread {
     private Long id;
 
     @Basic
+    @Size(max = 255)
     private String subject;
+
     @Basic
     private boolean locked;
+
     @Basic
     private boolean stickied;
 
-    @Column(name = "created_date")
-    private LocalDateTime dateTime;
+    @Column(name = "createdAt")
+    private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER)
     private Board board;
 
-    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Post> posts;
 
     @OneToOne(targetEntity = Post.class, fetch = FetchType.LAZY)
@@ -92,12 +96,12 @@ public class Thread {
         this.board = board;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<Post> getPosts() {
@@ -115,6 +119,7 @@ public class Thread {
     public void setOriginalPost(Post originalPost) {
         this.originalPost = originalPost;
     }
+
 
     @Override
     public String toString() {

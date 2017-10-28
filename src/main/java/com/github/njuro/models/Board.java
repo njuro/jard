@@ -1,6 +1,8 @@
 package com.github.njuro.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -16,8 +18,9 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Basic
-    @Column(unique = true)
+    @NotNull
+    @Column(unique = true, nullable = false)
+    @Size(min = 1, max = 16)
     private String label;
 
     @Basic
@@ -26,12 +29,12 @@ public class Board {
     @Enumerated(value = EnumType.STRING)
     private BoardType type;
 
-    @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board")
-    @OrderBy("dateTime DESC")
+    @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("createdAt DESC")
     private List<Thread> threads;
 
     @Basic
-    private Long postNumber;
+    private Long postCounter;
 
     public Board() {
 
@@ -83,12 +86,27 @@ public class Board {
         this.threads = threads;
     }
 
-    public Long getPostNumber() {
-        return postNumber;
+    public Long getPostCounter() {
+        return postCounter;
     }
 
-    public void setPostNumber(Long postNumber) {
-        this.postNumber = postNumber;
+    public void setPostCounter(Long postCounter) {
+        this.postCounter = postCounter;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Board)) return false;
+
+        Board board = (Board) o;
+
+        return getLabel() != null ? getLabel().equals(board.getLabel()) : board.getLabel() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getLabel() != null ? getLabel().hashCode() : 0;
     }
 
     @Override

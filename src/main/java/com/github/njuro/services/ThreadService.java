@@ -46,7 +46,7 @@ public class ThreadService {
     }
 
     public Thread createThread(Thread thread) {
-        thread.setDateTime(LocalDateTime.now());
+        thread.setCreatedAt(LocalDateTime.now());
         return threadRepository.save(thread);
     }
 

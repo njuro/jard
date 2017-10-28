@@ -29,8 +29,8 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @Column(name = "created_date")
-    private LocalDateTime dateTime;
+    @Column(name = "createdAt")
+    private LocalDateTime createdAt;
 
     @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Thread thread;
@@ -84,12 +84,12 @@ public class Post {
         this.body = body;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Thread getThread() {
@@ -98,5 +98,33 @@ public class Post {
 
     public void setThread(Thread thread) {
         this.thread = thread;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Post)) return false;
+
+        Post post = (Post) o;
+
+        if (!getPostNumber().equals(post.getPostNumber())) return false;
+        return getThread() != null ? getThread().equals(post.getThread()) : post.getThread() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPostNumber().hashCode();
+        result = 31 * result + (getThread() != null ? getThread().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postNumber=" + postNumber +
+                ", name='" + name + '\'' +
+                ", body='" + body + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

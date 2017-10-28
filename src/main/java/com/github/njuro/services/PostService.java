@@ -33,9 +33,9 @@ public class PostService {
     }
 
     public Post createPost(String board, Post post) {
-        post.setDateTime(LocalDateTime.now());
-        post.setPostNumber(boardService.getPostNumber(board));
-        boardService.increasePostNumber(board);
+        post.setCreatedAt(LocalDateTime.now());
+        post.setPostNumber(boardService.getPostCounter(board));
+        boardService.increasePostCounter(board);
 
         return postRepository.save(post);
     }

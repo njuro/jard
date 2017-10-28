@@ -23,11 +23,11 @@ import java.util.List;
 interface BoardRepository extends JpaRepository<Board, Long> {
     Board findByLabel(String label);
 
-    @Query("select b.postNumber from Board b where b.label = :label")
-    Long getPostNumber(@Param("label") String label);
+    @Query("select b.postCounter from Board b where b.label = :label")
+    Long getPostCounter(@Param("label") String label);
 
     @Modifying
-    @Query("update Board set postNumber = postNumber + 1 where label = :label")
+    @Query("update Board set postCounter = postCounter + 1 where label = :label")
     void increasePostNumber(@Param("label") String label);
 }
 
@@ -56,13 +56,12 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public Long getPostNumber(String label) {
-        return boardRepository.getPostNumber(label);
+    public Long getPostCounter(String label) {
+        return boardRepository.getPostCounter(label);
     }
 
-    public void increasePostNumber(String label) {
+    public void increasePostCounter(String label) {
         boardRepository.increasePostNumber(label);
     }
-
 
 }
