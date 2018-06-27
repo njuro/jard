@@ -9,11 +9,11 @@ public class ThreadForm {
 
 
     private String subject;
-    private String board;
+    private boolean stickied;
+    private boolean locked;
 
-    private String name;
-    private String tripcode;
-    private String comment;
+    private PostForm post;
+
 
     public String getSubject() {
         return subject;
@@ -23,35 +23,27 @@ public class ThreadForm {
         this.subject = subject;
     }
 
-    public String getBoard() {
-        return board;
+    public boolean isStickied() {
+        return stickied;
     }
 
-    public void setBoard(String board) {
-        this.board = board;
+    public void setStickied(boolean stickied) {
+        this.stickied = stickied;
     }
 
-    public String getName() {
-        return name;
+    public boolean isLocked() {
+        return locked;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
-    public String getTripcode() {
-        return tripcode;
+    public PostForm getPost() {
+        return post;
     }
 
-    public void setTripcode(String tripcode) {
-        this.tripcode = tripcode;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setPost(PostForm post) {
+        this.post = post;
     }
 }

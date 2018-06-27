@@ -13,11 +13,11 @@
         <div class="two fields">
           <div class="field">
             <label>Name</label>
-            <input type="text" name="name" placeholder="Name">
+              <input type="text" name="post.name" placeholder="Name">
           </div>
           <div class="field">
             <label>Tripcode</label>
-            <input type="text" name="tripcode" placeholder="Tripcode">
+              <input type="text" name="post.tripcode" placeholder="Tripcode">
           </div>
         </div>
         <div class="field">
@@ -26,15 +26,15 @@
         </div>
         <div class="field">
           <label>Comment</label>
-          <textarea name="comment" rows="8"></textarea>
+            <textarea name="post.body" rows="8"></textarea>
         </div>
-        <input type="hidden" name="board" th:value="${board}">
         <button class="ui right floated button" tabindex="0" type="submit">Create thread</button>
       </form>
 
       <!-- REPLY TO THREAD FORM -->
-      <form class="ui form" th:object="${post}" th:fragment="reply-form(board)" id="reply-form" method="post"
-            th:data-board="@{/board/{board}/(board=${board})}" th:action="@{/}">
+        <!--/*@thymesVar id="postForm" type="com.github.njuro.models.PostForm"*/-->
+        <form class="ui form" th:object="${postForm}" th:fragment="reply-form(board)" id="reply-form" method="post"
+              th:data-board="@{/board/{board}/(board=${board})}" th:action="@{/}" enctype="multipart/form-data">
         <h4 class="ui dividing header">Reply new thread</h4>
         <div class="two fields">
           <div class="field">
@@ -50,6 +50,10 @@
           <label>Comment</label>
           <textarea name="body" rows="8"></textarea>
         </div>
+            <div class="field">
+                <label>Upload image</label>
+                <input name="file" type="file" accept="image/*"/>
+            </div>
         <button class="ui right floated button" tabindex="0" type="submit">Submit post</button>
       </form>
 

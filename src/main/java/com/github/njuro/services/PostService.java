@@ -1,6 +1,8 @@
 package com.github.njuro.services;
 
+import com.github.njuro.models.Board;
 import com.github.njuro.models.Post;
+import com.github.njuro.models.dto.PostForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -32,7 +34,13 @@ public class PostService {
         this.boardService = boardService;
     }
 
-    public Post createPost(String board, Post post) {
+
+    public Post createPost(PostForm form) {
+        Post post = new Post(form.getName(), form.getTripcode(), form.getBody());
+        return post;
+    }
+
+    public Post savePost(Post post, Board board) {
         post.setCreatedAt(LocalDateTime.now());
         post.setPostNumber(boardService.getPostCounter(board));
         boardService.increasePostCounter(board);

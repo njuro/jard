@@ -38,9 +38,10 @@ public class BoardController {
     @RequestMapping("/board/{board}")
     public String showBoard(@PathVariable(name = "board") String label, Model model) {
         Board board = boardService.getBoard(label);
+
         model.addAttribute("title", "/" + label + "/ - " + board.getName());
         model.addAttribute("board", board);
-        model.addAttribute("threads", threadService.getThreadsFromBoard(label));
+        model.addAttribute("threads", threadService.getThreadsFromBoard(board));
         return "board";
     }
 

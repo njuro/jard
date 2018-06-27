@@ -42,26 +42,25 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    public List<Board> getAllBoards() {
-        List<Board> boards = new ArrayList<>();
-        boards.addAll(boardRepository.findAll());
-        return boards;
-    }
-
     public Board getBoard(String label) {
         return boardRepository.findByLabel(label);
     }
 
-    public void createBoard(Board board) {
+    public List<Board> getAllBoards() {
+        List<Board> boards = new ArrayList<>(boardRepository.findAll());
+        return boards;
+    }
+
+    public void saveBoard(Board board) {
         boardRepository.save(board);
     }
 
-    public Long getPostCounter(String label) {
-        return boardRepository.getPostCounter(label);
+    public Long getPostCounter(Board board) {
+        return boardRepository.getPostCounter(board.getLabel());
     }
 
-    public void increasePostCounter(String label) {
-        boardRepository.increasePostNumber(label);
+    public void increasePostCounter(Board board) {
+        boardRepository.increasePostNumber(board.getLabel());
     }
 
 }

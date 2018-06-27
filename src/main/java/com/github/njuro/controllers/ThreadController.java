@@ -1,7 +1,9 @@
 package com.github.njuro.controllers;
 
+import com.github.njuro.models.Board;
 import com.github.njuro.models.Post;
 import com.github.njuro.models.Thread;
+import com.github.njuro.models.dto.PostForm;
 import com.github.njuro.models.dto.ThreadForm;
 import com.github.njuro.services.BoardService;
 import com.github.njuro.services.PostService;
@@ -36,33 +38,34 @@ public class ThreadController {
     }
 
     @PostMapping("/submit")
-    public String submitThread(@PathVariable("board") String board,
+    public String submitThread(@PathVariable("board") String boardLabel,
                                @ModelAttribute(name = "threadForm") ThreadForm threadForm, BindingResult result) {
 
-        Thread thread = new Thread(threadForm.getSubject(), boardService.getBoard(threadForm.getBoard()));
+        Board board = boardService.getBoard(boardLabel);
+        Thread thread = threadService.createThread(threadForm, board);
+        threadService.saveThread(thread);
 
-        Post post = new Post(threadForm.getName(), threadForm.getTripcode(), threadForm.getComment());
-        post.setThread(thread);
-        postService.createPost(board, post);
-
-        thread.setOriginalPost(post);
-        threadService.createThread(thread);
-
-        return "redirect:/board/" + board + "/" + post.getPostNumber();
+        return "redirect:/board/" + boardLabel + "/" + thread.getOriginalPost().getPostNumber();
     }
 
     @PostMapping("/{threadNo}/reply")
-    public String replyToThread(@PathVariable("board") String board,
-                                @PathVariable("threadNo") Long threadNumber, @ModelAttribute(name = "post") Post post) {
-        post.setThread(threadService.getThread(board, threadNumber));
-        postService.createPost(board, post);
+    public String replyToThread(@PathVariable("board") String boardLabel,
+                                @PathVariable("threadNo") Long threadNumber, @ModelAttribute(name = "postForm") PostForm postForm) {
 
-        return "redirect:/board/" + board + "/" + threadNumber;
+        Board board = boardService.getBoard(boardLabel);
+
+        Post post = postService.createPost(postForm);
+        post.setThread(threadService.getThread(board, threadNumber));
+        postService.savePost(post, board);
+
+        return "redirect:/board/" + boardLabel + "/" + threadNumber;
     }
 
     @GetMapping("/{threadNo}")
-    public String viewThread(@PathVariable("board") String board,
+    public String viewThread(@PathVariable("board") String boardLabel,
                              @PathVariable("threadNo") Long threadNumber, Model model) {
+        Board board = boardService.getBoard(boardLabel);
+
         Thread thread = threadService.getThread(board, threadNumber);
         model.addAttribute("thread", thread);
 
