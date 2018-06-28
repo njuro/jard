@@ -35,6 +35,9 @@ public class Post {
     @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Thread thread;
 
+    @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Attachment attachment;
+
     public Post() {
     }
 
@@ -98,6 +101,14 @@ public class Post {
 
     public void setThread(Thread thread) {
         this.thread = thread;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
     @Override

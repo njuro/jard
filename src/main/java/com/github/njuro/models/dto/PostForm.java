@@ -11,7 +11,7 @@ public class PostForm {
     private String tripcode;
     private String body;
 
-    private MultipartFile file;
+    private MultipartFile attachment;
 
     public String getName() {
         return name;
@@ -37,11 +37,11 @@ public class PostForm {
         this.body = body;
     }
 
-    public MultipartFile getFile() {
-        return file;
+    public MultipartFile getAttachment() {
+        return attachment;
     }
 
-    public void setFile(MultipartFile file) {
-        this.file = file;
+    public void setAttachment(MultipartFile attachment) {
+        this.attachment = attachment;
     }
 }
