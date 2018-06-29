@@ -59,6 +59,11 @@
 			<artifactId>thymeleaf-extras-java8time</artifactId>
             <version>3.0.1.RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
 	</dependencies>
 
 	<build>

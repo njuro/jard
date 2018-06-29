@@ -24,6 +24,7 @@
                 <i class="reply icon"></i>
               </button>
             </div>
+              <img th:if="*{attachment != null}" th:src="*{attachment.url}"/>
             <div class="description" th:text="*{body}"></div>
           </div>
         </div>

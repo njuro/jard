@@ -53,7 +53,7 @@ public class ThreadService {
     public Thread createThread(ThreadForm form, Board board) {
         Thread thread = new Thread(form.getSubject(), form.isLocked(), form.isStickied(), board);
 
-        Post firstPost = postService.createPost(form.getPost());
+        Post firstPost = postService.createPost(form.getPost(), board);
         thread.setOriginalPost(firstPost);
         firstPost.setThread(thread);
 

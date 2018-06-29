@@ -1,8 +1,10 @@
 package com.github.njuro.models;
 
+import helpers.Constants;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +15,9 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Basic
+    private String path;
+
     @NotNull
     private String originalFilename;
 
@@ -20,7 +25,23 @@ public class Attachment {
     private String filename;
 
     @Transient
-    private File file;
+    private String url;
+
+    public Attachment() {
+    }
+
+    public Attachment(String path, @NotNull String originalFilename, String filename) {
+        this.path = path;
+        this.originalFilename = originalFilename;
+        this.filename = filename;
+
+        initUrl();
+    }
+
+    @PostLoad
+    public void initUrl() {
+        this.url = Constants.USER_CONTENT_URL + Paths.get(path, filename).toString();
+    }
 
     public Long getId() {
         return id;
@@ -28,6 +49,14 @@ public class Attachment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getOriginalFilename() {
@@ -46,12 +75,12 @@ public class Attachment {
         this.filename = filename;
     }
 
-    public File getFile() {
-        return file;
+    public String getUrl() {
+        return url;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override

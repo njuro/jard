@@ -54,7 +54,7 @@ public class ThreadController {
 
         Board board = boardService.getBoard(boardLabel);
 
-        Post post = postService.createPost(postForm);
+        Post post = postService.createPost(postForm, board);
         post.setThread(threadService.getThread(board, threadNumber));
         postService.savePost(post, board);
 
@@ -67,6 +67,7 @@ public class ThreadController {
         Board board = boardService.getBoard(boardLabel);
 
         Thread thread = threadService.getThread(board, threadNumber);
+
         model.addAttribute("thread", thread);
 
         return "fragments/thread";

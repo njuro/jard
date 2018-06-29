@@ -1,5 +1,6 @@
 package com.github.njuro.services;
 
+import com.github.njuro.models.Attachment;
 import com.github.njuro.models.Board;
 import com.github.njuro.models.Post;
 import com.github.njuro.models.dto.PostForm;
@@ -26,17 +27,22 @@ public class PostService {
 
     private final BoardService boardService;
 
+    private final AttachmentService attachmentService;
+
     private final PostRepository postRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, BoardService boardService) {
-        this.postRepository = postRepository;
+    public PostService(BoardService boardService, AttachmentService attachmentService, PostRepository postRepository) {
         this.boardService = boardService;
+        this.attachmentService = attachmentService;
+        this.postRepository = postRepository;
     }
 
-
-    public Post createPost(PostForm form) {
+    public Post createPost(PostForm form, Board board) {
         Post post = new Post(form.getName(), form.getTripcode(), form.getBody());
+        Attachment attachment = attachmentService.uploadAttachment(form.getAttachment(), board);
+        post.setAttachment(attachment);
+
         return post;
     }
 
