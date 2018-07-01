@@ -40,8 +40,11 @@ public class PostService {
 
     public Post createPost(PostForm form, Board board) {
         Post post = new Post(form.getName(), form.getTripcode(), form.getBody());
-        Attachment attachment = attachmentService.uploadAttachment(form.getAttachment(), board);
-        post.setAttachment(attachment);
+
+        if (form.getAttachment().getSize() > 0) {
+            Attachment attachment = attachmentService.uploadAttachment(form.getAttachment(), board);
+            post.setAttachment(attachment);
+        }
 
         return post;
     }
