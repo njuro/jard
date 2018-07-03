@@ -1,5 +1,6 @@
 package com.github.njuro.controllers;
 
+import com.github.njuro.exceptions.ThreadNotFoundException;
 import com.github.njuro.models.Board;
 import com.github.njuro.models.Post;
 import com.github.njuro.models.Thread;
@@ -78,11 +79,15 @@ public class ThreadController {
     public String viewThread(@PathVariable("board") String boardLabel,
                              @PathVariable("threadNo") Long threadNumber, Model model) {
         Board board = boardService.getBoard(boardLabel);
-
         Thread thread = threadService.getThread(board, threadNumber);
 
+        if (thread == null) {
+            throw new ThreadNotFoundException();
+        }
+
         model.addAttribute("thread", thread);
-        model.addAttribute("title", String.format("/%s/ - %s", board.getLabel(), thread.getSubject()));
+        model.addAttribute("title", String.format("/%s/", board.getLabel(), thread.getSubject()));
+        model.addAttribute("postForm", new PostForm());
 
         return "fragments/thread";
     }
