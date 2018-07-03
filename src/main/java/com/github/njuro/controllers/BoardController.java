@@ -1,5 +1,6 @@
 package com.github.njuro.controllers;
 
+import com.github.njuro.exceptions.BoardNotFoundException;
 import com.github.njuro.models.Board;
 import com.github.njuro.models.dto.PostForm;
 import com.github.njuro.models.dto.ThreadForm;
@@ -8,8 +9,8 @@ import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Controller for boards
@@ -30,16 +31,20 @@ public class BoardController {
         this.threadService = threadService;
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String showBoards(Model model) {
         model.addAttribute("title", "All boards");
         model.addAttribute("boards", boardService.getAllBoards());
         return "index";
     }
 
-    @RequestMapping("/board/{board}")
+    @GetMapping("/board/{board}")
     public String showBoard(@PathVariable(name = "board") String label, Model model) {
         Board board = boardService.getBoard(label);
+
+        if (board == null) {
+            throw new BoardNotFoundException();
+        }
 
         model.addAttribute("title", "/" + label + "/ - " + board.getName());
         model.addAttribute("board", board);
