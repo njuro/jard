@@ -36,6 +36,7 @@ public class Thread {
     private Board board;
 
     @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("createdAt ASC")
     private List<Post> posts;
 
     @OneToOne(targetEntity = Post.class, fetch = FetchType.LAZY)

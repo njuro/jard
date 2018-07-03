@@ -1,6 +1,6 @@
 package com.github.njuro.models;
 
-import helpers.Constants;
+import com.github.njuro.helpers.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

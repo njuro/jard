@@ -1,4 +1,4 @@
-package helpers;
+package com.github.njuro.helpers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

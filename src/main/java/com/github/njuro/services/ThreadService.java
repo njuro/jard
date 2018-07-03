@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,7 +47,12 @@ public class ThreadService {
 
 
     public List<Thread> getThreadsFromBoard(Board board) {
-        return threadRepository.findByBoardLabel(board.getLabel());
+        List<Thread> threads = threadRepository.findByBoardLabel(board.getLabel());
+
+        threads.sort(Comparator.comparing(Thread::isStickied)
+                .thenComparing(thread -> thread.getPosts().get(thread.getPosts().size() - 1).getCreatedAt()).reversed());
+
+        return threads;
     }
 
 
@@ -62,10 +68,13 @@ public class ThreadService {
 
     public Thread saveThread(Thread thread) {
         thread.setCreatedAt(LocalDateTime.now());
-
         postService.savePost(thread.getOriginalPost(), thread.getBoard());
+
         return threadRepository.save(thread);
     }
 
+    public Thread updateThread(Thread thread) {
+        return threadRepository.save(thread);
+    }
 
 }

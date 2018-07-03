@@ -61,6 +61,19 @@ public class ThreadController {
         return "redirect:/board/" + boardLabel + "/" + threadNumber;
     }
 
+    @PostMapping("/{threadNo}/sticky")
+    public String toggleStickyThread(@PathVariable("board") String boardLabel,
+                                     @PathVariable("threadNo") Long threadNumber) {
+
+        Board board = boardService.getBoard(boardLabel);
+
+        Thread thread = threadService.getThread(board, threadNumber);
+        thread.setStickied(!thread.isStickied());
+        threadService.updateThread(thread);
+
+        return "redirect:/board/" + boardLabel;
+    }
+
     @GetMapping("/{threadNo}")
     public String viewThread(@PathVariable("board") String boardLabel,
                              @PathVariable("threadNo") Long threadNumber, Model model) {
@@ -69,6 +82,7 @@ public class ThreadController {
         Thread thread = threadService.getThread(board, threadNumber);
 
         model.addAttribute("thread", thread);
+        model.addAttribute("title", String.format("/%s/ - %s", board.getLabel(), thread.getSubject()));
 
         return "fragments/thread";
     }

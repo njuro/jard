@@ -1,8 +1,8 @@
 package com.github.njuro.services;
 
+import com.github.njuro.helpers.Constants;
 import com.github.njuro.models.Attachment;
 import com.github.njuro.models.Board;
-import helpers.Constants;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
