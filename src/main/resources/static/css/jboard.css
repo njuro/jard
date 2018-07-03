@@ -13,8 +13,8 @@ header, main {
   padding-bottom: 10px;
 }
 
-#post {
-  margin-left: 20px;
+.post {
+  margin-left: 20px !important;
 }
 
 .subject {

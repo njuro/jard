@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body layout:fragment="thread-form(label)" th:remove="tag">
+<!--/*@thymesVar id="threadForm" type="com.github.njuro.models.dto.ThreadForm"*/-->
+<form class="ui form" th:object="${threadForm}" id="thread-form" method="post"
+      th:action="@{/board/{board}/submit(board=${label})}" enctype="multipart/form-data">
+    <h4 class="ui dividing header">Create new thread</h4>
+    <div class="two fields">
+        <div class="field">
+            <label>Name</label>
+            <input type="text" name="post.name" placeholder="Name">
+        </div>
+        <div class="field">
+            <label>Tripcode</label>
+            <input type="text" name="post.tripcode" placeholder="Tripcode">
+        </div>
+    </div>
+    <div class="field">
+        <label>Subject</label>
+        <input type="text" name="subject" placeholder="Subject">
+    </div>
+    <div class="field">
+        <label>Comment</label>
+        <textarea name="post.body" rows="8"></textarea>
+    </div>
+    <div class="field">
+        <label>Upload image</label>
+        <input name="post.attachment" type="file" accept="image/*"/>
+    </div>
+    <button class="ui right floated button" tabindex="0" type="submit">Create thread</button>
+</form>
+</body>
+</html>

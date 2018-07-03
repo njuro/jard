@@ -1,37 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head th:include="~{fragments/base :: head(${title})}"></head>
-  <body>
-    <nav th:include="~{fragments/base :: navigation}"></nav>
-    <main>
-      <div class="ui modal" id="reply-form-modal">
-        <div class="content" th:insert="~{fragments/forms :: reply-form(${thread.getBoard().getLabel()})}">
-        </div>
-      </div>
-      <div class="ui divided items" id="thread" th:fragment="thread(thread)">
-        <!--/*@thymesVar id="thread" type="com.github.njuro.models.Thread"*/-->
-        <!--/*@thymesVar id="post" type="com.github.njuro.models.Post"*/-->
-        <div th:each="post, iter: ${thread.getPosts()}" class="item" th:id="${iter.first}? 'original-post' : 'post'"
-             th:object="${post}" th:inline="text">
-          <div class="content">
-            <div class="meta">
-              <span class="name" th:text="*{name}"></span>
-              <span class="subject" th:if="${iter.first}" th:text="${thread.subject}"></span>
-              <span class="date" th:text="${#temporals.format(thread.createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
-              <span class="post-number" th:text="'No. ' + ${post.postNumber}"></span>
-              <button class="circular mini ui basic icon button reply-form-btn"
-                      th:data-thread-id="${thread.originalPost.postNumber}">
-                <i class="reply icon"></i>
-              </button>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <title th:text="${title}">Thread</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <th:block layout:fragment="thread(thread)">
+        <div class="ui divided items thread">
+            <!--/*@thymesVar id="thread" type="com.github.njuro.models.Thread"*/-->
+            <!--/*@thymesVar id="post" type="com.github.njuro.models.Post"*/-->
+            <div th:each="post, iter: ${thread.posts}" class="item"
+                 th:classappend="${iter.first}? 'original-post' : 'post'"
+                 th:object="${post}" th:inline="text">
+                <div class="content">
+                    <div class="meta">
+                        <span class="name" th:text="*{name}"></span>
+                        <span class="subject" th:if="${iter.first}" th:text="${thread.subject}"></span>
+                        <span class="date" th:text="*{#temporals.format(createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
+                        <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
+                        <button class="circular mini ui basic icon button reply-form-btn"
+                                th:data-thread-id="*{postNumber}">
+                            <i class="reply icon"></i>
+                        </button>
+                        <form style="display: inline" th:if="${iter.first}" method="post"
+                              th:action="@{/board/{label}/{threadId}/sticky(label=${thread.board.label},threadId=*{postNumber})}">
+                            <button class="circular mini ui basic icon button"
+                                    th:data-thread-id="*{postNumber}">
+                                <i class="thumbtack icon"
+                                   th:classappend="${thread.stickied} ? 'vertically flipped'"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <img th:if="*{attachment != null}" th:src="*{attachment.url}"/>
+                    <div class="description" th:text="*{body}"></div>
+                </div>
             </div>
-              <img th:if="*{attachment != null}" th:src="*{attachment.url}"/>
-            <div class="description" th:text="*{body}"></div>
-          </div>
         </div>
-
-
-      </div>
+    </th:block>
     </main>
-    <footer th:include="~{fragments/base :: footer}"></footer>
-  </body>
+</body>
 </html>

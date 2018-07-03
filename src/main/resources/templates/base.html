@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en">
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">JBoard</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.js"
+            integrity="sha256-/P4bJXh+K+kZ7M5aKUKxAcvN8105oYfKkQ2cgwVZ8r4=" crossorigin="anonymous"></script>
+    <script th:src="@{/js/jboard.js}"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css"
+          integrity="sha256-Z8Bv3UrxpRsWTfTPIjCojw5CdRNYSPw3TyxoU8WZSrM=" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/jboard.css}" media="all"/>
+
+</head>
+<body>
+<nav layout:fragment="navigation">
+    <div class="ui menu">
+        <a th:href="@{/}" class="header item">JBoard</a>
+        <a class="item" th:each="board: ${@boardService.getAllBoards()}" th:object="${board}"
+           th:href="@{'/board/' + *{label}}" th:text="|/*{label}/ - *{name}|" th:title="*{name}">/label/ - Board</a>
+    </div>
+</nav>
+<main layout:fragment="content">
+    <!-- main content -->
+</main>
+<footer layout:fragment="footer">
+    <!-- footer text here !-->
+</footer>
+</body>
+</html>

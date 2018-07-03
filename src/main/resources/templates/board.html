@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head th:include="~{fragments/base :: head(${title})}"></head>
-  <body>
-    <nav th:include="~{fragments/base :: navigation}"></nav>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+  <title th:text="${title}">Board</title>
+</head>
+<body>
+<main layout:fragment="content">
     <header>
       <h1 class="ui center aligned header" th:text="${board.name}"></h1>
     </header>
-    <main>
-      <button class="small ui basic button" id="thread-form-btn">
-        <i class="plus icon"></i> <strong>New thread</strong>
-      </button>
-      <div class="ui modal" id="thread-form-modal">
-        <div class="content" th:insert="~{fragments/forms :: thread-form(${board.label})}">
-        </div>
-      </div>
+  <button class="small ui basic button" id="thread-form-btn">
+    <i class="plus icon"></i> <strong>New thread</strong>
+  </button>
+  <div class="ui modal" id="thread-form-modal">
+    <div class="content" layout:insert="~{fragments/forms/thread-form :: thread-form(${board.label})}">
+    </div>
+  </div>
 
-      <div class="ui modal" id="reply-form-modal">
-        <div class="content" th:insert="~{fragments/forms :: reply-form(${board.label})}">
-        </div>
-      </div>
-      <th:block th:each="thread: ${board.getThreads()}" th:insert="~{fragments/thread :: thread(${thread})}"></th:block>
-    </main>
-    <footer th:include="~{fragments/base :: footer}"></footer>
-  </body>
+  <div class="ui modal" id="reply-form-modal">
+    <div class="content" layout:insert="~{fragments/forms/reply-form :: reply-form(${board.label})}">
+    </div>
+  </div>
+
+  <th:block th:each="thread: ${threads}">
+    <th:block layout:insert="~{fragments/thread :: thread(${thread})}"/>
+  </th:block>
+</main>
+</body>
 </html>
