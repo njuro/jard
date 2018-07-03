@@ -9,20 +9,20 @@
     <div class="two fields">
         <div class="field">
             <label>Name</label>
-            <input type="text" name="name" placeholder="Name">
+            <input type="text" th:field="*{name}" placeholder="Name">
         </div>
         <div class="field">
-            <label>Tripcode</label>
-            <input type="text" name="tripcode" placeholder="Tripcode">
+            <label>Tripcode password</label>
+            <input type="text" th:field="*{password}" placeholder="Password">
         </div>
     </div>
     <div class="field">
         <label>Comment</label>
-        <textarea name="body" rows="8"></textarea>
+        <textarea th:field="*{body}" rows="8"></textarea>
     </div>
     <div class="field">
         <label>Upload image</label>
-        <input name="attachment" type="file" accept="image/*"/>
+        <input th:field="*{attachment}" type="file" accept="image/*"/>
     </div>
     <button class="ui right floated button" tabindex="0" type="submit">Submit post</button>
 </form>

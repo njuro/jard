@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostForm {
 
     private String name;
-    private String tripcode;
+    private String password;
     private String body;
 
     private MultipartFile attachment;
@@ -21,12 +21,12 @@ public class PostForm {
         this.name = name;
     }
 
-    public String getTripcode() {
-        return tripcode;
+    public String getPassword() {
+        return password;
     }
 
-    public void setTripcode(String tripcode) {
-        this.tripcode = tripcode;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getBody() {

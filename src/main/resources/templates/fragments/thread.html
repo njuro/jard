@@ -7,6 +7,10 @@
 </head>
 <body>
 <main layout:fragment="content">
+    <div class="ui modal" id="reply-form-modal">
+        <div class="content" layout:insert="~{fragments/forms/reply-form :: reply-form(${thread.board.label})}">
+        </div>
+    </div>
     <th:block layout:fragment="thread(thread)">
         <div class="ui divided items thread">
             <!--/*@thymesVar id="thread" type="com.github.njuro.models.Thread"*/-->
@@ -16,7 +20,8 @@
                  th:object="${post}" th:inline="text">
                 <div class="content">
                     <div class="meta">
-                        <span class="name" th:text="*{name}"></span>
+                        <span class="name" th:text="*{name}">Anonymous</span>
+                        <span class="tripcode" th:text="*{tripcode}">!tr1pc0d3</span>
                         <span class="subject" th:if="${iter.first}" th:text="${thread.subject}"></span>
                         <span class="date" th:text="*{#temporals.format(createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
                         <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
@@ -33,8 +38,10 @@
                             </button>
                         </form>
                     </div>
-                    <img th:if="*{attachment != null}" th:src="*{attachment.url}"/>
-                    <div class="description" th:text="*{body}"></div>
+                    <a th:if="*{attachment != null}" th:href=*{attachment.url} target="_blank">
+                        <img class="attachment" th:src="*{attachment.url}"/>
+                    </a>
+                    <div class="body" th:text="*{body}"></div>
                 </div>
             </div>
         </div>

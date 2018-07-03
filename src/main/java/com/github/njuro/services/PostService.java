@@ -4,6 +4,7 @@ import com.github.njuro.models.Attachment;
 import com.github.njuro.models.Board;
 import com.github.njuro.models.Post;
 import com.github.njuro.models.dto.PostForm;
+import com.github.njuro.utils.Tripcode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -39,7 +40,8 @@ public class PostService {
     }
 
     public Post createPost(PostForm form, Board board) {
-        Post post = new Post(form.getName(), form.getTripcode(), form.getBody());
+        String tripcode = Tripcode.generateTripcode(form.getPassword());
+        Post post = new Post(form.getName(), tripcode, form.getBody());
 
         if (form.getAttachment().getSize() > 0) {
             Attachment attachment = attachmentService.uploadAttachment(form.getAttachment(), board);

@@ -9,24 +9,24 @@
     <div class="two fields">
         <div class="field">
             <label>Name</label>
-            <input type="text" name="post.name" placeholder="Name">
+            <input type="text" th:field="*{post.name}" placeholder="Name">
         </div>
         <div class="field">
-            <label>Tripcode</label>
-            <input type="text" name="post.tripcode" placeholder="Tripcode">
+            <label>Tripcode password</label>
+            <input type="text" th:field="*{post.password}" placeholder="Password">
         </div>
     </div>
     <div class="field">
         <label>Subject</label>
-        <input type="text" name="subject" placeholder="Subject">
+        <input type="text" th:field="*{subject}" placeholder="Subject">
     </div>
     <div class="field">
         <label>Comment</label>
-        <textarea name="post.body" rows="8"></textarea>
+        <textarea th:field="*{post.body}" rows="8"></textarea>
     </div>
     <div class="field">
         <label>Upload image</label>
-        <input name="post.attachment" type="file" accept="image/*"/>
+        <input th:field="*{post.attachment}" type="file" accept="image/*"/>
     </div>
     <button class="ui right floated button" tabindex="0" type="submit">Create thread</button>
 </form>
