@@ -3,10 +3,10 @@ package com.github.njuro.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Tripcode {
+import static com.github.njuro.helpers.Constants.TRIPCODE_LENGTH;
+import static com.github.njuro.helpers.Constants.TRIPCODE_SEPARATOR;
 
-    private static final String SEPARATOR = "!";
-    private static final int LENGTH = 10;
+public class Tripcode {
 
     public static String generateTripcode(String password) {
         MessageDigest md;
@@ -24,7 +24,7 @@ public class Tripcode {
             tripcode.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
         }
 
-        return SEPARATOR + tripcode.substring(tripcode.length() - LENGTH);
+        return TRIPCODE_SEPARATOR + tripcode.substring(tripcode.length() - TRIPCODE_LENGTH);
     }
 
 }

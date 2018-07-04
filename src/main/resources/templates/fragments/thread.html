@@ -26,7 +26,7 @@
                         <span class="date" th:text="*{#temporals.format(createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
                         <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
                         <button class="circular mini ui basic icon button reply-form-btn"
-                                th:data-thread-id="*{postNumber}">
+                                th:data-thread-id="${thread.originalPost.postNumber}">
                             <i class="reply icon"></i>
                         </button>
                         <form style="display: inline" th:if="${iter.first}" method="post"
@@ -38,8 +38,9 @@
                             </button>
                         </form>
                     </div>
-                    <a th:if="*{attachment != null}" th:href=*{attachment.url} target="_blank">
-                        <img class="attachment" th:src="*{attachment.url}"/>
+                    <a th:if="*{attachment != null}" th:href="*{attachment.url}" target="_blank">
+                        <img class="attachment" th:object="${post.attachment}" th:src="*{url}"
+                             th:style="|height: *{thumbHeight}px; width:*{thumbWidth}px|"/>
                     </a>
                     <div class="body" th:text="*{body}"></div>
                 </div>

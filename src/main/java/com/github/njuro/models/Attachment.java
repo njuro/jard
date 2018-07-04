@@ -4,6 +4,7 @@ import com.github.njuro.helpers.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.Objects;
 
@@ -24,8 +25,23 @@ public class Attachment {
     @Column(unique = true)
     private String filename;
 
+    @Basic
+    private int width;
+
+    @Basic
+    private int height;
+
+    @Basic
+    private int thumbWidth;
+
+    @Basic
+    private int thumbHeight;
+
     @Transient
     private String url;
+
+    @Transient
+    private File file;
 
     public Attachment() {
     }
@@ -35,12 +51,13 @@ public class Attachment {
         this.originalFilename = originalFilename;
         this.filename = filename;
 
-        initUrl();
+        initContentPaths();
     }
 
     @PostLoad
-    public void initUrl() {
+    public void initContentPaths() {
         this.url = Constants.USER_CONTENT_URL + Paths.get(path, filename).toString();
+        this.file = Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
     }
 
     public Long getId() {
@@ -75,12 +92,52 @@ public class Attachment {
         this.filename = filename;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getThumbWidth() {
+        return thumbWidth;
+    }
+
+    public void setThumbWidth(int thumbWidth) {
+        this.thumbWidth = thumbWidth;
+    }
+
+    public int getThumbHeight() {
+        return thumbHeight;
+    }
+
+    public void setThumbHeight(int thumbHeight) {
+        this.thumbHeight = thumbHeight;
+    }
+
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     @Override

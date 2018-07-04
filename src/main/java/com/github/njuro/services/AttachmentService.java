@@ -3,6 +3,7 @@ package com.github.njuro.services;
 import com.github.njuro.helpers.Constants;
 import com.github.njuro.models.Attachment;
 import com.github.njuro.models.Board;
+import com.github.njuro.utils.Images;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,6 +52,8 @@ public class AttachmentService {
         }
 
         Attachment attachment = new Attachment(dest.toString(), src.getOriginalFilename(), generatedName);
+        Images.setDimensions(attachment);
+
         return attachmentRepository.save(attachment);
     }
 
