@@ -1,15 +1,21 @@
 package com.github.njuro.models;
 
 import com.github.njuro.helpers.Constants;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 @Entity
 @Table(name = "attachments")
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Attachment {
 
     @Id
@@ -17,12 +23,14 @@ public class Attachment {
     private Long id;
 
     @Basic
+    @EqualsAndHashCode.Include
     private String path;
 
     @NotNull
     private String originalFilename;
 
     @Column(unique = true)
+    @EqualsAndHashCode.Include
     private String filename;
 
     @Basic
@@ -38,13 +46,12 @@ public class Attachment {
     private int thumbHeight;
 
     @Transient
+    @ToString.Exclude
     private String url;
 
     @Transient
+    @ToString.Exclude
     private File file;
-
-    public Attachment() {
-    }
 
     public Attachment(String path, @NotNull String originalFilename, String filename) {
         this.path = path;
@@ -60,106 +67,4 @@ public class Attachment {
         this.file = Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getOriginalFilename() {
-        return originalFilename;
-    }
-
-    public void setOriginalFilename(String originalFilename) {
-        this.originalFilename = originalFilename;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getThumbWidth() {
-        return thumbWidth;
-    }
-
-    public void setThumbWidth(int thumbWidth) {
-        this.thumbWidth = thumbWidth;
-    }
-
-    public int getThumbHeight() {
-        return thumbHeight;
-    }
-
-    public void setThumbHeight(int thumbHeight) {
-        this.thumbHeight = thumbHeight;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Attachment that = (Attachment) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Attachment{" +
-                "id=" + id +
-                ", originalFilename='" + originalFilename + '\'' +
-                ", filename='" + filename + '\'' +
-                '}';
-    }
 }

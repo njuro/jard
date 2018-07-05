@@ -1,6 +1,7 @@
 package com.github.njuro.utils;
 
 import com.github.njuro.models.Attachment;
+import lombok.experimental.UtilityClass;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,9 +11,10 @@ import java.util.Objects;
 import static com.github.njuro.helpers.Constants.IMAGE_MAX_THUMB_HEIGHT;
 import static com.github.njuro.helpers.Constants.IMAGE_MAX_THUMB_WIDTH;
 
+@UtilityClass
 public class Images {
 
-    public static void setDimensions(Attachment att) {
+    public void setDimensions(Attachment att) {
         BufferedImage img = getImageFromAttachment(att);
         if (img == null) return;
 
@@ -22,7 +24,7 @@ public class Images {
         setThumbnailDimensions(att);
     }
 
-    public static BufferedImage getImageFromAttachment(Attachment att) {
+    private BufferedImage getImageFromAttachment(Attachment att) {
         if (att.getFile() == null) return null;
 
         try {
@@ -32,7 +34,7 @@ public class Images {
         }
     }
 
-    public static void setThumbnailDimensions(Attachment att) {
+    private void setThumbnailDimensions(Attachment att) {
         Objects.requireNonNull(att);
 
         if (att.getWidth() == 0 || att.getHeight() == 0) {

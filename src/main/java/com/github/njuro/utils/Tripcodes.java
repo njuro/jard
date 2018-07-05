@@ -1,21 +1,20 @@
 package com.github.njuro.utils;
 
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import static com.github.njuro.helpers.Constants.TRIPCODE_LENGTH;
 import static com.github.njuro.helpers.Constants.TRIPCODE_SEPARATOR;
 
-public class Tripcode {
+@UtilityClass
+public class Tripcodes {
 
-    public static String generateTripcode(String password) {
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA-512");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("Hashing failed", e);
-        }
-
+    @SneakyThrows(NoSuchAlgorithmException.class)
+    public String generateTripcode(String password) {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(password.getBytes());
         byte byteData[] = md.digest();
 

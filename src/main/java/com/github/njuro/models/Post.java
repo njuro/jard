@@ -1,5 +1,9 @@
 package com.github.njuro.models;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,6 +14,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "posts")
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Post {
 
     @Id
@@ -17,6 +24,7 @@ public class Post {
     private Long id;
 
     @Basic
+    @EqualsAndHashCode.Include
     private Long postNumber;
 
     @Basic
@@ -33,109 +41,15 @@ public class Post {
     private LocalDateTime createdAt;
 
     @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @EqualsAndHashCode.Include
     private Thread thread;
 
     @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Attachment attachment;
 
-    public Post() {
-    }
-
     public Post(String name, String tripcode, String body) {
         this.name = name;
         this.tripcode = tripcode;
         this.body = body;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getPostNumber() {
-        return postNumber;
-    }
-
-    public void setPostNumber(Long postNumber) {
-        this.postNumber = postNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTripcode() {
-        return tripcode;
-    }
-
-    public void setTripcode(String tripcode) {
-        this.tripcode = tripcode;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Thread getThread() {
-        return thread;
-    }
-
-    public void setThread(Thread thread) {
-        this.thread = thread;
-    }
-
-    public Attachment getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Attachment attachment) {
-        this.attachment = attachment;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Post)) return false;
-
-        Post post = (Post) o;
-
-        if (!getPostNumber().equals(post.getPostNumber())) return false;
-        return getThread() != null ? getThread().equals(post.getThread()) : post.getThread() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getPostNumber().hashCode();
-        result = 31 * result + (getThread() != null ? getThread().hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postNumber=" + postNumber +
-                ", name='" + name + '\'' +
-                ", body='" + body + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }
