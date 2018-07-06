@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * Controller for threads
  *
@@ -40,7 +42,8 @@ public class ThreadController {
 
     @PostMapping("/submit")
     public String submitThread(@PathVariable("board") String boardLabel,
-                               @ModelAttribute(name = "threadForm") ThreadForm threadForm, BindingResult result) {
+                               @Valid @ModelAttribute(name = "threadForm") ThreadForm threadForm,
+                               BindingResult result) {
 
         Board board = boardService.getBoard(boardLabel);
         Thread thread = threadService.createThread(threadForm, board);
@@ -51,7 +54,9 @@ public class ThreadController {
 
     @PostMapping("/{threadNo}/reply")
     public String replyToThread(@PathVariable("board") String boardLabel,
-                                @PathVariable("threadNo") Long threadNumber, @ModelAttribute(name = "postForm") PostForm postForm) {
+                                @PathVariable("threadNo") Long threadNumber,
+                                @Valid @ModelAttribute(name = "postForm") PostForm postForm,
+                                BindingResult result) {
 
         Board board = boardService.getBoard(boardLabel);
 
@@ -87,7 +92,6 @@ public class ThreadController {
 
         model.addAttribute("thread", thread);
         model.addAttribute("title", String.format("/%s/", board.getLabel(), thread.getSubject()));
-        model.addAttribute("postForm", new PostForm());
 
         return "fragments/thread";
     }

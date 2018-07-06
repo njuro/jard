@@ -2,8 +2,6 @@ package com.github.njuro.controllers;
 
 import com.github.njuro.exceptions.BoardNotFoundException;
 import com.github.njuro.models.Board;
-import com.github.njuro.models.dto.PostForm;
-import com.github.njuro.models.dto.ThreadForm;
 import com.github.njuro.services.BoardService;
 import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +47,6 @@ public class BoardController {
         model.addAttribute("title", "/" + label + "/ - " + board.getName());
         model.addAttribute("board", board);
         model.addAttribute("threads", threadService.getThreadsFromBoard(board));
-        model.addAttribute("threadForm", new ThreadForm());
-        model.addAttribute("postForm", new PostForm());
 
         return "board";
     }
