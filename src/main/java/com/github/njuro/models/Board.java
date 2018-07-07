@@ -1,5 +1,6 @@
 package com.github.njuro.models;
 
+import com.github.njuro.models.enums.BoardType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -48,9 +49,5 @@ public class Board {
         this.label = label;
         this.name = name;
         this.type = type;
-    }
-
-    public enum BoardType {
-        IMAGE, TEXT
     }
 }
