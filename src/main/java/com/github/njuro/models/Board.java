@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -28,7 +27,6 @@ public class Board {
 
     @NotNull
     @Column(unique = true, nullable = false)
-    @Size(min = 1, max = 16)
     @EqualsAndHashCode.Include
     private String label;
 

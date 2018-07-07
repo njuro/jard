@@ -16,6 +16,15 @@
             integrity="sha256-/P4bJXh+K+kZ7M5aKUKxAcvN8105oYfKkQ2cgwVZ8r4=" crossorigin="anonymous"></script>
     <script th:src="@{/js/jboard.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+        var lengths = {
+            name: /*[[${T(com.github.njuro.helpers.Constants).MAX_NAME_LENGTH}]]*/ 32,
+            password: /*[[${T(com.github.njuro.helpers.Constants).MAX_PASSWORD_LENGTH}]]*/ 32,
+            subject: /*[[${T(com.github.njuro.helpers.Constants).MAX_SUBJECT_LENGTH}]]*/ 32,
+            post: /*[[${T(com.github.njuro.helpers.Constants).MAX_POST_LENGTH}]]*/ 32,
+        };
+    </script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css"
           integrity="sha256-Z8Bv3UrxpRsWTfTPIjCojw5CdRNYSPw3TyxoU8WZSrM=" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/jboard.css}" media="all"/>

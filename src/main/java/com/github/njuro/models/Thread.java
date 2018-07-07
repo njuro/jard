@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +27,6 @@ public class Thread {
     private Long id;
 
     @Basic
-    @Size(max = 255)
     private String subject;
 
     @Basic

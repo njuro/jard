@@ -7,10 +7,8 @@
 </head>
 <body>
 <main layout:fragment="content">
-    <div class="ui modal" id="reply-form-modal">
-        <div class="content" layout:insert="~{fragments/forms/reply-form :: reply-form(${thread.board.label})}">
-        </div>
-    </div>
+    <th:block layout:insert="~{fragments/forms/reply-form :: reply-form(${label})}"/>
+
     <th:block layout:fragment="thread(thread)">
         <div class="ui divided items thread">
             <!--/*@thymesVar id="thread" type="com.github.njuro.models.Thread"*/-->
@@ -18,6 +16,12 @@
             <div th:each="post, iter: ${thread.posts}" class="item"
                  th:classappend="${iter.first}? 'original-post' : 'post'"
                  th:object="${post}" th:inline="text">
+                <div class="ui top aligned image">
+                    <a th:if="*{attachment != null}" th:href="*{attachment.url}" target="_blank">
+                        <img th:object="${post.attachment}" th:src="*{url}"
+                             th:style="|height: *{thumbHeight}px !important; width:*{thumbWidth}px !important|"/>
+                    </a>
+                </div>
                 <div class="content">
                     <div class="meta">
                         <span class="name" th:text="*{name}">Anonymous</span>
@@ -26,22 +30,17 @@
                         <span class="date" th:text="*{#temporals.format(createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
                         <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
                         <button class="circular mini ui basic icon button reply-form-btn"
-                                th:data-thread-id="${thread.originalPost.postNumber}">
+                                th:onclick="|showReplyForm(${thread.originalPost.postNumber})|">
                             <i class="reply icon"></i>
                         </button>
                         <form style="display: inline" th:if="${iter.first}" method="post"
                               th:action="@{/board/{label}/{threadId}/sticky(label=${thread.board.label},threadId=*{postNumber})}">
-                            <button class="circular mini ui basic icon button"
-                                    th:data-thread-id="*{postNumber}">
+                            <button class="circular mini ui basic icon button">
                                 <i class="thumbtack icon"
                                    th:classappend="${thread.stickied} ? 'vertically flipped'"></i>
                             </button>
                         </form>
                     </div>
-                    <a th:if="*{attachment != null}" th:href="*{attachment.url}" target="_blank">
-                        <img class="attachment" th:object="${post.attachment}" th:src="*{url}"
-                             th:style="|height: *{thumbHeight}px; width:*{thumbWidth}px|"/>
-                    </a>
                     <div class="body" th:text="*{body}"></div>
                 </div>
             </div>

@@ -17,6 +17,10 @@ header, main {
     margin-left: 40px !important;
 }
 
+.thread {
+    margin-bottom: 50px !important;
+}
+
 .subject {
 }
 
@@ -24,12 +28,7 @@ header, main {
   font-weight: bold;
 }
 
-.attachment {
-    display: inline;
-    vertical-align: text-top;
-    margin-right: 10px;
+.meta {
+    margin-top: 0px !important;
 }
 
-.body {
-    display: inline;
-}

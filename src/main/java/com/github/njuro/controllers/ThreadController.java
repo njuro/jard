@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -43,7 +44,13 @@ public class ThreadController {
     @PostMapping("/submit")
     public String submitThread(@PathVariable("board") String boardLabel,
                                @Valid @ModelAttribute(name = "threadForm") ThreadForm threadForm,
-                               BindingResult result) {
+                               BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.threadForm", result);
+            redirectAttributes.addFlashAttribute("threadForm", threadForm);
+            return "redirect:/board/" + boardLabel;
+        }
 
         Board board = boardService.getBoard(boardLabel);
         Thread thread = threadService.createThread(threadForm, board);
@@ -56,7 +63,14 @@ public class ThreadController {
     public String replyToThread(@PathVariable("board") String boardLabel,
                                 @PathVariable("threadNo") Long threadNumber,
                                 @Valid @ModelAttribute(name = "postForm") PostForm postForm,
-                                BindingResult result) {
+                                BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.postForm", result);
+            redirectAttributes.addFlashAttribute("postForm", postForm);
+            redirectAttributes.addFlashAttribute("threadNo", threadNumber);
+            return "redirect:/board/" + boardLabel + "/" + threadNumber;
+        }
 
         Board board = boardService.getBoard(boardLabel);
 
@@ -90,6 +104,7 @@ public class ThreadController {
             throw new ThreadNotFoundException();
         }
 
+        model.addAttribute("label", boardLabel);
         model.addAttribute("thread", thread);
         model.addAttribute("title", String.format("/%s/", board.getLabel(), thread.getSubject()));
 
