@@ -58,5 +58,10 @@ $(function () {
             }
         })
     ;
+
+    $(".item img").click(function (e) {
+        e.preventDefault();
+        $(this).toggleClass("fullsize");
+    });
 });
 

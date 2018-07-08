@@ -4,17 +4,23 @@
 }
 
 header, main {
-  margin-left: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+    margin: 10px 10px 20px;
 }
 
 #thread-form-modal, #reply-form-modal {
-  padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .post {
+    display: flex;
+    flex-wrap: wrap;
     margin-left: 40px !important;
+    padding-right: 40px !important;
+}
+
+.original-post {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .thread {
@@ -32,3 +38,7 @@ header, main {
     margin-top: 0px !important;
 }
 
+img.fullsize {
+    width: 100% !important;
+    height: 100% !important;
+}

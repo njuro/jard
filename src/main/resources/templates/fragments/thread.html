@@ -19,7 +19,7 @@
                 <div class="ui top aligned image">
                     <a th:if="*{attachment != null}" th:href="*{attachment.url}" target="_blank">
                         <img th:object="${post.attachment}" th:src="*{url}"
-                             th:style="|height: *{thumbHeight}px !important; width:*{thumbWidth}px !important|"/>
+                             th:style="|height: *{thumbHeight}px; width:*{thumbWidth}px|"/>
                     </a>
                 </div>
                 <div class="content">
