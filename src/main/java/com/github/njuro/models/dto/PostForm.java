@@ -19,7 +19,7 @@ public class PostForm {
     @Size(max = MAX_NAME_LENGTH, message = "Username too long (allowed " + MAX_NAME_LENGTH + " chars)")
     private String name;
 
-    @Size(max = MAX_PASSWORD_LENGTH, message = "Password too long (allowed " + MAX_PASSWORD_LENGTH + " chars)")
+    @Size(max = MAX_TRIPCODE_PASSWORD_LENGTH, message = "Password too long (allowed " + MAX_TRIPCODE_PASSWORD_LENGTH + " chars)")
     private String password;
 
     @Size(max = MAX_POST_LENGTH, message = "Post too long (allowed " + MAX_POST_LENGTH + " chars)")

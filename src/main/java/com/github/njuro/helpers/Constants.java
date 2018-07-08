@@ -31,9 +31,17 @@ public class Constants {
      * Threads & Posts
      */
     public static final int MAX_NAME_LENGTH = 32;
-    public static final int MAX_PASSWORD_LENGTH = 80;
+    public static final int MAX_TRIPCODE_PASSWORD_LENGTH = 80;
     public static final int MAX_SUBJECT_LENGTH = 255;
     public static final int MAX_POST_LENGTH = 1000;
     public static final int MAX_ATTACHMENT_SIZE = 2_000_000;
+
+    /**
+     * Users
+     */
+    public static final int MIN_USERNAME_LENGTH = 2;
+    public static final int MAX_USERNAME_LENGTH = 32;
+    public static final int MIN_PASSWORD_LENGTH = 8;
+
 
 }
