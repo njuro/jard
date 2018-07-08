@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
@@ -19,9 +20,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
 
+    private final AuthenticationSuccessHandler loginSuccessHandler;
+
     @Autowired
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, AuthenticationSuccessHandler loginSuccessHandler) {
         this.userService = userService;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Override
@@ -32,8 +36,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/auth/**")
+                .authenticated()
+                .antMatchers("/login")
+                .anonymous()
                 .anyRequest()
                 .permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .successHandler(loginSuccessHandler)
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
                 .and()
                 .csrf()
                 .csrfTokenRepository(new HttpSessionCsrfTokenRepository()); // Thymeleaf CSRF bug
@@ -43,4 +59,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder bcryptEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

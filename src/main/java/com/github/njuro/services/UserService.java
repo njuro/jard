@@ -14,8 +14,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Repository
 interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
@@ -54,8 +52,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User saveUser(User user) {
-        user.setCreatedAt(LocalDateTime.now());
-
         return userRepository.save(user);
     }
 }

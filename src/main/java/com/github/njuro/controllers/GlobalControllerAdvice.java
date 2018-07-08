@@ -23,4 +23,5 @@ public class GlobalControllerAdvice {
     public RegisterForm registerForm() {
         return new RegisterForm();
     }
+
 }

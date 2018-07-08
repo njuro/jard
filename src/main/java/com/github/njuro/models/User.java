@@ -67,10 +67,14 @@ public class User implements UserDetails {
     private LocalDateTime lastLogin;
 
     @Getter
-    @Setter
     @Column(name = "createdAt")
     @ToString.Exclude
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void setCreatedAt() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -94,12 +98,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

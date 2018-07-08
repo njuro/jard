@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="en">
 <head>
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">JBoard</title>
@@ -39,6 +40,16 @@
         <a th:href="@{/}" class="header item">JBoard</a>
         <a class="item" th:each="board: ${@boardService.getAllBoards()}" th:object="${board}"
            th:href="@{'/board/' + *{label}}" th:text="|/*{label}/ - *{name}|" th:title="*{name}">/label/ - Board</a>
+        <div class="right item" sec:authorize="isAnonymous()">
+            <form th:action="@{/login}" method="get">
+                <button class="ui submit button" type="submit">Login</button>
+            </form>
+        </div>
+        <div class="right item" th:href="@{/logout}" sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post">
+                <button class="ui submit button" type="submit">Logout</button>
+            </form>
+        </div>
     </div>
 </nav>
 <main layout:fragment="content">

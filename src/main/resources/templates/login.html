@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <title>Login</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="ui grid">
+        <form class="ui six wide column centered form" th:action="@{/login}" method="post" id="login-form">
+            <div class="ui segment">
+                <h4 class="ui dividing header">Login</h4>
+                <div class="field">
+                    <label>Username</label>
+                    <input name="username" placeholder="Username" type="text"/>
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input name="password" placeholder="Password" type="password"/>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input name="remember-me" tabindex="0" class="hidden" type="checkbox">
+                        <label>Remember Me</label>
+                    </div>
+                </div>
+                <div class="ui error message" th:styleappend="${param.error != null}? 'display: block;'">
+                    <ul class="list" th:if="${param.error}"
+                        th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+                        <li th:text="${errorMsg}"></li>
+                    </ul>
+                </div>
+                <button class="fluid ui submit button" tabindex="0" type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

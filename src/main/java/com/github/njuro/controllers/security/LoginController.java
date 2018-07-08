@@ -1,4 +1,4 @@
-package com.github.njuro.controllers;
+package com.github.njuro.controllers.security;
 
 import com.github.njuro.models.User;
 import com.github.njuro.models.dto.RegisterForm;
@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
-public class UserController {
+public class LoginController {
 
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public LoginController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -47,6 +47,11 @@ public class UserController {
         userService.saveUser(user);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
     }
 
 

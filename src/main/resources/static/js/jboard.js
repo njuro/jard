@@ -114,5 +114,10 @@ $(function () {
         e.preventDefault();
         $(this).toggleClass("fullsize");
     });
+
+    $('.ui.checkbox')
+        .checkbox()
+    ;
+
 });
 
