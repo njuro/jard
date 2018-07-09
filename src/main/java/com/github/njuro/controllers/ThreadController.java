@@ -6,10 +6,12 @@ import com.github.njuro.models.Post;
 import com.github.njuro.models.Thread;
 import com.github.njuro.models.dto.PostForm;
 import com.github.njuro.models.dto.ThreadForm;
+import com.github.njuro.models.enums.UserRole;
 import com.github.njuro.services.BoardService;
 import com.github.njuro.services.PostService;
 import com.github.njuro.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -81,6 +83,7 @@ public class ThreadController {
         return "redirect:/board/" + boardLabel + "/" + threadNumber;
     }
 
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping("/{threadNo}/sticky")
     public String toggleStickyThread(@PathVariable("board") String boardLabel,
                                      @PathVariable("threadNo") Long threadNumber) {

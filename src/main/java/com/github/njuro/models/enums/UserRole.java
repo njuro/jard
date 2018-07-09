@@ -22,8 +22,8 @@ public enum UserRole implements GrantedAuthority {
         public static final String MODERATOR_ROLE = "ROLE_MODERATOR";
         public static final String JANITOR_ROLE = "ROLE_JANITOR";
 
-        public static final String HIERARCHY = ADMIN_ROLE + " > " + MODERATOR_ROLE + " > "
-                + JANITOR_ROLE + " > " + USER_ROLE;
-
+        public static final String HIERARCHY = ADMIN_ROLE + " > " + MODERATOR_ROLE + " and " +
+                MODERATOR_ROLE + " > " + JANITOR_ROLE + " and " +
+                JANITOR_ROLE + " > " + USER_ROLE;
     }
 }
