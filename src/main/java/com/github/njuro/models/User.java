@@ -28,6 +28,7 @@ public class User implements UserDetails {
     @Basic
     @Setter
     @EqualsAndHashCode.Include
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Basic
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     @Basic
     @Getter
     @Setter
+    @Column(unique = true)
     private String email;
 
     @Basic

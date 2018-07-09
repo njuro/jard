@@ -4,6 +4,7 @@ import com.github.njuro.models.User;
 import com.github.njuro.models.dto.RegisterForm;
 import com.github.njuro.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,18 +29,29 @@ public class LoginController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/register")
+    @GetMapping("/auth/register")
     public String showRegisterForm() {
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public String registerUser(@Valid @ModelAttribute("registerForm") RegisterForm registerForm,
                                BindingResult result, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            userService.loadUserByUsername(registerForm.getUsername());
+            result.rejectValue("username", "username.exists", "Username is already registered");
+        } catch (UsernameNotFoundException e) {
+            // ok
+        }
+
+        if (userService.getUserByEmail(registerForm.getEmail()) != null) {
+            result.rejectValue("email", "email.exists", "E-mail is already registered");
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.registerForm", result);
             redirectAttributes.addFlashAttribute("registerForm", registerForm);
-            return "redirect:/register";
+            return "redirect:/auth/register";
         }
 
         User user = userService.createUser(registerForm, passwordEncoder);

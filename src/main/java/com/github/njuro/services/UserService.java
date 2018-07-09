@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+    User findByUsernameIgnoreCase(String username);
+
+    User findByEmailIgnoreCase(String email);
 }
 
 @Service
@@ -32,12 +34,16 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsernameIgnoreCase(username);
         if (user != null) {
             return user;
         }
 
         throw new UsernameNotFoundException("User '" + username + "' not found");
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmailIgnoreCase(email);
     }
 
     public User createUser(RegisterForm registerForm, PasswordEncoder passwordEncoder) {
