@@ -39,7 +39,6 @@
             <div class="ui error message" th:styleappend="${#fields.hasAnyErrors()}? 'display: block;'">
                 <ul class="list" th:if="${#fields.hasAnyErrors()}">
                     <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</li>
-                    <li th:each="err : ${#fields.errors('global')}" th:text="${err}">Global error</li>
                 </ul>
             </div>
             <button class="ui right floated submit button" tabindex="0" type="submit">Create thread</button>

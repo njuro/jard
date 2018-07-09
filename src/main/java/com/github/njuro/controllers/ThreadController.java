@@ -67,6 +67,13 @@ public class ThreadController {
                                 @Valid @ModelAttribute(name = "postForm") PostForm postForm,
                                 BindingResult result, RedirectAttributes redirectAttributes) {
 
+        Board board = boardService.getBoard(boardLabel);
+        Thread thread = threadService.getThread(board, threadNumber);
+
+        if (thread.isLocked()) {
+            result.reject("thread.locked", "Thread is locked");
+        }
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.postForm", result);
             redirectAttributes.addFlashAttribute("postForm", postForm);
@@ -74,10 +81,10 @@ public class ThreadController {
             return "redirect:/board/" + boardLabel + "/" + threadNumber;
         }
 
-        Board board = boardService.getBoard(boardLabel);
+
 
         Post post = postService.createPost(postForm, board);
-        post.setThread(threadService.getThread(board, threadNumber));
+        post.setThread(thread);
         postService.savePost(post, board);
 
         return "redirect:/board/" + boardLabel + "/" + threadNumber;
@@ -92,6 +99,20 @@ public class ThreadController {
 
         Thread thread = threadService.getThread(board, threadNumber);
         thread.setStickied(!thread.isStickied());
+        threadService.updateThread(thread);
+
+        return "redirect:/board/" + boardLabel;
+    }
+
+    @Secured(UserRole.Roles.JANITOR_ROLE)
+    @PostMapping("/{threadNo}/lock")
+    public String toggleLockThread(@PathVariable("board") String boardLabel,
+                                   @PathVariable("threadNo") Long threadNumber) {
+
+        Board board = boardService.getBoard(boardLabel);
+
+        Thread thread = threadService.getThread(board, threadNumber);
+        thread.setLocked(!thread.isLocked());
         threadService.updateThread(thread);
 
         return "redirect:/board/" + boardLabel;

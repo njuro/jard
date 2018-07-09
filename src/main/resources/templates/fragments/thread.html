@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{base}">
 <head>
     <title th:text="${title}">Thread</title>
@@ -33,13 +34,26 @@
                                 th:onclick="|showReplyForm(${thread.originalPost.postNumber})|">
                             <i class="reply icon"></i>
                         </button>
-                        <form style="display: inline" th:if="${iter.first}" method="post"
+                        <form sec:authorize="hasRole(T(com.github.njuro.models.enums.UserRole).MODERATOR.getAuthority())"
+                              style="display: inline" th:if="${iter.first}" method="post"
                               th:action="@{/board/{label}/{threadId}/sticky(label=${thread.board.label},threadId=*{postNumber})}">
                             <button class="circular mini ui basic icon button">
                                 <i class="thumbtack icon"
                                    th:classappend="${thread.stickied} ? 'vertically flipped'"></i>
                             </button>
                         </form>
+                        <form sec:authorize="hasRole(T(com.github.njuro.models.enums.UserRole).JANITOR.getAuthority())"
+                              style="display: inline" th:if="${iter.first}" method="post"
+                              th:action="@{/board/{label}/{threadId}/lock(label=${thread.board.label},threadId=*{postNumber})}">
+                            <button class="circular mini ui basic icon button">
+                                <i class="lock icon"
+                                   th:classappend="${thread.locked} ? 'open'"></i>
+                            </button>
+                        </form>
+                        <i th:if="${thread.stickied}"
+                           class="thumbtack icon"></i>
+                        <i th:if="${thread.locked}"
+                           class="lock icon"></i>
                     </div>
                     <div class="body" th:text="*{body}"></div>
                 </div>
