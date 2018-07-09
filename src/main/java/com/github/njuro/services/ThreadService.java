@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -67,7 +66,6 @@ public class ThreadService {
     }
 
     public Thread saveThread(Thread thread) {
-        thread.setCreatedAt(LocalDateTime.now());
         postService.savePost(thread.getOriginalPost(), thread.getBoard());
 
         return threadRepository.save(thread);

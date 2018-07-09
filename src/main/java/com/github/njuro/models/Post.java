@@ -52,4 +52,9 @@ public class Post {
         this.tripcode = tripcode;
         this.body = body;
     }
+
+    @PrePersist
+    private void setCreatedAt() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

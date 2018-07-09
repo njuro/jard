@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 /**
  * Service for CRUD operations with posts.
  *
@@ -52,7 +50,6 @@ public class PostService {
     }
 
     public Post savePost(Post post, Board board) {
-        post.setCreatedAt(LocalDateTime.now());
         post.setPostNumber(boardService.getPostCounter(board));
         boardService.increasePostCounter(board);
 

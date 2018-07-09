@@ -62,4 +62,9 @@ public class Thread {
         this.stickied = stickied;
         this.board = board;
     }
+
+    @PrePersist
+    private void setCreatedAt() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
