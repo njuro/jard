@@ -10,7 +10,7 @@
 </script>
 <div class="ui modal" id="thread-form-modal">
     <div class="content">
-        <!--/*@thymesVar id="threadForm" type="com.github.njuro.models.dto.ThreadForm"*/-->
+        <!--/*@thymesVar id="threadForm" type="com.github.njuro.jboard.models.dto.ThreadForm"*/-->
         <form class="ui form" th:object="${threadForm}" id="thread-form" method="post"
               th:action="@{/board/{board}/submit(board=${label})}" enctype="multipart/form-data">
             <h4 class="ui dividing header">Create new thread</h4>

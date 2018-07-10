@@ -7,7 +7,7 @@
 </head>
 <body>
 <main layout:fragment="content">
-    <!--/*@thymesVar id="registerForm" type="com.github.njuro.models.dto.RegisterForm"*/-->
+    <!--/*@thymesVar id="registerForm" type="com.github.njuro.jboard.models.dto.RegisterForm"*/-->
     <div class="ui grid">
         <form class="ui six wide column centered form" th:object="${registerForm}" th:action="@{/auth/register}"
               method="post"

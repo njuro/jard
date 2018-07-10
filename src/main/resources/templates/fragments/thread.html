@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{base}">
+      layout:decorate="~{base}"
+      th:with="label=${thread.getBoard().getLabel()}">
 <head>
-    <title th:text="${title}">Thread</title>
+    <title th:text="|/${label}/ - Thread|">Thread</title>
 </head>
 <body>
 <main layout:fragment="content">
@@ -12,8 +13,8 @@
 
     <th:block layout:fragment="thread(thread)">
         <div class="ui divided items thread">
-            <!--/*@thymesVar id="thread" type="com.github.njuro.models.Thread"*/-->
-            <!--/*@thymesVar id="post" type="com.github.njuro.models.Post"*/-->
+            <!--/*@thymesVar id="thread" type="com.github.njuro.jboard.models.Thread"*/-->
+            <!--/*@thymesVar id="post" type="com.github.njuro.jboard.models.Post"*/-->
             <div th:each="post, iter: ${thread.posts}" class="item"
                  th:classappend="${iter.first}? 'original-post' : 'post'"
                  th:object="${post}" th:inline="text">
@@ -31,10 +32,10 @@
                         <span class="date" th:text="*{#temporals.format(createdAt, 'dd.MM.yyyy HH:mm:ss')}"></span>
                         <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
                         <button class="circular mini ui basic icon button reply-form-btn"
-                                th:onclick="|showReplyForm(${thread.originalPost.postNumber})|">
+                                th:onclick="|showReplyForm(${thread.postNumber})|">
                             <i class="reply icon"></i>
                         </button>
-                        <form sec:authorize="hasRole(T(com.github.njuro.models.enums.UserRole).MODERATOR.getAuthority())"
+                        <form sec:authorize="hasRole(T(com.github.njuro.jboard.models.enums.UserRole).MODERATOR.getAuthority())"
                               style="display: inline" th:if="${iter.first}" method="post"
                               th:action="@{/board/{label}/{threadId}/sticky(label=${thread.board.label},threadId=*{postNumber})}">
                             <button class="circular mini ui basic icon button">
@@ -42,7 +43,7 @@
                                    th:classappend="${thread.stickied} ? 'vertically flipped'"></i>
                             </button>
                         </form>
-                        <form sec:authorize="hasRole(T(com.github.njuro.models.enums.UserRole).JANITOR.getAuthority())"
+                        <form sec:authorize="hasRole(T(com.github.njuro.jboard.models.enums.UserRole).JANITOR.getAuthority())"
                               style="display: inline" th:if="${iter.first}" method="post"
                               th:action="@{/board/{label}/{threadId}/lock(label=${thread.board.label},threadId=*{postNumber})}">
                             <button class="circular mini ui basic icon button">
@@ -50,9 +51,9 @@
                                    th:classappend="${thread.locked} ? 'open'"></i>
                             </button>
                         </form>
-                        <i th:if="${thread.stickied}"
+                        <i th:if="${iter.first and thread.stickied}"
                            class="thumbtack icon"></i>
-                        <i th:if="${thread.locked}"
+                        <i th:if="${iter.first and thread.locked}"
                            class="lock icon"></i>
                     </div>
                     <div class="body" th:text="*{body}"></div>
@@ -60,6 +61,6 @@
             </div>
         </div>
     </th:block>
-    </main>
+</main>
 </body>
 </html>

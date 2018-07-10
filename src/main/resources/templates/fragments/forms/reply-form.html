@@ -10,7 +10,7 @@
 </script>
 <div class="ui modal" id="reply-form-modal">
     <div class="content">
-        <!--/*@thymesVar id="postForm" type="com.github.njuro.models.PostForm"*/-->
+        <!--/*@thymesVar id="postForm" type="com.github.njuro.jboard.models.PostForm"*/-->
         <form class="ui form" th:object="${postForm}" id="reply-form" method="post"
               th:data-board="@{/board/{board}/(board=${label})}" th:action="@{/}" enctype="multipart/form-data">
             <h4 class="ui dividing header">Reply to thread</h4>
