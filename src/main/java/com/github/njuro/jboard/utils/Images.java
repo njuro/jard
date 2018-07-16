@@ -69,6 +69,10 @@ public class Images {
             double factor = Math.min(IMAGE_MAX_THUMB_WIDTH / att.getWidth(), IMAGE_MAX_THUMB_HEIGHT / att.getHeight());
             att.setThumbWidth(((int) Math.ceil(att.getWidth() * factor)) + 1);
             att.setThumbHeight(((int) Math.ceil(att.getHeight() * factor)) + 1);
+        } else {
+            // thumbnail dimensions are the same as real dimensions
+            att.setThumbHeight(att.getHeight());
+            att.setThumbWidth(att.getWidth());
         }
     }
 
