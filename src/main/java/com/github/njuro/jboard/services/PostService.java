@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.services;
 
+import com.github.njuro.jboard.exceptions.PostNotFoundException;
 import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Repository
 interface PostRepository extends JpaRepository<Post, Long> {
+    Optional<Post> findByThreadBoardLabelAndPostNumber(String label, Long postNumber);
 }
 
 /**
@@ -36,6 +40,19 @@ public class PostService {
         this.boardService = boardService;
         this.attachmentService = attachmentService;
         this.postRepository = postRepository;
+    }
+
+    /**
+     * Resolves post
+     *
+     * @param boardLabel - label of board where this post was made
+     * @param postNumber - post number
+     * @return resolved post
+     * @throws PostNotFoundException when post was not found
+     */
+    public Post resolvePost(String boardLabel, Long postNumber) {
+        return postRepository.findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
+                .orElseThrow(PostNotFoundException::new);
     }
 
     /**
@@ -79,5 +96,14 @@ public class PostService {
      */
     public Post updatePost(Post post) {
         return postRepository.save(post);
+    }
+
+    /**
+     * Deletes post from database
+     *
+     * @param post to delete
+     */
+    public void deletePost(Post post) {
+        postRepository.delete(post);
     }
 }

@@ -136,5 +136,24 @@ public class ThreadController {
         return "redirect:/board/" + thread.getBoard().getLabel();
     }
 
+    /**
+     * Deletes post. If the post is original post, whole thread is deleted.
+     */
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
+    @PostMapping("/{threadNo}/delete/{postNo}")
+    public String deletePost(Thread thread, Post post) {
+        if (thread.getOriginalPost().equals(post)) {
+            // delete whole thread
+            threadService.deleteThread(thread);
+            log.info("Deleted thread " + thread.getPostNumber());
+        } else {
+            // delete post
+            postService.deletePost(post);
+            log.info("Deleted post " + post.getPostNumber());
+        }
+
+        return "redirect:/board/" + thread.getBoard().getLabel();
+    }
+
 
 }

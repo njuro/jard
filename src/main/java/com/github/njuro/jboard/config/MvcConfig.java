@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.config;
 
 import com.github.njuro.jboard.controllers.resolvers.BoardResolver;
+import com.github.njuro.jboard.controllers.resolvers.PostResolver;
 import com.github.njuro.jboard.controllers.resolvers.ThreadResolver;
 import com.github.njuro.jboard.helpers.Constants;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +26,12 @@ public class MvcConfig implements WebMvcConfigurer {
 
     private final BoardResolver boardResolver;
     private final ThreadResolver threadResolver;
+    private final PostResolver postResolver;
 
-    public MvcConfig(BoardResolver boardResolver, ThreadResolver threadResolver) {
+    public MvcConfig(BoardResolver boardResolver, ThreadResolver threadResolver, PostResolver postResolver) {
         this.boardResolver = boardResolver;
         this.threadResolver = threadResolver;
+        this.postResolver = postResolver;
     }
 
 
@@ -42,5 +45,6 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(boardResolver);
         resolvers.add(threadResolver);
+        resolvers.add(postResolver);
     }
 }

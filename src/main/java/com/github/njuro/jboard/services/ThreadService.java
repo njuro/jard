@@ -110,5 +110,13 @@ public class ThreadService {
         return threadRepository.save(thread);
     }
 
+    /**
+     * Deletes thread from database
+     *
+     * @param thread to delete
+     */
+    public void deleteThread(Thread thread) {
+        threadRepository.delete(thread);
+    }
 
 }
