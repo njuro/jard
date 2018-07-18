@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 /**
  * Various constants for configuration purposes. May be replaced with properties in the future.
@@ -37,6 +38,14 @@ public class Constants {
     public static final int MAX_SUBJECT_LENGTH = 255;
     public static final int MAX_POST_LENGTH = 1000;
     public static final int MAX_ATTACHMENT_SIZE = 2_000_000;
+
+    /**
+     * Decorators
+     */
+
+    public static final Pattern GREENTEXT_PATTERN = Pattern.compile("^\\s*>.*$", Pattern.MULTILINE);
+    public static final String GREENTEXT_START = "<span class='greentext'>";
+    public static final String GREENTEXT_END = "</span>";
 
     /**
      * Users
