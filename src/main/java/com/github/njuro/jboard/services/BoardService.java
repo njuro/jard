@@ -69,8 +69,8 @@ public class BoardService {
      *
      * @param board to save
      */
-    public void saveBoard(Board board) {
-        boardRepository.save(board);
+    public Board saveBoard(Board board) {
+        return boardRepository.save(board);
     }
 
     /**

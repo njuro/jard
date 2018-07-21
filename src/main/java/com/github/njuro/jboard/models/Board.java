@@ -1,10 +1,7 @@
 package com.github.njuro.jboard.models;
 
 import com.github.njuro.jboard.models.enums.BoardType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +15,9 @@ import java.util.List;
 @Entity
 @Table(name = "boards")
 @Data
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Board {
 
