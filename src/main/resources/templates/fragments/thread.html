@@ -35,7 +35,7 @@
                         </span>
                         <span class="post-number" th:text="'No. ' + *{postNumber}"></span>
                         <button class="circular mini ui basic icon button reply-form-btn"
-                                th:onclick="|showReplyForm(${thread.postNumber})|">
+                                th:onclick="|showReplyForm(${thread.postNumber})|" th:unless="${thread.isLocked()}">
                             <i class="reply icon"></i>
                         </button>
                         <form sec:authorize="hasRole(T(com.github.njuro.jboard.models.enums.UserRole).MODERATOR.getAuthority())"
