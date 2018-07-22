@@ -47,6 +47,12 @@ public class Constants {
     public static final String GREENTEXT_START = "<span class='greentext'>";
     public static final String GREENTEXT_END = "</span>";
 
+    public static final Pattern CROSSLINK_PATTERN = Pattern.compile(">>(?:>/(?<board>.+)/)?(?<postNo>\\d+)");
+    public static final String CROSSLINK_START = "<a href=\"${linkHref}\" class=\"${linkClass}\">";
+    public static final String CROSSLINK_END = "</a>";
+    public static final String CROSSLINK_CLASS_VALID = "crosslink";
+    public static final String CROSSLINK_CLASS_INVALID = "deadlink";
+
     /**
      * Users
      */
