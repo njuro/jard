@@ -1,14 +1,16 @@
 package com.github.njuro.jboard.services;
 
+import com.github.njuro.jboard.config.TestConfiguration;
 import com.github.njuro.jboard.exceptions.BoardNotFoundException;
 import com.github.njuro.jboard.models.Board;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -22,8 +24,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@Import(BoardService.class)
-public class BoardServiceTest {
+@ContextConfiguration(classes = TestConfiguration.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BoardServiceTest {
 
     @MockBean
     private BoardRepository boardRepository;
@@ -31,19 +34,19 @@ public class BoardServiceTest {
     @Autowired
     private BoardService boardService;
 
-    private static Board boardN;
-    private static Board boardG;
-    private static Board boardInt;
+    private Board boardN;
+    private Board boardG;
+    private Board boardInt;
 
     @BeforeAll
-    public static void initBoard() {
+    void initBoards() {
         boardN = Board.builder().label("n").name("Automobiles").postCounter(11L).build();
         boardG = Board.builder().label("g").name("Technology").postCounter(25L).build();
         boardInt = Board.builder().label("int").name("International").postCounter(32L).build();
     }
 
     @Test
-    public void testResolveBoard() {
+    void testResolveBoard() {
         when(boardRepository.findByLabel("g")).thenReturn(Optional.of(boardG));
 
         Board result = boardService.resolveBoard("g");
@@ -56,7 +59,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void testGetAllBoards() {
+    void testGetAllBoards() {
         when(boardRepository.findAll()).thenReturn(Arrays.asList(boardG, boardInt, boardN));
 
         List<Board> result = boardService.getAllBoards();
