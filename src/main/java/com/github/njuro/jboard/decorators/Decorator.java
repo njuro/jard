@@ -1,12 +1,14 @@
 package com.github.njuro.jboard.decorators;
 
+import com.github.njuro.jboard.models.Post;
+
 /**
- * Interface for decorating text input based on defined rules.
+ * Interface for decorating post content based on defined rules.
  *
  * @author njuro
  */
 @FunctionalInterface
 public interface Decorator {
 
-    String decorate(String text);
+    void decorate(Post post);
 }
