@@ -4,6 +4,7 @@ import com.github.njuro.jboard.exceptions.PostNotFoundException;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -16,6 +17,7 @@ public class CrosslinkDecorator implements Decorator {
 
     private final PostService postService;
 
+    @Lazy
     @Autowired
     public CrosslinkDecorator(PostService postService) {
         this.postService = postService;

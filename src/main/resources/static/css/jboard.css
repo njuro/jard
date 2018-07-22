@@ -42,3 +42,27 @@ img.fullsize {
     width: 100% !important;
     height: 100% !important;
 }
+
+a.crosslink {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    color: red;
+}
+
+a.deadlink {
+    text-decoration: line-through;
+    cursor: pointer;
+}
+
+span.greentext {
+    color: green;
+}
+
+span.spoiler {
+    background-color: black;
+    color: black;
+}
+
+span.spoiler:hover {
+    color: white;
+}

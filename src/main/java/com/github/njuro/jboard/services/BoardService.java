@@ -33,7 +33,7 @@ interface BoardRepository extends JpaRepository<Board, Long> {
  * @author njuro
  */
 @Service
-@Transactional
+@Transactional(noRollbackFor = BoardNotFoundException.class)
 public class BoardService {
 
     private final BoardRepository boardRepository;

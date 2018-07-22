@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.services;
 
+import com.github.njuro.jboard.decorators.Decorator;
 import com.github.njuro.jboard.exceptions.PostNotFoundException;
 import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
@@ -11,7 +12,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,7 +29,7 @@ interface PostRepository extends JpaRepository<Post, Long> {
  * @author njuro
  */
 @Service
-@Transactional
+@Transactional(noRollbackFor = PostNotFoundException.class)
 public class PostService {
 
     private final BoardService boardService;
@@ -35,11 +38,14 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    private final List<Decorator> decorators;
+
     @Autowired
-    public PostService(BoardService boardService, AttachmentService attachmentService, PostRepository postRepository) {
+    public PostService(BoardService boardService, AttachmentService attachmentService, PostRepository postRepository, List<Decorator> decorators) {
         this.boardService = boardService;
         this.attachmentService = attachmentService;
         this.postRepository = postRepository;
+        this.decorators = decorators;
     }
 
     /**
@@ -75,7 +81,7 @@ public class PostService {
     }
 
     /**
-     * Saves post into database and increases its board's post counter
+     * Parses post's content with decorator, increases its board's post counter and saves it into database
      *
      * @param post  to save
      * @param board where this post was made
@@ -84,6 +90,16 @@ public class PostService {
     public Post savePost(Post post, Board board) {
         post.setPostNumber(boardService.getPostCounter(board));
         boardService.increasePostCounter(board);
+
+        post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
+
+        for (Decorator decorator : decorators) {
+            decorator.decorate(post);
+        }
+
+
+        post.setBody(post.getBody().replace("\n", "<br/>"));
+
 
         return postRepository.save(post);
     }

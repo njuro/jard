@@ -29,7 +29,7 @@ interface ThreadRepository extends JpaRepository<Thread, Long> {
  * @author njuro
  */
 @Service
-@Transactional
+@Transactional(noRollbackFor = ThreadNotFoundException.class)
 public class ThreadService {
 
     private final ThreadRepository threadRepository;
