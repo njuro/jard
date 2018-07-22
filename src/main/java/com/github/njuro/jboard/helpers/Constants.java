@@ -44,7 +44,7 @@ public class Constants {
      */
 
     public static final Pattern GREENTEXT_PATTERN = Pattern.compile("^\\s*>.*$", Pattern.MULTILINE);
-    public static final String GREENTEXT_START = "<span class='greentext'>";
+    public static final String GREENTEXT_START = "<span class=\"greentext\">";
     public static final String GREENTEXT_END = "</span>";
 
     public static final Pattern CROSSLINK_PATTERN = Pattern.compile(">>(?:>/(?<board>.+)/)?(?<postNo>\\d+)");
@@ -52,6 +52,11 @@ public class Constants {
     public static final String CROSSLINK_END = "</a>";
     public static final String CROSSLINK_CLASS_VALID = "crosslink";
     public static final String CROSSLINK_CLASS_INVALID = "deadlink";
+
+    // TODO accept [/spoiler] as end tag
+    public static final Pattern SPOILER_PATTERN = Pattern.compile("(\\[spoiler\\]|\\*\\*)(?<content>\\w+)\\1", Pattern.CASE_INSENSITIVE);
+    public static final String SPOILER_START = "<span class=\"spoiler\">";
+    public static final String SPOILER_END = "</span>";
 
     /**
      * Users
