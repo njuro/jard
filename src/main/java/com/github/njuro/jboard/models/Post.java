@@ -1,9 +1,6 @@
 package com.github.njuro.jboard.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "posts")
 @Data
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Post {
 
@@ -41,19 +40,13 @@ public class Post {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
-    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @EqualsAndHashCode.Include
     @ToString.Exclude
     private Thread thread;
 
     @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Attachment attachment;
-
-    public Post(String name, String tripcode, String body) {
-        this.name = name;
-        this.tripcode = tripcode;
-        this.body = body;
-    }
 
     @PrePersist
     private void setCreatedAt() {

@@ -1,9 +1,6 @@
 package com.github.njuro.jboard.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,7 +14,9 @@ import java.util.List;
 @Entity
 @Table(name = "threads")
 @Data
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Thread {
 
@@ -49,18 +48,6 @@ public class Thread {
     @OneToOne(targetEntity = Post.class, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Include
     private Post originalPost;
-
-    public Thread(String subject, Board board) {
-        this.subject = subject;
-        this.board = board;
-    }
-
-    public Thread(String subject, boolean locked, boolean stickied, Board board) {
-        this.subject = subject;
-        this.locked = locked;
-        this.stickied = stickied;
-        this.board = board;
-    }
 
     @PrePersist
     private void setCreatedAt() {
