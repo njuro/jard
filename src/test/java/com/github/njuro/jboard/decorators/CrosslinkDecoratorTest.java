@@ -63,7 +63,7 @@ class CrosslinkDecoratorTest {
     void testValidCrossBoardLink() {
         decoratePost(postR, "Some text  >>>/fit/1");
         decoratePost(postF, ">>>/r/4 some text");
-        assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/fit/");
+        assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/fit/1");
         assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/r/2#4");
     }
 
@@ -71,12 +71,20 @@ class CrosslinkDecoratorTest {
     void testInvalidCrossBoardLink() {
         decoratePost(postF, "This points to >>>/r/42");
         decoratePost(postR, "And this to >>>/a/1");
+        assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
         assertThat(postF.getBody()).contains(CROSSLINK_CLASS_INVALID);
+    }
+
+    @Test
+    void testPureCrossBoardLink() {
+        decoratePost(postF, "This is pure valid link to >>>/fit/  ");
+        decoratePost(postR, "And this is invalid link to >>>/q/");
+        assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/fit");
         assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {">> 1", ">>/r/1", ">>> /fit/1", ">>abc", ">>>abc", ">>>//123"})
+    @ValueSource(strings = {">>", " >>>", ">> 1", ">>/r/1", ">>> /fit/1", ">>abc", ">>>abc", ">>>//123", ">>/fit/"})
     void testInvalidCrosslinkPattern(String input) {
         decoratePost(postR, input);
         assertThat(postR.getBody()).doesNotContain(CROSSLINK_CLASS_VALID, CROSSLINK_CLASS_INVALID);

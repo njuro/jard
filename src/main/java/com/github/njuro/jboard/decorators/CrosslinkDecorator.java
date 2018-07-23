@@ -1,7 +1,9 @@
 package com.github.njuro.jboard.decorators;
 
+import com.github.njuro.jboard.exceptions.BoardNotFoundException;
 import com.github.njuro.jboard.exceptions.PostNotFoundException;
 import com.github.njuro.jboard.models.Post;
+import com.github.njuro.jboard.services.BoardService;
 import com.github.njuro.jboard.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,11 +17,13 @@ import static com.github.njuro.jboard.helpers.Constants.*;
 @Component
 public class CrosslinkDecorator implements Decorator {
 
+    private final BoardService boardService;
     private final PostService postService;
 
     @Lazy
     @Autowired
-    public CrosslinkDecorator(PostService postService) {
+    public CrosslinkDecorator(BoardService boardService, PostService postService) {
+        this.boardService = boardService;
         this.postService = postService;
     }
 
@@ -31,20 +35,26 @@ public class CrosslinkDecorator implements Decorator {
 
         while (matcher.find()) {
             String boardLabel = Optional.ofNullable(matcher.group("board")).orElse(post.getThread().getBoard().getLabel());
-            long postNumber = Long.valueOf(matcher.group("postNo"));
+            String postNumber = matcher.group("postNo");
 
-            Post linkedPost = null;
+            String linkHref = "/board/" + boardLabel;
             boolean valid = true;
 
             try {
-                linkedPost = postService.resolvePost(boardLabel, postNumber);
-            } catch (PostNotFoundException e) {
+                if (postNumber == null || postNumber.isEmpty()) {
+                    boardService.resolveBoard(boardLabel);
+                } else {
+                    Post linkedPost = postService.resolvePost(boardLabel, Long.valueOf(postNumber));
+                    linkHref += "/" + linkedPost.getThread().getPostNumber() + "#" + linkedPost.getPostNumber();
+                }
+            } catch (BoardNotFoundException | PostNotFoundException e) {
                 valid = false;
             }
 
             String linkClass = valid ? CROSSLINK_CLASS_VALID : CROSSLINK_CLASS_INVALID;
-            String linkHref = valid ? "/board/" + boardLabel + "/" + linkedPost.getThread().getPostNumber() + "#" + linkedPost.getPostNumber() : "#";
-            String crosslinkStart = CROSSLINK_START.replace("${linkHref}", linkHref).replace("${linkClass}", linkClass);
+            String crosslinkStart = CROSSLINK_START
+                    .replace("${linkHref}", valid ? linkHref : "#")
+                    .replace("${linkClass}", linkClass);
 
             matcher.appendReplacement(sb, crosslinkStart + "$0" + CROSSLINK_END);
         }
