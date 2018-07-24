@@ -66,3 +66,9 @@ span.spoiler {
 span.spoiler:hover {
     color: white;
 }
+
+div.code {
+    background-color: lightgray;
+    padding: 10px;
+    font-family: monospace;
+}

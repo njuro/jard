@@ -54,9 +54,13 @@ public class Constants {
     public static final String CROSSLINK_CLASS_INVALID = "deadlink";
 
     // TODO accept [/spoiler] as end tag
-    public static final Pattern SPOILER_PATTERN = Pattern.compile("(\\[spoiler\\]|\\*\\*)(?<content>.*\\w+.*)\\1", Pattern.CASE_INSENSITIVE);
+    public static final Pattern SPOILER_PATTERN = Pattern.compile("(\\[spoiler\\]|\\*\\*)(?<content>.*?\\w+.*?)\\1", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     public static final String SPOILER_START = "<span class=\"spoiler\">";
     public static final String SPOILER_END = "</span>";
+
+    public static final Pattern CODE_PATTERN = Pattern.compile("\\[code\\](?<content>.*?\\w+.*?)\\[/code\\]", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    public static final String CODE_START = "<div class=\"code\">";
+    public static final String CODE_END = "</div>";
 
     /**
      * Users

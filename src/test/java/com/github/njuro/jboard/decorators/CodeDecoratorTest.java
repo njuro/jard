@@ -7,34 +7,34 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static com.github.njuro.jboard.helpers.Constants.SPOILER_END;
-import static com.github.njuro.jboard.helpers.Constants.SPOILER_START;
+import static com.github.njuro.jboard.helpers.Constants.CODE_END;
+import static com.github.njuro.jboard.helpers.Constants.CODE_START;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SpoilerDecoratorTest {
+class CodeDecoratorTest {
 
-    private SpoilerDecorator decorator;
+    private CodeDecorator decorator;
     private Post post;
 
     @BeforeAll
     void initAll() {
-        decorator = new SpoilerDecorator();
+        decorator = new CodeDecorator();
         post = Post.builder().build();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"[spoiler]text[spoiler]", "**text**", "[SPOILER]text[spoiler]", "**multiple** \n [spoiler]\nspoilers\n[spoiler]"})
-    void testValidSpoiler(String input) {
+    @ValueSource(strings = {"[code]text[/code]", "[CODE]text[/code]", "[code]\nmultiple\n[/code] \n [code]code blocks[/code]"})
+    void testValidCodeBlock(String input) {
         decoratePost(input);
-        assertThat(post.getBody()).containsSubsequence(SPOILER_START, SPOILER_END);
+        assertThat(post.getBody()).containsSubsequence(CODE_START, CODE_END);
     }
 
 
     @ParameterizedTest
-    @ValueSource(strings = {"[spoiler]text", "**text", "*****", "[spoiler][spoiler]", "**text[spoiler]", "**  **", "text"})
-    void testInvalidSpoiler(String input) {
+    @ValueSource(strings = {"[code]text", "[code]text[code]", "test[/code]", "[code] [/code]", "text"})
+    void testInvalidCodeBlock(String input) {
         decoratePost(input);
         assertThat(post.getBody()).isEqualTo(input);
     }
