@@ -1,10 +1,7 @@
 package com.github.njuro.jboard.models;
 
 import com.github.njuro.jboard.models.enums.UserRole;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -20,6 +17,10 @@ import java.util.Collections;
  */
 @Entity
 @Table(name = "users")
+@Data
+@Builder
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class User implements UserDetails {
@@ -89,16 +90,6 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -111,10 +102,5 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 }

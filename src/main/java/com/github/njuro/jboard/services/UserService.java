@@ -63,12 +63,13 @@ public class UserService implements UserDetailsService {
      * @return created user
      */
     public User createUser(RegisterForm registerForm, PasswordEncoder passwordEncoder) {
-        User user = new User();
-        user.setUsername(registerForm.getUsername());
-        user.setPassword(passwordEncoder.encode(registerForm.getPassword()));
-        user.setEmail(registerForm.getEmail());
-        user.setRole(UserRole.USER);
-        user.setEnabled(true);
+        User user = User.builder()
+                .username(registerForm.getUsername())
+                .password(passwordEncoder.encode(registerForm.getPassword()))
+                .email(registerForm.getEmail())
+                .role(UserRole.USER)
+                .enabled(true)
+                .build();
 
         return user;
     }
