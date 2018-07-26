@@ -15,8 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.github.njuro.jboard.helpers.Constants.CROSSLINK_CLASS_INVALID;
-import static com.github.njuro.jboard.helpers.Constants.CROSSLINK_CLASS_VALID;
+import static com.github.njuro.jboard.helpers.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -55,8 +54,9 @@ class CrosslinkDecoratorTest {
 
     @Test
     void testMultipleCrossThreadLinks() {
-        decoratePost(postR, "Some text >>3 more text\n >>2 even more text");
-        assertThat(postR.getBody()).containsSubsequence("/board/r/2#3", CROSSLINK_CLASS_VALID, "/board/r/2#2", CROSSLINK_CLASS_VALID);
+        decoratePost(postR, "To different thread >>1 more text\n >>2 and to OP");
+        assertThat(postR.getBody()).containsSubsequence("/board/r/1#1", CROSSLINK_CLASS_VALID, CROSSLINK_DIFF_THREAD,
+                "/board/r/2#2", CROSSLINK_CLASS_VALID, CROSSLINK_OP);
     }
 
     @Test

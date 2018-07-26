@@ -3,6 +3,7 @@ package com.github.njuro.jboard.models;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,8 +46,8 @@ public class Thread {
     @ToString.Exclude
     private List<Post> posts;
 
-    @OneToOne(targetEntity = Post.class, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Include
+    @OneToOne(targetEntity = Post.class, fetch = FetchType.EAGER)
+    @NotNull
     private Post originalPost;
 
     @PrePersist
@@ -54,6 +55,7 @@ public class Thread {
         this.createdAt = LocalDateTime.now();
     }
 
+    @EqualsAndHashCode.Include
     public Long getPostNumber() {
         return originalPost != null ? originalPost.getPostNumber() : null;
     }

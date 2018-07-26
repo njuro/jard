@@ -39,12 +39,17 @@ public class CrosslinkDecorator implements Decorator {
 
             String linkHref = "/board/" + boardLabel;
             boolean valid = true;
+            String special = "";
 
             try {
                 if (postNumber == null || postNumber.isEmpty()) {
                     boardService.resolveBoard(boardLabel);
                 } else {
                     Post linkedPost = postService.resolvePost(boardLabel, Long.valueOf(postNumber));
+                    if (linkedPost.equals(post.getThread().getOriginalPost()))
+                        special += CROSSLINK_OP;
+                    if (!linkedPost.getThread().equals(post.getThread()))
+                        special += CROSSLINK_DIFF_THREAD;
                     linkHref += "/" + linkedPost.getThread().getPostNumber() + "#" + linkedPost.getPostNumber();
                 }
             } catch (BoardNotFoundException | PostNotFoundException e) {
@@ -56,7 +61,7 @@ public class CrosslinkDecorator implements Decorator {
                     .replace("${linkHref}", valid ? linkHref : "#")
                     .replace("${linkClass}", linkClass);
 
-            matcher.appendReplacement(sb, crosslinkStart + "$0" + CROSSLINK_END);
+            matcher.appendReplacement(sb, crosslinkStart + "$0" + " " + special + CROSSLINK_END);
         }
 
         matcher.appendTail(sb);
