@@ -1,29 +1,20 @@
 package com.github.njuro.jboard.decorators;
 
-import com.github.njuro.jboard.config.TestConfiguration;
+import com.github.njuro.jboard.MockDatabaseTest;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.services.ThreadService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.njuro.jboard.helpers.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@DataJpaTest
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfiguration.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CrosslinkDecoratorTest {
+class CrosslinkDecoratorTest extends MockDatabaseTest {
 
     @Autowired
     private CrosslinkDecorator decorator;
@@ -34,7 +25,7 @@ class CrosslinkDecoratorTest {
     private Post postR;
     private Post postF;
 
-    @BeforeAll
+    @BeforeEach
     void initPosts() {
         postR = Post.builder().thread(threadService.resolveThread("r", 2L)).build();
         postF = Post.builder().thread(threadService.resolveThread("fit", 1L)).build();
@@ -56,7 +47,7 @@ class CrosslinkDecoratorTest {
     void testMultipleCrossThreadLinks() {
         decoratePost(postR, "To different thread >>1 more text\n >>2 and to OP");
         assertThat(postR.getBody()).containsSubsequence("/board/r/1#1", CROSSLINK_CLASS_VALID, CROSSLINK_DIFF_THREAD,
-                "/board/r/2#2", CROSSLINK_CLASS_VALID, CROSSLINK_OP);
+                "/board/r/1#2", CROSSLINK_CLASS_VALID, CROSSLINK_OP);
     }
 
     @Test

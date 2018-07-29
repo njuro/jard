@@ -1,41 +1,32 @@
 package com.github.njuro.jboard.services;
 
+import com.github.njuro.jboard.MockDatabaseTest;
 import com.github.njuro.jboard.models.Board;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-class BoardRepositoryTest {
+class BoardRepositoryTest extends MockDatabaseTest {
 
     @Autowired
     private BoardRepository boardRepository;
 
-    private Board boardG;
-
-    @BeforeEach
-    void setupBoard() {
-        boardG = Board.builder().label("g").name("Technology").postCounter(25L).build();
-        boardG = boardRepository.save(boardG);
-    }
-
     @Test
     void testFindByLabel() {
-        assertThat(boardRepository.findByLabel("g").get()).isEqualToIgnoringNullFields(boardG);
+        for (Board board : boardRepository.findAll()) {
+            System.out.println(board.getLabel());
+        }
+        assertThat(boardRepository.findByLabel("fit")).hasValueSatisfying(board -> board.getName().equals("Fitness"));
         assertThat(boardRepository.findByLabel("b")).isNotPresent();
     }
 
     @Test
     void testPostCounter() {
-        long postCounterBefore = boardG.getPostCounter();
-        boardRepository.increasePostNumber(boardG.getLabel());
-        long postCounterAfter = boardRepository.getPostCounter(boardG.getLabel());
+        Board board = boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
+        long postCounterBefore = board.getPostCounter();
+        boardRepository.increasePostNumber(board.getLabel());
+        long postCounterAfter = boardRepository.getPostCounter(board.getLabel());
 
         assertThat(postCounterAfter).isEqualTo(postCounterBefore + 1);
     }

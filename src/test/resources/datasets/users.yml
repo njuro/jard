@@ -1,0 +1,11 @@
+users:
+- email: "some@email.com"
+  enabled: true
+  password: "password"
+  role: "ADMIN"
+  username: "admin"
+- email: "another@email.com"
+  enabled: true
+  password: "password2"
+  role: "MODERATOR"
+  username: "moderator"
