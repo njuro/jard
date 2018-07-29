@@ -14,9 +14,6 @@ class BoardRepositoryTest extends MockDatabaseTest {
 
     @Test
     void testFindByLabel() {
-        for (Board board : boardRepository.findAll()) {
-            System.out.println(board.getLabel());
-        }
         assertThat(boardRepository.findByLabel("fit")).hasValueSatisfying(board -> board.getName().equals("Fitness"));
         assertThat(boardRepository.findByLabel("b")).isNotPresent();
     }
