@@ -24,6 +24,10 @@ public class Tripcodes {
      */
     @SneakyThrows(NoSuchAlgorithmException.class)
     public String generateTripcode(String password) {
+        if (password.isEmpty()) {
+            return null;
+        }
+
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(password.getBytes());
         byte byteData[] = md.digest();
