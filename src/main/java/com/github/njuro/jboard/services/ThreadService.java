@@ -5,23 +5,13 @@ import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.ThreadForm;
+import com.github.njuro.jboard.repositories.ThreadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-
-@Repository
-interface ThreadRepository extends JpaRepository<Thread, Long> {
-    List<Thread> findByBoard(Board board);
-
-    Optional<Thread> findByBoardLabelAndOriginalPostPostNumber(String label, Long postNumber);
-
-}
 
 /**
  * Service methods for manipulating {@link Thread threads}

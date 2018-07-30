@@ -1,17 +1,12 @@
 package com.github.njuro.jboard.services;
 
-import com.github.njuro.jboard.config.TestConfiguration;
 import com.github.njuro.jboard.exceptions.BoardNotFoundException;
 import com.github.njuro.jboard.models.Board;
-import org.junit.jupiter.api.BeforeAll;
+import com.github.njuro.jboard.repositories.BoardRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,11 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-@ContextConfiguration(classes = TestConfiguration.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BoardServiceTest {
+class BoardServiceTest extends ServiceTest {
 
     @MockBean
     private BoardRepository boardRepository;
@@ -38,7 +29,7 @@ class BoardServiceTest {
     private Board boardG;
     private Board boardInt;
 
-    @BeforeAll
+    @BeforeEach
     void initBoards() {
         boardN = Board.builder().label("n").name("Automobiles").postCounter(11L).build();
         boardG = Board.builder().label("g").name("Technology").postCounter(25L).build();

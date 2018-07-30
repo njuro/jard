@@ -1,13 +1,12 @@
-package com.github.njuro.jboard.services;
+package com.github.njuro.jboard.repositories;
 
-import com.github.njuro.jboard.MockDatabaseTest;
 import com.github.njuro.jboard.models.Board;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class BoardRepositoryTest extends MockDatabaseTest {
+class BoardRepositoryTest extends RepositoryTest {
 
     @Autowired
     private BoardRepository boardRepository;

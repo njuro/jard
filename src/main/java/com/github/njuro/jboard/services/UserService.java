@@ -4,24 +4,14 @@ package com.github.njuro.jboard.services;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.RegisterForm;
 import com.github.njuro.jboard.models.enums.UserRole;
+import com.github.njuro.jboard.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-
-@Repository
-interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsernameIgnoreCase(String username);
-
-    User findByEmailIgnoreCase(String email);
-}
 
 /**
  * Service methods for manipulating {@link User users}

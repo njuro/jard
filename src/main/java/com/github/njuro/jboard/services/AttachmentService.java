@@ -3,11 +3,10 @@ package com.github.njuro.jboard.services;
 import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
+import com.github.njuro.jboard.repositories.AttachmentRepository;
 import com.github.njuro.jboard.utils.Images;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +16,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-
-@Repository
-interface AttachmentRepository extends JpaRepository<Attachment, Long> {
-}
 
 /**
  * Service methods for manipulating {@link Attachment file attachments}

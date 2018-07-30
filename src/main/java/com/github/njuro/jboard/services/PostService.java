@@ -6,22 +6,15 @@ import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.dto.PostForm;
+import com.github.njuro.jboard.repositories.PostRepository;
 import com.github.njuro.jboard.utils.Tripcodes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
-import java.util.Optional;
 
-
-@Repository
-interface PostRepository extends JpaRepository<Post, Long> {
-    Optional<Post> findByThreadBoardLabelAndPostNumber(String label, Long postNumber);
-}
 
 /**
  * Service methods for manipulating {@link Post posts}

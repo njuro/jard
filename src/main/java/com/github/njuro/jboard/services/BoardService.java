@@ -2,30 +2,13 @@ package com.github.njuro.jboard.services;
 
 import com.github.njuro.jboard.exceptions.BoardNotFoundException;
 import com.github.njuro.jboard.models.Board;
+import com.github.njuro.jboard.repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-@Repository
-interface BoardRepository extends JpaRepository<Board, Long> {
-    Optional<Board> findByLabel(String label);
-
-    @Query("select b.postCounter from Board b where b.label = :label")
-    Long getPostCounter(@Param("label") String label);
-
-    @Modifying
-    @Query("update Board set postCounter = postCounter + 1 where label = :label")
-    void increasePostNumber(@Param("label") String label);
-}
 
 /**
  * Service methods for manipulating {@link Board boards}
