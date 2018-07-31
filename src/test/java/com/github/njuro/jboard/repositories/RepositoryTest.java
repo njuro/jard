@@ -7,5 +7,5 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-public abstract class RepositoryTest extends MockDatabaseTest {
+abstract class RepositoryTest extends MockDatabaseTest {
 }
