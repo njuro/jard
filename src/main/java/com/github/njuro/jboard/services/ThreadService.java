@@ -54,7 +54,7 @@ public class ThreadService {
      * @return list of all threads from board
      */
     public List<Thread> getSortedThreadsFromBoard(Board board) {
-        List<Thread> threads = threadRepository.findByBoard(board);
+        List<Thread> threads = threadRepository.findByBoardLabel(board.getLabel());
 
         threads.sort(Comparator.comparing(Thread::isStickied)
                 .thenComparing(thread -> thread.getPosts().get(thread.getPosts().size() - 1).getCreatedAt()).reversed());

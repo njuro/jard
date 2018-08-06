@@ -1,10 +1,10 @@
 users:
-- email: "some@email.com"
+- email: "admin@jboard"
   enabled: true
   password: "password"
   role: "ADMIN"
   username: "admin"
-- email: "another@email.com"
+- email: "moderator@jboard"
   enabled: true
   password: "password2"
   role: "MODERATOR"
