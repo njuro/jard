@@ -1,8 +1,5 @@
 package com.github.njuro.jboard.decorators;
 
-import com.github.njuro.jboard.models.Post;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -10,16 +7,11 @@ import static com.github.njuro.jboard.helpers.Constants.GREENTEXT_END;
 import static com.github.njuro.jboard.helpers.Constants.GREENTEXT_START;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
-class GreentextDecoratorTest {
+class GreentextDecoratorTest extends DecoratorTest {
 
-    private GreentextDecorator decorator;
-    private Post post;
-
-    @BeforeEach
-    void initAll() {
-        decorator = new GreentextDecorator();
-        post = Post.builder().build();
+    @Override
+    protected Decorator initDecorator() {
+        return new GreentextDecorator();
     }
 
     @ParameterizedTest
@@ -38,9 +30,5 @@ class GreentextDecoratorTest {
         assertThat(post.getBody()).isEqualTo(input);
     }
 
-    private void decoratePost(String input) {
-        post.setBody(input);
-        decorator.decorate(post);
-        log.info(input + " -> " + post.getBody());
-    }
+
 }

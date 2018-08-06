@@ -1,8 +1,5 @@
 package com.github.njuro.jboard.decorators;
 
-import com.github.njuro.jboard.models.Post;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -10,16 +7,11 @@ import static com.github.njuro.jboard.helpers.Constants.SPOILER_END;
 import static com.github.njuro.jboard.helpers.Constants.SPOILER_START;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
-class SpoilerDecoratorTest {
+class SpoilerDecoratorTest extends DecoratorTest {
 
-    private SpoilerDecorator decorator;
-    private Post post;
-
-    @BeforeEach
-    void initAll() {
-        decorator = new SpoilerDecorator();
-        post = Post.builder().build();
+    @Override
+    protected Decorator initDecorator() {
+        return new SpoilerDecorator();
     }
 
     @ParameterizedTest
@@ -35,11 +27,5 @@ class SpoilerDecoratorTest {
     void testInvalidSpoiler(String input) {
         decoratePost(input);
         assertThat(post.getBody()).isEqualTo(input);
-    }
-
-    private void decoratePost(String input) {
-        post.setBody(input);
-        decorator.decorate(post);
-        log.info(input + " -> " + post.getBody());
     }
 }
