@@ -1,6 +1,6 @@
 package com.github.njuro.jboard.decorators;
 
-import com.github.njuro.jboard.MockDatabaseTest;
+import com.github.njuro.jboard.database.UseMockDatabase;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.services.ThreadService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +20,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
+@UseMockDatabase
 @Slf4j
-class CrosslinkDecoratorTest extends MockDatabaseTest {
+class CrosslinkDecoratorTest extends DecoratorTest {
 
     @Autowired
     private CrosslinkDecorator decorator;
@@ -31,6 +32,11 @@ class CrosslinkDecoratorTest extends MockDatabaseTest {
 
     private Post postR;
     private Post postF;
+
+    @Override
+    protected Decorator initDecorator() {
+        return decorator;
+    }
 
     @BeforeEach
     void initPosts() {
@@ -88,9 +94,4 @@ class CrosslinkDecoratorTest extends MockDatabaseTest {
         assertThat(postR.getBody()).doesNotContain(CROSSLINK_CLASS_VALID, CROSSLINK_CLASS_INVALID);
     }
 
-    private void decoratePost(Post post, String body) {
-        post.setBody(body);
-        decorator.decorate(post);
-        log.info(body + " -> " + post.getBody());
-    }
 }

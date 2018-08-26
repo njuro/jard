@@ -21,10 +21,13 @@ public abstract class DecoratorTest {
     protected abstract Decorator initDecorator();
 
 
-    protected void decoratePost(String input) {
-        post.setBody(input);
-        decorator.decorate(post);
-        log.info(input + " -> " + post.getBody());
+    protected void decoratePost(String body) {
+        decoratePost(post, body);
     }
 
+    protected void decoratePost(Post post, String body) {
+        post.setBody(body);
+        decorator.decorate(post);
+        log.info(body + " -> " + post.getBody());
+    }
 }

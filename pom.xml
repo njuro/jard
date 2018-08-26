@@ -127,7 +127,7 @@
         <dependency>
             <groupId>com.github.database-rider</groupId>
             <artifactId>rider-spring</artifactId>
-            <version>1.2.8</version>
+            <version>1.2.11</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
