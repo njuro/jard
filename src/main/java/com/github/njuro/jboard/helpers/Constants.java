@@ -73,5 +73,10 @@ public class Constants {
     public static final int MAX_USERNAME_LENGTH = 32;
     public static final int MIN_PASSWORD_LENGTH = 8;
 
+    /**
+     * Bans
+     */
+    public static final String EXPIRED_BANS_CHECK_PERIOD = "PT15M"; // 15 minutes
+    public static final String IP_PATTERN = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
 
 }

@@ -6,6 +6,7 @@ import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
 import com.github.njuro.jboard.models.enums.UserRole;
+import com.github.njuro.jboard.services.BanService;
 import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -37,10 +39,13 @@ public class ThreadController {
 
     private final ThreadService threadService;
 
+    private final BanService banService;
+
     @Autowired
-    public ThreadController(PostService postService, ThreadService threadService) {
+    public ThreadController(PostService postService, ThreadService threadService, BanService banService) {
         this.postService = postService;
         this.threadService = threadService;
+        this.banService = banService;
     }
 
     /**
@@ -49,7 +54,10 @@ public class ThreadController {
     @PostMapping("/submit")
     public String submitNewThread(Board board,
                                   @Valid @ModelAttribute(name = "threadForm") ThreadForm threadForm,
-                                  BindingResult result, RedirectAttributes redirectAttributes) {
+                                  BindingResult result, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        if (banService.hasActiveBan(request.getRemoteAddr())) {
+            result.reject("user.banned", "You are banned");
+        }
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.threadForm", result);
@@ -84,7 +92,11 @@ public class ThreadController {
     @PostMapping("/{threadNo}/reply")
     public String replyToThread(Board board, Thread thread,
                                 @Valid @ModelAttribute(name = "postForm") PostForm postForm,
-                                BindingResult result, RedirectAttributes redirectAttributes) {
+                                BindingResult result, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        if (banService.hasActiveBan(request.getRemoteAddr())) {
+            result.reject("user.banned", "You are banned");
+        }
 
         if (thread.isLocked()) {
             result.reject("thread.locked", "Thread is locked");

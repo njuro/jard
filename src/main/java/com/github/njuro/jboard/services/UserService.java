@@ -6,6 +6,7 @@ import com.github.njuro.jboard.models.dto.RegisterForm;
 import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -97,6 +98,21 @@ public class UserService implements UserDetailsService {
      */
     public boolean doesEmailExists(String email) {
         return getUserByEmail(email) != null;
+    }
+
+    /**
+     * Return current logged {@link User}
+     *
+     * @return Instance of {@link User} or {@code null}, if no user is logged in
+     */
+    public static User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!(principal instanceof User)) {
+            return null;
+        }
+
+        return (User) principal;
     }
 }
 
