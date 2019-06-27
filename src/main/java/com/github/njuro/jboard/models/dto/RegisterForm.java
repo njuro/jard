@@ -25,6 +25,8 @@ public class RegisterForm {
     @Email(message = "Invalid email")
     private String email;
 
+    private String registrationIp;
+
     @AssertTrue(message = "Passwords do not match")
     public boolean isPasswordMatching() {
         return password.equals(passwordRepeated);

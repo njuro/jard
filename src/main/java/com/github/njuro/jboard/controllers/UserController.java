@@ -1,11 +1,9 @@
 package com.github.njuro.jboard.controllers;
 
-import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.RegisterForm;
 import com.github.njuro.jboard.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +25,9 @@ public class UserController {
 
     private final UserService userService;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -62,12 +57,9 @@ public class UserController {
             log.debug("Creating user failed: {}", result.getAllErrors());
             return "redirect:/auth/register";
         }
+        registerForm.setRegistrationIp(request.getRemoteAddr());
 
-        User user = userService.createUser(registerForm, passwordEncoder);
-        user.setRegistrationIp(request.getRemoteAddr());
-        userService.saveUser(user);
-
-        log.debug("Created user {}", user);
+        userService.createUser(registerForm);
         return "redirect:/";
     }
 

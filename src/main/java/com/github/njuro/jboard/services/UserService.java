@@ -5,6 +5,7 @@ import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.RegisterForm;
 import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,13 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -46,23 +50,24 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Creates user from {@link RegisterForm}. Encrypts password with provided {@link PasswordEncoder}. Sets default
+     * Creates user from {@link RegisterForm}. Encrypts password with {@link PasswordEncoder}. Sets default
      * {@link UserRole} of user and enables it.
      *
      * @param registerForm    with user details
-     * @param passwordEncoder to be used for password encryption
      * @return created user
      */
-    public User createUser(RegisterForm registerForm, PasswordEncoder passwordEncoder) {
+    public User createUser(RegisterForm registerForm) {
         User user = User.builder()
                 .username(registerForm.getUsername())
                 .password(passwordEncoder.encode(registerForm.getPassword()))
                 .email(registerForm.getEmail())
+                .registrationIp(registerForm.getRegistrationIp())
                 .role(UserRole.USER)
                 .enabled(true)
                 .build();
 
-        return user;
+        //log.debug("Created user {}", user);
+        return saveUser(user);
     }
 
     /**
