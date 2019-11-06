@@ -36,7 +36,7 @@ public class BoardRestController {
     /**
      * Shows board specified by {board} path variable
      */
-    @GetMapping("/board/{board}")
+    @GetMapping("/boards/{board}")
     public Board showBoard(Board board) {
         return board;
     }

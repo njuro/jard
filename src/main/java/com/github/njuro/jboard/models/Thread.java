@@ -1,5 +1,7 @@
 package com.github.njuro.jboard.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +24,7 @@ public class Thread {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @Basic
@@ -44,6 +47,7 @@ public class Thread {
 
     @OneToOne(targetEntity = Post.class, fetch = FetchType.EAGER)
     @NotNull
+    @JsonIgnoreProperties("thread")
     private Post originalPost;
 
     @PrePersist

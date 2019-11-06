@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.models.enums.BoardType;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @NotNull
