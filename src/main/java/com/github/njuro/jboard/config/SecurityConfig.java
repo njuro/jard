@@ -6,6 +6,7 @@ import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -52,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler loginSuccessHandler;
 
     @Autowired
-    public SecurityConfig(UserService userService, AuthenticationSuccessHandler loginSuccessHandler) {
+    public SecurityConfig(@Lazy UserService userService, @Lazy AuthenticationSuccessHandler loginSuccessHandler) {
         this.userService = userService;
         this.loginSuccessHandler = loginSuccessHandler;
     }
