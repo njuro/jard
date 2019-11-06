@@ -9,6 +9,7 @@ import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.repositories.PostRepository;
 import com.github.njuro.jboard.utils.Tripcodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -27,6 +28,8 @@ public class PostService {
 
     private final BoardService boardService;
 
+    private final ThreadService threadService;
+
     private final AttachmentService attachmentService;
 
     private final PostRepository postRepository;
@@ -34,8 +37,9 @@ public class PostService {
     private final List<Decorator> decorators;
 
     @Autowired
-    public PostService(BoardService boardService, AttachmentService attachmentService, PostRepository postRepository, List<Decorator> decorators) {
+    public PostService(BoardService boardService, @Lazy ThreadService threadService, AttachmentService attachmentService, PostRepository postRepository, List<Decorator> decorators) {
         this.boardService = boardService;
+        this.threadService = threadService;
         this.attachmentService = attachmentService;
         this.postRepository = postRepository;
         this.decorators = decorators;
@@ -74,7 +78,7 @@ public class PostService {
     }
 
     /**
-     * Parses post's content with decorator, increases its board's post counter and saves it into database
+     * Parses post's content with decorator, increases its board's post counter and thread modification time and saves it into database
      *
      * @param post  to save
      * @param board where this post was made
@@ -83,6 +87,7 @@ public class PostService {
     public Post savePost(Post post, Board board) {
         post.setPostNumber(boardService.getPostCounter(board));
         boardService.increasePostCounter(board);
+        threadService.updateLastReplyTimestamp(post.getThread());
 
         post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 

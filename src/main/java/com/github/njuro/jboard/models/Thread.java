@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Entity representing a thread submitted to board
@@ -37,14 +36,11 @@ public class Thread {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
+    private LocalDateTime lastReplyAt;
+
     @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Include
     private Board board;
-
-    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    @OrderBy("createdAt ASC")
-    @ToString.Exclude
-    private List<Post> posts;
 
     @OneToOne(targetEntity = Post.class, fetch = FetchType.EAGER)
     @NotNull

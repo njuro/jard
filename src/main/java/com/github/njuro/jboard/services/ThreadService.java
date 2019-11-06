@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -54,10 +54,7 @@ public class ThreadService {
      * @return list of all threads from board
      */
     public List<Thread> getSortedThreadsFromBoard(Board board) {
-        List<Thread> threads = threadRepository.findByBoardLabel(board.getLabel());
-
-        threads.sort(Comparator.comparing(Thread::isStickied)
-                .thenComparing(thread -> thread.getPosts().get(thread.getPosts().size() - 1).getCreatedAt()).reversed());
+        List<Thread> threads = threadRepository.findByBoardLabelOrderByStickiedDescLastReplyAtDesc(board.getLabel());
 
         return threads;
     }
@@ -105,6 +102,11 @@ public class ThreadService {
         return threadRepository.save(thread);
     }
 
+    public Thread updateLastReplyTimestamp(Thread thread) {
+        thread.setLastReplyAt(LocalDateTime.now());
+        return threadRepository.save(thread);
+    }
+
     /**
      * Deletes thread from database
      *
@@ -113,5 +115,6 @@ public class ThreadService {
     public void deleteThread(Thread thread) {
         threadRepository.delete(thread);
     }
+
 
 }

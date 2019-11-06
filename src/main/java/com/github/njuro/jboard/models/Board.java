@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Entity representing a board
@@ -35,11 +34,6 @@ public class Board {
 
     @Enumerated(value = EnumType.STRING)
     private BoardType type;
-
-    @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
-    @OrderBy("createdAt DESC")
-    @ToString.Exclude
-    private List<Thread> threads;
 
     @Basic
     private Long postCounter;

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ThreadRepository extends JpaRepository<Thread, Long> {
-    List<Thread> findByBoardLabel(String label);
+    List<Thread> findByBoardLabelOrderByStickiedDescLastReplyAtDesc(String label);
 
     Optional<Thread> findByBoardLabelAndOriginalPostPostNumber(String label, Long postNumber);
 

@@ -14,7 +14,7 @@ class ThreadRepositoryTest extends RepositoryTest {
     @Test
     void testFindByBoardLabel() {
         assertThat(threadRepository
-                .findByBoardLabel("r"))
+                .findByBoardLabelOrderByStickiedDescLastReplyAtDesc("r"))
                 .extracting(Thread::getId)
                 .containsExactly(1L, 2L);
     }
