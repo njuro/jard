@@ -1,6 +1,5 @@
 package com.github.njuro.jboard.repositories;
 
-import com.github.njuro.jboard.models.Thread;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,14 +9,6 @@ class ThreadRepositoryTest extends RepositoryTest {
 
     @Autowired
     private ThreadRepository threadRepository;
-
-    @Test
-    void testFindByBoardLabel() {
-        assertThat(threadRepository
-                .findByBoardLabelOrderByStickiedDescLastReplyAtDesc("r"))
-                .extracting(Thread::getId)
-                .containsExactly(1L, 2L);
-    }
 
     @Test
     void testFindByBoardLabelAndOriginalPostPostNumber() {

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Service methods for manipulating {@link Thread threads}
@@ -44,21 +43,6 @@ public class ThreadService {
         return threadRepository.findByBoardLabelAndOriginalPostPostNumber(boardLabel, threadNumber)
                 .orElseThrow(ThreadNotFoundException::new);
     }
-
-
-    /**
-     * Resolves all threads from board, sorted primarily by sticky status (stickied first), secondarily by creation
-     * date (newest first)
-     *
-     * @param board to fetch threads from
-     * @return list of all threads from board
-     */
-    public List<Thread> getSortedThreadsFromBoard(Board board) {
-        List<Thread> threads = threadRepository.findByBoardLabelOrderByStickiedDescLastReplyAtDesc(board.getLabel());
-
-        return threads;
-    }
-
 
     /**
      * Creates thread (first post) from {@link ThreadForm}.

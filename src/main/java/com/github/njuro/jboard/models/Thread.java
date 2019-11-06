@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Entity representing a thread submitted to board
@@ -49,6 +50,12 @@ public class Thread {
     @NotNull
     @JsonIgnoreProperties("thread")
     private Post originalPost;
+
+    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("createdAt ASC")
+    @ToString.Exclude
+    @JsonIgnoreProperties("thread")
+    private List<Post> posts;
 
     @PrePersist
     private void setCreatedAt() {

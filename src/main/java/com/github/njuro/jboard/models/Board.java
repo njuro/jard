@@ -1,11 +1,13 @@
 package com.github.njuro.jboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jboard.models.enums.BoardType;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Entity representing a board
@@ -39,6 +41,12 @@ public class Board {
 
     @Basic
     private Long postCounter;
+
+    @OneToMany(targetEntity = Thread.class, fetch = FetchType.LAZY, mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OrderBy("stickied DESC, createdAt DESC")
+    @ToString.Exclude
+    @JsonIgnoreProperties("board")
+    private List<Thread> threads;
 
     public Board(String label, String name, BoardType type) {
         this.label = label;

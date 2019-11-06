@@ -43,8 +43,7 @@ public class BoardService {
      * @return list of boards
      */
     public List<Board> getAllBoards() {
-        List<Board> boards = new ArrayList<>(boardRepository.findAll());
-        return boards;
+        return new ArrayList<>(boardRepository.findAll());
     }
 
     /**

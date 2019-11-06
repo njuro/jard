@@ -42,7 +42,7 @@ public class BoardController {
     @GetMapping("/board/{board}")
     public String showBoard(Board board, Model model) {
         model.addAttribute("board", board);
-        model.addAttribute("threads", threadService.getSortedThreadsFromBoard(board));
+        model.addAttribute("threads", board.getThreads());
 
         return "board";
     }

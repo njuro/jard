@@ -3,7 +3,6 @@ package com.github.njuro.jboard.controllers.rest;
 
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.services.BoardService;
-import com.github.njuro.jboard.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,32 +11,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/boards")
 public class BoardRestController {
 
     private final BoardService boardService;
 
-    private final ThreadService threadService;
-
     @Autowired
-    public BoardRestController(BoardService boardService, ThreadService threadService) {
+    public BoardRestController(BoardService boardService) {
         this.boardService = boardService;
-        this.threadService = threadService;
     }
 
     /**
      * Shows list of all boards
      */
-    @GetMapping("/boards")
+    @GetMapping
     public List<Board> showAllBoards() {
-        return boardService.getAllBoards();
+        List<Board> boards = boardService.getAllBoards();
+        boards.forEach(board -> board.setThreads(null));
+        return boards;
     }
 
-    /**
-     * Shows board specified by {board} path variable
-     */
-    @GetMapping("/boards/{board}")
+    @GetMapping("/{board}")
     public Board showBoard(Board board) {
+        board.getThreads().forEach(thread -> thread.setPosts(null));
         return board;
     }
 }
