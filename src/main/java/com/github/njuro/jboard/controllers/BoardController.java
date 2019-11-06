@@ -1,4 +1,4 @@
-package com.github.njuro.jboard;
+package com.github.njuro.jboard.controllers;
 
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.services.BoardService;
