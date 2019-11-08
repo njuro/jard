@@ -23,7 +23,7 @@ threads:
   stickied: false
   locked: false
   board_id: 1
-  original_post_id: 2
+  original_post_id: 3
 - id: 3
   created_at: "2018-07-22 12:15:33"
   stickied: false

@@ -20,7 +20,6 @@ public class BoardRestController {
     public BoardRestController(BoardService boardService) {
         this.boardService = boardService;
     }
-
     /**
      * Shows list of all boards
      */
@@ -33,7 +32,6 @@ public class BoardRestController {
 
     @GetMapping("/{board}")
     public Board showBoard(Board board) {
-        board.getThreads().forEach(thread -> thread.setPosts(null));
         return board;
     }
 }
