@@ -15,7 +15,7 @@ public class Constants {
     /**
      * User content location
      **/
-    public static final Path USER_CONTENT_PATH = Paths.get(System.getProperty("user.dir"), "usercontent");
+    public static final Path USER_CONTENT_PATH = Paths.get(System.getProperty("user.home"), "WebstormProjects", "jboard-client", "public", "usercontent"); // TODO do it better
     public static final String USER_CONTENT_URL = "/usercontent/";
 
     /**
