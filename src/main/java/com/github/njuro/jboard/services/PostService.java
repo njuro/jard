@@ -87,7 +87,6 @@ public class PostService {
     public Post savePost(Post post, Board board) {
         post.setPostNumber(boardService.getPostCounter(board));
         boardService.increasePostCounter(board);
-        threadService.updateLastReplyTimestamp(post.getThread());
 
         post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
@@ -98,8 +97,9 @@ public class PostService {
 
         post.setBody(post.getBody().replace("\n", "<br/>"));
 
-
-        return postRepository.save(post);
+        post = postRepository.save(post);
+        threadService.updateLastReplyTimestamp(post.getThread());
+        return post;
     }
 
     /**
