@@ -69,7 +69,7 @@ public class PostService {
         String tripcode = Tripcodes.generateTripcode(form.getPassword());
         Post post = Post.builder().name(form.getName()).tripcode(tripcode).body(form.getBody()).build();
 
-        if (form.getAttachment().getSize() > 0) {
+        if (form.getAttachment() != null && form.getAttachment().getSize() > 0) {
             Attachment attachment = attachmentService.saveAttachment(form.getAttachment(), board);
             post.setAttachment(attachment);
         }
