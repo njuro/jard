@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.controllers.rest;
+package com.github.njuro.jboard.controllers.rest.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,9 +17,11 @@ public class RequestValidator {
         this.validator = validator;
     }
 
-    public BindingResult validate(Object target, String targetName) {
-        BindingResult bindingResult = new BeanPropertyBindingResult(target, targetName);
+    public void validate(Object target) throws ValidationException {
+        BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
         validator.validate(target, bindingResult);
-        return bindingResult;
+        if (bindingResult.hasFieldErrors()) {
+            throw new ValidationException(bindingResult);
+        }
     }
 }
