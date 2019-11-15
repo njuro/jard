@@ -28,12 +28,12 @@ public class PostForm {
 
     @AssertFalse(message = "Attachment is too big (allowed " + MAX_ATTACHMENT_SIZE + " bytes)")
     public boolean isAttachmentTooBig() {
-        return attachment.getSize() > MAX_ATTACHMENT_SIZE;
+        return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
     }
 
     @AssertTrue(message = "Post must have an attachment or non-empty body")
     public boolean isAttachmentOrNonEmptyBody() {
-        return attachment.getSize() > 0 || (body != null && !body.trim().isEmpty());
+        return (attachment != null && attachment.getSize() > 0) || (body != null && !body.trim().isEmpty());
     }
 
 }

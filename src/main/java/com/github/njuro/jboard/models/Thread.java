@@ -51,7 +51,7 @@ public class Thread {
     @JsonIgnoreProperties("thread")
     private Post originalPost;
 
-    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Post.class, mappedBy = "thread", fetch = FetchType.LAZY)
     @OrderBy("createdAt ASC")
     @ToString.Exclude
     @JsonIgnoreProperties("thread")

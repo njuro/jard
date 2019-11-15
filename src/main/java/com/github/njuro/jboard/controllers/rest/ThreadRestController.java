@@ -10,6 +10,7 @@ import com.github.njuro.jboard.models.dto.ThreadForm;
 import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,4 +55,36 @@ public class ThreadRestController {
 
         return post;
     }
+
+    @PostMapping("/{threadNo}/sticky")
+    public Thread toggleStickyThread(Thread thread) {
+
+        thread.toggleSticky();
+        thread = threadService.updateThread(thread);
+
+        return thread;
+    }
+
+    @PostMapping("/{threadNo}/lock")
+    public Thread toggleLockThread(Thread thread) {
+
+        thread.toggleLock();
+        thread = threadService.updateThread(thread);
+
+        return thread;
+    }
+
+    @PostMapping("/{threadNo}/delete/{postNo}")
+    public ResponseEntity<?> deletePost(Thread thread, Post post) {
+        if (thread.getOriginalPost().equals(post)) {
+            // delete whole thread
+            threadService.deleteThread(thread);
+        } else {
+            // delete post
+            postService.deletePost(post);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
 }

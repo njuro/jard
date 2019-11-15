@@ -120,4 +120,8 @@ public class PostService {
     public void deletePost(Post post) {
         postRepository.delete(post);
     }
+
+    public void deletePosts(List<Post> posts) {
+        postRepository.deleteAll(posts);
+    }
 }
