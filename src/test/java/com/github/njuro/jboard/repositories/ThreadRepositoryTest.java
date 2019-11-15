@@ -13,10 +13,10 @@ class ThreadRepositoryTest extends RepositoryTest {
     @Test
     void testFindByBoardLabelAndOriginalPostPostNumber() {
         assertThat(threadRepository
-                .findByBoardLabelAndOriginalPostPostNumber("r", 2L)).isPresent();
+                .findByBoardLabelAndOriginalPostPostNumber("r", 1L)).isPresent();
 
         assertThat(threadRepository
-                .findByBoardLabelAndOriginalPostPostNumber("r", 3L)).isNotPresent();
+                .findByBoardLabelAndOriginalPostPostNumber("r", 5L)).isNotPresent();
     }
 
 
