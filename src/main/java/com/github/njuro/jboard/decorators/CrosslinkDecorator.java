@@ -37,7 +37,7 @@ public class CrosslinkDecorator implements Decorator {
             String boardLabel = Optional.ofNullable(matcher.group("board")).orElse(post.getThread().getBoard().getLabel());
             String postNumber = matcher.group("postNo");
 
-            String linkHref = "/board/s" + boardLabel;
+            String linkHref = "/boards/" + boardLabel;
             boolean valid = true;
             String special = "";
 

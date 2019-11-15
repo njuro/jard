@@ -40,14 +40,14 @@ class CrosslinkDecoratorTest extends DecoratorTest {
 
     @BeforeEach
     void initPosts() {
-        postR = Post.builder().thread(threadService.resolveThread("r", 2L)).build();
+        postR = Post.builder().thread(threadService.resolveThread("r", 1L)).build();
         postF = Post.builder().thread(threadService.resolveThread("fit", 1L)).build();
     }
 
     @Test
     void testValidCrossThreadlink() {
         decoratePost(postR, ">>1");
-        assertThat(postR.getBody()).containsSubsequence("/board/r/1", CROSSLINK_CLASS_VALID);
+        assertThat(postR.getBody()).containsSubsequence("/boards/r/1", CROSSLINK_CLASS_VALID);
     }
 
     @Test
@@ -58,17 +58,17 @@ class CrosslinkDecoratorTest extends DecoratorTest {
 
     @Test
     void testMultipleCrossThreadLinks() {
-        decoratePost(postR, "To different thread >>1 more text\n >>2 and to OP");
-        assertThat(postR.getBody()).containsSubsequence("/board/r/1#1", CROSSLINK_CLASS_VALID, CROSSLINK_DIFF_THREAD,
-                "/board/r/1#2", CROSSLINK_CLASS_VALID, CROSSLINK_OP);
+        decoratePost(postR, "To different thread >>3 more text\n >>1 and to OP");
+        assertThat(postR.getBody()).containsSubsequence("/boards/r/3#3", CROSSLINK_CLASS_VALID, CROSSLINK_DIFF_THREAD,
+                "/boards/r/1#1", CROSSLINK_CLASS_VALID, CROSSLINK_OP);
     }
 
     @Test
     void testValidCrossBoardLink() {
         decoratePost(postR, "Some text  >>>/fit/1");
         decoratePost(postF, ">>>/r/4 some text");
-        assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/fit/1");
-        assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/r/2#4");
+        assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit/1");
+        assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/r/3#4");
     }
 
     @Test
@@ -83,7 +83,7 @@ class CrosslinkDecoratorTest extends DecoratorTest {
     void testPureCrossBoardLink() {
         decoratePost(postF, "This is pure valid link to >>>/fit/  ");
         decoratePost(postR, "And this is invalid link to >>>/q/");
-        assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/board/fit");
+        assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit");
         assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
     }
 
