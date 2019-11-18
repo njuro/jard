@@ -7,7 +7,6 @@ import com.github.njuro.jboard.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -51,12 +50,5 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         boolean rememberMe = Boolean.parseBoolean(request.getAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE).toString());
         response.addCookie(rememberMe ? jwtTokenProvider.generateRememberMeCookie(authentication) : jwtTokenProvider.generateSessionCookie(authentication));
-    }
-
-    protected static class NoRedirectStrategy implements RedirectStrategy {
-        @Override
-        public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) {
-            // no redirect
-        }
     }
 }
