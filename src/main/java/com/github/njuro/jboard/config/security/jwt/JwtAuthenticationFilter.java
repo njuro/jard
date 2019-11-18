@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.config.security.jwt;
 
+import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 @Slf4j
@@ -54,10 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals(Constants.JWT_COOKIE_NAME))
+                .map(Cookie::getValue)
+                .findAny()
+                .orElse(null);
     }
 }

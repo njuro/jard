@@ -113,9 +113,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder bcryptEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);
     }
-
 
     @Bean
     public AffirmativeBased accessDecisionManager() {

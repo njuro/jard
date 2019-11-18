@@ -46,14 +46,14 @@ public class ThreadRestController {
      * Attempts to reply to thread
      */
     @PostMapping("/{threadNo}/reply")
-    public Post replyToThread(Board board, Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
+    public Thread replyToThread(Board board, Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
         postForm.setAttachment(attachment);
         requestValidator.validate(postForm);
         Post post = postService.createPost(postForm, board);
         post.setThread(thread);
-        postService.savePost(post, board);
-
-        return post;
+        post = postService.savePost(post, board);
+        thread.getPosts().add(post);
+        return thread;
     }
 
     @PostMapping("/{threadNo}/sticky")

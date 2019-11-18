@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class Constants {
 
+    public static final String JWT_COOKIE_NAME = "jwt_token";
+
     /**
      * User content location
      **/

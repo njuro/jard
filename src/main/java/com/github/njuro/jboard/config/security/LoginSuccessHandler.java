@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.config.security;
 
 import com.github.njuro.jboard.config.security.jwt.JwtTokenProvider;
+import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,17 +42,25 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        super.onAuthenticationSuccess(request, response, authentication);
+        logUserLogin(authentication, request.getRemoteAddr());
+        response.addCookie(getJwtCookie(authentication));
+    }
+
+    private void logUserLogin(Authentication authentication, String ipAddress) {
         User user = (User) authentication.getPrincipal();
-        user.setLastLoginIp(request.getRemoteAddr());
+        user.setLastLoginIp(ipAddress);
         user.setLastLogin(LocalDateTime.now());
         userService.saveUser(user);
-
         log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
-        super.onAuthenticationSuccess(request, response, authentication);
+    }
 
+    private Cookie getJwtCookie(Authentication authentication) {
         String token = jwtTokenProvider.generateToken(authentication);
-        response.getWriter().write(token);
-        response.getWriter().flush();
+        Cookie cookie = new Cookie(Constants.JWT_COOKIE_NAME, token);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 
     protected static class NoRedirectStrategy implements RedirectStrategy {
