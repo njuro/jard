@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.njuro.jboard.helpers.Constants;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -27,7 +28,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
             );
 
             setDetails(request, authRequest);
-
+            request.setAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE, login.isRememberMe());
             return this.getAuthenticationManager().authenticate(authRequest);
         } catch (IOException e) {
             throw new InternalAuthenticationServiceException("Parsing login request failed: " + e.getMessage());
@@ -38,5 +39,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
     private static class LoginRequest {
         private String username;
         private String password;
+        private boolean rememberMe;
     }
 }

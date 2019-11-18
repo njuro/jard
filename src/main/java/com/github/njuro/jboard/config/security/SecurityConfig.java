@@ -3,6 +3,7 @@ package com.github.njuro.jboard.config.security;
 
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
+import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .logoutUrl("/api/logout")
+                .deleteCookies(Constants.JWT_COOKIE_NAME)
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())

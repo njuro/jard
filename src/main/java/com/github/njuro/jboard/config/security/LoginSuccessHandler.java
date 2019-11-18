@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -42,25 +41,16 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        super.onAuthenticationSuccess(request, response, authentication);
-        logUserLogin(authentication, request.getRemoteAddr());
-        response.addCookie(getJwtCookie(authentication));
-    }
-
-    private void logUserLogin(Authentication authentication, String ipAddress) {
         User user = (User) authentication.getPrincipal();
-        user.setLastLoginIp(ipAddress);
+        user.setLastLoginIp(request.getRemoteAddr());
         user.setLastLogin(LocalDateTime.now());
         userService.saveUser(user);
         log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
-    }
 
-    private Cookie getJwtCookie(Authentication authentication) {
-        String token = jwtTokenProvider.generateToken(authentication);
-        Cookie cookie = new Cookie(Constants.JWT_COOKIE_NAME, token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        return cookie;
+        super.onAuthenticationSuccess(request, response, authentication);
+
+        boolean rememberMe = Boolean.parseBoolean(request.getAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE).toString());
+        response.addCookie(rememberMe ? jwtTokenProvider.generateRememberMeCookie(authentication) : jwtTokenProvider.generateSessionCookie(authentication));
     }
 
     protected static class NoRedirectStrategy implements RedirectStrategy {
