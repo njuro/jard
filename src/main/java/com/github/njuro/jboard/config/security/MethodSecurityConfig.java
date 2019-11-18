@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.config;
+package com.github.njuro.jboard.config.security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

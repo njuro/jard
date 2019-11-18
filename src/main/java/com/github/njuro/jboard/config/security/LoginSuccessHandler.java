@@ -1,10 +1,12 @@
-package com.github.njuro.jboard.config;
+package com.github.njuro.jboard.config.security;
 
+import com.github.njuro.jboard.config.security.jwt.JwtTokenProvider;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +28,13 @@ import java.time.LocalDateTime;
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public LoginSuccessHandler(UserService userService) {
+    public LoginSuccessHandler(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
+        setRedirectStrategy(new NoRedirectStrategy());
     }
 
     @Override
@@ -41,9 +46,17 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         userService.saveUser(user);
 
         log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
-
-        // redirect to authenticated section
-        setDefaultTargetUrl("/auth");
         super.onAuthenticationSuccess(request, response, authentication);
+
+        String token = jwtTokenProvider.generateToken(authentication);
+        response.getWriter().write(token);
+        response.getWriter().flush();
+    }
+
+    protected static class NoRedirectStrategy implements RedirectStrategy {
+        @Override
+        public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) {
+            // no redirect
+        }
     }
 }
