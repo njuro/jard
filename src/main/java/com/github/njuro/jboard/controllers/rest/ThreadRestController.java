@@ -7,10 +7,12 @@ import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
+import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +58,7 @@ public class ThreadRestController {
         return thread;
     }
 
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping("/{threadNo}/sticky")
     public Thread toggleStickyThread(Thread thread) {
 
@@ -65,6 +68,7 @@ public class ThreadRestController {
         return thread;
     }
 
+    @Secured(UserRole.Roles.JANITOR_ROLE)
     @PostMapping("/{threadNo}/lock")
     public Thread toggleLockThread(Thread thread) {
 
@@ -74,6 +78,7 @@ public class ThreadRestController {
         return thread;
     }
 
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping("/{threadNo}/delete/{postNo}")
     public ResponseEntity<?> deletePost(Thread thread, Post post) {
         if (thread.getOriginalPost().equals(post)) {

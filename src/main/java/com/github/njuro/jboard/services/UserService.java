@@ -2,11 +2,13 @@ package com.github.njuro.jboard.services;
 
 
 import com.github.njuro.jboard.models.User;
+import com.github.njuro.jboard.models.dto.CurrentUser;
 import com.github.njuro.jboard.models.dto.RegisterForm;
 import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,11 +29,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleHierarchy roleHierarchy;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleHierarchy roleHierarchy) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleHierarchy = roleHierarchy;
     }
 
     @Override
@@ -118,6 +122,12 @@ public class UserService implements UserDetailsService {
         }
 
         return (User) principal;
+    }
+
+    public CurrentUser getCurrentUserReduced() {
+        User user = getCurrentUser();
+
+        return (user == null) ? null : new CurrentUser(user.getUsername(), roleHierarchy.getReachableGrantedAuthorities(user.getAuthorities()));
     }
 }
 

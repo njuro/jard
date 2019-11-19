@@ -2,6 +2,8 @@ package com.github.njuro.jboard.models.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Arrays;
+
 /**
  * Enum representing user roles for authorizing purposes
  * <p>
@@ -22,6 +24,10 @@ public enum UserRole implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return authority;
+    }
+
+    public static UserRole getByAuthority(String authority) {
+        return Arrays.stream(UserRole.values()).filter(role -> role.getAuthority().equals(authority)).findAny().orElse(null);
     }
 
     public static class Roles {

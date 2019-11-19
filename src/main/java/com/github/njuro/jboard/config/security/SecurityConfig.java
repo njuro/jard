@@ -82,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .accessDecisionManager(accessDecisionManager())
+                .antMatchers("/users/current").authenticated()
                 .antMatchers("/auth/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
