@@ -12,10 +12,12 @@ import java.util.stream.Collectors;
 public class CurrentUser {
 
     private String username;
+    private UserRole primaryRole;
     private Set<UserRole> roles;
 
-    public CurrentUser(String username, Collection<? extends GrantedAuthority> authorities) {
+    public CurrentUser(String username, UserRole primaryRole, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
+        this.primaryRole = primaryRole;
         this.roles = authorities.stream()
                 .map(authority ->
                         authority instanceof UserRole ? (UserRole) authority : UserRole.getByAuthority(authority.getAuthority()))

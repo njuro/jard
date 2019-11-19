@@ -127,7 +127,7 @@ public class UserService implements UserDetailsService {
     public CurrentUser getCurrentUserReduced() {
         User user = getCurrentUser();
 
-        return (user == null) ? null : new CurrentUser(user.getUsername(), roleHierarchy.getReachableGrantedAuthorities(user.getAuthorities()));
+        return (user == null) ? null : new CurrentUser(user.getUsername(), user.getRole(), roleHierarchy.getReachableGrantedAuthorities(user.getAuthorities()));
     }
 }
 
