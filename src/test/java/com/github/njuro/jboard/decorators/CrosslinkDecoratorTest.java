@@ -18,7 +18,7 @@ import static com.github.njuro.jboard.helpers.Constants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 @Transactional
 @UseMockDatabase
 @Slf4j
