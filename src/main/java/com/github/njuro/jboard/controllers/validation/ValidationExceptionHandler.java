@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.controllers.rest.validation;
+package com.github.njuro.jboard.controllers.validation;
 
 
 import org.springframework.http.HttpHeaders;

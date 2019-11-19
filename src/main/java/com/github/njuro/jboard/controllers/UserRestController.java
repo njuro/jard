@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.controllers.rest;
+package com.github.njuro.jboard.controllers;
 
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.CurrentUser;

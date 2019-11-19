@@ -1,7 +1,7 @@
-package com.github.njuro.jboard.controllers.rest;
+package com.github.njuro.jboard.controllers;
 
-import com.github.njuro.jboard.controllers.rest.validation.RequestValidator;
-import com.github.njuro.jboard.controllers.rest.validation.ValidationException;
+import com.github.njuro.jboard.controllers.validation.RequestValidator;
+import com.github.njuro.jboard.controllers.validation.ValidationException;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;

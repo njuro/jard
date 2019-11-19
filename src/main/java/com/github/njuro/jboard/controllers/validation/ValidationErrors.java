@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.controllers.rest.validation;
+package com.github.njuro.jboard.controllers.validation;
 
 import lombok.Data;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
