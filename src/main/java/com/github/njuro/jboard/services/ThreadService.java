@@ -31,6 +31,10 @@ public class ThreadService {
         this.postService = postService;
     }
 
+    public Thread refreshThread(Thread oldThread) {
+        return resolveThread(oldThread.getBoard().getLabel(), oldThread.getOriginalPost().getPostNumber());
+    }
+
     /**
      * Resolves thread
      *

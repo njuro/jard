@@ -11,7 +11,6 @@ import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,14 +47,12 @@ public class ThreadRestController {
      * Attempts to reply to thread
      */
     @PostMapping("/{threadNo}/reply")
-    public Thread replyToThread(Board board, Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
+    public Post replyToThread(Board board, Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
         postForm.setAttachment(attachment);
         requestValidator.validate(postForm);
         Post post = postService.createPost(postForm, board);
         post.setThread(thread);
-        post = postService.savePost(post, board);
-        thread.getPosts().add(post);
-        return thread;
+        return postService.savePost(post, board);
     }
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
@@ -80,16 +77,16 @@ public class ThreadRestController {
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping("/{threadNo}/delete/{postNo}")
-    public ResponseEntity<?> deletePost(Thread thread, Post post) {
+    public Thread deletePost(Thread thread, Post post) {
         if (thread.getOriginalPost().equals(post)) {
             // delete whole thread
             threadService.deleteThread(thread);
+            return null;
         } else {
             // delete post
             postService.deletePost(post);
+            return threadService.refreshThread(thread);
         }
-
-        return ResponseEntity.ok().build();
     }
 
 }
