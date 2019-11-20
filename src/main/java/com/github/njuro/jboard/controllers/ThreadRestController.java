@@ -52,7 +52,9 @@ public class ThreadRestController {
         requestValidator.validate(postForm);
         Post post = postService.createPost(postForm, board);
         post.setThread(thread);
-        return postService.savePost(post, board);
+        post = postService.savePost(post, board);
+        post.setThread(null);
+        return post;
     }
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
