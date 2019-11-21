@@ -55,10 +55,9 @@ public class ThreadFacade {
 
         Post post = postFacade.createPost(postForm, thread);
         post = postService.savePost(post);
-        post.setThread(null);
-
         threadService.updateLastReplyTimestamp(thread);
 
+        post.setThread(null);
         return post;
     }
 
