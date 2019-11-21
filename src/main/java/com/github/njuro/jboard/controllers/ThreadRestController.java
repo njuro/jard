@@ -2,6 +2,7 @@ package com.github.njuro.jboard.controllers;
 
 import com.github.njuro.jboard.controllers.validation.RequestValidator;
 import com.github.njuro.jboard.controllers.validation.ValidationException;
+import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/boards/{board}")
+@RequestMapping(Mappings.API_ROOT_THREADS)
 public class ThreadRestController {
 
     private final ThreadService threadService;
@@ -30,12 +31,12 @@ public class ThreadRestController {
         this.requestValidator = requestValidator;
     }
 
-    @GetMapping("/{threadNo}")
+    @GetMapping(Mappings.PATH_VARIABLE_THREAD)
     public Thread showThread(Thread thread) {
         return thread;
     }
 
-    @PostMapping(value = "/submit")
+    @PostMapping("/submit")
     public Thread submitNewThread(Board board, @RequestPart ThreadForm threadForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
         threadForm.getPost().setAttachment(attachment);
         requestValidator.validate(threadForm);
@@ -46,7 +47,7 @@ public class ThreadRestController {
     /**
      * Attempts to reply to thread
      */
-    @PostMapping("/{threadNo}/reply")
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
     public Post replyToThread(Board board, Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment) throws ValidationException {
         postForm.setAttachment(attachment);
         requestValidator.validate(postForm);
@@ -58,7 +59,7 @@ public class ThreadRestController {
     }
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
-    @PostMapping("/{threadNo}/sticky")
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
     public Thread toggleStickyThread(Thread thread) {
 
         thread.toggleSticky();
@@ -68,7 +69,7 @@ public class ThreadRestController {
     }
 
     @Secured(UserRole.Roles.JANITOR_ROLE)
-    @PostMapping("/{threadNo}/lock")
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
     public Thread toggleLockThread(Thread thread) {
 
         thread.toggleLock();
@@ -78,7 +79,7 @@ public class ThreadRestController {
     }
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
-    @PostMapping("/{threadNo}/delete/{postNo}")
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
     public Thread deletePost(Thread thread, Post post) {
         if (thread.getOriginalPost().equals(post)) {
             // delete whole thread

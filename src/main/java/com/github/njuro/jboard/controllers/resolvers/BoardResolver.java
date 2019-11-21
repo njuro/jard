@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.controllers.resolvers;
 
+import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class BoardResolver implements PathVariableArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String label = getPathVariable("board", webRequest);
+        String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
         return boardService.resolveBoard(label);
     }

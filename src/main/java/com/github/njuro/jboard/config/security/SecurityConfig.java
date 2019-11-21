@@ -4,12 +4,14 @@ package com.github.njuro.jboard.config.security;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jboard.helpers.Constants;
+import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -97,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutSuccessHandler(logoutSuccessHandler)
-                .logoutUrl("/api/logout")
+                .logoutUrl(Mappings.API_ROOT + "/logout")
                 .deleteCookies(Constants.JWT_COOKIE_NAME)
                 .and()
                 .csrf()
@@ -116,7 +118,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAuthenticationSuccessHandler(loginSuccessHandler);
         filter.setAuthenticationFailureHandler(loginFailureHandler);
-        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+        filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(Mappings.API_ROOT + "/login", HttpMethod.POST.name()));
         return filter;
     }
 

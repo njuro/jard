@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.controllers;
 
+import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.CurrentUser;
 import com.github.njuro.jboard.models.dto.RegisterForm;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(Mappings.API_ROOT_USERS)
 public class UserRestController {
 
     private final UserService userService;
