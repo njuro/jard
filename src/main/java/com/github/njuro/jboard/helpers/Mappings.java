@@ -8,7 +8,7 @@ public class Mappings {
     public static final String PLACEHOLDER_BOARD = "board";
     public static final String PATH_VARIABLE_BOARD = "/{" + PLACEHOLDER_BOARD + "}";
 
-    public static final String PLACEHOLDER_THREAD = "board";
+    public static final String PLACEHOLDER_THREAD = "thread";
     public static final String PATH_VARIABLE_THREAD = "/{" + PLACEHOLDER_THREAD + "}";
 
     public static final String PLACEHOLDER_POST = "post";

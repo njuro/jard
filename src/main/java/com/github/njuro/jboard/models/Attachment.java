@@ -1,10 +1,12 @@
 package com.github.njuro.jboard.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.helpers.Constants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -57,6 +59,11 @@ public class Attachment {
     @Transient
     @ToString.Exclude
     private File file;
+
+    @Transient
+    @ToString.Exclude
+    @JsonIgnore
+    private MultipartFile sourceFile;
 
     public Attachment(String path, @NotNull String originalFilename, String filename) {
         this.path = path;

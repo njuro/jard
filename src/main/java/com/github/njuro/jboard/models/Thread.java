@@ -42,7 +42,7 @@ public class Thread {
 
     private LocalDateTime lastReplyAt;
 
-    @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER, optional = false)
     @EqualsAndHashCode.Include
     private Board board;
 
@@ -60,6 +60,7 @@ public class Thread {
     @PrePersist
     private void setCreatedAt() {
         this.createdAt = LocalDateTime.now();
+        this.setLastReplyAt(LocalDateTime.now());
     }
 
     @EqualsAndHashCode.Include

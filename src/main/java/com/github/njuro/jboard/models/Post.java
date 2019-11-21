@@ -42,7 +42,7 @@ public class Post {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
-    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Include
     @ToString.Exclude
     private Thread thread;

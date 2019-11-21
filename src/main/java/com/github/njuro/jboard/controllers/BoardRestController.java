@@ -1,9 +1,9 @@
 package com.github.njuro.jboard.controllers;
 
 
+import com.github.njuro.jboard.facades.BoardFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.Board;
-import com.github.njuro.jboard.services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,21 +15,16 @@ import java.util.List;
 @RequestMapping(Mappings.API_ROOT_BOARDS)
 public class BoardRestController {
 
-    private final BoardService boardService;
+    private final BoardFacade boardFacade;
 
     @Autowired
-    public BoardRestController(BoardService boardService) {
-        this.boardService = boardService;
+    public BoardRestController(BoardFacade boardFacade) {
+        this.boardFacade = boardFacade;
     }
 
-    /**
-     * Shows list of all boards
-     */
     @GetMapping
     public List<Board> showAllBoards() {
-        List<Board> boards = boardService.getAllBoards();
-        boards.forEach(board -> board.setThreads(null));
-        return boards;
+        return boardFacade.getAllBoards();
     }
 
     @GetMapping(Mappings.PATH_VARIABLE_BOARD)

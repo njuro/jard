@@ -26,50 +26,22 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    /**
-     * Resolves board by label
-     *
-     * @param label of board
-     * @return board with given label
-     * @throws BoardNotFoundException if board was not found
-     */
-    public Board resolveBoard(String label) throws BoardNotFoundException {
-        return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
-    }
-
-    /**
-     * Gets all boards
-     *
-     * @return list of boards
-     */
     public List<Board> getAllBoards() {
         return new ArrayList<>(boardRepository.findAll());
     }
 
-    /**
-     * Saves board into database
-     *
-     * @param board to save
-     */
     public Board saveBoard(Board board) {
         return boardRepository.save(board);
     }
 
-    /**
-     * Get current post counter for specified board
-     *
-     * @param board
-     * @return post counter of a board
-     */
+    public Board resolveBoard(String label) throws BoardNotFoundException {
+        return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
+    }
+
     public Long getPostCounter(Board board) {
         return boardRepository.getPostCounter(board.getLabel());
     }
 
-    /**
-     * Increases board's post counter by one
-     *
-     * @param board
-     */
     public void increasePostCounter(Board board) {
         boardRepository.increasePostNumber(board.getLabel());
     }

@@ -1,5 +1,7 @@
 package com.github.njuro.jboard.models.dto;
 
+import com.github.njuro.jboard.models.User;
+import com.github.njuro.jboard.models.enums.UserRole;
 import lombok.Data;
 
 import javax.validation.constraints.AssertTrue;
@@ -30,6 +32,17 @@ public class RegisterForm {
     @AssertTrue(message = "Passwords do not match")
     public boolean isPasswordMatching() {
         return password.equals(passwordRepeated);
+    }
+
+    public User toUser() {
+        return User.builder()
+                .username(username)
+                .password(password)
+                .email(email)
+                .registrationIp(registrationIp)
+                .role(UserRole.USER)
+                .enabled(true)
+                .build();
     }
 
 }

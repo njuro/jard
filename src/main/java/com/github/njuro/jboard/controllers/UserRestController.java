@@ -1,10 +1,10 @@
 package com.github.njuro.jboard.controllers;
 
+import com.github.njuro.jboard.facades.UserFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.CurrentUser;
 import com.github.njuro.jboard.models.dto.RegisterForm;
-import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,21 +15,21 @@ import javax.validation.Valid;
 @RequestMapping(Mappings.API_ROOT_USERS)
 public class UserRestController {
 
-    private final UserService userService;
+    private final UserFacade userFacade;
 
     @Autowired
-    public UserRestController(UserService userService) {
-        this.userService = userService;
+    public UserRestController(UserFacade userFacade) {
+        this.userFacade = userFacade;
     }
 
     @GetMapping("/current")
     public CurrentUser getCurrentUser() {
-        return userService.getCurrentUserReduced();
+        return userFacade.getCurrentUser();
     }
 
     @PostMapping("/register")
     public User registerUser(@RequestBody @Valid RegisterForm registerForm, HttpServletRequest request) {
         registerForm.setRegistrationIp(request.getRemoteAddr());
-        return userService.createUser(registerForm);
+        return userFacade.registerUser(registerForm);
     }
 }
