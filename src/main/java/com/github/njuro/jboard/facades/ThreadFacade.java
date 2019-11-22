@@ -61,6 +61,24 @@ public class ThreadFacade {
         return post;
     }
 
+    public Thread toggleSticky(Thread thread) {
+        thread.toggleSticky();
+        return threadService.updateThread(thread);
+    }
 
+    public Thread toggleLock(Thread thread) {
+        thread.toggleLock();
+        return threadService.updateThread(thread);
+    }
+
+    public void deletePost(Thread thread, Post post) {
+        if (thread.getOriginalPost().equals(post)) {
+            // delete whole thread
+            threadService.deleteThread(thread);
+        } else {
+            // delete post
+            postService.deletePost(post);
+        }
+    }
 }
 

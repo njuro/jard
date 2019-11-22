@@ -9,7 +9,10 @@ import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
+import com.github.njuro.jboard.models.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,38 +55,26 @@ public class ThreadRestController {
         return threadFacade.replyToThread(postForm, thread);
     }
 
-//    @Secured(UserRole.Roles.MODERATOR_ROLE)
-//    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
-//    public Thread toggleStickyThread(Thread thread) {
-//
-//        thread.toggleSticky();
-//        thread = threadService.updateThread(thread);
-//
-//        return thread;
-//    }
-//
-//    @Secured(UserRole.Roles.JANITOR_ROLE)
-//    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
-//    public Thread toggleLockThread(Thread thread) {
-//
-//        thread.toggleLock();
-//        thread = threadService.updateThread(thread);
-//
-//        return thread;
-//    }
-//
-//    @Secured(UserRole.Roles.MODERATOR_ROLE)
-//    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
-//    public Thread deletePost(Thread thread, Post post) {
-//        if (thread.getOriginalPost().equals(post)) {
-//            // delete whole thread
-//            threadService.deleteThread(thread);
-//            return null;
-//        } else {
-//            // delete post
-//            postService.deletePost(post);
-//            return threadService.refreshThread(thread);
-//        }
-//    }
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
+    public ResponseEntity<?> toggleStickyThread(Thread thread) {
+        threadFacade.toggleSticky(thread);
+        return ResponseEntity.ok().build();
+    }
+
+    @Secured(UserRole.Roles.JANITOR_ROLE)
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
+    public ResponseEntity<?> toggleLockThread(Thread thread) {
+        threadFacade.toggleLock(thread);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @Secured(UserRole.Roles.MODERATOR_ROLE)
+    @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
+    public ResponseEntity<?> deletePost(Thread thread, Post post) {
+        threadFacade.deletePost(thread, post);
+        return ResponseEntity.ok().build();
+    }
 
 }
