@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Service methods for manipulating {@link Attachment file attachments}
@@ -45,4 +46,13 @@ public class AttachmentService {
         return attachmentRepository.save(attachment);
     }
 
+    public void deleteAttachmentFile(Attachment attachment) {
+        if (!attachment.getFile().delete()) {
+            throw new IllegalStateException("Attachment file could not be deleted");
+        }
+    }
+
+    public void deleteAttachmentFiles(List<Attachment> attachments) {
+        attachments.forEach(this::deleteAttachmentFile);
+    }
 }

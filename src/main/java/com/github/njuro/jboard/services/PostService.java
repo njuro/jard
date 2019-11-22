@@ -2,6 +2,7 @@ package com.github.njuro.jboard.services;
 
 import com.github.njuro.jboard.decorators.Decorator;
 import com.github.njuro.jboard.exceptions.PostNotFoundException;
+import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.repositories.PostRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -70,10 +72,16 @@ public class PostService {
     }
 
     public void deletePost(Post post) {
+        if (post.getAttachment() != null) {
+            attachmentService.deleteAttachmentFile(post.getAttachment());
+        }
         postRepository.delete(post);
     }
 
     public void deletePosts(List<Post> posts) {
+        List<Attachment> attachments = posts.stream()
+                .filter(post -> post.getAttachment() != null).map(Post::getAttachment).collect(Collectors.toList());
+        attachmentService.deleteAttachmentFiles(attachments);
         postRepository.deleteAll(posts);
     }
 }
