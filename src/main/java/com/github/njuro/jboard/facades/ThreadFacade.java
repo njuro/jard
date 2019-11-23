@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class ThreadFacade {
@@ -59,6 +60,12 @@ public class ThreadFacade {
 
         post.setThread(null);
         return post;
+    }
+
+    public List<Post> findNewPosts(Thread thread, Long lastPostNumber) {
+        List<Post> posts = postService.findNewPostsInThread(thread, lastPostNumber);
+        posts.forEach(post -> post.setThread(null));
+        return posts;
     }
 
     public Thread toggleSticky(Thread thread) {

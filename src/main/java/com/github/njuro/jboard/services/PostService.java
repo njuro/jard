@@ -5,6 +5,7 @@ import com.github.njuro.jboard.exceptions.PostNotFoundException;
 import com.github.njuro.jboard.models.Attachment;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
+import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,10 @@ public class PostService {
     public Post resolvePost(String boardLabel, Long postNumber) {
         return postRepository.findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
                 .orElseThrow(PostNotFoundException::new);
+    }
+
+    public List<Post> findNewPostsInThread(Thread thread, Long lastPostNumber) {
+        return postRepository.findByThreadIdAndPostNumberGreaterThan(thread.getId(), lastPostNumber);
     }
 
     public void deletePost(Post post) {

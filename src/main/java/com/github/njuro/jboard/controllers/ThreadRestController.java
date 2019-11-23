@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_THREADS)
@@ -53,6 +54,11 @@ public class ThreadRestController {
         requestValidator.validate(postForm);
 
         return threadFacade.replyToThread(postForm, thread);
+    }
+
+    @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/update")
+    public List<Post> findNewPosts(Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
+        return threadFacade.findNewPosts(thread, lastPostNumber);
     }
 
     @Secured(UserRole.Roles.MODERATOR_ROLE)
