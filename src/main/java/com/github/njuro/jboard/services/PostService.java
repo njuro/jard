@@ -73,7 +73,7 @@ public class PostService {
     }
 
     public List<Post> findNewPostsInThread(Thread thread, Long lastPostNumber) {
-        return postRepository.findByThreadIdAndPostNumberGreaterThan(thread.getId(), lastPostNumber);
+        return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(thread.getId(), lastPostNumber);
     }
 
     public void deletePost(Post post) {

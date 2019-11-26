@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByThreadBoardLabelAndPostNumber(String label, Long postNumber);
 
-    List<Post> findByThreadIdAndPostNumberGreaterThan(Long threadId, Long postNumber);
+    List<Post> findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(Long threadId, Long postNumber);
 }
