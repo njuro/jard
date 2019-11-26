@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.models;
 
+import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.models.enums.UserRole;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Set;
 
 /**
  * Entity representing registered user.
@@ -25,56 +26,45 @@ import java.util.Collections;
 @ToString
 public class User implements UserDetails {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic
-    @Setter
     @EqualsAndHashCode.Include
     @Column(nullable = false, unique = true)
     private String username;
 
     @Basic
-    @Setter
     @ToString.Exclude
     private String password;
 
     @Basic
-    @Getter
-    @Setter
     @Column(unique = true)
     private String email;
 
     @Basic
-    @Setter
     private boolean enabled;
 
-    @Getter
-    @Setter
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "authority")
+    @Enumerated(value = EnumType.STRING)
+    private Set<UserAuthority> authorities;
+
     @Basic
-    @Getter
-    @Setter
     @ToString.Exclude
     private String registrationIp;
 
     @Basic
-    @Getter
-    @Setter
     @ToString.Exclude
     private String lastLoginIp;
 
-    @Getter
-    @Setter
     @Column(name = "lastLogin")
     private LocalDateTime lastLogin;
 
-    @Getter
     @Column(name = "createdAt")
     @ToString.Exclude
     private LocalDateTime createdAt;
@@ -86,7 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(role);
+        return authorities;
     }
 
     @Override

@@ -1,43 +1,28 @@
 package com.github.njuro.jboard.models.enums;
 
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Enum representing user roles for authorizing purposes
- * <p>
- * Roles have following hierarchy:
- * ADMIN > MODERATOR > JANITOR > USER
- *
- * @author njuro
- */
-public enum UserRole implements GrantedAuthority {
-    USER(Roles.USER_ROLE), ADMIN(Roles.ADMIN_ROLE), MODERATOR(Roles.MODERATOR_ROLE), JANITOR(Roles.JANITOR_ROLE);
+import static com.github.njuro.jboard.models.enums.UserAuthority.*;
 
-    private String authority;
 
-    UserRole(String authority) {
-        this.authority = authority;
+public enum UserRole {
+    USER(),
+    JANITOR(DELETE_POST),
+    MODERATOR(DELETE_POST, TOGGLE_LOCK_THREAD, TOGGLE_STICKY_THREAD),
+    ADMIN(getAllAuthorities());
+
+    @Getter
+    private Set<UserAuthority> defaultAuthorites;
+
+    UserRole(Set<UserAuthority> authorities) {
+        this.defaultAuthorites = authorities;
     }
 
-    @Override
-    public String getAuthority() {
-        return authority;
-    }
-
-    public static UserRole getByAuthority(String authority) {
-        return Arrays.stream(UserRole.values()).filter(role -> role.getAuthority().equals(authority)).findAny().orElse(null);
-    }
-
-    public static class Roles {
-        public static final String USER_ROLE = "ROLE_USER";
-        public static final String ADMIN_ROLE = "ROLE_ADMIN";
-        public static final String MODERATOR_ROLE = "ROLE_MODERATOR";
-        public static final String JANITOR_ROLE = "ROLE_JANITOR";
-
-        public static final String HIERARCHY = ADMIN_ROLE + " > " + MODERATOR_ROLE + "\n" +
-                MODERATOR_ROLE + " > " + JANITOR_ROLE + "\n" +
-                JANITOR_ROLE + " > " + USER_ROLE;
+    UserRole(UserAuthority... authorities) {
+        this.defaultAuthorites = new HashSet<>(Arrays.asList(authorities));
     }
 }

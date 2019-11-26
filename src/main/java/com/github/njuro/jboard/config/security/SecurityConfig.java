@@ -5,40 +5,27 @@ import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.helpers.Mappings;
-import com.github.njuro.jboard.models.enums.UserRole;
 import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Custom Spring Security configuration, which handles these processes:
@@ -86,7 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .accessDecisionManager(accessDecisionManager())
                 .antMatchers("/users/current").authenticated()
                 .antMatchers("/auth/**").authenticated()
                 .anyRequest().permitAll()
@@ -122,46 +108,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.expressionHandler(webSecurityExpressionHandler());
-    }
-
     @Bean
     public PasswordEncoder bcryptEncoder() {
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);
-    }
-
-    @Bean
-    public AffirmativeBased accessDecisionManager() {
-        List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
-        decisionVoters.add(webExpressionVoter());
-        decisionVoters.add(roleVoter());
-        return new AffirmativeBased(decisionVoters);
-    }
-
-    private WebExpressionVoter webExpressionVoter() {
-        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
-        webExpressionVoter.setExpressionHandler(webSecurityExpressionHandler());
-        return webExpressionVoter;
-    }
-
-    private SecurityExpressionHandler<FilterInvocation> webSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
-        return defaultWebSecurityExpressionHandler;
-    }
-
-    @Bean
-    public static RoleHierarchyVoter roleVoter() {
-        return new RoleHierarchyVoter(roleHierarchy());
-    }
-
-
-    @Bean
-    public static RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy(UserRole.Roles.HIERARCHY);
-        return roleHierarchy;
     }
 }

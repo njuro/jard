@@ -3,8 +3,8 @@ package com.github.njuro.jboard.controllers;
 import com.github.njuro.jboard.facades.UserFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.User;
-import com.github.njuro.jboard.models.dto.CurrentUser;
 import com.github.njuro.jboard.models.dto.RegisterForm;
+import com.jfilter.filter.FieldFilterSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +23,8 @@ public class UserRestController {
     }
 
     @GetMapping("/current")
-    public CurrentUser getCurrentUser() {
+    @FieldFilterSetting(className = User.class, fields = {"username", "role", "authorities"})
+    public User getCurrentUser() {
         return userFacade.getCurrentUser();
     }
 

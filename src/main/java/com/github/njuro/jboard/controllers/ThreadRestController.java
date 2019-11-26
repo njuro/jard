@@ -9,11 +9,10 @@ import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
-import com.github.njuro.jboard.models.enums.UserRole;
 import com.jfilter.filter.FieldFilterSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,23 +63,22 @@ public class ThreadRestController {
         return threadFacade.findNewPosts(thread, lastPostNumber);
     }
 
-    @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
+    @PreAuthorize("hasAuthority(T(com.github.njuro.jboard.models.enums.UserAuthority).TOGGLE_STICKY_THREAD)")
     public ResponseEntity<?> toggleStickyThread(Thread thread) {
         threadFacade.toggleSticky(thread);
         return ResponseEntity.ok().build();
     }
 
-    @Secured(UserRole.Roles.JANITOR_ROLE)
     @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
+    @PreAuthorize("hasAuthority(T(com.github.njuro.jboard.models.enums.UserAuthority).TOGGLE_LOCK_THREAD)")
     public ResponseEntity<?> toggleLockThread(Thread thread) {
         threadFacade.toggleLock(thread);
         return ResponseEntity.ok().build();
     }
 
-
-    @Secured(UserRole.Roles.MODERATOR_ROLE)
     @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
+    @PreAuthorize("hasAuthority(T(com.github.njuro.jboard.models.enums.UserAuthority).DELETE_POST)")
     public ResponseEntity<?> deletePost(Thread thread, Post post) {
         threadFacade.deletePost(thread, post);
         return ResponseEntity.ok().build();

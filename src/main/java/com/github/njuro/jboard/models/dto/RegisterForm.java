@@ -40,7 +40,8 @@ public class RegisterForm {
                 .password(password)
                 .email(email)
                 .registrationIp(registrationIp)
-                .role(UserRole.USER)
+                .role(UserRole.USER) // TODO set role as part of user form
+                .authorities(UserRole.USER.getDefaultAuthorites())
                 .enabled(true)
                 .build();
     }
