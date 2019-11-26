@@ -17,13 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-/**
- * Custom login success handler, which intercepts the request to update last login time and IP of {@link User} who
- * just authenticated, logs the event and redirects user to authenticated section.
- *
- * @author njuro
- * @see SecurityConfig
- */
+
 @Component
 @Slf4j
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {

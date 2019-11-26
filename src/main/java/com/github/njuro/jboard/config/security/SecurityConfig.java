@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    public SecurityConfig(@Lazy UserService userService, @Lazy AuthenticationSuccessHandler loginSuccessHandler, AuthenticationFailureHandler loginFailureHandler, LogoutSuccessHandler logoutSuccessHandler, JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    public SecurityConfig(UserService userService, @Lazy AuthenticationSuccessHandler loginSuccessHandler, AuthenticationFailureHandler loginFailureHandler, LogoutSuccessHandler logoutSuccessHandler, JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.userService = userService;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
@@ -57,8 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/users/current").authenticated()
-                .antMatchers("/auth/**").authenticated()
+                .antMatchers(Mappings.API_ROOT_USERS + "/current").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .sessionManagement()

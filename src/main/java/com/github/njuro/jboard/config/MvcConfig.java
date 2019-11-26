@@ -21,16 +21,7 @@ import java.util.List;
 import static com.jfilter.FilterConstantsHelper.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-/**
- * Custom Spring MVC configuration, which handles these processes:
- *
- * <ul>
- * <li>maps files from {@link Constants#USER_CONTENT_PATH}</li> to {@link Constants#USER_CONTENT_URL}
- * <li>registers custom method argument resolvers</li>
- * </ul>
- *
- * @author njuro
- */
+
 @Configuration
 @EnableJsonFilter
 public class MvcConfig implements WebMvcConfigurer {

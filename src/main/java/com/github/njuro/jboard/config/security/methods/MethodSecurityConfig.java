@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 
 import java.util.Collections;
 
-
 @Configuration
 @EnableGlobalMethodSecurity
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
