@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Constants {
 
     public static final String JWT_COOKIE_NAME = "jwt_token";
-    public static final String JWT_REMEMBER_ME_ATTRIBUTE = "com.github.njuro.jboard.config.security.jwt.rememberme";
+    public static final String JWT_REMEMBER_ME_ATTRIBUTE = "jboard.jwt.rememberme";
 
     /**
      * User content location
