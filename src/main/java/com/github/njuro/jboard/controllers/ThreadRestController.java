@@ -10,6 +10,7 @@ import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
 import com.github.njuro.jboard.models.enums.UserRole;
+import com.jfilter.filter.FieldFilterSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -48,6 +49,7 @@ public class ThreadRestController {
     }
 
     @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
+    @FieldFilterSetting(className = Post.class, fields = "thread")
     public Post replyToThread(Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment, HttpServletRequest request) throws ValidationException {
         postForm.setAttachment(attachment);
         postForm.setIp(request.getRemoteAddr());
@@ -57,6 +59,7 @@ public class ThreadRestController {
     }
 
     @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/update")
+    @FieldFilterSetting(className = Post.class, fields = "thread")
     public List<Post> findNewPosts(Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
         return threadFacade.findNewPosts(thread, lastPostNumber);
     }

@@ -18,8 +18,6 @@ public class BoardFacade {
     }
 
     public List<Board> getAllBoards() {
-        List<Board> boards = boardService.getAllBoards();
-        boards.forEach(board -> board.setThreads(null));
-        return boards;
+        return boardService.getAllBoards();
     }
 }

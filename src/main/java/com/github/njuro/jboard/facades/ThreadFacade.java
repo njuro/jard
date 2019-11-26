@@ -58,14 +58,11 @@ public class ThreadFacade {
         post = postService.savePost(post);
         threadService.updateLastReplyTimestamp(thread);
 
-        post.setThread(null);
         return post;
     }
 
     public List<Post> findNewPosts(Thread thread, Long lastPostNumber) {
-        List<Post> posts = postService.findNewPostsInThread(thread, lastPostNumber);
-        posts.forEach(post -> post.setThread(null));
-        return posts;
+        return postService.findNewPostsInThread(thread, lastPostNumber);
     }
 
     public Thread toggleSticky(Thread thread) {

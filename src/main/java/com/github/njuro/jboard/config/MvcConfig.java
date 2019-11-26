@@ -4,6 +4,7 @@ import com.github.njuro.jboard.controllers.resolvers.BoardResolver;
 import com.github.njuro.jboard.controllers.resolvers.PostResolver;
 import com.github.njuro.jboard.controllers.resolvers.ThreadResolver;
 import com.github.njuro.jboard.helpers.Constants;
+import com.jfilter.EnableJsonFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author njuro
  */
 @Configuration
+@EnableJsonFilter
 public class MvcConfig implements WebMvcConfigurer {
 
     private final BoardResolver boardResolver;
