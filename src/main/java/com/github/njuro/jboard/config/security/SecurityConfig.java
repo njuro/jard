@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,21 +26,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/**
- * Custom Spring Security configuration, which handles these processes:
- *
- * <ul>
- * <li>setup {@link UserService} as user details provider for authentication and authorization</li>
- * <li>use {@link BCryptPasswordEncoder} for securely hashing and storing passwords</li>
- * <li>use custom {@link RoleHierarchy} so that one role can be superset of others</li>
- * <li>set custom required authentication for various paths</li>
- * <li>set custom login and logout paths and register login handler</li>
- * <li>enable CSRF protection</li>
- * </ul>
- *
- * @author njuro
- * @see MethodSecurityConfig
- */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
