@@ -12,7 +12,7 @@ import java.util.Collections;
 
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableGlobalMethodSecurity
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
     @Override
