@@ -1,16 +1,16 @@
 users:
   - id: "1"
     email: "admin@jboard"
-  enabled: true
-  password: "password"
-  role: "ADMIN"
-  username: "admin"
+    enabled: true
+    password: "password"
+    role: "ADMIN"
+    username: "admin"
   - id: "2"
     email: "moderator@jboard"
-  enabled: true
-  password: "password2"
-  role: "MODERATOR"
-  username: "moderator"
+    enabled: true
+    password: "password2"
+    role: "MODERATOR"
+    username: "moderator"
 
 user_authorities:
   - user_id: "1"
