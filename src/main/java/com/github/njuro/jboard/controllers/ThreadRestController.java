@@ -24,7 +24,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_THREADS)
-@DynamicFilter(SensitiveDataFilter.class)
 public class ThreadRestController {
 
     private final ThreadFacade threadFacade;
@@ -37,6 +36,7 @@ public class ThreadRestController {
     }
 
     @GetMapping(Mappings.PATH_VARIABLE_THREAD)
+    @DynamicFilter(SensitiveDataFilter.class)
     public Thread showThread(Thread thread) {
         return thread;
     }
@@ -63,6 +63,7 @@ public class ThreadRestController {
 
     @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/update")
     @FieldFilterSetting(className = Post.class, fields = "thread")
+    @DynamicFilter(SensitiveDataFilter.class)
     public List<Post> findNewPosts(Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
         return threadFacade.findNewPosts(thread, lastPostNumber);
     }

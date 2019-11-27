@@ -42,6 +42,9 @@ public class Post {
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
+    @Basic
+    private String ip;
+
     @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
     @EqualsAndHashCode.Include
     @ToString.Exclude

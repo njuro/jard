@@ -41,11 +41,11 @@ public class PostForm {
     }
 
     public Post toPost() {
-        // TODO add ip to post
         return Post.builder()
                 .name(name)
                 .tripcode(Tripcodes.generateTripcode(password))
                 .body(body)
+                .ip(ip)
                 .build();
     }
 
