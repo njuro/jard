@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import static com.github.njuro.jboard.helpers.Constants.*;
@@ -26,6 +27,7 @@ public class PostForm {
     @Size(max = MAX_POST_LENGTH, message = "Post too long (allowed " + MAX_POST_LENGTH + " chars)")
     private String body;
 
+    @Pattern(regexp = IP_PATTERN)
     private String ip;
 
     private MultipartFile attachment;

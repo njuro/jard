@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import static com.github.njuro.jboard.helpers.Constants.*;
@@ -27,6 +28,7 @@ public class RegisterForm {
     @Email(message = "Invalid email")
     private String email;
 
+    @Pattern(regexp = IP_PATTERN)
     private String registrationIp;
 
     @AssertTrue(message = "Passwords do not match")
