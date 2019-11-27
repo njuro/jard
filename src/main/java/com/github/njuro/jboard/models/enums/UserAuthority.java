@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum UserAuthority implements GrantedAuthority {
-    TOGGLE_STICKY_THREAD, TOGGLE_LOCK_THREAD, DELETE_POST, CREATE_USER, EDIT_USER;
+    TOGGLE_STICKY_THREAD, TOGGLE_LOCK_THREAD, DELETE_POST, CREATE_USER, EDIT_USER, VIEW_IP;
 
     @Override
     public String getAuthority() {

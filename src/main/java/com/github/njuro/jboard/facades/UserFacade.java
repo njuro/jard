@@ -29,7 +29,7 @@ public class UserFacade {
     }
 
     public User getCurrentUser() {
-        return UserService.getCurrentUser();
+        return userService.getCurrentUser();
     }
 
     public User updateUser(User user) {

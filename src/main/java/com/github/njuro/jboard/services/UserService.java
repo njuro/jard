@@ -2,6 +2,7 @@ package com.github.njuro.jboard.services;
 
 
 import com.github.njuro.jboard.models.User;
+import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class UserService implements UserDetailsService {
         return getUserByEmail(email) != null;
     }
 
-    public static User getCurrentUser() {
+    public User getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (!(principal instanceof User)) {
@@ -64,5 +65,16 @@ public class UserService implements UserDetailsService {
 
         return (User) principal;
     }
+
+    public boolean hasCurrentUserAuthority(UserAuthority authority) {
+        User current = getCurrentUser();
+        if (current == null) {
+            return false;
+        }
+
+        return current.getAuthorities().contains(authority);
+    }
+
+
 }
 

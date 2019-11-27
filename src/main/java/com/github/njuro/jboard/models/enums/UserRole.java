@@ -12,7 +12,7 @@ import static com.github.njuro.jboard.models.enums.UserAuthority.*;
 public enum UserRole {
     USER(),
     JANITOR(DELETE_POST),
-    MODERATOR(DELETE_POST, TOGGLE_LOCK_THREAD, TOGGLE_STICKY_THREAD),
+    MODERATOR(DELETE_POST, TOGGLE_LOCK_THREAD, TOGGLE_STICKY_THREAD, VIEW_IP),
     ADMIN(getAllAuthorities());
 
     @Getter

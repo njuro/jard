@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.controllers;
 
+import com.github.njuro.jboard.config.security.SensitiveDataFilter;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.controllers.validation.RequestValidator;
 import com.github.njuro.jboard.controllers.validation.ValidationException;
@@ -11,6 +12,7 @@ import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
 import com.github.njuro.jboard.models.dto.ThreadForm;
 import com.github.njuro.jboard.models.enums.UserAuthority;
+import com.jfilter.filter.DynamicFilter;
 import com.jfilter.filter.FieldFilterSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_THREADS)
+@DynamicFilter(SensitiveDataFilter.class)
 public class ThreadRestController {
 
     private final ThreadFacade threadFacade;

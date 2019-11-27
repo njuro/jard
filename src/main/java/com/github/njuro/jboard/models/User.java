@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.models.enums.UserRole;
 import lombok.*;
@@ -28,6 +29,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @Basic
@@ -37,6 +39,7 @@ public class User implements UserDetails {
 
     @Basic
     @ToString.Exclude
+    @JsonIgnore
     private String password;
 
     @Basic

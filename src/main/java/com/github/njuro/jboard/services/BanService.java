@@ -18,10 +18,12 @@ import java.util.List;
 public class BanService {
 
     private final BanRepository banRepository;
+    private final UserService userService;
 
     @Autowired
-    public BanService(BanRepository banRepository) {
+    public BanService(BanRepository banRepository, UserService userService) {
         this.banRepository = banRepository;
+        this.userService = userService;
     }
 
     public boolean hasActiveBan(String ip) {
@@ -37,7 +39,7 @@ public class BanService {
     }
 
     private Ban createBan(String ip, String reason, LocalDateTime end, Post post, BanStatus banStatus) {
-        User loggedUser = UserService.getCurrentUser();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             throw new IllegalArgumentException("No user is logged in!");
         }
@@ -63,7 +65,7 @@ public class BanService {
 
 
     public Ban unban(Ban ban, String reason) {
-        User loggedUser = UserService.getCurrentUser();
+        User loggedUser = userService.getCurrentUser();
         if (loggedUser == null) {
             throw new IllegalArgumentException("No user is logged in!");
         }
