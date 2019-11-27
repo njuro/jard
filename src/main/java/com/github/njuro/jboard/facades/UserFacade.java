@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 
 @Service
@@ -22,6 +23,14 @@ public class UserFacade {
     }
 
     public User registerUser(@NotNull RegisterForm registerForm) {
+        if (userService.doesUserExists(registerForm.getUsername())) {
+            throw new ValidationException("User with this name already exists");
+        }
+
+        if (userService.doesEmailExists(registerForm.getEmail())) {
+            throw new ValidationException("User with this e-mail already exists");
+        }
+
         User user = registerForm.toUser();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
