@@ -17,11 +17,11 @@ public class RequestValidator {
         this.validator = validator;
     }
 
-    public void validate(Object target) throws ValidationException {
+    public void validate(Object target) {
         BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
         validator.validate(target, bindingResult);
         if (bindingResult.hasFieldErrors()) {
-            throw new ValidationException(bindingResult);
+            throw new FormValidationException(bindingResult);
         }
     }
 }

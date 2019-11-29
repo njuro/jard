@@ -19,9 +19,11 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ValidationErrors(ex.getBindingResult()), headers, status);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    private ResponseEntity<Object> handleValidationException(ValidationException ex) {
-        return new ResponseEntity<>(new ValidationErrors(ex.getBindingResult()), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(FormValidationException.class)
+    private ResponseEntity<Object> handleValidationException(FormValidationException ex) {
+        ValidationErrors errors = ex.getBindingResult() != null ?
+                new ValidationErrors(ex.getBindingResult()) : new ValidationErrors(ex.getMessage());
+        return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 }

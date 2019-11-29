@@ -3,7 +3,6 @@ package com.github.njuro.jboard.controllers;
 import com.github.njuro.jboard.config.security.SensitiveDataFilter;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.controllers.validation.RequestValidator;
-import com.github.njuro.jboard.controllers.validation.ValidationException;
 import com.github.njuro.jboard.facades.ThreadFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.Board;
@@ -42,7 +41,7 @@ public class ThreadRestController {
     }
 
     @PostMapping("/submit")
-    public Thread submitNewThread(Board board, @RequestPart ThreadForm threadForm, @RequestPart(required = false) MultipartFile attachment, HttpServletRequest request) throws ValidationException {
+    public Thread submitNewThread(Board board, @RequestPart ThreadForm threadForm, @RequestPart(required = false) MultipartFile attachment, HttpServletRequest request) {
         threadForm.setBoard(board);
         threadForm.getPostForm().setAttachment(attachment);
         threadForm.getPostForm().setIp(request.getRemoteAddr());
@@ -53,7 +52,7 @@ public class ThreadRestController {
 
     @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
     @FieldFilterSetting(className = Post.class, fields = "thread")
-    public Post replyToThread(Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment, HttpServletRequest request) throws ValidationException {
+    public Post replyToThread(Thread thread, @RequestPart PostForm postForm, @RequestPart(required = false) MultipartFile attachment, HttpServletRequest request) {
         postForm.setAttachment(attachment);
         postForm.setIp(request.getRemoteAddr());
         requestValidator.validate(postForm);

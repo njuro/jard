@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.facades;
 
+import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.PostForm;
@@ -10,7 +11,6 @@ import com.github.njuro.jboard.services.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ThreadFacade {
 
     public Thread submitNewThread(@NotNull ThreadForm threadForm) {
         if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
-            throw new ValidationException("Your IP address is banned");
+            throw new FormValidationException("Your IP address is banned");
         }
 
         Thread thread = threadForm.toThread();
@@ -47,11 +47,11 @@ public class ThreadFacade {
 
     public Post replyToThread(@NotNull PostForm postForm, Thread thread) {
         if (banService.hasActiveBan(postForm.getIp())) {
-            throw new ValidationException("Your IP address is banned");
+            throw new FormValidationException("Your IP address is banned");
         }
 
         if (thread.isLocked()) {
-            throw new ValidationException("Thread is locked");
+            throw new FormValidationException("Thread is locked");
         }
 
         Post post = postFacade.createPost(postForm, thread);
