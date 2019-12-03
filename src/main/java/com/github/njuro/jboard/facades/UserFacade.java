@@ -2,7 +2,7 @@ package com.github.njuro.jboard.facades;
 
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.User;
-import com.github.njuro.jboard.models.dto.RegisterForm;
+import com.github.njuro.jboard.models.dto.forms.RegisterForm;
 import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -3,8 +3,8 @@ package com.github.njuro.jboard.facades;
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
-import com.github.njuro.jboard.models.dto.PostForm;
-import com.github.njuro.jboard.models.dto.ThreadForm;
+import com.github.njuro.jboard.models.dto.forms.PostForm;
+import com.github.njuro.jboard.models.dto.forms.ThreadForm;
 import com.github.njuro.jboard.services.BanService;
 import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
@@ -56,7 +56,7 @@ public class ThreadFacade {
 
         Post post = postFacade.createPost(postForm, thread);
         post = postService.savePost(post);
-        threadService.updateLastReplyTimestamp(thread);
+        threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
 
         return post;
     }

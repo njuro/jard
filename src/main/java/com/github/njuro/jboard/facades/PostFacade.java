@@ -2,7 +2,7 @@ package com.github.njuro.jboard.facades;
 
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
-import com.github.njuro.jboard.models.dto.PostForm;
+import com.github.njuro.jboard.models.dto.forms.PostForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

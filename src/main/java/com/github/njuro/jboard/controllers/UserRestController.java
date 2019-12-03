@@ -1,9 +1,11 @@
 package com.github.njuro.jboard.controllers;
 
+import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.facades.UserFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.User;
-import com.github.njuro.jboard.models.dto.RegisterForm;
+import com.github.njuro.jboard.models.dto.forms.RegisterForm;
+import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.jfilter.filter.FieldFilterSetting;
 import com.jfilter.filter.FilterBehaviour;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ public class UserRestController {
         return userFacade.getCurrentUser();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/create")
+    @HasAuthorities(UserAuthority.CREATE_USER)
     public User registerUser(@RequestBody @Valid RegisterForm registerForm, HttpServletRequest request) {
         registerForm.setRegistrationIp(request.getRemoteAddr());
         return userFacade.registerUser(registerForm);

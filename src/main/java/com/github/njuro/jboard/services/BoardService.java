@@ -31,11 +31,16 @@ public class BoardService {
     }
 
     public Board saveBoard(Board board) {
+        board.setPostCounter(1L);
         return boardRepository.save(board);
     }
 
     public Board resolveBoard(String label) throws BoardNotFoundException {
         return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
+    }
+
+    public boolean doesBoardExist(String label) {
+        return boardRepository.findByLabel(label).isPresent();
     }
 
     public Long getPostCounter(Board board) {

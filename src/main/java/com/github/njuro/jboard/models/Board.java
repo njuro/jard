@@ -2,7 +2,7 @@ package com.github.njuro.jboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.njuro.jboard.models.enums.BoardType;
+import com.github.njuro.jboard.models.enums.BoardAttachmentType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,7 +37,9 @@ public class Board {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
-    private BoardType type;
+    private BoardAttachmentType attachmentType;
+
+    private boolean nsfw;
 
     @Basic
     private Long postCounter;
@@ -48,9 +50,4 @@ public class Board {
     @JsonIgnoreProperties("board")
     private List<Thread> threads;
 
-    public Board(String label, String name, BoardType type) {
-        this.label = label;
-        this.name = name;
-        this.type = type;
-    }
 }

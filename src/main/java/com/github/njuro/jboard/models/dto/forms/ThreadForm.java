@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.models.dto;
+package com.github.njuro.jboard.models.dto.forms;
 
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Thread;
