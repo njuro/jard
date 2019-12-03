@@ -18,22 +18,26 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class BoardResolver implements PathVariableArgumentResolver {
 
-    private final BoardService boardService;
+  private final BoardService boardService;
 
-    @Autowired
-    public BoardResolver(BoardService boardService) {
-        this.boardService = boardService;
-    }
+  @Autowired
+  public BoardResolver(BoardService boardService) {
+    this.boardService = boardService;
+  }
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Board.class);
-    }
+  @Override
+  public boolean supportsParameter(MethodParameter parameter) {
+    return parameter.getParameterType().equals(Board.class);
+  }
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+  @Override
+  public Object resolveArgument(
+      MethodParameter parameter,
+      ModelAndViewContainer mavContainer,
+      NativeWebRequest webRequest,
+      WebDataBinderFactory binderFactory) {
+    String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
-        return boardService.resolveBoard(label);
-    }
+    return boardService.resolveBoard(label);
+  }
 }

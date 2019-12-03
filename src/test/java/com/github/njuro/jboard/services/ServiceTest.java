@@ -8,5 +8,4 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
-abstract class ServiceTest {
-}
+abstract class ServiceTest {}

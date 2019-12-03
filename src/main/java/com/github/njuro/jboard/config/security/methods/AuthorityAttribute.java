@@ -8,11 +8,11 @@ import org.springframework.security.access.ConfigAttribute;
 @AllArgsConstructor
 public class AuthorityAttribute implements ConfigAttribute {
 
-    @Getter
-    private final UserAuthority authority;
+  private static final long serialVersionUID = -8715812535674792037L;
+  @Getter private final UserAuthority authority;
 
-    @Override
-    public String getAttribute() {
-        return authority.name();
-    }
+  @Override
+  public String getAttribute() {
+    return this.authority.name();
+  }
 }

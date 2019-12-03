@@ -2,13 +2,24 @@ package com.github.njuro.jboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.helpers.Constants;
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.nio.file.Paths;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PostLoad;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Entity representing an attachment to post
@@ -23,58 +34,44 @@ import java.nio.file.Paths;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Attachment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Basic
-    @EqualsAndHashCode.Include
-    private String path;
+  @Basic @EqualsAndHashCode.Include private String path;
 
-    @NotNull
-    private String originalFilename;
+  @NotNull private String originalFilename;
 
-    @Column(unique = true)
-    @EqualsAndHashCode.Include
-    private String filename;
+  @Column(unique = true)
+  @EqualsAndHashCode.Include
+  private String filename;
 
-    @Basic
-    private int width;
+  @Basic private int width;
 
-    @Basic
-    private int height;
+  @Basic private int height;
 
-    @Basic
-    private int thumbWidth;
+  @Basic private int thumbWidth;
 
-    @Basic
-    private int thumbHeight;
+  @Basic private int thumbHeight;
 
-    @Transient
-    @ToString.Exclude
-    private String url;
+  @Transient @ToString.Exclude private String url;
 
-    @Transient
-    @ToString.Exclude
-    private File file;
+  @Transient @ToString.Exclude private File file;
 
-    @Transient
-    @ToString.Exclude
-    @JsonIgnore
-    private MultipartFile sourceFile;
+  @Transient @ToString.Exclude @JsonIgnore private MultipartFile sourceFile;
 
-    public Attachment(String path, @NotNull String originalFilename, String filename) {
-        this.path = path;
-        this.originalFilename = originalFilename;
-        this.filename = filename;
+  public Attachment(
+      final String path, @NotNull final String originalFilename, final String filename) {
+    this.path = path;
+    this.originalFilename = originalFilename;
+    this.filename = filename;
 
-        initContentPaths();
-    }
+    initContentPaths();
+  }
 
-    @PostLoad
-    public void initContentPaths() {
-        this.url = Constants.USER_CONTENT_URL + Paths.get(path, filename).toString();
-        this.file = Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
-    }
-
+  @PostLoad
+  public void initContentPaths() {
+    this.url = Constants.USER_CONTENT_URL + Paths.get(this.path, this.filename).toString();
+    this.file = Constants.USER_CONTENT_PATH.resolve(Paths.get(this.path, this.filename)).toFile();
+  }
 }

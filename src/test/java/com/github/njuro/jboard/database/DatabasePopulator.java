@@ -1,6 +1,5 @@
 package com.github.njuro.jboard.database;
 
-
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.SeedStrategy;
@@ -16,7 +15,9 @@ import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@DisabledIf(expression = "#{ systemProperties['populate'] == null}", reason = "Database populator must be enabled with -Dpopulate flag")
+@DisabledIf(
+    expression = "#{ systemProperties['populate'] == null}",
+    reason = "Database populator must be enabled with -Dpopulate flag")
 @DataJpaTest
 @DBRider
 @DBUnit(caseSensitiveTableNames = true)
@@ -25,17 +26,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Slf4j
 public class DatabasePopulator {
 
-    @Test
-    @DataSet(value = {"/datasets/test.yml", "/datasets/users.yml"},
-            disableConstraints = true,
-            executeStatementsBefore = "SET FOREIGN_KEY_CHECKS=0",
-            executeStatementsAfter = "SET FOREIGN_KEY_CHECKS=1",
-            transactional = true,
-            useSequenceFiltering = false,
-            strategy = SeedStrategy.CLEAN_INSERT)
-    @Commit
-    public void populateDatabase() {
-        log.info("Database populated");
-    }
-
+  @Test
+  @DataSet(
+      value = {"/datasets/test.yml", "/datasets/users.yml"},
+      disableConstraints = true,
+      executeStatementsBefore = "SET FOREIGN_KEY_CHECKS=0",
+      executeStatementsAfter = "SET FOREIGN_KEY_CHECKS=1",
+      transactional = true,
+      useSequenceFiltering = false,
+      strategy = SeedStrategy.CLEAN_INSERT)
+  @Commit
+  public void populateDatabase() {
+    log.info("Database populated");
+  }
 }

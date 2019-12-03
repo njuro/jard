@@ -10,5 +10,5 @@ import com.github.njuro.jboard.models.Post;
 @FunctionalInterface
 public interface Decorator {
 
-    void decorate(Post post);
+  void decorate(Post post);
 }

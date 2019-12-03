@@ -8,33 +8,40 @@ import com.github.njuro.jboard.models.dto.forms.RegisterForm;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.jfilter.filter.FieldFilterSetting;
 import com.jfilter.filter.FilterBehaviour;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_USERS)
 public class UserRestController {
 
-    private final UserFacade userFacade;
+  private final UserFacade userFacade;
 
-    @Autowired
-    public UserRestController(UserFacade userFacade) {
-        this.userFacade = userFacade;
-    }
+  @Autowired
+  public UserRestController(UserFacade userFacade) {
+    this.userFacade = userFacade;
+  }
 
-    @GetMapping("/current")
-    @FieldFilterSetting(className = User.class, fields = {"username", "role", "authorities"}, behaviour = FilterBehaviour.KEEP_FIELDS)
-    public User getCurrentUser() {
-        return userFacade.getCurrentUser();
-    }
+  @GetMapping("/current")
+  @FieldFilterSetting(
+      className = User.class,
+      fields = {"username", "role", "authorities"},
+      behaviour = FilterBehaviour.KEEP_FIELDS)
+  public User getCurrentUser() {
+    return userFacade.getCurrentUser();
+  }
 
-    @PostMapping("/create")
-    @HasAuthorities(UserAuthority.CREATE_USER)
-    public User registerUser(@RequestBody @Valid RegisterForm registerForm, HttpServletRequest request) {
-        registerForm.setRegistrationIp(request.getRemoteAddr());
-        return userFacade.registerUser(registerForm);
-    }
+  @PostMapping("/create")
+  @HasAuthorities(UserAuthority.CREATE_USER)
+  public User registerUser(
+      @RequestBody @Valid RegisterForm registerForm, HttpServletRequest request) {
+    registerForm.setRegistrationIp(request.getRemoteAddr());
+    return userFacade.registerUser(registerForm);
+  }
 }

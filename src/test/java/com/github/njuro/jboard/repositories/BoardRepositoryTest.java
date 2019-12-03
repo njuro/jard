@@ -1,29 +1,30 @@
 package com.github.njuro.jboard.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.njuro.jboard.models.Board;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class BoardRepositoryTest extends RepositoryTest {
 
-    @Autowired
-    private BoardRepository boardRepository;
+  @Autowired private BoardRepository boardRepository;
 
-    @Test
-    void testFindByLabel() {
-        assertThat(boardRepository.findByLabel("fit")).hasValueSatisfying(board -> board.getName().equals("Fitness"));
-        assertThat(boardRepository.findByLabel("b")).isNotPresent();
-    }
+  @Test
+  void testFindByLabel() {
+    assertThat(this.boardRepository.findByLabel("fit"))
+        .hasValueSatisfying(board -> board.getName().equals("Fitness"));
+    assertThat(this.boardRepository.findByLabel("b")).isNotPresent();
+  }
 
-    @Test
-    void testPostCounter() {
-        Board board = boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
-        long postCounterBefore = board.getPostCounter();
-        boardRepository.increasePostNumber(board.getLabel());
-        long postCounterAfter = boardRepository.getPostCounter(board.getLabel());
+  @Test
+  void testPostCounter() {
+    final Board board =
+        this.boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
+    final long postCounterBefore = board.getPostCounter();
+    this.boardRepository.increasePostNumber(board.getLabel());
+    final long postCounterAfter = this.boardRepository.getPostCounter(board.getLabel());
 
-        assertThat(postCounterAfter).isEqualTo(postCounterBefore + 1);
-    }
+    assertThat(postCounterAfter).isEqualTo(postCounterBefore + 1);
+  }
 }

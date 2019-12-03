@@ -9,25 +9,24 @@ import org.junit.jupiter.api.TestInstance;
 @Slf4j
 public abstract class DecoratorTest {
 
-    protected static Decorator decorator;
-    protected static Post post;
+  protected static Decorator decorator;
+  protected static Post post;
 
-    @BeforeAll
-    public void initAll() {
-        post = Post.builder().build();
-        decorator = initDecorator();
-    }
+  @BeforeAll
+  public void initAll() {
+    post = Post.builder().build();
+    decorator = initDecorator();
+  }
 
-    protected abstract Decorator initDecorator();
+  protected abstract Decorator initDecorator();
 
+  protected void decoratePost(String body) {
+    decoratePost(post, body);
+  }
 
-    protected void decoratePost(String body) {
-        decoratePost(post, body);
-    }
-
-    protected void decoratePost(Post post, String body) {
-        post.setBody(body);
-        decorator.decorate(post);
-        log.info(body + " -> " + post.getBody());
-    }
+  protected void decoratePost(Post post, String body) {
+    post.setBody(body);
+    decorator.decorate(post);
+    log.info(body + " -> " + post.getBody());
+  }
 }

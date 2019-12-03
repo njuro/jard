@@ -1,23 +1,20 @@
 package com.github.njuro.jboard.repositories;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class ThreadRepositoryTest extends RepositoryTest {
 
-    @Autowired
-    private ThreadRepository threadRepository;
+  @Autowired private ThreadRepository threadRepository;
 
-    @Test
-    void testFindByBoardLabelAndOriginalPostPostNumber() {
-        assertThat(threadRepository
-                .findByBoardLabelAndOriginalPostPostNumber("r", 1L)).isPresent();
+  @Test
+  void testFindByBoardLabelAndOriginalPostPostNumber() {
+    assertThat(this.threadRepository.findByBoardLabelAndOriginalPostPostNumber("r", 1L))
+        .isPresent();
 
-        assertThat(threadRepository
-                .findByBoardLabelAndOriginalPostPostNumber("r", 5L)).isNotPresent();
-    }
-
-
+    assertThat(this.threadRepository.findByBoardLabelAndOriginalPostPostNumber("r", 5L))
+        .isNotPresent();
+  }
 }

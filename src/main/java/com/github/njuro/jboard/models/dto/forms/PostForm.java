@@ -1,54 +1,59 @@
 package com.github.njuro.jboard.models.dto.forms;
 
+import static com.github.njuro.jboard.helpers.Constants.IP_PATTERN;
+import static com.github.njuro.jboard.helpers.Constants.MAX_ATTACHMENT_SIZE;
+import static com.github.njuro.jboard.helpers.Constants.MAX_NAME_LENGTH;
+import static com.github.njuro.jboard.helpers.Constants.MAX_POST_LENGTH;
+import static com.github.njuro.jboard.helpers.Constants.MAX_TRIPCODE_PASSWORD_LENGTH;
+
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.utils.Tripcodes;
-import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-import static com.github.njuro.jboard.helpers.Constants.*;
-
-/**
- * Data transfer object for "reply to thread" form
- */
+/** Data transfer object for "reply to thread" form */
 @Data
 public class PostForm {
 
-    @Size(max = MAX_NAME_LENGTH, message = "Username too long (allowed " + MAX_NAME_LENGTH + " chars)")
-    private String name;
+  @Size(
+      max = MAX_NAME_LENGTH,
+      message = "Username too long (allowed " + MAX_NAME_LENGTH + " chars)")
+  private String name;
 
-    @Size(max = MAX_TRIPCODE_PASSWORD_LENGTH, message = "Password too long (allowed " + MAX_TRIPCODE_PASSWORD_LENGTH + " chars)")
-    private String password;
+  @Size(
+      max = MAX_TRIPCODE_PASSWORD_LENGTH,
+      message = "Password too long (allowed " + MAX_TRIPCODE_PASSWORD_LENGTH + " chars)")
+  private String password;
 
-    @Size(max = MAX_POST_LENGTH, message = "Post too long (allowed " + MAX_POST_LENGTH + " chars)")
-    private String body;
+  @Size(max = MAX_POST_LENGTH, message = "Post too long (allowed " + MAX_POST_LENGTH + " chars)")
+  private String body;
 
-    @Pattern(regexp = IP_PATTERN)
-    private String ip;
+  @Pattern(regexp = IP_PATTERN)
+  private String ip;
 
-    private MultipartFile attachment;
+  private MultipartFile attachment;
 
-    @AssertFalse(message = "Attachment is too big (allowed " + MAX_ATTACHMENT_SIZE + " bytes)")
-    public boolean isAttachmentTooBig() {
-        return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
-    }
+  @AssertFalse(message = "Attachment is too big (allowed " + MAX_ATTACHMENT_SIZE + " bytes)")
+  public boolean isAttachmentTooBig() {
+    return this.attachment != null && this.attachment.getSize() > MAX_ATTACHMENT_SIZE;
+  }
 
-    @AssertTrue(message = "Post must have an attachment or non-empty body")
-    public boolean isAttachmentOrNonEmptyBody() {
-        return (attachment != null && attachment.getSize() > 0) || (body != null && !body.trim().isEmpty());
-    }
+  @AssertTrue(message = "Post must have an attachment or non-empty body")
+  public boolean isAttachmentOrNonEmptyBody() {
+    return (this.attachment != null && this.attachment.getSize() > 0)
+        || (this.body != null && !this.body.trim().isEmpty());
+  }
 
-    public Post toPost() {
-        return Post.builder()
-                .name(name)
-                .tripcode(Tripcodes.generateTripcode(password))
-                .body(body)
-                .ip(ip)
-                .build();
-    }
-
+  public Post toPost() {
+    return Post.builder()
+        .name(this.name)
+        .tripcode(Tripcodes.generateTripcode(this.password))
+        .body(this.body)
+        .ip(this.ip)
+        .build();
+  }
 }

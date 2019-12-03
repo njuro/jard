@@ -4,44 +4,43 @@ import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.forms.RegisterForm;
 import com.github.njuro.jboard.services.UserService;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
-
 @Service
 public class UserFacade {
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+  private final UserService userService;
+  private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserFacade(PasswordEncoder passwordEncoder, UserService userService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
+  @Autowired
+  public UserFacade(final PasswordEncoder passwordEncoder, final UserService userService) {
+    this.passwordEncoder = passwordEncoder;
+    this.userService = userService;
+  }
+
+  public User registerUser(@NotNull final RegisterForm registerForm) {
+    if (this.userService.doesUserExists(registerForm.getUsername())) {
+      throw new FormValidationException("User with this name already exists");
     }
 
-    public User registerUser(@NotNull RegisterForm registerForm) {
-        if (userService.doesUserExists(registerForm.getUsername())) {
-            throw new FormValidationException("User with this name already exists");
-        }
-
-        if (userService.doesEmailExists(registerForm.getEmail())) {
-            throw new FormValidationException("User with this e-mail already exists");
-        }
-
-        User user = registerForm.toUser();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        return userService.saveUser(user);
+    if (this.userService.doesEmailExists(registerForm.getEmail())) {
+      throw new FormValidationException("User with this e-mail already exists");
     }
 
-    public User getCurrentUser() {
-        return userService.getCurrentUser();
-    }
+    final User user = registerForm.toUser();
+    user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
-    public User updateUser(User user) {
-        return userService.saveUser(user);
-    }
+    return this.userService.saveUser(user);
+  }
+
+  public User getCurrentUser() {
+    return this.userService.getCurrentUser();
+  }
+
+  public User updateUser(final User user) {
+    return this.userService.saveUser(user);
+  }
 }

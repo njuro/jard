@@ -11,30 +11,35 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * Resolver for mapping post number and board label (path variables) to respective {@link Post} object
+ * Resolver for mapping post number and board label (path variables) to respective {@link Post}
+ * object
  *
  * @author njuro
  */
 @Component
 public class PostResolver implements PathVariableArgumentResolver {
 
-    private final PostService postService;
+  private final PostService postService;
 
-    @Autowired
-    public PostResolver(PostService postService) {
-        this.postService = postService;
-    }
+  @Autowired
+  public PostResolver(PostService postService) {
+    this.postService = postService;
+  }
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Post.class);
-    }
+  @Override
+  public boolean supportsParameter(MethodParameter parameter) {
+    return parameter.getParameterType().equals(Post.class);
+  }
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        Long postNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
-        String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+  @Override
+  public Object resolveArgument(
+      MethodParameter parameter,
+      ModelAndViewContainer mavContainer,
+      NativeWebRequest webRequest,
+      WebDataBinderFactory binderFactory) {
+    Long postNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
+    String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
-        return postService.resolvePost(board, postNumber);
-    }
+    return postService.resolvePost(board, postNumber);
+  }
 }

@@ -3,14 +3,29 @@ package com.github.njuro.jboard.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.models.enums.UserRole;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Entity representing registered user.
@@ -27,73 +42,67 @@ import java.util.Set;
 @ToString
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    private Long id;
+  private static final long serialVersionUID = -6709426435122012297L;
 
-    @Basic
-    @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true)
-    private String username;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIgnore
+  private Long id;
 
-    @Basic
-    @ToString.Exclude
-    @JsonIgnore
-    private String password;
+  @Basic
+  @EqualsAndHashCode.Include
+  @Column(nullable = false, unique = true)
+  private String username;
 
-    @Basic
-    @Column(unique = true)
-    private String email;
+  @Basic @ToString.Exclude @JsonIgnore private String password;
 
-    @Basic
-    private boolean enabled;
+  @Basic
+  @Column(unique = true)
+  private String email;
 
-    @Enumerated(value = EnumType.STRING)
-    private UserRole role;
+  @Basic private boolean enabled;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "authority")
-    @Enumerated(value = EnumType.STRING)
-    private Set<UserAuthority> authorities;
+  @Enumerated(value = EnumType.STRING)
+  private UserRole role;
 
-    @Basic
-    @ToString.Exclude
-    private String registrationIp;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @Column(name = "authority")
+  @Enumerated(value = EnumType.STRING)
+  private Set<UserAuthority> authorities;
 
-    @Basic
-    @ToString.Exclude
-    private String lastLoginIp;
+  @Basic @ToString.Exclude private String registrationIp;
 
-    @Column(name = "lastLogin")
-    private LocalDateTime lastLogin;
+  @Basic @ToString.Exclude private String lastLoginIp;
 
-    @Column(name = "createdAt")
-    @ToString.Exclude
-    private LocalDateTime createdAt;
+  @Column(name = "lastLogin")
+  private LocalDateTime lastLogin;
 
-    @PrePersist
-    public void setCreatedAt() {
-        this.createdAt = LocalDateTime.now();
-    }
+  @Column(name = "createdAt")
+  @ToString.Exclude
+  private LocalDateTime createdAt;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
+  @PrePersist
+  public void setCreatedAt() {
+    this.createdAt = LocalDateTime.now();
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.authorities;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 }

@@ -1,10 +1,25 @@
 package com.github.njuro.jboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Entity representing a post in thread
@@ -20,41 +35,36 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Post {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIgnore
+  private Long id;
 
-    @Basic
-    @EqualsAndHashCode.Include
-    private Long postNumber;
+  @Basic @EqualsAndHashCode.Include private Long postNumber;
 
-    @Basic
-    private String name;
+  @Basic private String name;
 
-    @Basic
-    private String tripcode;
+  @Basic private String tripcode;
 
-    @Basic
-    @Column(columnDefinition = "TEXT")
-    private String body;
+  @Basic
+  @Column(columnDefinition = "TEXT")
+  private String body;
 
-    @Column(name = "createdAt")
-    private LocalDateTime createdAt;
+  @Column(name = "createdAt")
+  private LocalDateTime createdAt;
 
-    @Basic
-    private String ip;
+  @Basic private String ip;
 
-    @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
-    @EqualsAndHashCode.Include
-    @ToString.Exclude
-    private Thread thread;
+  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
+  @EqualsAndHashCode.Include
+  @ToString.Exclude
+  private Thread thread;
 
-    @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Attachment attachment;
+  @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private Attachment attachment;
 
-    @PrePersist
-    private void setCreatedAt() {
-        this.createdAt = LocalDateTime.now();
-    }
+  @PrePersist
+  private void setCreatedAt() {
+    this.createdAt = LocalDateTime.now();
+  }
 }

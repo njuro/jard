@@ -1,6 +1,5 @@
 package com.github.njuro.jboard.services;
 
-
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.repositories.UserRepository;
@@ -23,58 +22,57 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+  @Autowired
+  public UserService(final UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+    return this.userRepository
+        .findByUsernameIgnoreCase(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User " + username + "does not exists"));
+  }
+
+  public User getUserByEmail(final String email) {
+    return this.userRepository.findByEmailIgnoreCase(email);
+  }
+
+  public User saveUser(final User user) {
+    return this.userRepository.save(user);
+  }
+
+  public boolean doesUserExists(final String username) {
+    try {
+      loadUserByUsername(username);
+      return true;
+    } catch (final UsernameNotFoundException unfe) {
+      return false;
+    }
+  }
+
+  public boolean doesEmailExists(final String email) {
+    return getUserByEmail(email) != null;
+  }
+
+  public User getCurrentUser() {
+    final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (!(principal instanceof User)) {
+      return null;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + "does not exists"));
+    return (User) principal;
+  }
+
+  public boolean hasCurrentUserAuthority(final UserAuthority authority) {
+    final User current = getCurrentUser();
+    if (current == null) {
+      return false;
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmailIgnoreCase(email);
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public boolean doesUserExists(String username) {
-        try {
-            loadUserByUsername(username);
-            return true;
-        } catch (UsernameNotFoundException unfe) {
-            return false;
-        }
-    }
-
-    public boolean doesEmailExists(String email) {
-        return getUserByEmail(email) != null;
-    }
-
-    public User getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (!(principal instanceof User)) {
-            return null;
-        }
-
-        return (User) principal;
-    }
-
-    public boolean hasCurrentUserAuthority(UserAuthority authority) {
-        User current = getCurrentUser();
-        if (current == null) {
-            return false;
-        }
-
-        return current.getAuthorities().contains(authority);
-    }
-
-
+    return current.getAuthorities().contains(authority);
+  }
 }
-
