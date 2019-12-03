@@ -18,8 +18,8 @@ import java.util.List;
 @Table(name = "boards")
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Board {
 

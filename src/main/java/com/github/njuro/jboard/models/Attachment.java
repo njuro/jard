@@ -2,10 +2,7 @@ package com.github.njuro.jboard.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.helpers.Constants;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -22,6 +19,7 @@ import java.nio.file.Paths;
 @Table(name = "attachments")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Attachment {
 

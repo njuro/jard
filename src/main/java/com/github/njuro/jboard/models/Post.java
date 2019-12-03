@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "posts")
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Post {
 

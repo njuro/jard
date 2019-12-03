@@ -21,8 +21,8 @@ import java.util.Set;
 @Table(name = "users")
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 public class User implements UserDetails {
