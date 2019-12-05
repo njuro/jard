@@ -3,6 +3,7 @@ package com.github.njuro.jboard.services;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.github.njuro.jboard.repositories.UserRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,6 +56,10 @@ public class UserService implements UserDetailsService {
 
   public boolean doesEmailExists(final String email) {
     return getUserByEmail(email) != null;
+  }
+
+  public List<User> getAllUsers() {
+    return this.userRepository.findAll();
   }
 
   public User getCurrentUser() {

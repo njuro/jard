@@ -32,13 +32,13 @@ public class BoardRestController {
   }
 
   @PostMapping
-  @HasAuthorities(UserAuthority.CREATE_BOARD)
+  @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public Board createBoard(@RequestBody @Valid final BoardForm boardForm) {
     return this.boardFacade.createBoard(boardForm);
   }
 
   @GetMapping("/types")
-  @HasAuthorities(UserAuthority.CREATE_BOARD)
+  @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public Set<BoardAttachmentTypeDto> getBoardTypes() {
     return BoardFacade.getBoardTypes();
   }

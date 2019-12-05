@@ -4,6 +4,7 @@ import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.models.dto.forms.RegisterForm;
 import com.github.njuro.jboard.services.UserService;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,5 +43,9 @@ public class UserFacade {
 
   public User updateUser(final User user) {
     return this.userService.saveUser(user);
+  }
+
+  public List<User> getAllUsers() {
+    return this.userService.getAllUsers();
   }
 }

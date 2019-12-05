@@ -6,12 +6,11 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum UserAuthority implements GrantedAuthority {
-  CREATE_BOARD,
+  MANAGE_BOARDS,
   TOGGLE_STICKY_THREAD,
   TOGGLE_LOCK_THREAD,
   DELETE_POST,
-  CREATE_USER,
-  EDIT_USER,
+  MANAGE_USERS,
   VIEW_IP;
 
   @Override
