@@ -56,7 +56,7 @@ public class Board {
 
   private boolean nsfw;
 
-  @Basic private Long postCounter;
+  @Basic @JsonIgnore private Long postCounter;
 
   @OneToMany(
       targetEntity = Thread.class,
