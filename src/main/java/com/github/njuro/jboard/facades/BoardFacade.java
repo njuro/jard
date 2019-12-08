@@ -3,9 +3,11 @@ package com.github.njuro.jboard.facades;
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.dto.BoardAttachmentTypeDto;
+import com.github.njuro.jboard.models.dto.BoardCatalog;
 import com.github.njuro.jboard.models.dto.forms.BoardForm;
 import com.github.njuro.jboard.models.enums.BoardAttachmentType;
 import com.github.njuro.jboard.services.BoardService;
+import com.github.njuro.jboard.services.ThreadService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -17,10 +19,12 @@ import org.springframework.stereotype.Component;
 public class BoardFacade {
 
   private final BoardService boardService;
+  private final ThreadService threadService;
 
   @Autowired
-  public BoardFacade(final BoardService boardService) {
+  public BoardFacade(final BoardService boardService, final ThreadService threadService) {
     this.boardService = boardService;
+    this.threadService = threadService;
   }
 
   public List<Board> getAllBoards() {
@@ -33,6 +37,10 @@ public class BoardFacade {
     }
 
     return this.boardService.saveBoard(boardForm.toBoard());
+  }
+
+  public BoardCatalog getBoardCatalog(final Board board) {
+    return new BoardCatalog(board, this.threadService.getThreadCatalogEntries(board.getId()));
   }
 
   public static Set<BoardAttachmentTypeDto> getBoardTypes() {

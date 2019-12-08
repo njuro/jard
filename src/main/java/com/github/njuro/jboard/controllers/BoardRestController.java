@@ -6,6 +6,7 @@ import com.github.njuro.jboard.facades.BoardFacade;
 import com.github.njuro.jboard.helpers.Mappings;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.dto.BoardAttachmentTypeDto;
+import com.github.njuro.jboard.models.dto.BoardCatalog;
 import com.github.njuro.jboard.models.dto.forms.BoardForm;
 import com.github.njuro.jboard.models.enums.UserAuthority;
 import com.jfilter.filter.DynamicFilter;
@@ -53,5 +54,11 @@ public class BoardRestController {
   @DynamicFilter(SensitiveDataFilter.class)
   public Board showBoard(final Board board) {
     return board;
+  }
+
+  @GetMapping(Mappings.PATH_VARIABLE_BOARD + "/catalog")
+  @FieldFilterSetting(className = Board.class, fields = "threads")
+  public BoardCatalog showBoardCatalog(final Board board) {
+    return this.boardFacade.getBoardCatalog(board);
   }
 }
