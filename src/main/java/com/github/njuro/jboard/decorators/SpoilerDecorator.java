@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 public class SpoilerDecorator implements Decorator {
 
   @Override
-  public void decorate(Post post) {
-    Matcher matcher = SPOILER_PATTERN.matcher(post.getBody());
+  public void decorate(final Post post) {
+    final Matcher matcher = SPOILER_PATTERN.matcher(post.getBody());
     post.setBody(matcher.replaceAll(SPOILER_START + "${content}" + SPOILER_END));
   }
 }

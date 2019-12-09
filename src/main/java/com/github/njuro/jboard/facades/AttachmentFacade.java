@@ -12,14 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class AttachmentFacade {
 
-  public Attachment createAttachment(MultipartFile file, Board board) {
-    return createAttachment(file, Paths.get(board.getLabel()));
+  public static Attachment createAttachment(final MultipartFile file, final Board board) {
+    return AttachmentFacade.createAttachment(file, Paths.get(board.getLabel()));
   }
 
-  public Attachment createAttachment(MultipartFile file, Path destination) {
-    String ext = FilenameUtils.getExtension(file.getOriginalFilename());
-    String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
-    Attachment attachment =
+  public static Attachment createAttachment(final MultipartFile file, final Path destination) {
+    final String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+    final String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
+    final Attachment attachment =
         new Attachment(destination.toString(), file.getOriginalFilename(), generatedName);
 
     attachment.setSourceFile(file);

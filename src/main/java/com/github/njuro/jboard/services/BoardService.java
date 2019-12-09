@@ -21,7 +21,7 @@ public class BoardService {
   private final BoardRepository boardRepository;
 
   @Autowired
-  public BoardService(BoardRepository boardRepository) {
+  public BoardService(final BoardRepository boardRepository) {
     this.boardRepository = boardRepository;
   }
 
@@ -29,24 +29,24 @@ public class BoardService {
     return new ArrayList<>(boardRepository.findAll());
   }
 
-  public Board saveBoard(Board board) {
+  public Board saveBoard(final Board board) {
     board.setPostCounter(1L);
     return boardRepository.save(board);
   }
 
-  public Board resolveBoard(String label) throws BoardNotFoundException {
+  public Board resolveBoard(final String label) throws BoardNotFoundException {
     return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
   }
 
-  public boolean doesBoardExist(String label) {
+  public boolean doesBoardExist(final String label) {
     return boardRepository.findByLabel(label).isPresent();
   }
 
-  public Long getPostCounter(Board board) {
+  public Long getPostCounter(final Board board) {
     return boardRepository.getPostCounter(board.getLabel());
   }
 
-  public void increasePostCounter(Board board) {
+  public void increasePostCounter(final Board board) {
     boardRepository.increasePostNumber(board.getLabel());
   }
 }

@@ -32,17 +32,17 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-    return this.userRepository
+    return userRepository
         .findByUsernameIgnoreCase(username)
         .orElseThrow(() -> new UsernameNotFoundException("User " + username + "does not exists"));
   }
 
   public User getUserByEmail(final String email) {
-    return this.userRepository.findByEmailIgnoreCase(email);
+    return userRepository.findByEmailIgnoreCase(email);
   }
 
   public User saveUser(final User user) {
-    return this.userRepository.save(user);
+    return userRepository.save(user);
   }
 
   public boolean doesUserExists(final String username) {
@@ -59,10 +59,10 @@ public class UserService implements UserDetailsService {
   }
 
   public List<User> getAllUsers() {
-    return this.userRepository.findAll();
+    return userRepository.findAll();
   }
 
-  public User getCurrentUser() {
+  public static User getCurrentUser() {
     final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (!(principal instanceof User)) {
@@ -72,8 +72,8 @@ public class UserService implements UserDetailsService {
     return (User) principal;
   }
 
-  public boolean hasCurrentUserAuthority(final UserAuthority authority) {
-    final User current = getCurrentUser();
+  public static boolean hasCurrentUserAuthority(final UserAuthority authority) {
+    final User current = UserService.getCurrentUser();
     if (current == null) {
       return false;
     }

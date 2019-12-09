@@ -28,37 +28,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final UserService userService;
 
   @Autowired
-  public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, @Lazy UserService userService) {
+  public JwtAuthenticationFilter(
+      final JwtTokenProvider tokenProvider, @Lazy final UserService userService) {
     this.tokenProvider = tokenProvider;
     this.userService = userService;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final FilterChain filterChain)
       throws ServletException, IOException {
     try {
-      String jwt = getJwtFromRequest(request);
+      final String jwt = getJwtFromRequest(request);
 
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-        String username = tokenProvider.getUsernameFromJWT(jwt);
+        final String username = tokenProvider.getUsernameFromJWT(jwt);
 
-        UserDetails userDetails = userService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authentication =
+        final UserDetails userDetails = userService.loadUserByUsername(username);
+        final UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
-    } catch (Exception ex) {
+    } catch (final Exception ex) {
       log.error("Could not set user authentication in security context", ex);
     }
 
     filterChain.doFilter(request, response);
   }
 
-  private String getJwtFromRequest(HttpServletRequest request) {
+  private String getJwtFromRequest(final HttpServletRequest request) {
     return Arrays.stream(request.getCookies())
         .filter(cookie -> cookie.getName().equals(Constants.JWT_COOKIE_NAME))
         .map(Cookie::getValue)

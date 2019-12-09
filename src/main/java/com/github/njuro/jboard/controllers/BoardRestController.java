@@ -35,7 +35,7 @@ public class BoardRestController {
   @PostMapping
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public Board createBoard(@RequestBody @Valid final BoardForm boardForm) {
-    return this.boardFacade.createBoard(boardForm);
+    return boardFacade.createBoard(boardForm);
   }
 
   @GetMapping("/types")
@@ -47,12 +47,12 @@ public class BoardRestController {
   @GetMapping
   @FieldFilterSetting(className = Board.class, fields = "threads")
   public List<Board> showAllBoards() {
-    return this.boardFacade.getAllBoards();
+    return boardFacade.getAllBoards();
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
   @DynamicFilter(SensitiveDataFilter.class)
   public Board showBoard(final Board board, final Pageable pageRequest) {
-    return this.boardFacade.getBoardPage(board, pageRequest);
+    return boardFacade.getBoardPage(board, pageRequest);
   }
 }

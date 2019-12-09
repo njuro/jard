@@ -13,11 +13,12 @@ public class ResponseJsonWriter {
   private final ObjectMapper objectMapper;
 
   @Autowired
-  public ResponseJsonWriter(ObjectMapper objectMapper) {
+  public ResponseJsonWriter(final ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
 
-  public void writeJsonToResponse(HttpServletResponse response, Object object) throws IOException {
+  public void writeJsonToResponse(final HttpServletResponse response, final Object object)
+      throws IOException {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.getWriter().write(objectMapper.writeValueAsString(object));
     response.getWriter().flush();

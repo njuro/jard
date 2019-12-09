@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 public class CodeDecorator implements Decorator {
 
   @Override
-  public void decorate(Post post) {
-    Matcher matcher = CODE_PATTERN.matcher(post.getBody());
+  public void decorate(final Post post) {
+    final Matcher matcher = CODE_PATTERN.matcher(post.getBody());
     post.setBody(matcher.replaceAll(CODE_START + "${content}" + CODE_END));
   }
 }

@@ -49,10 +49,10 @@ public class CrosslinkDecorator implements Decorator {
 
       try {
         if (postNumber == null || postNumber.isEmpty()) {
-          this.boardService.resolveBoard(boardLabel);
+          boardService.resolveBoard(boardLabel);
         } else {
           final Post linkedPost =
-              this.postService.resolvePost(boardLabel, Long.valueOf(postNumber));
+              postService.resolvePost(boardLabel, Long.valueOf(postNumber));
           if (linkedPost.equals(post.getThread().getOriginalPost())) {
             special += CROSSLINK_OP;
           }

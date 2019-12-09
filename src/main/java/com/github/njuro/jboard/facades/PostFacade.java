@@ -14,16 +14,16 @@ public class PostFacade {
   private final AttachmentFacade attachmentFacade;
 
   @Autowired
-  public PostFacade(AttachmentFacade attachmentFacade) {
+  public PostFacade(final AttachmentFacade attachmentFacade) {
     this.attachmentFacade = attachmentFacade;
   }
 
-  public Post createPost(@Valid @NotNull PostForm postForm, Thread thread) {
-    Post post = postForm.toPost();
+  public Post createPost(@Valid @NotNull final PostForm postForm, final Thread thread) {
+    final Post post = postForm.toPost();
 
     if (postForm.getAttachment() != null) {
       post.setAttachment(
-          attachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));
+          AttachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));
     }
 
     post.setThread(thread);

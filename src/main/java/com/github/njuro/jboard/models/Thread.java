@@ -82,20 +82,20 @@ public class Thread {
 
   @PrePersist
   private void setCreatedAt() {
-    this.createdAt = LocalDateTime.now();
-    this.setLastReplyAt(LocalDateTime.now());
+    createdAt = LocalDateTime.now();
+    setLastReplyAt(LocalDateTime.now());
   }
 
   @EqualsAndHashCode.Include
   public Long getPostNumber() {
-    return this.originalPost != null ? this.originalPost.getPostNumber() : null;
+    return originalPost != null ? originalPost.getPostNumber() : null;
   }
 
   public void toggleLock() {
-    this.locked = !this.locked;
+    locked = !locked;
   }
 
   public void toggleSticky() {
-    this.stickied = !this.stickied;
+    stickied = !stickied;
   }
 }

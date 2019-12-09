@@ -17,7 +17,9 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
   @Override
   public void onLogoutSuccess(
-      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final Authentication authentication)
       throws IOException, ServletException {
     super.onLogoutSuccess(request, response, authentication);
   }

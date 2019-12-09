@@ -13,14 +13,16 @@ import org.springframework.security.access.method.AbstractMethodSecurityMetadata
 public class AuthorityMetadataSource extends AbstractMethodSecurityMetadataSource {
 
   @Override
-  public Collection<ConfigAttribute> getAttributes(Method method, Class<?> targetClass) {
-    HasAuthorities annotation = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
+  public Collection<ConfigAttribute> getAttributes(
+      final Method method, final Class<?> targetClass) {
+    final HasAuthorities annotation = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
     return (annotation == null)
         ? Collections.emptyList()
         : convertToAuthorityAttributes(annotation.value());
   }
 
-  private Collection<ConfigAttribute> convertToAuthorityAttributes(UserAuthority[] authorities) {
+  private Collection<ConfigAttribute> convertToAuthorityAttributes(
+      final UserAuthority[] authorities) {
     return Arrays.stream(authorities).map(AuthorityAttribute::new).collect(Collectors.toSet());
   }
 

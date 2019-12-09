@@ -46,22 +46,22 @@ public class PostService {
 
   public Post savePost(final Post post) {
     final Board board = post.getThread().getBoard();
-    post.setPostNumber(this.boardService.getPostCounter(board));
-    this.boardService.increasePostCounter(board);
+    post.setPostNumber(boardService.getPostCounter(board));
+    boardService.increasePostCounter(board);
 
     decoratePost(post);
 
     if (post.getAttachment() != null) {
-      post.setAttachment(this.attachmentService.saveAttachment(post.getAttachment()));
+      post.setAttachment(attachmentService.saveAttachment(post.getAttachment()));
     }
 
-    return this.postRepository.save(post);
+    return postRepository.save(post);
   }
 
   private void decoratePost(final Post post) {
     post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
-    for (final Decorator decorator : this.decorators) {
+    for (final Decorator decorator : decorators) {
       decorator.decorate(post);
     }
 
@@ -69,34 +69,34 @@ public class PostService {
   }
 
   public Post resolvePost(final String boardLabel, final Long postNumber) {
-    return this.postRepository
+    return postRepository
         .findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
         .orElseThrow(PostNotFoundException::new);
   }
 
   public List<Post> getAllRepliesForThread(final Thread thread) {
-    return this.postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(
+    return postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(
         thread.getId(), thread.getOriginalPost().getId());
   }
 
   public List<Post> getLatestRepliesForThread(final Thread thread) {
     final List<Post> posts =
-        this.postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(
+        postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(
             thread.getId(), thread.getOriginalPost().getId());
     Collections.reverse(posts);
     return posts;
   }
 
   public List<Post> getNewRepliesForThreadSince(final Thread thread, final Long lastPostNumber) {
-    return this.postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
+    return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
         thread.getId(), lastPostNumber);
   }
 
   public void deletePost(final Post post) {
     if (post.getAttachment() != null) {
-      this.attachmentService.deleteAttachmentFile(post.getAttachment());
+      AttachmentService.deleteAttachmentFile(post.getAttachment());
     }
-    this.postRepository.delete(post);
+    postRepository.delete(post);
   }
 
   public void deletePosts(final List<Post> posts) {
@@ -105,7 +105,7 @@ public class PostService {
             .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
-    this.attachmentService.deleteAttachmentFiles(attachments);
-    this.postRepository.deleteAll(posts);
+    AttachmentService.deleteAttachmentFiles(attachments);
+    postRepository.deleteAll(posts);
   }
 }

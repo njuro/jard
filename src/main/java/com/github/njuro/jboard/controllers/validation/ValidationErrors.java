@@ -16,19 +16,19 @@ public class ValidationErrors {
   private List<String> errors;
 
   public ValidationErrors() {
-    this.timestamp = LocalDateTime.now();
-    this.errors = new ArrayList<>();
+    timestamp = LocalDateTime.now();
+    errors = new ArrayList<>();
   }
 
-  public ValidationErrors(BindingResult validationResult) {
+  public ValidationErrors(final BindingResult validationResult) {
     this();
-    this.errors =
+    errors =
         validationResult.getFieldErrors().stream()
             .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
   }
 
-  public ValidationErrors(String... errors) {
+  public ValidationErrors(final String... errors) {
     this();
     this.errors.addAll(Arrays.asList(errors));
   }

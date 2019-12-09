@@ -20,10 +20,10 @@ public enum UserRole {
   @Getter private Set<UserAuthority> defaultAuthorites;
 
   UserRole(final Set<UserAuthority> authorities) {
-    this.defaultAuthorites = authorities;
+    defaultAuthorites = authorities;
   }
 
   UserRole(final UserAuthority... authorities) {
-    this.defaultAuthorites = new HashSet<>(Arrays.asList(authorities));
+    defaultAuthorites = new HashSet<>(Arrays.asList(authorities));
   }
 }

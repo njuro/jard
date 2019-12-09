@@ -43,15 +43,15 @@ public class RegisterForm {
 
   @AssertTrue(message = "Passwords do not match")
   public boolean isPasswordMatching() {
-    return this.password.equals(this.passwordRepeated);
+    return password.equals(passwordRepeated);
   }
 
   public User toUser() {
     return User.builder()
-        .username(this.username)
-        .password(this.password)
-        .email(this.email)
-        .registrationIp(this.registrationIp)
+        .username(username)
+        .password(password)
+        .email(email)
+        .registrationIp(registrationIp)
         .role(UserRole.USER) // TODO set role as part of user form
         .authorities(UserRole.USER.getDefaultAuthorites())
         .enabled(true)

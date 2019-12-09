@@ -25,18 +25,18 @@ public class AttachmentService {
   private final AttachmentRepository attachmentRepository;
 
   @Autowired
-  public AttachmentService(AttachmentRepository attachmentRepository) {
+  public AttachmentService(final AttachmentRepository attachmentRepository) {
     this.attachmentRepository = attachmentRepository;
   }
 
-  public Attachment saveAttachment(Attachment attachment) {
+  public Attachment saveAttachment(final Attachment attachment) {
     if (attachment.getSourceFile() != null) {
-      Path path = Paths.get(attachment.getPath(), attachment.getFilename());
+      final Path path = Paths.get(attachment.getPath(), attachment.getFilename());
       try {
-        File destFile = Constants.USER_CONTENT_PATH.resolve(path).toFile();
+        final File destFile = Constants.USER_CONTENT_PATH.resolve(path).toFile();
         destFile.getParentFile().mkdirs();
         attachment.getSourceFile().transferTo(destFile);
-      } catch (IOException e) {
+      } catch (final IOException e) {
         throw new IllegalArgumentException("Cannot save to destination " + path.toString(), e);
       }
     }
@@ -45,13 +45,13 @@ public class AttachmentService {
     return attachmentRepository.save(attachment);
   }
 
-  public void deleteAttachmentFile(Attachment attachment) {
+  public static void deleteAttachmentFile(final Attachment attachment) {
     if (!attachment.getFile().delete()) {
       throw new IllegalStateException("Attachment file could not be deleted");
     }
   }
 
-  public void deleteAttachmentFiles(List<Attachment> attachments) {
-    attachments.forEach(this::deleteAttachmentFile);
+  public static void deleteAttachmentFiles(final List<Attachment> attachments) {
+    attachments.forEach(AttachmentService::deleteAttachmentFile);
   }
 }

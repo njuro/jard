@@ -39,12 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   public SecurityConfig(
-      UserService userService,
-      @Lazy AuthenticationSuccessHandler loginSuccessHandler,
-      AuthenticationFailureHandler loginFailureHandler,
-      LogoutSuccessHandler logoutSuccessHandler,
-      JwtAuthenticationFilter jwtAuthenticationFilter,
-      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+      final UserService userService,
+      @Lazy final AuthenticationSuccessHandler loginSuccessHandler,
+      final AuthenticationFailureHandler loginFailureHandler,
+      final LogoutSuccessHandler logoutSuccessHandler,
+      final JwtAuthenticationFilter jwtAuthenticationFilter,
+      final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
     this.userService = userService;
     this.loginSuccessHandler = loginSuccessHandler;
     this.loginFailureHandler = loginFailureHandler;
@@ -54,12 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+  protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(userService).passwordEncoder(bcryptEncoder());
   }
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  protected void configure(final HttpSecurity http) throws Exception {
     http.authorizeRequests()
         .antMatchers(Mappings.API_ROOT_USERS + "/current")
         .authenticated()
@@ -83,12 +83,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .cors(Customizer.withDefaults());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(
+        jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
   public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordFilter() throws Exception {
-    JsonUsernamePasswordAuthenticationFilter filter =
+    final JsonUsernamePasswordAuthenticationFilter filter =
         new JsonUsernamePasswordAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManagerBean());
     filter.setAuthenticationSuccessHandler(loginSuccessHandler);

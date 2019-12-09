@@ -23,16 +23,16 @@ public class Tripcodes {
    * com.github.njuro.jboard.helpers.Constants Constants}
    */
   @SneakyThrows(NoSuchAlgorithmException.class)
-  public String generateTripcode(String password) {
+  public String generateTripcode(final String password) {
     if (password.isEmpty()) {
       return null;
     }
 
-    MessageDigest md = MessageDigest.getInstance("SHA-512");
+    final MessageDigest md = MessageDigest.getInstance("SHA-512");
     md.update(password.getBytes());
-    byte[] byteData = md.digest();
+    final byte[] byteData = md.digest();
 
-    StringBuilder tripcode = new StringBuilder();
+    final StringBuilder tripcode = new StringBuilder();
     for (int i = 0; i < byteData.length; i++) {
       tripcode.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
     }

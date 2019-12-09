@@ -12,18 +12,18 @@ class BoardRepositoryTest extends RepositoryTest {
 
   @Test
   void testFindByLabel() {
-    assertThat(this.boardRepository.findByLabel("fit"))
+    assertThat(boardRepository.findByLabel("fit"))
         .hasValueSatisfying(board -> board.getName().equals("Fitness"));
-    assertThat(this.boardRepository.findByLabel("b")).isNotPresent();
+    assertThat(boardRepository.findByLabel("b")).isNotPresent();
   }
 
   @Test
   void testPostCounter() {
     final Board board =
-        this.boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
+        boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
     final long postCounterBefore = board.getPostCounter();
-    this.boardRepository.increasePostNumber(board.getLabel());
-    final long postCounterAfter = this.boardRepository.getPostCounter(board.getLabel());
+    boardRepository.increasePostNumber(board.getLabel());
+    final long postCounterAfter = boardRepository.getPostCounter(board.getLabel());
 
     assertThat(postCounterAfter).isEqualTo(postCounterBefore + 1);
   }

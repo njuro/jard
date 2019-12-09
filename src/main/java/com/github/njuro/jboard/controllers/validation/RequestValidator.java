@@ -13,12 +13,12 @@ public class RequestValidator {
   private final Validator validator;
 
   @Autowired
-  public RequestValidator(@Qualifier("defaultValidator") Validator validator) {
+  public RequestValidator(@Qualifier("defaultValidator") final Validator validator) {
     this.validator = validator;
   }
 
-  public void validate(Object target) {
-    BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
+  public void validate(final Object target) {
+    final BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
     validator.validate(target, bindingResult);
     if (bindingResult.hasFieldErrors()) {
       throw new FormValidationException(bindingResult);

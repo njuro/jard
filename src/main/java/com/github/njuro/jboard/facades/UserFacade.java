@@ -23,29 +23,29 @@ public class UserFacade {
   }
 
   public User registerUser(@NotNull final RegisterForm registerForm) {
-    if (this.userService.doesUserExists(registerForm.getUsername())) {
+    if (userService.doesUserExists(registerForm.getUsername())) {
       throw new FormValidationException("User with this name already exists");
     }
 
-    if (this.userService.doesEmailExists(registerForm.getEmail())) {
+    if (userService.doesEmailExists(registerForm.getEmail())) {
       throw new FormValidationException("User with this e-mail already exists");
     }
 
     final User user = registerForm.toUser();
-    user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    return this.userService.saveUser(user);
+    return userService.saveUser(user);
   }
 
-  public User getCurrentUser() {
-    return this.userService.getCurrentUser();
+  public static User getCurrentUser() {
+    return UserService.getCurrentUser();
   }
 
   public User updateUser(final User user) {
-    return this.userService.saveUser(user);
+    return userService.saveUser(user);
   }
 
   public List<User> getAllUsers() {
-    return this.userService.getAllUsers();
+    return userService.getAllUsers();
   }
 }

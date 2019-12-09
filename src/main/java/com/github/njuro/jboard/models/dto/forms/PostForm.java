@@ -39,21 +39,21 @@ public class PostForm {
 
   @AssertFalse(message = "Attachment is too big (allowed " + MAX_ATTACHMENT_SIZE + " bytes)")
   public boolean isAttachmentTooBig() {
-    return this.attachment != null && this.attachment.getSize() > MAX_ATTACHMENT_SIZE;
+    return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
   }
 
   @AssertTrue(message = "Post must have an attachment or non-empty body")
   public boolean isAttachmentOrNonEmptyBody() {
-    return (this.attachment != null && this.attachment.getSize() > 0)
-        || (this.body != null && !this.body.trim().isEmpty());
+    return (attachment != null && attachment.getSize() > 0)
+        || (body != null && !body.trim().isEmpty());
   }
 
   public Post toPost() {
     return Post.builder()
-        .name(this.name)
-        .tripcode(Tripcodes.generateTripcode(this.password))
-        .body(this.body)
-        .ip(this.ip)
+        .name(name)
+        .tripcode(Tripcodes.generateTripcode(password))
+        .body(body)
+        .ip(ip)
         .build();
   }
 }

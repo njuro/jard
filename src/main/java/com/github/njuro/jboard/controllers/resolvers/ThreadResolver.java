@@ -22,23 +22,24 @@ public class ThreadResolver implements PathVariableArgumentResolver {
   private final ThreadService threadService;
 
   @Autowired
-  public ThreadResolver(ThreadService threadService) {
+  public ThreadResolver(final ThreadService threadService) {
     this.threadService = threadService;
   }
 
   @Override
-  public boolean supportsParameter(MethodParameter parameter) {
+  public boolean supportsParameter(final MethodParameter parameter) {
     return parameter.getParameterType().equals(Thread.class);
   }
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
-      ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory) {
-    Long threadNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_THREAD, webRequest));
-    String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+      final MethodParameter parameter,
+      final ModelAndViewContainer mavContainer,
+      final NativeWebRequest webRequest,
+      final WebDataBinderFactory binderFactory) {
+    final Long threadNumber =
+        Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_THREAD, webRequest));
+    final String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
     return threadService.resolveThread(board, threadNumber);
   }

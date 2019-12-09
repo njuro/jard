@@ -31,31 +31,31 @@ public class ThreadService {
   }
 
   public Thread saveThread(final Thread thread) {
-    thread.setOriginalPost(this.postService.savePost(thread.getOriginalPost()));
-    return this.threadRepository.save(thread);
+    thread.setOriginalPost(postService.savePost(thread.getOriginalPost()));
+    return threadRepository.save(thread);
   }
 
   public Thread resolveThread(final String boardLabel, final Long threadNumber) {
-    return this.threadRepository
+    return threadRepository
         .findByBoardLabelAndOriginalPostPostNumber(boardLabel, threadNumber)
         .orElseThrow(ThreadNotFoundException::new);
   }
 
   public List<Thread> getThreadsFromBoard(final Board board, final Pageable pageRequest) {
-    return this.threadRepository.findByBoardId(board.getId(), pageRequest);
+    return threadRepository.findByBoardId(board.getId(), pageRequest);
   }
 
   public Thread updateThread(final Thread thread) {
-    return this.threadRepository.save(thread);
+    return threadRepository.save(thread);
   }
 
   public Thread updateLastReplyTimestamp(final Thread thread) {
     thread.setLastReplyAt(LocalDateTime.now());
-    return this.threadRepository.save(thread);
+    return threadRepository.save(thread);
   }
 
   public void deleteThread(final Thread thread) {
-    this.threadRepository.delete(thread);
-    this.postService.deletePosts(this.postService.getAllRepliesForThread(thread));
+    threadRepository.delete(thread);
+    postService.deletePosts(postService.getAllRepliesForThread(thread));
   }
 }

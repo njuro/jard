@@ -21,22 +21,22 @@ public class BoardResolver implements PathVariableArgumentResolver {
   private final BoardService boardService;
 
   @Autowired
-  public BoardResolver(BoardService boardService) {
+  public BoardResolver(final BoardService boardService) {
     this.boardService = boardService;
   }
 
   @Override
-  public boolean supportsParameter(MethodParameter parameter) {
+  public boolean supportsParameter(final MethodParameter parameter) {
     return parameter.getParameterType().equals(Board.class);
   }
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
-      ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory) {
-    String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+      final MethodParameter parameter,
+      final ModelAndViewContainer mavContainer,
+      final NativeWebRequest webRequest,
+      final WebDataBinderFactory binderFactory) {
+    final String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
     return boardService.resolveBoard(label);
   }

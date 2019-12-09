@@ -33,21 +33,21 @@ public class ThreadForm {
 
   @AssertFalse(message = "First post must have non-empty subject or non-empty body")
   public boolean isEmptySubjectAndComment() {
-    return (this.subject == null || this.subject.trim().isEmpty())
-        && (this.postForm.getBody() == null || this.postForm.getBody().trim().isEmpty());
+    return (subject == null || subject.trim().isEmpty())
+        && (postForm.getBody() == null || postForm.getBody().trim().isEmpty());
   }
 
   @AssertTrue(message = "First post must have an attachment")
   public boolean isUploadedAttachment() {
-    return this.postForm.getAttachment().getSize() > 0;
+    return postForm.getAttachment().getSize() > 0;
   }
 
   public Thread toThread() {
     return Thread.builder()
-        .subject(this.subject)
-        .locked(this.locked)
-        .stickied(this.stickied)
-        .board(this.board)
+        .subject(subject)
+        .locked(locked)
+        .stickied(stickied)
+        .board(board)
         .build();
   }
 }

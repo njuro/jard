@@ -23,13 +23,13 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
       throws AuthenticationException {
     try {
       final LoginRequest login =
-          this.objectMapper.readValue(request.getReader(), LoginRequest.class);
+          objectMapper.readValue(request.getReader(), LoginRequest.class);
       final UsernamePasswordAuthenticationToken authRequest =
           new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
 
       setDetails(request, authRequest);
       request.setAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE, login.isRememberMe());
-      return this.getAuthenticationManager().authenticate(authRequest);
+      return getAuthenticationManager().authenticate(authRequest);
     } catch (final IOException e) {
       throw new InternalAuthenticationServiceException(
           "Parsing login request failed: " + e.getMessage());

@@ -17,13 +17,15 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
   private final ResponseJsonWriter responseJsonWriter;
 
   @Autowired
-  public LoginFailureHandler(ResponseJsonWriter responseJsonWriter) {
+  public LoginFailureHandler(final ResponseJsonWriter responseJsonWriter) {
     this.responseJsonWriter = responseJsonWriter;
   }
 
   @Override
   public void onAuthenticationFailure(
-      HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final AuthenticationException exception)
       throws IOException {
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     responseJsonWriter.writeJsonToResponse(

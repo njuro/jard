@@ -71,7 +71,7 @@ public class Attachment {
 
   @PostLoad
   public void initContentPaths() {
-    this.url = Constants.USER_CONTENT_URL + Paths.get(this.path, this.filename).toString();
-    this.file = Constants.USER_CONTENT_PATH.resolve(Paths.get(this.path, this.filename)).toFile();
+    url = Constants.USER_CONTENT_URL + Paths.get(path, filename).toString();
+    file = Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
   }
 }

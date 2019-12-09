@@ -36,19 +36,19 @@ public class ThreadFacade {
   }
 
   public Thread submitNewThread(@NotNull final ThreadForm threadForm) {
-    if (this.banService.hasActiveBan(threadForm.getPostForm().getIp())) {
+    if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
 
     final Thread thread = threadForm.toThread();
-    thread.setOriginalPost(this.postFacade.createPost(threadForm.getPostForm(), thread));
+    thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
 
-    return this.threadService.saveThread(thread);
+    return threadService.saveThread(thread);
   }
 
   public Post replyToThread(@NotNull final PostForm postForm, final Thread thread) {
-    if (this.banService.hasActiveBan(postForm.getIp())) {
+    if (banService.hasActiveBan(postForm.getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
 
@@ -56,39 +56,39 @@ public class ThreadFacade {
       throw new FormValidationException("Thread is locked");
     }
 
-    Post post = this.postFacade.createPost(postForm, thread);
-    post = this.postService.savePost(post);
-    this.threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
+    Post post = postFacade.createPost(postForm, thread);
+    post = postService.savePost(post);
+    threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
 
     return post;
   }
 
   public List<Post> findNewPosts(final Thread thread, final Long lastPostNumber) {
-    return this.postService.getNewRepliesForThreadSince(thread, lastPostNumber);
+    return postService.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
   public Thread toggleSticky(final Thread thread) {
     thread.toggleSticky();
-    return this.threadService.updateThread(thread);
+    return threadService.updateThread(thread);
   }
 
   public Thread toggleLock(final Thread thread) {
     thread.toggleLock();
-    return this.threadService.updateThread(thread);
+    return threadService.updateThread(thread);
   }
 
   public void deletePost(final Thread thread, final Post post) {
     if (thread.getOriginalPost().equals(post)) {
       // delete whole thread
-      this.threadService.deleteThread(thread);
+      threadService.deleteThread(thread);
     } else {
       // delete post
-      this.postService.deletePost(post);
+      postService.deletePost(post);
     }
   }
 
   public Thread getFullThread(final Thread thread) {
-    final List<Post> replies = this.postService.getAllRepliesForThread(thread);
+    final List<Post> replies = postService.getAllRepliesForThread(thread);
     thread.setReplies(replies);
     return thread;
   }

@@ -19,26 +19,30 @@ public class BanService {
   private final UserService userService;
 
   @Autowired
-  public BanService(BanRepository banRepository, UserService userService) {
+  public BanService(final BanRepository banRepository, final UserService userService) {
     this.banRepository = banRepository;
     this.userService = userService;
   }
 
-  public boolean hasActiveBan(String ip) {
+  public boolean hasActiveBan(final String ip) {
     return !banRepository.findByIpAndStatus(ip, BanStatus.ACTIVE).isEmpty();
   }
 
-  public Ban warn(String ip, String reason, Post post) {
+  public Ban warn(final String ip, final String reason, final Post post) {
     return createBan(ip, reason, null, post, BanStatus.WARNING);
   }
 
-  public Ban ban(String ip, String reason, LocalDateTime end, Post post) {
+  public Ban ban(final String ip, final String reason, final LocalDateTime end, final Post post) {
     return createBan(ip, reason, end, post, BanStatus.ACTIVE);
   }
 
   private Ban createBan(
-      String ip, String reason, LocalDateTime end, Post post, BanStatus banStatus) {
-    User loggedUser = userService.getCurrentUser();
+      final String ip,
+      final String reason,
+      final LocalDateTime end,
+      final Post post,
+      final BanStatus banStatus) {
+    final User loggedUser = UserService.getCurrentUser();
     if (loggedUser == null) {
       throw new IllegalArgumentException("No user is logged in!");
     }
@@ -49,7 +53,7 @@ public class BanService {
       throw new IllegalArgumentException("End datetime must be in the future");
     }
 
-    Ban ban =
+    final Ban ban =
         Ban.builder()
             .ip(ip)
             .status(banStatus)
@@ -63,8 +67,8 @@ public class BanService {
     return banRepository.save(ban);
   }
 
-  public Ban unban(Ban ban, String reason) {
-    User loggedUser = userService.getCurrentUser();
+  public Ban unban(final Ban ban, final String reason) {
+    final User loggedUser = UserService.getCurrentUser();
     if (loggedUser == null) {
       throw new IllegalArgumentException("No user is logged in!");
     }
@@ -75,7 +79,7 @@ public class BanService {
     return unban(ban, false);
   }
 
-  private Ban unban(Ban ban, boolean expired) {
+  private Ban unban(final Ban ban, final boolean expired) {
     if (!ban.getStatus().equals(BanStatus.ACTIVE)) {
       throw new IllegalArgumentException("Attempting to unban non-active createBan!");
     }
@@ -86,7 +90,7 @@ public class BanService {
 
   @Scheduled(fixedRateString = Constants.EXPIRED_BANS_CHECK_PERIOD)
   public void checkExpiredBans() {
-    List<Ban> expiredBans =
+    final List<Ban> expiredBans =
         banRepository.findByStatusAndEndBefore(BanStatus.ACTIVE, LocalDateTime.now());
     expiredBans.forEach(ban -> unban(ban, true));
   }

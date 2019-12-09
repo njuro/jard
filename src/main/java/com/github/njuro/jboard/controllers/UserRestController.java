@@ -35,7 +35,7 @@ public class UserRestController {
       fields = {"username", "email", "enabled", "role", "authorities"},
       behaviour = FilterBehaviour.KEEP_FIELDS)
   public List<User> getAllUsers() {
-    return this.userFacade.getAllUsers();
+    return userFacade.getAllUsers();
   }
 
   @GetMapping("/current")
@@ -44,7 +44,7 @@ public class UserRestController {
       fields = {"username", "role", "authorities"},
       behaviour = FilterBehaviour.KEEP_FIELDS)
   public User getCurrentUser() {
-    return this.userFacade.getCurrentUser();
+    return UserFacade.getCurrentUser();
   }
 
   @PostMapping("/create")
@@ -52,6 +52,6 @@ public class UserRestController {
   public User registerUser(
       @RequestBody @Valid final RegisterForm registerForm, final HttpServletRequest request) {
     registerForm.setRegistrationIp(request.getRemoteAddr());
-    return this.userFacade.registerUser(registerForm);
+    return userFacade.registerUser(registerForm);
   }
 }

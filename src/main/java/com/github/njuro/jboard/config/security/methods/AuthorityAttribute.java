@@ -13,6 +13,6 @@ public class AuthorityAttribute implements ConfigAttribute {
 
   @Override
   public String getAttribute() {
-    return this.authority.name();
+    return authority.name();
   }
 }

@@ -68,6 +68,6 @@ public class Post {
 
   @PrePersist
   private void setCreatedAt() {
-    this.createdAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
   }
 }

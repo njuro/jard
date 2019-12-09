@@ -83,12 +83,12 @@ public class User implements UserDetails {
 
   @PrePersist
   public void setCreatedAt() {
-    this.createdAt = LocalDateTime.now();
+    createdAt = LocalDateTime.now();
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.authorities;
+    return authorities;
   }
 
   @Override

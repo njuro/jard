@@ -35,15 +35,15 @@ public class BoardFacade {
   }
 
   public List<Board> getAllBoards() {
-    return this.boardService.getAllBoards();
+    return boardService.getAllBoards();
   }
 
   public Board createBoard(final BoardForm boardForm) {
-    if (this.boardService.doesBoardExist(boardForm.getLabel())) {
+    if (boardService.doesBoardExist(boardForm.getLabel())) {
       throw new FormValidationException("Board with this label already exists");
     }
 
-    return this.boardService.saveBoard(boardForm.toBoard());
+    return boardService.saveBoard(boardForm.toBoard());
   }
 
   public static Set<BoardAttachmentTypeDto> getBoardTypes() {
@@ -53,9 +53,9 @@ public class BoardFacade {
   }
 
   public Board getBoardPage(final Board board, final Pageable pageRequest) {
-    final List<Thread> threads = this.threadService.getThreadsFromBoard(board, pageRequest);
+    final List<Thread> threads = threadService.getThreadsFromBoard(board, pageRequest);
     threads.forEach(
-        thread -> thread.setReplies(this.postService.getLatestRepliesForThread(thread)));
+        thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
     board.setThreads(threads);
     return board;
   }

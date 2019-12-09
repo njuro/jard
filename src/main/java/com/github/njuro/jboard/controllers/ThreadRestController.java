@@ -42,7 +42,7 @@ public class ThreadRestController {
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
   @DynamicFilter(SensitiveDataFilter.class)
   public Thread showThread(final Thread thread) {
-    return this.threadFacade.getFullThread(thread);
+    return threadFacade.getFullThread(thread);
   }
 
   @PostMapping("/submit")
@@ -54,9 +54,9 @@ public class ThreadRestController {
     threadForm.setBoard(board);
     threadForm.getPostForm().setAttachment(attachment);
     threadForm.getPostForm().setIp(request.getRemoteAddr());
-    this.requestValidator.validate(threadForm);
+    requestValidator.validate(threadForm);
 
-    return this.threadFacade.submitNewThread(threadForm);
+    return threadFacade.submitNewThread(threadForm);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
@@ -68,9 +68,9 @@ public class ThreadRestController {
       final HttpServletRequest request) {
     postForm.setAttachment(attachment);
     postForm.setIp(request.getRemoteAddr());
-    this.requestValidator.validate(postForm);
+    requestValidator.validate(postForm);
 
-    return this.threadFacade.replyToThread(postForm, thread);
+    return threadFacade.replyToThread(postForm, thread);
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/update")
@@ -78,27 +78,27 @@ public class ThreadRestController {
   @DynamicFilter(SensitiveDataFilter.class)
   public List<Post> findNewPosts(
       final Thread thread, @RequestParam(name = "lastPost") final Long lastPostNumber) {
-    return this.threadFacade.findNewPosts(thread, lastPostNumber);
+    return threadFacade.findNewPosts(thread, lastPostNumber);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
   public ResponseEntity<?> toggleStickyThread(final Thread thread) {
-    this.threadFacade.toggleSticky(thread);
+    threadFacade.toggleSticky(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
   public ResponseEntity<?> toggleLockThread(final Thread thread) {
-    this.threadFacade.toggleLock(thread);
+    threadFacade.toggleLock(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
   public ResponseEntity<?> deletePost(final Thread thread, final Post post) {
-    this.threadFacade.deletePost(thread, post);
+    threadFacade.deletePost(thread, post);
     return ResponseEntity.ok().build();
   }
 }
