@@ -33,9 +33,7 @@ public class MvcConfig implements WebMvcConfigurer {
   private final PostResolver postResolver;
 
   public MvcConfig(
-      BoardResolver boardResolver,
-      ThreadResolver threadResolver,
-      PostResolver postResolver) {
+      BoardResolver boardResolver, ThreadResolver threadResolver, PostResolver postResolver) {
     this.boardResolver = boardResolver;
     this.threadResolver = threadResolver;
     this.postResolver = postResolver;
@@ -43,7 +41,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
-  public static void configureJsonFilter(
+  public void configureJsonFilter(
       FilterConfiguration filterConfiguration, ObjectMapper objectMapper) {
     filterConfiguration.setMapper(APPLICATION_JSON, objectMapper);
     filterConfiguration.setMapper(

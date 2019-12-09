@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService {
     return userRepository.findAll();
   }
 
-  public static User getCurrentUser() {
+  public User getCurrentUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (!(principal instanceof User)) {
@@ -72,8 +72,8 @@ public class UserService implements UserDetailsService {
     return (User) principal;
   }
 
-  public static boolean hasCurrentUserAuthority(UserAuthority authority) {
-    User current = UserService.getCurrentUser();
+  public boolean hasCurrentUserAuthority(UserAuthority authority) {
+    User current = getCurrentUser();
     if (current == null) {
       return false;
     }

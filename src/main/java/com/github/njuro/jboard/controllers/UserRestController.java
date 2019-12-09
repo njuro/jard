@@ -44,7 +44,7 @@ public class UserRestController {
       fields = {"username", "role", "authorities"},
       behaviour = FilterBehaviour.KEEP_FIELDS)
   public User getCurrentUser() {
-    return UserFacade.getCurrentUser();
+    return userFacade.getCurrentUser();
   }
 
   @PostMapping("/create")

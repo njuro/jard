@@ -37,12 +37,8 @@ public class BanService {
   }
 
   private Ban createBan(
-      String ip,
-      String reason,
-      LocalDateTime end,
-      Post post,
-      BanStatus banStatus) {
-    User loggedUser = UserService.getCurrentUser();
+      String ip, String reason, LocalDateTime end, Post post, BanStatus banStatus) {
+    User loggedUser = userService.getCurrentUser();
     if (loggedUser == null) {
       throw new IllegalArgumentException("No user is logged in!");
     }
@@ -68,7 +64,7 @@ public class BanService {
   }
 
   public Ban unban(Ban ban, String reason) {
-    User loggedUser = UserService.getCurrentUser();
+    User loggedUser = userService.getCurrentUser();
     if (loggedUser == null) {
       throw new IllegalArgumentException("No user is logged in!");
     }

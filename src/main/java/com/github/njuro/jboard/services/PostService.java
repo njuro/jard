@@ -94,7 +94,7 @@ public class PostService {
 
   public void deletePost(Post post) {
     if (post.getAttachment() != null) {
-      AttachmentService.deleteAttachmentFile(post.getAttachment());
+      attachmentService.deleteAttachmentFile(post.getAttachment());
     }
     postRepository.delete(post);
   }
@@ -105,7 +105,7 @@ public class PostService {
             .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
-    AttachmentService.deleteAttachmentFiles(attachments);
+    attachmentService.deleteAttachmentFiles(attachments);
     postRepository.deleteAll(posts);
   }
 }

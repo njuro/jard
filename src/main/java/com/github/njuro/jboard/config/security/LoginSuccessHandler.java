@@ -37,9 +37,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   @Override
   public void onAuthenticationSuccess(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Authentication authentication)
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
     User user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
@@ -55,6 +53,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         rememberMe
             ? jwtTokenProvider.generateRememberMeCookie(authentication)
             : jwtTokenProvider.generateSessionCookie(authentication));
-    responseJsonWriter.writeJsonToResponse(response, UserFacade.getCurrentUser());
+    responseJsonWriter.writeJsonToResponse(response, userFacade.getCurrentUser());
   }
 }

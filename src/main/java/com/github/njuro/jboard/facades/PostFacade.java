@@ -23,7 +23,7 @@ public class PostFacade {
 
     if (postForm.getAttachment() != null) {
       post.setAttachment(
-          AttachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));
+          attachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));
     }
 
     post.setThread(thread);

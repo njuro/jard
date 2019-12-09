@@ -24,7 +24,7 @@ public class SensitiveDataFilter implements DynamicFilterEvent {
   @Override
   public void onRequest(Comparator<RequestSession, FilterFields> comparator) {
     comparator.compare(
-        request -> !UserService.hasCurrentUserAuthority(UserAuthority.VIEW_IP),
+        request -> !userService.hasCurrentUserAuthority(UserAuthority.VIEW_IP),
         result -> FilterFields.getFieldsBy(Post.class, Collections.singletonList("ip")));
   }
 }

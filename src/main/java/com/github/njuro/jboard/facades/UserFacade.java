@@ -37,8 +37,8 @@ public class UserFacade {
     return userService.saveUser(user);
   }
 
-  public static User getCurrentUser() {
-    return UserService.getCurrentUser();
+  public User getCurrentUser() {
+    return userService.getCurrentUser();
   }
 
   public User updateUser(User user) {

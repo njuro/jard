@@ -45,13 +45,13 @@ public class AttachmentService {
     return attachmentRepository.save(attachment);
   }
 
-  public static void deleteAttachmentFile(Attachment attachment) {
+  public void deleteAttachmentFile(Attachment attachment) {
     if (!attachment.getFile().delete()) {
       throw new IllegalStateException("Attachment file could not be deleted");
     }
   }
 
-  public static void deleteAttachmentFiles(List<Attachment> attachments) {
-    attachments.forEach(AttachmentService::deleteAttachmentFile);
+  public void deleteAttachmentFiles(List<Attachment> attachments) {
+    attachments.forEach(this::deleteAttachmentFile);
   }
 }

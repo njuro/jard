@@ -12,11 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class AttachmentFacade {
 
-  public static Attachment createAttachment(MultipartFile file, Board board) {
-    return AttachmentFacade.createAttachment(file, Paths.get(board.getLabel()));
+  public Attachment createAttachment(MultipartFile file, Board board) {
+    return createAttachment(file, Paths.get(board.getLabel()));
   }
 
-  public static Attachment createAttachment(MultipartFile file, Path destination) {
+  public Attachment createAttachment(MultipartFile file, Path destination) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
     Attachment attachment =
