@@ -25,30 +25,30 @@ public class ThreadFacade {
 
   @Autowired
   public ThreadFacade(
-      ThreadService threadService,
-      PostService postService,
-      BanService banService,
-      PostFacade postFacade) {
+      final ThreadService threadService,
+      final PostService postService,
+      final BanService banService,
+      final PostFacade postFacade) {
     this.threadService = threadService;
     this.postService = postService;
     this.banService = banService;
     this.postFacade = postFacade;
   }
 
-  public Thread submitNewThread(@NotNull ThreadForm threadForm) {
-    if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
+  public Thread submitNewThread(@NotNull final ThreadForm threadForm) {
+    if (this.banService.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
 
-    Thread thread = threadForm.toThread();
-    thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
+    final Thread thread = threadForm.toThread();
+    thread.setOriginalPost(this.postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
 
-    return threadService.saveThread(thread);
+    return this.threadService.saveThread(thread);
   }
 
-  public Post replyToThread(@NotNull PostForm postForm, Thread thread) {
-    if (banService.hasActiveBan(postForm.getIp())) {
+  public Post replyToThread(@NotNull final PostForm postForm, final Thread thread) {
+    if (this.banService.hasActiveBan(postForm.getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
 
@@ -56,34 +56,40 @@ public class ThreadFacade {
       throw new FormValidationException("Thread is locked");
     }
 
-    Post post = postFacade.createPost(postForm, thread);
-    post = postService.savePost(post);
-    threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
+    Post post = this.postFacade.createPost(postForm, thread);
+    post = this.postService.savePost(post);
+    this.threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
 
     return post;
   }
 
-  public List<Post> findNewPosts(Thread thread, Long lastPostNumber) {
-    return postService.findNewPostsInThread(thread, lastPostNumber);
+  public List<Post> findNewPosts(final Thread thread, final Long lastPostNumber) {
+    return this.postService.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
-  public Thread toggleSticky(Thread thread) {
+  public Thread toggleSticky(final Thread thread) {
     thread.toggleSticky();
-    return threadService.updateThread(thread);
+    return this.threadService.updateThread(thread);
   }
 
-  public Thread toggleLock(Thread thread) {
+  public Thread toggleLock(final Thread thread) {
     thread.toggleLock();
-    return threadService.updateThread(thread);
+    return this.threadService.updateThread(thread);
   }
 
-  public void deletePost(Thread thread, Post post) {
+  public void deletePost(final Thread thread, final Post post) {
     if (thread.getOriginalPost().equals(post)) {
       // delete whole thread
-      threadService.deleteThread(thread);
+      this.threadService.deleteThread(thread);
     } else {
       // delete post
-      postService.deletePost(post);
+      this.postService.deletePost(post);
     }
+  }
+
+  public Thread getFullThread(final Thread thread) {
+    final List<Post> replies = this.postService.getAllRepliesForThread(thread);
+    thread.setReplies(replies);
+    return thread;
   }
 }

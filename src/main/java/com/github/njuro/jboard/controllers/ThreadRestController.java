@@ -42,7 +42,7 @@ public class ThreadRestController {
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
   @DynamicFilter(SensitiveDataFilter.class)
   public Thread showThread(final Thread thread) {
-    return thread;
+    return this.threadFacade.getFullThread(thread);
   }
 
   @PostMapping("/submit")

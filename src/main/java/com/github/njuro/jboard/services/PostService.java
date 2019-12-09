@@ -7,6 +7,7 @@ import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Post;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.repositories.PostRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,65 +34,78 @@ public class PostService {
 
   @Autowired
   public PostService(
-      BoardService boardService,
-      AttachmentService attachmentService,
-      PostRepository postRepository,
-      List<Decorator> decorators) {
+      final BoardService boardService,
+      final AttachmentService attachmentService,
+      final PostRepository postRepository,
+      final List<Decorator> decorators) {
     this.boardService = boardService;
     this.attachmentService = attachmentService;
     this.postRepository = postRepository;
     this.decorators = decorators;
   }
 
-  public Post savePost(Post post) {
-    Board board = post.getThread().getBoard();
-    post.setPostNumber(boardService.getPostCounter(board));
-    boardService.increasePostCounter(board);
+  public Post savePost(final Post post) {
+    final Board board = post.getThread().getBoard();
+    post.setPostNumber(this.boardService.getPostCounter(board));
+    this.boardService.increasePostCounter(board);
 
     decoratePost(post);
 
     if (post.getAttachment() != null) {
-      post.setAttachment(attachmentService.saveAttachment(post.getAttachment()));
+      post.setAttachment(this.attachmentService.saveAttachment(post.getAttachment()));
     }
 
-    return postRepository.save(post);
+    return this.postRepository.save(post);
   }
 
-  private void decoratePost(Post post) {
+  private void decoratePost(final Post post) {
     post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
-    for (Decorator decorator : decorators) {
+    for (final Decorator decorator : this.decorators) {
       decorator.decorate(post);
     }
 
     post.setBody(post.getBody().replace("\n", "<br/>"));
   }
 
-  public Post resolvePost(String boardLabel, Long postNumber) {
-    return postRepository
+  public Post resolvePost(final String boardLabel, final Long postNumber) {
+    return this.postRepository
         .findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
         .orElseThrow(PostNotFoundException::new);
   }
 
-  public List<Post> findNewPostsInThread(Thread thread, Long lastPostNumber) {
-    return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
+  public List<Post> getAllRepliesForThread(final Thread thread) {
+    return this.postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(
+        thread.getId(), thread.getOriginalPost().getId());
+  }
+
+  public List<Post> getLatestRepliesForThread(final Thread thread) {
+    final List<Post> posts =
+        this.postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(
+            thread.getId(), thread.getOriginalPost().getId());
+    Collections.reverse(posts);
+    return posts;
+  }
+
+  public List<Post> getNewRepliesForThreadSince(final Thread thread, final Long lastPostNumber) {
+    return this.postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
         thread.getId(), lastPostNumber);
   }
 
-  public void deletePost(Post post) {
+  public void deletePost(final Post post) {
     if (post.getAttachment() != null) {
-      attachmentService.deleteAttachmentFile(post.getAttachment());
+      this.attachmentService.deleteAttachmentFile(post.getAttachment());
     }
-    postRepository.delete(post);
+    this.postRepository.delete(post);
   }
 
-  public void deletePosts(List<Post> posts) {
-    List<Attachment> attachments =
+  public void deletePosts(final List<Post> posts) {
+    final List<Attachment> attachments =
         posts.stream()
             .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
-    attachmentService.deleteAttachmentFiles(attachments);
-    postRepository.deleteAll(posts);
+    this.attachmentService.deleteAttachmentFiles(attachments);
+    this.postRepository.deleteAll(posts);
   }
 }

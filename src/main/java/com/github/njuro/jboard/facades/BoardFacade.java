@@ -2,16 +2,19 @@ package com.github.njuro.jboard.facades;
 
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.Board;
+import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.models.dto.BoardAttachmentTypeDto;
 import com.github.njuro.jboard.models.dto.forms.BoardForm;
 import com.github.njuro.jboard.models.enums.BoardAttachmentType;
 import com.github.njuro.jboard.services.BoardService;
+import com.github.njuro.jboard.services.PostService;
 import com.github.njuro.jboard.services.ThreadService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,11 +22,16 @@ public class BoardFacade {
 
   private final BoardService boardService;
   private final ThreadService threadService;
+  private final PostService postService;
 
   @Autowired
-  public BoardFacade(final BoardService boardService, final ThreadService threadService) {
+  public BoardFacade(
+      final BoardService boardService,
+      final ThreadService threadService,
+      final PostService postService) {
     this.boardService = boardService;
     this.threadService = threadService;
+    this.postService = postService;
   }
 
   public List<Board> getAllBoards() {
@@ -42,5 +50,13 @@ public class BoardFacade {
     return Arrays.stream(BoardAttachmentType.values())
         .map(BoardAttachmentTypeDto::fromBoardAttachmentType)
         .collect(Collectors.toSet());
+  }
+
+  public Board getBoardPage(final Board board, final Pageable pageRequest) {
+    final List<Thread> threads = this.threadService.getThreadsFromBoard(board, pageRequest);
+    threads.forEach(
+        thread -> thread.setReplies(this.postService.getLatestRepliesForThread(thread)));
+    board.setThreads(threads);
+    return board;
   }
 }

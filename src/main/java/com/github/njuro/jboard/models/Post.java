@@ -20,6 +20,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Entity representing a post in thread
@@ -55,12 +57,13 @@ public class Post {
 
   @Basic private String ip;
 
-  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
+  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY)
   @EqualsAndHashCode.Include
   @ToString.Exclude
   private Thread thread;
 
   @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @Fetch(FetchMode.JOIN)
   private Attachment attachment;
 
   @PrePersist

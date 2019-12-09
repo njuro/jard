@@ -1,10 +1,13 @@
 package com.github.njuro.jboard.services;
 
 import com.github.njuro.jboard.exceptions.ThreadNotFoundException;
+import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.Thread;
 import com.github.njuro.jboard.repositories.ThreadRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,10 @@ public class ThreadService {
         .orElseThrow(ThreadNotFoundException::new);
   }
 
+  public List<Thread> getThreadsFromBoard(final Board board, final Pageable pageRequest) {
+    return this.threadRepository.findByBoardId(board.getId(), pageRequest);
+  }
+
   public Thread updateThread(final Thread thread) {
     return this.threadRepository.save(thread);
   }
@@ -49,6 +56,6 @@ public class ThreadService {
 
   public void deleteThread(final Thread thread) {
     this.threadRepository.delete(thread);
-    this.postService.deletePosts(thread.getPosts());
+    this.postService.deletePosts(this.postService.getAllRepliesForThread(thread));
   }
 }

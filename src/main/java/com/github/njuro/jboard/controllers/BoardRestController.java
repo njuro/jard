@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,7 +52,7 @@ public class BoardRestController {
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
   @DynamicFilter(SensitiveDataFilter.class)
-  public Board showBoard(final Board board) {
-    return board;
+  public Board showBoard(final Board board, final Pageable pageRequest) {
+    return this.boardFacade.getBoardPage(board, pageRequest);
   }
 }
