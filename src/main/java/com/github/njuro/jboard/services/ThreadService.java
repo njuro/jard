@@ -2,10 +2,8 @@ package com.github.njuro.jboard.services;
 
 import com.github.njuro.jboard.exceptions.ThreadNotFoundException;
 import com.github.njuro.jboard.models.Thread;
-import com.github.njuro.jboard.models.dto.ThreadCatalogEntry;
 import com.github.njuro.jboard.repositories.ThreadRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +36,6 @@ public class ThreadService {
     return this.threadRepository
         .findByBoardLabelAndOriginalPostPostNumber(boardLabel, threadNumber)
         .orElseThrow(ThreadNotFoundException::new);
-  }
-
-  public List<ThreadCatalogEntry> getThreadCatalogEntries(final Long boardId) {
-    return this.threadRepository.getThreadCatalogEntries(boardId);
   }
 
   public Thread updateThread(final Thread thread) {

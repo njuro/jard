@@ -3,7 +3,6 @@ package com.github.njuro.jboard.facades;
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.Board;
 import com.github.njuro.jboard.models.dto.BoardAttachmentTypeDto;
-import com.github.njuro.jboard.models.dto.BoardCatalog;
 import com.github.njuro.jboard.models.dto.forms.BoardForm;
 import com.github.njuro.jboard.models.enums.BoardAttachmentType;
 import com.github.njuro.jboard.services.BoardService;
@@ -37,10 +36,6 @@ public class BoardFacade {
     }
 
     return this.boardService.saveBoard(boardForm.toBoard());
-  }
-
-  public BoardCatalog getBoardCatalog(final Board board) {
-    return new BoardCatalog(board, this.threadService.getThreadCatalogEntries(board.getId()));
   }
 
   public static Set<BoardAttachmentTypeDto> getBoardTypes() {
