@@ -26,9 +26,9 @@ public class BoardFacade {
 
   @Autowired
   public BoardFacade(
-      final BoardService boardService,
-      final ThreadService threadService,
-      final PostService postService) {
+      BoardService boardService,
+      ThreadService threadService,
+      PostService postService) {
     this.boardService = boardService;
     this.threadService = threadService;
     this.postService = postService;
@@ -38,7 +38,7 @@ public class BoardFacade {
     return boardService.getAllBoards();
   }
 
-  public Board createBoard(final BoardForm boardForm) {
+  public Board createBoard(BoardForm boardForm) {
     if (boardService.doesBoardExist(boardForm.getLabel())) {
       throw new FormValidationException("Board with this label already exists");
     }
@@ -52,10 +52,9 @@ public class BoardFacade {
         .collect(Collectors.toSet());
   }
 
-  public Board getBoardPage(final Board board, final Pageable pageRequest) {
-    final List<Thread> threads = threadService.getThreadsFromBoard(board, pageRequest);
-    threads.forEach(
-        thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
+  public Board getBoardPage(Board board, Pageable pageRequest) {
+    List<Thread> threads = threadService.getThreadsFromBoard(board, pageRequest);
+    threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
     board.setThreads(threads);
     return board;
   }

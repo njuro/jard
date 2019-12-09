@@ -9,11 +9,11 @@ public class FormValidationException extends ValidationException {
   private static final long serialVersionUID = 8579539307467463861L;
   @Getter private BindingResult bindingResult;
 
-  public FormValidationException(final BindingResult bindingResult) {
+  public FormValidationException(BindingResult bindingResult) {
     this.bindingResult = bindingResult;
   }
 
-  public FormValidationException(final String message) {
+  public FormValidationException(String message) {
     super(message);
   }
 }

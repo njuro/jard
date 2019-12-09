@@ -25,7 +25,7 @@ public class UserRestController {
   private final UserFacade userFacade;
 
   @Autowired
-  public UserRestController(final UserFacade userFacade) {
+  public UserRestController(UserFacade userFacade) {
     this.userFacade = userFacade;
   }
 
@@ -50,7 +50,7 @@ public class UserRestController {
   @PostMapping("/create")
   @HasAuthorities(UserAuthority.MANAGE_USERS)
   public User registerUser(
-      @RequestBody @Valid final RegisterForm registerForm, final HttpServletRequest request) {
+      @RequestBody @Valid RegisterForm registerForm, HttpServletRequest request) {
     registerForm.setRegistrationIp(request.getRemoteAddr());
     return userFacade.registerUser(registerForm);
   }

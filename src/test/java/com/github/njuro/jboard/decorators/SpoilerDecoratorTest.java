@@ -22,7 +22,7 @@ class SpoilerDecoratorTest extends DecoratorTest {
         "[SPOILER]text[spoiler]",
         "**multiple** \n [spoiler]\nspoilers\n[spoiler]"
       })
-  void testValidSpoiler(final String input) {
+  void testValidSpoiler(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).containsSubsequence(SPOILER_START, SPOILER_END);
   }
@@ -38,7 +38,7 @@ class SpoilerDecoratorTest extends DecoratorTest {
         "**  **",
         "text"
       })
-  void testInvalidSpoiler(final String input) {
+  void testInvalidSpoiler(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).isEqualTo(input);
   }

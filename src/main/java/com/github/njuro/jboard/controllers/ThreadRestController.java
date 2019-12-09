@@ -34,23 +34,23 @@ public class ThreadRestController {
 
   @Autowired
   public ThreadRestController(
-      final ThreadFacade threadFacade, final RequestValidator requestValidator) {
+      ThreadFacade threadFacade, RequestValidator requestValidator) {
     this.threadFacade = threadFacade;
     this.requestValidator = requestValidator;
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
   @DynamicFilter(SensitiveDataFilter.class)
-  public Thread showThread(final Thread thread) {
+  public Thread showThread(Thread thread) {
     return threadFacade.getFullThread(thread);
   }
 
   @PostMapping("/submit")
   public Thread submitNewThread(
-      final Board board,
-      @RequestPart final ThreadForm threadForm,
-      @RequestPart(required = false) final MultipartFile attachment,
-      final HttpServletRequest request) {
+      Board board,
+      @RequestPart ThreadForm threadForm,
+      @RequestPart(required = false) MultipartFile attachment,
+      HttpServletRequest request) {
     threadForm.setBoard(board);
     threadForm.getPostForm().setAttachment(attachment);
     threadForm.getPostForm().setIp(request.getRemoteAddr());
@@ -62,10 +62,10 @@ public class ThreadRestController {
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
   @FieldFilterSetting(className = Post.class, fields = "thread")
   public Post replyToThread(
-      final Thread thread,
-      @RequestPart final PostForm postForm,
-      @RequestPart(required = false) final MultipartFile attachment,
-      final HttpServletRequest request) {
+      Thread thread,
+      @RequestPart PostForm postForm,
+      @RequestPart(required = false) MultipartFile attachment,
+      HttpServletRequest request) {
     postForm.setAttachment(attachment);
     postForm.setIp(request.getRemoteAddr());
     requestValidator.validate(postForm);
@@ -77,27 +77,27 @@ public class ThreadRestController {
   @FieldFilterSetting(className = Post.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
   public List<Post> findNewPosts(
-      final Thread thread, @RequestParam(name = "lastPost") final Long lastPostNumber) {
+      Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
     return threadFacade.findNewPosts(thread, lastPostNumber);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
-  public ResponseEntity<?> toggleStickyThread(final Thread thread) {
+  public ResponseEntity<?> toggleStickyThread(Thread thread) {
     threadFacade.toggleSticky(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
-  public ResponseEntity<?> toggleLockThread(final Thread thread) {
+  public ResponseEntity<?> toggleLockThread(Thread thread) {
     threadFacade.toggleLock(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
-  public ResponseEntity<?> deletePost(final Thread thread, final Post post) {
+  public ResponseEntity<?> deletePost(Thread thread, Post post) {
     threadFacade.deletePost(thread, post);
     return ResponseEntity.ok().build();
   }

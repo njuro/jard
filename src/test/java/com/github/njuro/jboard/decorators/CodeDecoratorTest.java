@@ -21,7 +21,7 @@ class CodeDecoratorTest extends DecoratorTest {
         "[CODE]text[/code]",
         "[code]\nmultiple\n[/code] \n [code]code blocks[/code]"
       })
-  void testValidCodeBlock(final String input) {
+  void testValidCodeBlock(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).containsSubsequence(CODE_START, CODE_END);
   }
@@ -29,7 +29,7 @@ class CodeDecoratorTest extends DecoratorTest {
   @ParameterizedTest
   @ValueSource(
       strings = {"[code]text", "[code]text[code]", "test[/code]", "[code] [/code]", "text"})
-  void testInvalidCodeBlock(final String input) {
+  void testInvalidCodeBlock(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).isEqualTo(input);
   }

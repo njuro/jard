@@ -11,7 +11,7 @@ public class BoardAttachmentTypeDto {
   private String name;
   private String description;
 
-  public static BoardAttachmentTypeDto fromBoardAttachmentType(final BoardAttachmentType type) {
+  public static BoardAttachmentTypeDto fromBoardAttachmentType(BoardAttachmentType type) {
     return new BoardAttachmentTypeDto(type.name(), type.getDescription());
   }
 }

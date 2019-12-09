@@ -13,13 +13,13 @@ class UserRepositoryTest extends RepositoryTest {
 
   @Test
   void testFindByEmail() {
-    assertThat(this.userRepository.findByEmailIgnoreCase("admin@JBOARD"))
+    assertThat(userRepository.findByEmailIgnoreCase("admin@JBOARD"))
         .hasFieldOrPropertyWithValue("username", "admin");
   }
 
   @Test
   void testFindByUsername() {
-    assertThat(this.userRepository.findByUsernameIgnoreCase("moderator"))
+    assertThat(userRepository.findByUsernameIgnoreCase("moderator"))
         .hasValueSatisfying(user -> user.getUsername().equals("moderator"));
   }
 }

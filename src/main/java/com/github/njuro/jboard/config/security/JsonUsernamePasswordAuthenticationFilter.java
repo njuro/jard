@@ -19,18 +19,17 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
   @Override
   public Authentication attemptAuthentication(
-      final HttpServletRequest request, final HttpServletResponse response)
+      HttpServletRequest request, HttpServletResponse response)
       throws AuthenticationException {
     try {
-      final LoginRequest login =
-          objectMapper.readValue(request.getReader(), LoginRequest.class);
-      final UsernamePasswordAuthenticationToken authRequest =
+      LoginRequest login = objectMapper.readValue(request.getReader(), LoginRequest.class);
+      UsernamePasswordAuthenticationToken authRequest =
           new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
 
       setDetails(request, authRequest);
       request.setAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE, login.isRememberMe());
       return getAuthenticationManager().authenticate(authRequest);
-    } catch (final IOException e) {
+    } catch (IOException e) {
       throw new InternalAuthenticationServiceException(
           "Parsing login request failed: " + e.getMessage());
     }

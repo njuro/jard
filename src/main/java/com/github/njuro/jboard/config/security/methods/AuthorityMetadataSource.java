@@ -14,15 +14,15 @@ public class AuthorityMetadataSource extends AbstractMethodSecurityMetadataSourc
 
   @Override
   public Collection<ConfigAttribute> getAttributes(
-      final Method method, final Class<?> targetClass) {
-    final HasAuthorities annotation = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
+      Method method, Class<?> targetClass) {
+    HasAuthorities annotation = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
     return (annotation == null)
         ? Collections.emptyList()
         : convertToAuthorityAttributes(annotation.value());
   }
 
   private Collection<ConfigAttribute> convertToAuthorityAttributes(
-      final UserAuthority[] authorities) {
+      UserAuthority[] authorities) {
     return Arrays.stream(authorities).map(AuthorityAttribute::new).collect(Collectors.toSet());
   }
 

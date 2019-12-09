@@ -26,9 +26,9 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   @Autowired
   public LoginSuccessHandler(
-      final UserFacade userFacade,
-      final JwtTokenProvider jwtTokenProvider,
-      final ResponseJsonWriter responseJsonWriter) {
+      UserFacade userFacade,
+      JwtTokenProvider jwtTokenProvider,
+      ResponseJsonWriter responseJsonWriter) {
     this.userFacade = userFacade;
     this.jwtTokenProvider = jwtTokenProvider;
     this.responseJsonWriter = responseJsonWriter;
@@ -37,11 +37,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   @Override
   public void onAuthenticationSuccess(
-      final HttpServletRequest request,
-      final HttpServletResponse response,
-      final Authentication authentication)
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Authentication authentication)
       throws IOException, ServletException {
-    final User user = (User) authentication.getPrincipal();
+    User user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
     user.setLastLogin(LocalDateTime.now());
     userFacade.updateUser(user);
@@ -49,7 +49,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     super.onAuthenticationSuccess(request, response, authentication);
 
-    final boolean rememberMe =
+    boolean rememberMe =
         Boolean.parseBoolean(request.getAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE).toString());
     response.addCookie(
         rememberMe

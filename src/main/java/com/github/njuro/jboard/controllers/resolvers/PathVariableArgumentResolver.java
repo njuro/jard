@@ -23,7 +23,7 @@ public interface PathVariableArgumentResolver extends HandlerMethodArgumentResol
    * @param request - web request
    * @return String representation of given path variable or null, if path variable does not exists
    */
-  default String getPathVariable(final String name, final NativeWebRequest request) {
+  default String getPathVariable(String name, NativeWebRequest request) {
     return getPathVariables(request).get(name);
   }
 
@@ -31,8 +31,8 @@ public interface PathVariableArgumentResolver extends HandlerMethodArgumentResol
    * @param request - web request
    * @return map of path variables from given request
    */
-  default Map<String, String> getPathVariables(final NativeWebRequest request) {
-    final Map<String, String> pathVariables =
+  default Map<String, String> getPathVariables(NativeWebRequest request) {
+    Map<String, String> pathVariables =
         (Map<String, String>)
             request.getAttribute(
                 HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);

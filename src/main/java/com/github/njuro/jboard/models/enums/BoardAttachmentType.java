@@ -9,7 +9,7 @@ public enum BoardAttachmentType {
 
   @Getter private String description;
 
-  BoardAttachmentType(final String description) {
+  BoardAttachmentType(String description) {
     this.description = description;
   }
 }

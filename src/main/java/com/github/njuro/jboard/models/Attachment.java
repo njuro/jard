@@ -61,7 +61,7 @@ public class Attachment {
   @Transient @ToString.Exclude @JsonIgnore private MultipartFile sourceFile;
 
   public Attachment(
-      final String path, @NotNull final String originalFilename, final String filename) {
+      String path, @NotNull String originalFilename, String filename) {
     this.path = path;
     this.originalFilename = originalFilename;
     this.filename = filename;

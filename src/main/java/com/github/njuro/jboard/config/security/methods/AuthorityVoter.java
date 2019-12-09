@@ -12,21 +12,21 @@ import org.springframework.security.core.Authentication;
 public class AuthorityVoter implements AccessDecisionVoter<MethodInvocation> {
 
   @Override
-  public boolean supports(final ConfigAttribute attribute) {
+  public boolean supports(ConfigAttribute attribute) {
     return attribute instanceof AuthorityAttribute;
   }
 
   @Override
-  public boolean supports(final Class<?> clazz) {
+  public boolean supports(Class<?> clazz) {
     return MethodInvocation.class.isAssignableFrom(clazz);
   }
 
   @Override
   public int vote(
-      final Authentication authentication,
-      final MethodInvocation object,
-      final Collection<ConfigAttribute> attributes) {
-    final Set<UserAuthority> requiredAuthorities =
+      Authentication authentication,
+      MethodInvocation object,
+      Collection<ConfigAttribute> attributes) {
+    Set<UserAuthority> requiredAuthorities =
         attributes.stream()
             .filter(att -> att instanceof AuthorityAttribute)
             .map(AuthorityAttribute.class::cast)

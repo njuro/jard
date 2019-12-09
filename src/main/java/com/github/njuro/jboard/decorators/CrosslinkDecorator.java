@@ -27,21 +27,21 @@ public class CrosslinkDecorator implements Decorator {
 
   @Lazy
   @Autowired
-  public CrosslinkDecorator(final BoardService boardService, final PostService postService) {
+  public CrosslinkDecorator(BoardService boardService, PostService postService) {
     this.boardService = boardService;
     this.postService = postService;
   }
 
   @Override
-  public void decorate(final Post post) {
-    final Matcher matcher = CROSSLINK_PATTERN.matcher(post.getBody());
-    final StringBuffer sb = new StringBuffer(post.getBody().length());
+  public void decorate(Post post) {
+    Matcher matcher = CROSSLINK_PATTERN.matcher(post.getBody());
+    StringBuffer sb = new StringBuffer(post.getBody().length());
 
     while (matcher.find()) {
-      final String boardLabel =
+      String boardLabel =
           Optional.ofNullable(matcher.group("board"))
               .orElse(post.getThread().getBoard().getLabel());
-      final String postNumber = matcher.group("postNo");
+      String postNumber = matcher.group("postNo");
 
       String linkHref = "/boards/" + boardLabel;
       boolean valid = true;
@@ -51,8 +51,7 @@ public class CrosslinkDecorator implements Decorator {
         if (postNumber == null || postNumber.isEmpty()) {
           boardService.resolveBoard(boardLabel);
         } else {
-          final Post linkedPost =
-              postService.resolvePost(boardLabel, Long.valueOf(postNumber));
+          Post linkedPost = postService.resolvePost(boardLabel, Long.valueOf(postNumber));
           if (linkedPost.equals(post.getThread().getOriginalPost())) {
             special += CROSSLINK_OP;
           }
@@ -62,12 +61,12 @@ public class CrosslinkDecorator implements Decorator {
           linkHref +=
               "/" + linkedPost.getThread().getPostNumber() + "#" + linkedPost.getPostNumber();
         }
-      } catch (final BoardNotFoundException | PostNotFoundException e) {
+      } catch (BoardNotFoundException | PostNotFoundException e) {
         valid = false;
       }
 
-      final String linkClass = valid ? CROSSLINK_CLASS_VALID : CROSSLINK_CLASS_INVALID;
-      final String crosslinkStart =
+      String linkClass = valid ? CROSSLINK_CLASS_VALID : CROSSLINK_CLASS_INVALID;
+      String crosslinkStart =
           CROSSLINK_START
               .replace("${linkHref}", valid ? linkHref : "#")
               .replace("${linkClass}", linkClass);

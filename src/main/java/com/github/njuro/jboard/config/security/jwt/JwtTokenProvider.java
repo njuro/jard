@@ -26,12 +26,12 @@ public class JwtTokenProvider {
   @Value("${app.jwt.expiration:604800}")
   private int jwtExpiration;
 
-  public String generateToken(final Authentication authentication) {
+  public String generateToken(Authentication authentication) {
 
-    final User user = (User) authentication.getPrincipal();
+    User user = (User) authentication.getPrincipal();
 
-    final Date now = new Date();
-    final Date expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
 
     return Jwts.builder()
         .setSubject(user.getUsername())
@@ -41,16 +41,16 @@ public class JwtTokenProvider {
         .compact();
   }
 
-  public Cookie generateSessionCookie(final Authentication authentication) {
+  public Cookie generateSessionCookie(Authentication authentication) {
     return generateCookie(authentication, -1);
   }
 
-  public Cookie generateRememberMeCookie(final Authentication authentication) {
+  public Cookie generateRememberMeCookie(Authentication authentication) {
     return generateCookie(authentication, jwtExpiration);
   }
 
-  private Cookie generateCookie(final Authentication authentication, final int maxAge) {
-    final Cookie cookie = new Cookie(Constants.JWT_COOKIE_NAME, generateToken(authentication));
+  private Cookie generateCookie(Authentication authentication, int maxAge) {
+    Cookie cookie = new Cookie(Constants.JWT_COOKIE_NAME, generateToken(authentication));
     cookie.setPath("/");
     cookie.setHttpOnly(true);
     cookie.setMaxAge(maxAge);
@@ -58,26 +58,25 @@ public class JwtTokenProvider {
     return cookie;
   }
 
-  public String getUsernameFromJWT(final String token) {
-    final Claims claims =
-        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+  public String getUsernameFromJWT(String token) {
+    Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
 
     return claims.getSubject();
   }
 
-  public boolean validateToken(final String authToken) {
+  public boolean validateToken(String authToken) {
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
       return true;
-    } catch (final SignatureException ex) {
+    } catch (SignatureException ex) {
       log.error("Invalid JWT signature");
-    } catch (final MalformedJwtException ex) {
+    } catch (MalformedJwtException ex) {
       log.error("Invalid JWT token");
-    } catch (final ExpiredJwtException ex) {
+    } catch (ExpiredJwtException ex) {
       log.error("Expired JWT token");
-    } catch (final UnsupportedJwtException ex) {
+    } catch (UnsupportedJwtException ex) {
       log.error("Unsupported JWT token");
-    } catch (final IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ex) {
       log.error("JWT claims string is empty.");
     }
     return false;

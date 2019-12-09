@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 public class GreentextDecorator implements Decorator {
 
   @Override
-  public void decorate(final Post post) {
-    final Matcher matcher = GREENTEXT_PATTERN.matcher(post.getBody());
+  public void decorate(Post post) {
+    Matcher matcher = GREENTEXT_PATTERN.matcher(post.getBody());
     post.setBody(matcher.replaceAll(GREENTEXT_START + "$0" + GREENTEXT_END));
   }
 }

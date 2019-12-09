@@ -43,11 +43,6 @@ public class ThreadForm {
   }
 
   public Thread toThread() {
-    return Thread.builder()
-        .subject(subject)
-        .locked(locked)
-        .stickied(stickied)
-        .board(board)
-        .build();
+    return Thread.builder().subject(subject).locked(locked).stickied(stickied).board(board).build();
   }
 }

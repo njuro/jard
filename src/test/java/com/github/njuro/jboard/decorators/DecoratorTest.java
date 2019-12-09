@@ -20,11 +20,11 @@ public abstract class DecoratorTest {
 
   protected abstract Decorator initDecorator();
 
-  protected void decoratePost(final String body) {
+  protected void decoratePost(String body) {
     decoratePost(post, body);
   }
 
-  protected void decoratePost(final Post post, final String body) {
+  protected void decoratePost(Post post, String body) {
     post.setBody(body);
     decorator.decorate(post);
     log.info(body + " -> " + post.getBody());

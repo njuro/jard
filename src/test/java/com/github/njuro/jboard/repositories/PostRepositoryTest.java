@@ -11,10 +11,10 @@ class PostRepositoryTest extends RepositoryTest {
 
   @Test
   void testFindByThreadBoardLabelAndPostNumber() {
-    assertThat(this.postRepository.findByThreadBoardLabelAndPostNumber("r", 1L))
+    assertThat(postRepository.findByThreadBoardLabelAndPostNumber("r", 1L))
         .isPresent()
         .hasValueSatisfying(post -> post.getName().equals("Admin"));
-    assertThat(this.postRepository.findByThreadBoardLabelAndPostNumber("r", 10L)).isNotPresent();
-    assertThat(this.postRepository.findByThreadBoardLabelAndPostNumber("a", 1L)).isNotPresent();
+    assertThat(postRepository.findByThreadBoardLabelAndPostNumber("r", 10L)).isNotPresent();
+    assertThat(postRepository.findByThreadBoardLabelAndPostNumber("a", 1L)).isNotPresent();
   }
 }

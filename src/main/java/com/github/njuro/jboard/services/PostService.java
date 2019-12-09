@@ -34,18 +34,18 @@ public class PostService {
 
   @Autowired
   public PostService(
-      final BoardService boardService,
-      final AttachmentService attachmentService,
-      final PostRepository postRepository,
-      final List<Decorator> decorators) {
+      BoardService boardService,
+      AttachmentService attachmentService,
+      PostRepository postRepository,
+      List<Decorator> decorators) {
     this.boardService = boardService;
     this.attachmentService = attachmentService;
     this.postRepository = postRepository;
     this.decorators = decorators;
   }
 
-  public Post savePost(final Post post) {
-    final Board board = post.getThread().getBoard();
+  public Post savePost(Post post) {
+    Board board = post.getThread().getBoard();
     post.setPostNumber(boardService.getPostCounter(board));
     boardService.increasePostCounter(board);
 
@@ -58,49 +58,49 @@ public class PostService {
     return postRepository.save(post);
   }
 
-  private void decoratePost(final Post post) {
+  private void decoratePost(Post post) {
     post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
-    for (final Decorator decorator : decorators) {
+    for (Decorator decorator : decorators) {
       decorator.decorate(post);
     }
 
     post.setBody(post.getBody().replace("\n", "<br/>"));
   }
 
-  public Post resolvePost(final String boardLabel, final Long postNumber) {
+  public Post resolvePost(String boardLabel, Long postNumber) {
     return postRepository
         .findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
         .orElseThrow(PostNotFoundException::new);
   }
 
-  public List<Post> getAllRepliesForThread(final Thread thread) {
+  public List<Post> getAllRepliesForThread(Thread thread) {
     return postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(
         thread.getId(), thread.getOriginalPost().getId());
   }
 
-  public List<Post> getLatestRepliesForThread(final Thread thread) {
-    final List<Post> posts =
+  public List<Post> getLatestRepliesForThread(Thread thread) {
+    List<Post> posts =
         postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(
             thread.getId(), thread.getOriginalPost().getId());
     Collections.reverse(posts);
     return posts;
   }
 
-  public List<Post> getNewRepliesForThreadSince(final Thread thread, final Long lastPostNumber) {
+  public List<Post> getNewRepliesForThreadSince(Thread thread, Long lastPostNumber) {
     return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
         thread.getId(), lastPostNumber);
   }
 
-  public void deletePost(final Post post) {
+  public void deletePost(Post post) {
     if (post.getAttachment() != null) {
       AttachmentService.deleteAttachmentFile(post.getAttachment());
     }
     postRepository.delete(post);
   }
 
-  public void deletePosts(final List<Post> posts) {
-    final List<Attachment> attachments =
+  public void deletePosts(List<Post> posts) {
+    List<Attachment> attachments =
         posts.stream()
             .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)

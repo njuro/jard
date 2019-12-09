@@ -28,13 +28,13 @@ public class BoardRestController {
   private final BoardFacade boardFacade;
 
   @Autowired
-  public BoardRestController(final BoardFacade boardFacade) {
+  public BoardRestController(BoardFacade boardFacade) {
     this.boardFacade = boardFacade;
   }
 
   @PostMapping
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
-  public Board createBoard(@RequestBody @Valid final BoardForm boardForm) {
+  public Board createBoard(@RequestBody @Valid BoardForm boardForm) {
     return boardFacade.createBoard(boardForm);
   }
 
@@ -52,7 +52,7 @@ public class BoardRestController {
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
   @DynamicFilter(SensitiveDataFilter.class)
-  public Board showBoard(final Board board, final Pageable pageRequest) {
+  public Board showBoard(Board board, Pageable pageRequest) {
     return boardFacade.getBoardPage(board, pageRequest);
   }
 }

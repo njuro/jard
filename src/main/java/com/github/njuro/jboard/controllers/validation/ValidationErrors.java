@@ -20,7 +20,7 @@ public class ValidationErrors {
     errors = new ArrayList<>();
   }
 
-  public ValidationErrors(final BindingResult validationResult) {
+  public ValidationErrors(BindingResult validationResult) {
     this();
     errors =
         validationResult.getFieldErrors().stream()
@@ -28,7 +28,7 @@ public class ValidationErrors {
             .collect(Collectors.toList());
   }
 
-  public ValidationErrors(final String... errors) {
+  public ValidationErrors(String... errors) {
     this();
     this.errors.addAll(Arrays.asList(errors));
   }

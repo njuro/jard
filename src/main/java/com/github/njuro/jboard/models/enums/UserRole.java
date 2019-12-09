@@ -19,11 +19,11 @@ public enum UserRole {
 
   @Getter private Set<UserAuthority> defaultAuthorites;
 
-  UserRole(final Set<UserAuthority> authorities) {
+  UserRole(Set<UserAuthority> authorities) {
     defaultAuthorites = authorities;
   }
 
-  UserRole(final UserAuthority... authorities) {
+  UserRole(UserAuthority... authorities) {
     defaultAuthorites = new HashSet<>(Arrays.asList(authorities));
   }
 }

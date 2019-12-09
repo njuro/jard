@@ -36,31 +36,31 @@ class CrosslinkDecoratorTest extends DecoratorTest {
 
   @Override
   protected Decorator initDecorator() {
-    return this.decorator;
+    return decorator;
   }
 
   @BeforeEach
   void initPosts() {
-    this.postR = Post.builder().thread(this.threadService.resolveThread("r", 1L)).build();
-    this.postF = Post.builder().thread(this.threadService.resolveThread("fit", 1L)).build();
+    postR = Post.builder().thread(threadService.resolveThread("r", 1L)).build();
+    postF = Post.builder().thread(threadService.resolveThread("fit", 1L)).build();
   }
 
   @Test
   void testValidCrossThreadlink() {
-    decoratePost(this.postR, ">>1");
-    assertThat(this.postR.getBody()).containsSubsequence("/boards/r/1", CROSSLINK_CLASS_VALID);
+    decoratePost(postR, ">>1");
+    assertThat(postR.getBody()).containsSubsequence("/boards/r/1", CROSSLINK_CLASS_VALID);
   }
 
   @Test
   void testInvalidCrossThreadLink() {
-    decoratePost(this.postR, ">>42");
-    assertThat(this.postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
+    decoratePost(postR, ">>42");
+    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
   }
 
   @Test
   void testMultipleCrossThreadLinks() {
-    decoratePost(this.postR, "To different thread >>3 more text\n >>1 and to OP");
-    assertThat(this.postR.getBody())
+    decoratePost(postR, "To different thread >>3 more text\n >>1 and to OP");
+    assertThat(postR.getBody())
         .containsSubsequence(
             "/boards/r/3#3",
             CROSSLINK_CLASS_VALID,
@@ -72,26 +72,26 @@ class CrosslinkDecoratorTest extends DecoratorTest {
 
   @Test
   void testValidCrossBoardLink() {
-    decoratePost(this.postR, "Some text  >>>/fit/1");
-    decoratePost(this.postF, ">>>/r/4 some text");
-    assertThat(this.postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit/1");
-    assertThat(this.postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/r/3#4");
+    decoratePost(postR, "Some text  >>>/fit/1");
+    decoratePost(postF, ">>>/r/4 some text");
+    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit/1");
+    assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/r/3#4");
   }
 
   @Test
   void testInvalidCrossBoardLink() {
-    decoratePost(this.postF, "This points to >>>/r/42");
-    decoratePost(this.postR, "And this to >>>/a/1");
-    assertThat(this.postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
-    assertThat(this.postF.getBody()).contains(CROSSLINK_CLASS_INVALID);
+    decoratePost(postF, "This points to >>>/r/42");
+    decoratePost(postR, "And this to >>>/a/1");
+    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
+    assertThat(postF.getBody()).contains(CROSSLINK_CLASS_INVALID);
   }
 
   @Test
   void testPureCrossBoardLink() {
-    decoratePost(this.postF, "This is pure valid link to >>>/fit/  ");
-    decoratePost(this.postR, "And this is invalid link to >>>/q/");
-    assertThat(this.postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit");
-    assertThat(this.postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
+    decoratePost(postF, "This is pure valid link to >>>/fit/  ");
+    decoratePost(postR, "And this is invalid link to >>>/q/");
+    assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit");
+    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_INVALID);
   }
 
   @ParameterizedTest
@@ -107,8 +107,8 @@ class CrosslinkDecoratorTest extends DecoratorTest {
         ">>>//123",
         ">>/fit/"
       })
-  void testInvalidCrosslinkPattern(final String input) {
-    decoratePost(this.postR, input);
-    assertThat(this.postR.getBody()).doesNotContain(CROSSLINK_CLASS_VALID, CROSSLINK_CLASS_INVALID);
+  void testInvalidCrosslinkPattern(String input) {
+    decoratePost(postR, input);
+    assertThat(postR.getBody()).doesNotContain(CROSSLINK_CLASS_VALID, CROSSLINK_CLASS_INVALID);
   }
 }

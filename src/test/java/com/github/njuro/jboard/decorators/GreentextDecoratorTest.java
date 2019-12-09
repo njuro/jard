@@ -24,14 +24,14 @@ class GreentextDecoratorTest extends DecoratorTest {
         ">>>multiple quotes",
         ">multiline\r\n>text"
       })
-  void testValidGreentext(final String input) {
+  void testValidGreentext(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).containsSubsequence(GREENTEXT_START, GREENTEXT_END);
   }
 
   @ParameterizedTest
   @ValueSource(strings = {"aaa>text", "    aaaa > text", " aaa>text "})
-  void testInvalidGreentext(final String input) {
+  void testInvalidGreentext(String input) {
     decoratePost(input);
     assertThat(DecoratorTest.post.getBody()).isEqualTo(input);
   }

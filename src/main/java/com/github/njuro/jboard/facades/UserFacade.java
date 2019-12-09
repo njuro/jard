@@ -17,12 +17,12 @@ public class UserFacade {
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserFacade(final PasswordEncoder passwordEncoder, final UserService userService) {
+  public UserFacade(PasswordEncoder passwordEncoder, UserService userService) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
   }
 
-  public User registerUser(@NotNull final RegisterForm registerForm) {
+  public User registerUser(@NotNull RegisterForm registerForm) {
     if (userService.doesUserExists(registerForm.getUsername())) {
       throw new FormValidationException("User with this name already exists");
     }
@@ -31,7 +31,7 @@ public class UserFacade {
       throw new FormValidationException("User with this e-mail already exists");
     }
 
-    final User user = registerForm.toUser();
+    User user = registerForm.toUser();
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
     return userService.saveUser(user);
@@ -41,7 +41,7 @@ public class UserFacade {
     return UserService.getCurrentUser();
   }
 
-  public User updateUser(final User user) {
+  public User updateUser(User user) {
     return userService.saveUser(user);
   }
 

@@ -26,35 +26,35 @@ public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Autowired
-  public UserService(final UserRepository userRepository) {
+  public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
   @Override
-  public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     return userRepository
         .findByUsernameIgnoreCase(username)
         .orElseThrow(() -> new UsernameNotFoundException("User " + username + "does not exists"));
   }
 
-  public User getUserByEmail(final String email) {
+  public User getUserByEmail(String email) {
     return userRepository.findByEmailIgnoreCase(email);
   }
 
-  public User saveUser(final User user) {
+  public User saveUser(User user) {
     return userRepository.save(user);
   }
 
-  public boolean doesUserExists(final String username) {
+  public boolean doesUserExists(String username) {
     try {
       loadUserByUsername(username);
       return true;
-    } catch (final UsernameNotFoundException unfe) {
+    } catch (UsernameNotFoundException unfe) {
       return false;
     }
   }
 
-  public boolean doesEmailExists(final String email) {
+  public boolean doesEmailExists(String email) {
     return getUserByEmail(email) != null;
   }
 
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
   }
 
   public static User getCurrentUser() {
-    final Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (!(principal instanceof User)) {
       return null;
@@ -72,8 +72,8 @@ public class UserService implements UserDetailsService {
     return (User) principal;
   }
 
-  public static boolean hasCurrentUserAuthority(final UserAuthority authority) {
-    final User current = UserService.getCurrentUser();
+  public static boolean hasCurrentUserAuthority(UserAuthority authority) {
+    User current = UserService.getCurrentUser();
     if (current == null) {
       return false;
     }

@@ -19,11 +19,10 @@ class BoardRepositoryTest extends RepositoryTest {
 
   @Test
   void testPostCounter() {
-    final Board board =
-        boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
-    final long postCounterBefore = board.getPostCounter();
+    Board board = boardRepository.findByLabel("fit").orElseThrow(IllegalStateException::new);
+    long postCounterBefore = board.getPostCounter();
     boardRepository.increasePostNumber(board.getLabel());
-    final long postCounterAfter = boardRepository.getPostCounter(board.getLabel());
+    long postCounterAfter = boardRepository.getPostCounter(board.getLabel());
 
     assertThat(postCounterAfter).isEqualTo(postCounterBefore + 1);
   }

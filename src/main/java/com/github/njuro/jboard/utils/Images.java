@@ -23,8 +23,8 @@ public class Images {
    *
    * @param att attachment
    */
-  public void setDimensions(final Attachment att) {
-    final BufferedImage img = getImageFromAttachment(att);
+  public void setDimensions(Attachment att) {
+    BufferedImage img = getImageFromAttachment(att);
     if (img == null) {
       return;
     }
@@ -42,14 +42,14 @@ public class Images {
    * @return image, or null if attachment does not have file associated with it
    * @throws IllegalArgumentException when reading image data fails
    */
-  private BufferedImage getImageFromAttachment(final Attachment att) {
+  private BufferedImage getImageFromAttachment(Attachment att) {
     if (att.getFile() == null) {
       return null;
     }
 
     try {
       return ImageIO.read(att.getFile());
-    } catch (final IOException e) {
+    } catch (IOException e) {
       throw new IllegalArgumentException("Error while reading image", e);
     }
   }
@@ -59,7 +59,7 @@ public class Images {
    *
    * @att image attachment
    */
-  private void setThumbnailDimensions(final Attachment att) {
+  private void setThumbnailDimensions(Attachment att) {
     Objects.requireNonNull(att);
 
     if (att.getWidth() == 0 || att.getHeight() == 0) {
@@ -68,7 +68,7 @@ public class Images {
     }
 
     if (att.getWidth() > IMAGE_MAX_THUMB_WIDTH || att.getHeight() > IMAGE_MAX_THUMB_HEIGHT) {
-      final double factor =
+      double factor =
           Math.min(
               IMAGE_MAX_THUMB_WIDTH / att.getWidth(), IMAGE_MAX_THUMB_HEIGHT / att.getHeight());
       att.setThumbWidth(((int) Math.ceil(att.getWidth() * factor)) + 1);

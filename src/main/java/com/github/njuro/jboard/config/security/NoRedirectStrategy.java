@@ -9,7 +9,7 @@ public class NoRedirectStrategy implements RedirectStrategy {
 
   @Override
   public void sendRedirect(
-      final HttpServletRequest request, final HttpServletResponse response, final String url)
+      HttpServletRequest request, HttpServletResponse response, String url)
       throws IOException {
     // no redirect
   }

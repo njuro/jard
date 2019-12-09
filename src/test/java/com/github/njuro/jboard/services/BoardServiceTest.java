@@ -31,35 +31,35 @@ class BoardServiceTest extends ServiceTest {
 
   @BeforeEach
   void initBoards() {
-    this.boardN = Board.builder().label("n").name("Automobiles").postCounter(11L).build();
-    this.boardG = Board.builder().label("g").name("Technology").postCounter(25L).build();
-    this.boardInt = Board.builder().label("int").name("International").postCounter(32L).build();
+    boardN = Board.builder().label("n").name("Automobiles").postCounter(11L).build();
+    boardG = Board.builder().label("g").name("Technology").postCounter(25L).build();
+    boardInt = Board.builder().label("int").name("International").postCounter(32L).build();
   }
 
   @Test
   void testResolveBoard() {
-    when(this.boardRepository.findByLabel("g")).thenReturn(Optional.of(this.boardG));
+    when(boardRepository.findByLabel("g")).thenReturn(Optional.of(boardG));
 
-    final Board result = this.boardService.resolveBoard("g");
+    Board result = boardService.resolveBoard("g");
 
-    assertThat(result).isEqualToIgnoringNullFields(this.boardG);
+    assertThat(result).isEqualToIgnoringNullFields(boardG);
     assertThatExceptionOfType(BoardNotFoundException.class)
-        .isThrownBy(() -> this.boardService.resolveBoard("pol"));
+        .isThrownBy(() -> boardService.resolveBoard("pol"));
 
-    verify(this.boardRepository, times(2)).findByLabel(anyString());
-    verifyNoMoreInteractions(this.boardRepository);
+    verify(boardRepository, times(2)).findByLabel(anyString());
+    verifyNoMoreInteractions(boardRepository);
   }
 
   @Test
   void testGetAllBoards() {
-    when(this.boardRepository.findAll())
-        .thenReturn(Arrays.asList(this.boardG, this.boardInt, this.boardN));
+    when(boardRepository.findAll())
+        .thenReturn(Arrays.asList(boardG, boardInt, boardN));
 
-    final List<Board> result = this.boardService.getAllBoards();
+    List<Board> result = boardService.getAllBoards();
 
-    assertThat(result).containsExactlyInAnyOrder(this.boardInt, this.boardN, this.boardG);
+    assertThat(result).containsExactlyInAnyOrder(boardInt, boardN, boardG);
 
-    verify(this.boardRepository).findAll();
-    verifyNoMoreInteractions(this.boardRepository);
+    verify(boardRepository).findAll();
+    verifyNoMoreInteractions(boardRepository);
   }
 }

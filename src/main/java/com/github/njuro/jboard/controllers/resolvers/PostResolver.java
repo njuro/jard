@@ -22,24 +22,23 @@ public class PostResolver implements PathVariableArgumentResolver {
   private final PostService postService;
 
   @Autowired
-  public PostResolver(final PostService postService) {
+  public PostResolver(PostService postService) {
     this.postService = postService;
   }
 
   @Override
-  public boolean supportsParameter(final MethodParameter parameter) {
+  public boolean supportsParameter(MethodParameter parameter) {
     return parameter.getParameterType().equals(Post.class);
   }
 
   @Override
   public Object resolveArgument(
-      final MethodParameter parameter,
-      final ModelAndViewContainer mavContainer,
-      final NativeWebRequest webRequest,
-      final WebDataBinderFactory binderFactory) {
-    final Long postNumber =
-        Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
-    final String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+      MethodParameter parameter,
+      ModelAndViewContainer mavContainer,
+      NativeWebRequest webRequest,
+      WebDataBinderFactory binderFactory) {
+    Long postNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
+    String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
     return postService.resolvePost(board, postNumber);
   }

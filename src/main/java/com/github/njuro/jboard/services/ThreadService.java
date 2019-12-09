@@ -25,36 +25,36 @@ public class ThreadService {
   private final PostService postService;
 
   @Autowired
-  public ThreadService(final ThreadRepository threadRepository, final PostService postService) {
+  public ThreadService(ThreadRepository threadRepository, PostService postService) {
     this.threadRepository = threadRepository;
     this.postService = postService;
   }
 
-  public Thread saveThread(final Thread thread) {
+  public Thread saveThread(Thread thread) {
     thread.setOriginalPost(postService.savePost(thread.getOriginalPost()));
     return threadRepository.save(thread);
   }
 
-  public Thread resolveThread(final String boardLabel, final Long threadNumber) {
+  public Thread resolveThread(String boardLabel, Long threadNumber) {
     return threadRepository
         .findByBoardLabelAndOriginalPostPostNumber(boardLabel, threadNumber)
         .orElseThrow(ThreadNotFoundException::new);
   }
 
-  public List<Thread> getThreadsFromBoard(final Board board, final Pageable pageRequest) {
+  public List<Thread> getThreadsFromBoard(Board board, Pageable pageRequest) {
     return threadRepository.findByBoardId(board.getId(), pageRequest);
   }
 
-  public Thread updateThread(final Thread thread) {
+  public Thread updateThread(Thread thread) {
     return threadRepository.save(thread);
   }
 
-  public Thread updateLastReplyTimestamp(final Thread thread) {
+  public Thread updateLastReplyTimestamp(Thread thread) {
     thread.setLastReplyAt(LocalDateTime.now());
     return threadRepository.save(thread);
   }
 
-  public void deleteThread(final Thread thread) {
+  public void deleteThread(Thread thread) {
     threadRepository.delete(thread);
     postService.deletePosts(postService.getAllRepliesForThread(thread));
   }
