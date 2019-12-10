@@ -56,7 +56,7 @@ public class Post {
 
   @Basic private String ip;
 
-  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
   @EqualsAndHashCode.Include
   @ToString.Exclude
   private Thread thread;

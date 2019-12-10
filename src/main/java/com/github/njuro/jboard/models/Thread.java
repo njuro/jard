@@ -55,7 +55,7 @@ public class Thread {
 
   private LocalDateTime lastReplyAt;
 
-  @ManyToOne(targetEntity = Board.class, fetch = FetchType.LAZY, optional = false)
+  @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER, optional = false)
   @EqualsAndHashCode.Include
   @ToString.Exclude
   private Board board;
