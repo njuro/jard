@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,12 +17,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -52,25 +51,21 @@ public class Thread {
 
   @Basic private boolean stickied;
 
-  @Column(name = "createdAt")
   private LocalDateTime createdAt;
 
   private LocalDateTime lastReplyAt;
 
-  @ManyToOne(
-      targetEntity = Board.class,
-      fetch = FetchType.LAZY,
-      optional = false,
-      cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToOne(targetEntity = Board.class, fetch = FetchType.LAZY, optional = false)
   @EqualsAndHashCode.Include
+  @ToString.Exclude
   private Board board;
 
   @OneToOne(targetEntity = Post.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   @Fetch(FetchMode.JOIN)
-  @NotNull
   @JsonIgnoreProperties("thread")
   private Post originalPost;
 
+  @SuppressWarnings("JpaDataSourceORMInspection")
   @OneToOne(targetEntity = ThreadStatistics.class, fetch = FetchType.EAGER)
   @Fetch(FetchMode.JOIN)
   @JoinColumn(name = "id", referencedColumnName = "thread_id")

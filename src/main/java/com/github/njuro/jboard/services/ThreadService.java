@@ -55,7 +55,7 @@ public class ThreadService {
   }
 
   public void deleteThread(Thread thread) {
-    threadRepository.delete(thread);
     postService.deletePosts(postService.getAllRepliesForThread(thread));
+    threadRepository.delete(thread);
   }
 }

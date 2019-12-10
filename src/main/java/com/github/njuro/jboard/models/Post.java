@@ -52,18 +52,18 @@ public class Post {
   @Column(columnDefinition = "TEXT")
   private String body;
 
-  @Column(name = "createdAt")
   private LocalDateTime createdAt;
 
   @Basic private String ip;
 
-  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = Thread.class, fetch = FetchType.LAZY, optional = false)
   @EqualsAndHashCode.Include
   @ToString.Exclude
   private Thread thread;
 
   @OneToOne(targetEntity = Attachment.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @Fetch(FetchMode.JOIN)
+  @ToString.Exclude
   private Attachment attachment;
 
   @PrePersist
