@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,5 +61,12 @@ public class BoardRestController {
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public Board editBoard(Board oldBoard, @RequestBody @Valid BoardForm boardForm) {
     return boardFacade.editBoard(oldBoard, boardForm);
+  }
+
+  @PostMapping(Mappings.PATH_VARIABLE_BOARD + "/delete")
+  @HasAuthorities(UserAuthority.MANAGE_BOARDS)
+  public ResponseEntity<?> deleteBoard(Board board) {
+    boardFacade.deleteBoard(board);
+    return ResponseEntity.ok().build();
   }
 }

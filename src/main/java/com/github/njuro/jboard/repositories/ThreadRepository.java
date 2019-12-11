@@ -12,5 +12,7 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
 
   Optional<Thread> findByBoardLabelAndOriginalPostPostNumber(String label, Long postNumber);
 
+  List<Thread> findByBoardId(Long boardId);
+
   List<Thread> findByBoardId(Long boardId, Pageable pageRequest);
 }

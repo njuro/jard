@@ -53,4 +53,8 @@ public class BoardService {
   public void increasePostCounter(Board board) {
     boardRepository.increasePostNumber(board.getLabel());
   }
+
+  public void deleteBoard(Board board) {
+    boardRepository.delete(board);
+  }
 }

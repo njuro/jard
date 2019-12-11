@@ -41,6 +41,10 @@ public class ThreadService {
         .orElseThrow(ThreadNotFoundException::new);
   }
 
+  public List<Thread> getAllThreadsFromBoard(Board board) {
+    return threadRepository.findByBoardId(board.getId());
+  }
+
   public List<Thread> getThreadsFromBoard(Board board, Pageable pageRequest) {
     return threadRepository.findByBoardId(board.getId(), pageRequest);
   }
@@ -57,5 +61,9 @@ public class ThreadService {
   public void deleteThread(Thread thread) {
     postService.deletePosts(postService.getAllRepliesForThread(thread));
     threadRepository.delete(thread);
+  }
+
+  public void deleteThreads(List<Thread> threads) {
+    threads.forEach(this::deleteThread);
   }
 }
