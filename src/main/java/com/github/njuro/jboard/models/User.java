@@ -65,6 +65,7 @@ public class User implements UserDetails {
   @Enumerated(value = EnumType.STRING)
   private UserRole role;
 
+  @SuppressWarnings("JpaDataSourceORMInspection")
   @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "authority")
   @Enumerated(value = EnumType.STRING)
@@ -74,12 +75,9 @@ public class User implements UserDetails {
 
   @Basic @ToString.Exclude private String lastLoginIp;
 
-  @Column(name = "lastLogin")
   private LocalDateTime lastLogin;
 
-  @Column(name = "createdAt")
-  @ToString.Exclude
-  private LocalDateTime createdAt;
+  @ToString.Exclude private LocalDateTime createdAt;
 
   @PrePersist
   public void setCreatedAt() {

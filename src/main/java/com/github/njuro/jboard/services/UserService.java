@@ -45,6 +45,10 @@ public class UserService implements UserDetailsService {
     return userRepository.findAll();
   }
 
+  public User resolveUser(String username) {
+    return userRepository.findByUsernameIgnoreCase(username).orElse(null);
+  }
+
   public User findUserByEmail(String email) {
     return userRepository.findByEmailIgnoreCase(email);
   }

@@ -14,6 +14,9 @@ public class Mappings {
   public static final String PLACEHOLDER_POST = "post";
   public static final String PATH_VARIABLE_POST = "/{" + PLACEHOLDER_POST + "}";
 
+  public static final String PLACEHOLDER_USER = "user";
+  public static final String PATH_VARIABLE_USER = "/{" + PLACEHOLDER_USER + "}";
+
   public static final String API_ROOT = "/api";
   public static final String API_ROOT_BOARDS = API_ROOT + "/boards";
   public static final String API_ROOT_THREADS = API_ROOT_BOARDS + PATH_VARIABLE_BOARD;
