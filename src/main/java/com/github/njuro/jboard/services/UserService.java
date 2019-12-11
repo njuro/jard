@@ -37,12 +37,16 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("User " + username + "does not exists"));
   }
 
-  public User getUserByEmail(String email) {
-    return userRepository.findByEmailIgnoreCase(email);
-  }
-
   public User saveUser(User user) {
     return userRepository.save(user);
+  }
+
+  public List<User> getAllUsers() {
+    return userRepository.findAll();
+  }
+
+  public User findUserByEmail(String email) {
+    return userRepository.findByEmailIgnoreCase(email);
   }
 
   public boolean doesUserExists(String username) {
@@ -55,11 +59,7 @@ public class UserService implements UserDetailsService {
   }
 
   public boolean doesEmailExists(String email) {
-    return getUserByEmail(email) != null;
-  }
-
-  public List<User> getAllUsers() {
-    return userRepository.findAll();
+    return findUserByEmail(email) != null;
   }
 
   public User getCurrentUser() {

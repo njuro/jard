@@ -58,16 +58,6 @@ public class PostService {
     return postRepository.save(post);
   }
 
-  private void decoratePost(Post post) {
-    post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
-
-    for (Decorator decorator : decorators) {
-      decorator.decorate(post);
-    }
-
-    post.setBody(post.getBody().replace("\n", "<br/>"));
-  }
-
   public Post resolvePost(String boardLabel, Long postNumber) {
     return postRepository
         .findByThreadBoardLabelAndPostNumber(boardLabel, postNumber)
@@ -90,6 +80,16 @@ public class PostService {
   public List<Post> getNewRepliesForThreadSince(Thread thread, Long lastPostNumber) {
     return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
         thread.getId(), lastPostNumber);
+  }
+
+  private void decoratePost(Post post) {
+    post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
+
+    for (Decorator decorator : decorators) {
+      decorator.decorate(post);
+    }
+
+    post.setBody(post.getBody().replace("\n", "<br/>"));
   }
 
   public void deletePost(Post post) {

@@ -58,8 +58,8 @@ public class BoardFacade {
         .collect(Collectors.toSet());
   }
 
-  public Board getBoardPage(Board board, Pageable pageRequest) {
-    List<Thread> threads = threadService.getThreadsFromBoard(board, pageRequest);
+  public Board getBoard(Board board, Pageable pagination) {
+    List<Thread> threads = threadService.getThreadsFromBoard(board, pagination);
     threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
     board.setThreads(threads);
     return board;

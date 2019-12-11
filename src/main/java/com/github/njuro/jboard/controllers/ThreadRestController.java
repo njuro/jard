@@ -17,8 +17,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -33,8 +35,7 @@ public class ThreadRestController {
   private final RequestValidator requestValidator;
 
   @Autowired
-  public ThreadRestController(
-      ThreadFacade threadFacade, RequestValidator requestValidator) {
+  public ThreadRestController(ThreadFacade threadFacade, RequestValidator requestValidator) {
     this.threadFacade = threadFacade;
     this.requestValidator = requestValidator;
   }
@@ -42,11 +43,11 @@ public class ThreadRestController {
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
   @DynamicFilter(SensitiveDataFilter.class)
   public Thread showThread(Thread thread) {
-    return threadFacade.getFullThread(thread);
+    return threadFacade.getThread(thread);
   }
 
-  @PostMapping("/submit")
-  public Thread submitNewThread(
+  @PutMapping
+  public Thread createThread(
       Board board,
       @RequestPart ThreadForm threadForm,
       @RequestPart(required = false) MultipartFile attachment,
@@ -56,10 +57,10 @@ public class ThreadRestController {
     threadForm.getPostForm().setIp(request.getRemoteAddr());
     requestValidator.validate(threadForm);
 
-    return threadFacade.submitNewThread(threadForm);
+    return threadFacade.createThread(threadForm);
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/reply")
+  @PutMapping(Mappings.PATH_VARIABLE_THREAD)
   @FieldFilterSetting(className = Post.class, fields = "thread")
   public Post replyToThread(
       Thread thread,
@@ -73,7 +74,7 @@ public class ThreadRestController {
     return threadFacade.replyToThread(postForm, thread);
   }
 
-  @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/update")
+  @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-posts")
   @FieldFilterSetting(className = Post.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
   public List<Post> findNewPosts(
@@ -83,19 +84,19 @@ public class ThreadRestController {
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
-  public ResponseEntity<?> toggleStickyThread(Thread thread) {
-    threadFacade.toggleSticky(thread);
+  public ResponseEntity<?> toggleStickyOnThread(Thread thread) {
+    threadFacade.toggleStickyOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
-  public ResponseEntity<?> toggleLockThread(Thread thread) {
-    threadFacade.toggleLock(thread);
+  public ResponseEntity<?> toggleLockOnThread(Thread thread) {
+    threadFacade.toggleLockOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/delete" + Mappings.PATH_VARIABLE_POST)
+  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
   public ResponseEntity<?> deletePost(Thread thread, Post post) {
     threadFacade.deletePost(thread, post);

@@ -35,7 +35,7 @@ public class ThreadFacade {
     this.postFacade = postFacade;
   }
 
-  public Thread submitNewThread(@NotNull ThreadForm threadForm) {
+  public Thread createThread(@NotNull ThreadForm threadForm) {
     if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
@@ -63,16 +63,22 @@ public class ThreadFacade {
     return post;
   }
 
+  public Thread getThread(Thread thread) {
+    List<Post> replies = postService.getAllRepliesForThread(thread);
+    thread.setReplies(replies);
+    return thread;
+  }
+
   public List<Post> findNewPosts(Thread thread, Long lastPostNumber) {
     return postService.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
-  public Thread toggleSticky(Thread thread) {
+  public Thread toggleStickyOnThread(Thread thread) {
     thread.toggleSticky();
     return threadService.updateThread(thread);
   }
 
-  public Thread toggleLock(Thread thread) {
+  public Thread toggleLockOnThread(Thread thread) {
     thread.toggleLock();
     return threadService.updateThread(thread);
   }
@@ -85,11 +91,5 @@ public class ThreadFacade {
       // delete post
       postService.deletePost(post);
     }
-  }
-
-  public Thread getFullThread(Thread thread) {
-    List<Post> replies = postService.getAllRepliesForThread(thread);
-    thread.setReplies(replies);
-    return thread;
   }
 }

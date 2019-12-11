@@ -17,6 +17,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -56,6 +57,13 @@ public class MvcConfig implements WebMvcConfigurer {
     registry
         .addMapping("/**")
         .allowedOrigins("http://localhost:3000", "http://192.168.0.80:3000")
+        .allowedMethods(
+            HttpMethod.GET.name(),
+            HttpMethod.POST.name(),
+            HttpMethod.PUT.name(),
+            HttpMethod.DELETE.name(),
+            HttpMethod.HEAD.name(),
+            HttpMethod.OPTIONS.name())
         .allowCredentials(true);
   }
 

@@ -25,17 +25,13 @@ public class BoardService {
     this.boardRepository = boardRepository;
   }
 
-  public List<Board> getAllBoards() {
-    return new ArrayList<>(boardRepository.findAll());
-  }
-
   public Board saveBoard(Board board) {
     board.setPostCounter(1L);
     return boardRepository.save(board);
   }
 
-  public Board updateBoard(Board board) {
-    return boardRepository.save(board);
+  public List<Board> getAllBoards() {
+    return new ArrayList<>(boardRepository.findAll());
   }
 
   public Board resolveBoard(String label) throws BoardNotFoundException {
@@ -52,6 +48,10 @@ public class BoardService {
 
   public void increasePostCounter(Board board) {
     boardRepository.increasePostNumber(board.getLabel());
+  }
+
+  public Board updateBoard(Board board) {
+    return boardRepository.save(board);
   }
 
   public void deleteBoard(Board board) {

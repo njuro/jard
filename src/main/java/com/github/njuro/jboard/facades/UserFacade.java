@@ -2,7 +2,7 @@ package com.github.njuro.jboard.facades;
 
 import com.github.njuro.jboard.controllers.validation.FormValidationException;
 import com.github.njuro.jboard.models.User;
-import com.github.njuro.jboard.models.dto.forms.RegisterForm;
+import com.github.njuro.jboard.models.dto.forms.UserForm;
 import com.github.njuro.jboard.services.UserService;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -22,19 +22,23 @@ public class UserFacade {
     this.userService = userService;
   }
 
-  public User registerUser(@NotNull RegisterForm registerForm) {
-    if (userService.doesUserExists(registerForm.getUsername())) {
+  public User createUser(@NotNull UserForm userForm) {
+    if (userService.doesUserExists(userForm.getUsername())) {
       throw new FormValidationException("User with this name already exists");
     }
 
-    if (userService.doesEmailExists(registerForm.getEmail())) {
+    if (userService.doesEmailExists(userForm.getEmail())) {
       throw new FormValidationException("User with this e-mail already exists");
     }
 
-    User user = registerForm.toUser();
+    User user = userForm.toUser();
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
     return userService.saveUser(user);
+  }
+
+  public List<User> getAllUsers() {
+    return userService.getAllUsers();
   }
 
   public User getCurrentUser() {
@@ -43,9 +47,5 @@ public class UserFacade {
 
   public User updateUser(User user) {
     return userService.saveUser(user);
-  }
-
-  public List<User> getAllUsers() {
-    return userService.getAllUsers();
   }
 }

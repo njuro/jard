@@ -15,7 +15,7 @@ import lombok.Data;
 
 /** Data transfer object for "create new user" form */
 @Data
-public class RegisterForm {
+public class UserForm {
 
   @Size(
       min = MIN_USERNAME_LENGTH,
