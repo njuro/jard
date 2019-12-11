@@ -66,7 +66,6 @@ public class BoardFacade {
   }
 
   public void deleteBoard(Board board) {
-    threadService.deleteThreads(threadService.getAllThreadsFromBoard(board));
     boardService.deleteBoard(board);
   }
 }

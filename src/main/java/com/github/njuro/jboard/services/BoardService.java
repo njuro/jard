@@ -20,9 +20,12 @@ public class BoardService {
 
   private final BoardRepository boardRepository;
 
+  private final ThreadService threadService;
+
   @Autowired
-  public BoardService(BoardRepository boardRepository) {
+  public BoardService(BoardRepository boardRepository, ThreadService threadService) {
     this.boardRepository = boardRepository;
+    this.threadService = threadService;
   }
 
   public Board saveBoard(Board board) {
@@ -55,6 +58,7 @@ public class BoardService {
   }
 
   public void deleteBoard(Board board) {
+    threadService.deleteThreads(threadService.getAllThreadsFromBoard(board));
     boardRepository.delete(board);
   }
 }
