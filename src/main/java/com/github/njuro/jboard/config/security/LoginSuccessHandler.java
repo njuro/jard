@@ -2,9 +2,9 @@ package com.github.njuro.jboard.config.security;
 
 import com.github.njuro.jboard.config.security.jwt.JwtTokenProvider;
 import com.github.njuro.jboard.controllers.utils.ResponseJsonWriter;
-import com.github.njuro.jboard.facades.UserFacade;
 import com.github.njuro.jboard.helpers.Constants;
 import com.github.njuro.jboard.models.User;
+import com.github.njuro.jboard.services.UserService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javax.servlet.ServletException;
@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-  private final UserFacade userFacade;
+  private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
   private final ResponseJsonWriter responseJsonWriter;
 
   @Autowired
   public LoginSuccessHandler(
-      UserFacade userFacade,
+      UserService userService,
       JwtTokenProvider jwtTokenProvider,
       ResponseJsonWriter responseJsonWriter) {
-    this.userFacade = userFacade;
+    this.userService = userService;
     this.jwtTokenProvider = jwtTokenProvider;
     this.responseJsonWriter = responseJsonWriter;
     setRedirectStrategy(new NoRedirectStrategy());
@@ -42,7 +42,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     User user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
     user.setLastLogin(LocalDateTime.now());
-    userFacade.updateUser(user);
+    userService.updateUser(user);
     log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
 
     super.onAuthenticationSuccess(request, response, authentication);
@@ -53,6 +53,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         rememberMe
             ? jwtTokenProvider.generateRememberMeCookie(authentication)
             : jwtTokenProvider.generateSessionCookie(authentication));
-    responseJsonWriter.writeJsonToResponse(response, userFacade.getCurrentUser());
+    responseJsonWriter.writeJsonToResponse(response, userService.getCurrentUser());
   }
 }

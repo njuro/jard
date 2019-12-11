@@ -45,7 +45,12 @@ public class UserFacade {
     return userService.getCurrentUser();
   }
 
-  public User updateUser(User user) {
-    return userService.saveUser(user);
+  public User editUser(User oldUser, UserForm updatedUser) {
+    oldUser.setEmail(updatedUser.getEmail());
+    return userService.updateUser(oldUser);
+  }
+
+  public void deleteUser(User user) {
+    userService.deleteUser(user);
   }
 }

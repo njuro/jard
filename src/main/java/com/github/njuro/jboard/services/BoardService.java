@@ -6,6 +6,7 @@ import com.github.njuro.jboard.repositories.BoardRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class BoardService {
   private final ThreadService threadService;
 
   @Autowired
-  public BoardService(BoardRepository boardRepository, ThreadService threadService) {
+  public BoardService(BoardRepository boardRepository, @Lazy ThreadService threadService) {
     this.boardRepository = boardRepository;
     this.threadService = threadService;
   }

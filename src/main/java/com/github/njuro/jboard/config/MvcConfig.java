@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jboard.controllers.resolvers.BoardResolver;
 import com.github.njuro.jboard.controllers.resolvers.PostResolver;
 import com.github.njuro.jboard.controllers.resolvers.ThreadResolver;
+import com.github.njuro.jboard.controllers.resolvers.UserResolver;
 import com.github.njuro.jboard.helpers.Constants;
 import com.jfilter.EnableJsonFilter;
 import com.jfilter.components.FilterConfiguration;
@@ -32,12 +33,18 @@ public class MvcConfig implements WebMvcConfigurer {
   private final BoardResolver boardResolver;
   private final ThreadResolver threadResolver;
   private final PostResolver postResolver;
+  private final UserResolver userResolver;
 
+  @Autowired
   public MvcConfig(
-      BoardResolver boardResolver, ThreadResolver threadResolver, PostResolver postResolver) {
+      BoardResolver boardResolver,
+      ThreadResolver threadResolver,
+      PostResolver postResolver,
+      UserResolver userResolver) {
     this.boardResolver = boardResolver;
     this.threadResolver = threadResolver;
     this.postResolver = postResolver;
+    this.userResolver = userResolver;
   }
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -79,5 +86,6 @@ public class MvcConfig implements WebMvcConfigurer {
     resolvers.add(boardResolver);
     resolvers.add(threadResolver);
     resolvers.add(postResolver);
+    resolvers.add(userResolver);
   }
 }

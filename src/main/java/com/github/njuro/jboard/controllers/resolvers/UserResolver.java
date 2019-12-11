@@ -5,10 +5,12 @@ import com.github.njuro.jboard.models.User;
 import com.github.njuro.jboard.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Component
 public class UserResolver implements PathVariableArgumentResolver {
 
   private final UserService userService;

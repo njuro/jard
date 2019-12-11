@@ -84,4 +84,13 @@ public class UserService implements UserDetailsService {
 
     return current.getAuthorities().contains(authority);
   }
+
+  public User updateUser(User user) {
+    return userRepository.save(user);
+  }
+
+  public void deleteUser(User user) {
+    // TODO delete all bans from user
+    userRepository.delete(user);
+  }
 }
