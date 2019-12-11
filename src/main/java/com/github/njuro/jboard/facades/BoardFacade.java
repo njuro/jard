@@ -26,9 +26,7 @@ public class BoardFacade {
 
   @Autowired
   public BoardFacade(
-      BoardService boardService,
-      ThreadService threadService,
-      PostService postService) {
+      BoardService boardService, ThreadService threadService, PostService postService) {
     this.boardService = boardService;
     this.threadService = threadService;
     this.postService = postService;
@@ -44,6 +42,14 @@ public class BoardFacade {
     }
 
     return boardService.saveBoard(boardForm.toBoard());
+  }
+
+  public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
+    oldBoard.setName(updatedBoard.getName());
+    oldBoard.setAttachmentType(updatedBoard.getAttachmentType());
+    oldBoard.setNsfw(updatedBoard.isNsfw());
+
+    return boardService.updateBoard(oldBoard);
   }
 
   public static Set<BoardAttachmentTypeDto> getBoardTypes() {

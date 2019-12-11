@@ -55,4 +55,10 @@ public class BoardRestController {
   public Board showBoard(Board board, Pageable pageRequest) {
     return boardFacade.getBoardPage(board, pageRequest);
   }
+
+  @PostMapping(Mappings.PATH_VARIABLE_BOARD + "/edit")
+  @HasAuthorities(UserAuthority.MANAGE_BOARDS)
+  public Board editBoard(Board oldBoard, @RequestBody @Valid BoardForm boardForm) {
+    return boardFacade.editBoard(oldBoard, boardForm);
+  }
 }

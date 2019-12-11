@@ -34,6 +34,10 @@ public class BoardService {
     return boardRepository.save(board);
   }
 
+  public Board updateBoard(Board board) {
+    return boardRepository.save(board);
+  }
+
   public Board resolveBoard(String label) throws BoardNotFoundException {
     return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
   }
