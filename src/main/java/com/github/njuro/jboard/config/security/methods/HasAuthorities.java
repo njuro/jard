@@ -1,6 +1,6 @@
 package com.github.njuro.jboard.config.security.methods;
 
-import com.github.njuro.jboard.models.enums.UserAuthority;
+import com.github.njuro.jboard.user.UserAuthority;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

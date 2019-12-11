@@ -1,10 +1,10 @@
 package com.github.njuro.jboard.config.security;
 
+import com.github.njuro.jboard.common.Constants;
+import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
-import com.github.njuro.jboard.helpers.Constants;
-import com.github.njuro.jboard.helpers.Mappings;
-import com.github.njuro.jboard.services.UserService;
+import com.github.njuro.jboard.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

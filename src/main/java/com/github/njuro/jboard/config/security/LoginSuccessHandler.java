@@ -1,10 +1,10 @@
 package com.github.njuro.jboard.config.security;
 
+import com.github.njuro.jboard.common.Constants;
 import com.github.njuro.jboard.config.security.jwt.JwtTokenProvider;
-import com.github.njuro.jboard.controllers.utils.ResponseJsonWriter;
-import com.github.njuro.jboard.helpers.Constants;
-import com.github.njuro.jboard.models.User;
-import com.github.njuro.jboard.services.UserService;
+import com.github.njuro.jboard.user.User;
+import com.github.njuro.jboard.user.UserService;
+import com.github.njuro.jboard.utils.ResponseJsonWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import javax.servlet.ServletException;

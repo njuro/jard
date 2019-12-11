@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.config.security.jwt;
 
-import com.github.njuro.jboard.helpers.Constants;
-import com.github.njuro.jboard.services.UserService;
+import com.github.njuro.jboard.common.Constants;
+import com.github.njuro.jboard.user.UserService;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.FilterChain;
@@ -28,17 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final UserService userService;
 
   @Autowired
-  public JwtAuthenticationFilter(
-      JwtTokenProvider tokenProvider, @Lazy UserService userService) {
+  public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, @Lazy UserService userService) {
     this.tokenProvider = tokenProvider;
     this.userService = userService;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      FilterChain filterChain)
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     try {
       String jwt = getJwtFromRequest(request);

@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.config.security.jwt;
 
-import com.github.njuro.jboard.helpers.Constants;
-import com.github.njuro.jboard.models.User;
+import com.github.njuro.jboard.common.Constants;
+import com.github.njuro.jboard.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

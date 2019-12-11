@@ -6,11 +6,11 @@ import static com.jfilter.FilterConstantsHelper.MEDIA_TYPE_APPLICATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.njuro.jboard.controllers.resolvers.BoardResolver;
-import com.github.njuro.jboard.controllers.resolvers.PostResolver;
-import com.github.njuro.jboard.controllers.resolvers.ThreadResolver;
-import com.github.njuro.jboard.controllers.resolvers.UserResolver;
-import com.github.njuro.jboard.helpers.Constants;
+import com.github.njuro.jboard.board.BoardResolver;
+import com.github.njuro.jboard.common.Constants;
+import com.github.njuro.jboard.post.PostResolver;
+import com.github.njuro.jboard.thread.ThreadResolver;
+import com.github.njuro.jboard.user.UserResolver;
 import com.jfilter.EnableJsonFilter;
 import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;

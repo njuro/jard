@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.config.security;
 
-import com.github.njuro.jboard.controllers.utils.ResponseJsonWriter;
-import com.github.njuro.jboard.controllers.validation.ValidationErrors;
+import com.github.njuro.jboard.utils.ResponseJsonWriter;
+import com.github.njuro.jboard.utils.validation.ValidationErrors;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +23,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
   @Override
   public void onAuthenticationFailure(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      AuthenticationException exception)
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
       throws IOException {
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     responseJsonWriter.writeJsonToResponse(

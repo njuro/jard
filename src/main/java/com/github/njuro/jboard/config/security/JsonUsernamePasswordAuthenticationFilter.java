@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.njuro.jboard.helpers.Constants;
+import com.github.njuro.jboard.common.Constants;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +19,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
   @Override
   public Authentication attemptAuthentication(
-      HttpServletRequest request, HttpServletResponse response)
-      throws AuthenticationException {
+      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     try {
       LoginRequest login = objectMapper.readValue(request.getReader(), LoginRequest.class);
       UsernamePasswordAuthenticationToken authRequest =

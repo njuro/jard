@@ -1,6 +1,6 @@
 package com.github.njuro.jboard.config.security.methods;
 
-import com.github.njuro.jboard.models.enums.UserAuthority;
+import com.github.njuro.jboard.user.UserAuthority;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
