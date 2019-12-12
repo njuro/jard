@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CodeDecorator implements Decorator {
+public class CodeDecorator implements PostDecorator {
 
   @Override
   public void decorate(Post post) {

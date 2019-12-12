@@ -8,7 +8,7 @@ import com.github.njuro.jboard.post.Post;
  * @author njuro
  */
 @FunctionalInterface
-public interface Decorator {
+public interface PostDecorator {
 
   void decorate(Post post);
 }

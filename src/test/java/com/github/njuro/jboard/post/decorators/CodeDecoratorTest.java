@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class CodeDecoratorTest extends DecoratorTest {
+class CodeDecoratorTest extends PostDecoratorTest {
 
   @Override
-  protected Decorator initDecorator() {
+  protected PostDecorator initDecorator() {
     return new CodeDecorator();
   }
 
@@ -23,7 +23,7 @@ class CodeDecoratorTest extends DecoratorTest {
       })
   void testValidCodeBlock(String input) {
     decoratePost(input);
-    assertThat(DecoratorTest.post.getBody()).containsSubsequence(CODE_START, CODE_END);
+    assertThat(PostDecoratorTest.post.getBody()).containsSubsequence(CODE_START, CODE_END);
   }
 
   @ParameterizedTest
@@ -31,6 +31,6 @@ class CodeDecoratorTest extends DecoratorTest {
       strings = {"[code]text", "[code]text[code]", "test[/code]", "[code] [/code]", "text"})
   void testInvalidCodeBlock(String input) {
     decoratePost(input);
-    assertThat(DecoratorTest.post.getBody()).isEqualTo(input);
+    assertThat(PostDecoratorTest.post.getBody()).isEqualTo(input);
   }
 }

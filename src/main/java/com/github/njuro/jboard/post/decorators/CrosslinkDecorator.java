@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CrosslinkDecorator implements Decorator {
+public class CrosslinkDecorator implements PostDecorator {
 
   private final BoardService boardService;
   private final PostService postService;

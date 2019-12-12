@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @UseMockDatabase
 @Slf4j
-class CrosslinkDecoratorTest extends DecoratorTest {
+class CrosslinkDecoratorTest extends PostDecoratorTest {
 
   @Autowired private CrosslinkDecorator decorator;
 
@@ -35,7 +35,7 @@ class CrosslinkDecoratorTest extends DecoratorTest {
   private Post postF;
 
   @Override
-  protected Decorator initDecorator() {
+  protected PostDecorator initDecorator() {
     return decorator;
   }
 

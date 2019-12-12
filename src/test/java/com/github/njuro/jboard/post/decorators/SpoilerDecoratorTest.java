@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class SpoilerDecoratorTest extends DecoratorTest {
+class SpoilerDecoratorTest extends PostDecoratorTest {
 
   @Override
-  protected Decorator initDecorator() {
+  protected PostDecorator initDecorator() {
     return new SpoilerDecorator();
   }
 
@@ -24,7 +24,7 @@ class SpoilerDecoratorTest extends DecoratorTest {
       })
   void testValidSpoiler(String input) {
     decoratePost(input);
-    assertThat(DecoratorTest.post.getBody()).containsSubsequence(SPOILER_START, SPOILER_END);
+    assertThat(PostDecoratorTest.post.getBody()).containsSubsequence(SPOILER_START, SPOILER_END);
   }
 
   @ParameterizedTest
@@ -40,6 +40,6 @@ class SpoilerDecoratorTest extends DecoratorTest {
       })
   void testInvalidSpoiler(String input) {
     decoratePost(input);
-    assertThat(DecoratorTest.post.getBody()).isEqualTo(input);
+    assertThat(PostDecoratorTest.post.getBody()).isEqualTo(input);
   }
 }

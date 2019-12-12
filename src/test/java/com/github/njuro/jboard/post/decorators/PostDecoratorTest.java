@@ -7,9 +7,9 @@ import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
-public abstract class DecoratorTest {
+public abstract class PostDecoratorTest {
 
-  protected static Decorator decorator;
+  protected static PostDecorator decorator;
   protected static Post post;
 
   @BeforeAll
@@ -18,7 +18,7 @@ public abstract class DecoratorTest {
     decorator = initDecorator();
   }
 
-  protected abstract Decorator initDecorator();
+  protected abstract PostDecorator initDecorator();
 
   protected void decoratePost(String body) {
     decoratePost(post, body);

@@ -4,7 +4,7 @@ import com.github.njuro.jboard.attachment.Attachment;
 import com.github.njuro.jboard.attachment.AttachmentService;
 import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.board.BoardService;
-import com.github.njuro.jboard.post.decorators.Decorator;
+import com.github.njuro.jboard.post.decorators.PostDecorator;
 import com.github.njuro.jboard.thread.Thread;
 import java.util.Collections;
 import java.util.List;
@@ -29,14 +29,14 @@ public class PostService {
 
   private final PostRepository postRepository;
 
-  private final List<Decorator> decorators;
+  private final List<PostDecorator> decorators;
 
   @Autowired
   public PostService(
       BoardService boardService,
       AttachmentService attachmentService,
       PostRepository postRepository,
-      List<Decorator> decorators) {
+      List<PostDecorator> decorators) {
     this.boardService = boardService;
     this.attachmentService = attachmentService;
     this.postRepository = postRepository;
@@ -83,7 +83,7 @@ public class PostService {
   private void decoratePost(Post post) {
     post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
-    for (Decorator decorator : decorators) {
+    for (PostDecorator decorator : decorators) {
       decorator.decorate(post);
     }
 
