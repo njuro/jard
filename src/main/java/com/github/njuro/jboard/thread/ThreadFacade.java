@@ -56,7 +56,7 @@ public class ThreadFacade {
 
     Post post = postFacade.createPost(postForm, thread);
     post = postService.savePost(post);
-    threadService.updateLastReplyTimestamp(thread); // TODO move to PostService##savePost
+    threadService.updateLastReplyTimestamp(thread);
 
     return post;
   }

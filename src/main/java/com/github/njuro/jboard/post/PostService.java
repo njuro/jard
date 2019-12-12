@@ -45,8 +45,7 @@ public class PostService {
 
   public Post savePost(Post post) {
     Board board = post.getThread().getBoard();
-    post.setPostNumber(boardService.getPostCounter(board));
-    boardService.increasePostCounter(board);
+    post.setPostNumber(boardService.registerNewPost(board));
 
     decoratePost(post);
 

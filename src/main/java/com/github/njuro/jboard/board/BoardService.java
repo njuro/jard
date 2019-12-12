@@ -48,8 +48,10 @@ public class BoardService {
     return boardRepository.getPostCounter(board.getLabel());
   }
 
-  public void increasePostCounter(Board board) {
+  public Long registerNewPost(Board board) {
+    Long newPostNumber = getPostCounter(board);
     boardRepository.increasePostNumber(board.getLabel());
+    return newPostNumber;
   }
 
   public Board updateBoard(Board board) {
