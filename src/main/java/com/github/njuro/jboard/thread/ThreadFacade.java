@@ -34,7 +34,7 @@ public class ThreadFacade {
     this.postFacade = postFacade;
   }
 
-  public Thread createThread(@NotNull ThreadForm threadForm) {
+  public Thread createThread(@NotNull ThreadForm threadForm, Board board) {
     if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
@@ -42,8 +42,8 @@ public class ThreadFacade {
     Thread thread = threadForm.toThread();
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
+    thread.setBoard(board);
 
-    Board board = threadForm.getBoard();
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getThreadLimit()) {
       threadService.deleteOldestThread(board);
     }
@@ -62,7 +62,10 @@ public class ThreadFacade {
 
     Post post = postFacade.createPost(postForm, thread);
     post = postService.savePost(post);
-    threadService.updateLastReplyTimestamp(thread);
+
+    if (postService.getNumberOfPostsInThread(thread) <= thread.getBoard().getBumpLimit()) {
+      threadService.updateLastReplyTimestamp(thread);
+    }
 
     return post;
   }

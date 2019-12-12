@@ -38,6 +38,7 @@ public class Constants {
 
   public static final int MAX_BOARD_NAME_LENGTH = 32;
   public static final int MAX_THREAD_LIMIT = 100;
+  public static final int MAX_BUMP_LIMIT = 1000;
 
   /** Threads & Posts */
   public static final int MAX_NAME_LENGTH = 32;

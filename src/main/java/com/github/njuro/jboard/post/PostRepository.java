@@ -16,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   List<Post> findByThreadIdAndIdIsNotOrderByCreatedAtAsc(Long threadId, Long originalPostId);
 
   List<Post> findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(Long threadId, Long originalPostId);
+
+  Long countByThreadId(Long threadId);
 }

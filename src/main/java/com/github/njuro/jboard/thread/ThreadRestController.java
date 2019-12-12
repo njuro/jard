@@ -49,12 +49,11 @@ public class ThreadRestController {
       @RequestPart ThreadForm threadForm,
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
-    threadForm.setBoard(board);
     threadForm.getPostForm().setAttachment(attachment);
     threadForm.getPostForm().setIp(request.getRemoteAddr());
     requestValidator.validate(threadForm);
 
-    return threadFacade.createThread(threadForm);
+    return threadFacade.createThread(threadForm, board);
   }
 
   @PutMapping(Mappings.PATH_VARIABLE_THREAD)

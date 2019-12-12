@@ -2,6 +2,7 @@ package com.github.njuro.jboard.board;
 
 import static com.github.njuro.jboard.common.Constants.MAX_BOARD_LABEL_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BOARD_NAME_LENGTH;
+import static com.github.njuro.jboard.common.Constants.MAX_BUMP_LIMIT;
 import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
 
 import javax.validation.constraints.Max;
@@ -35,12 +36,18 @@ public class BoardForm {
   @Max(value = MAX_THREAD_LIMIT, message = "Thread limit cannot be higher than " + MAX_THREAD_LIMIT)
   private int threadLimit;
 
+  @Positive(message = "Bump limit must be a positive number")
+  @Max(value = MAX_BUMP_LIMIT, message = "Bump limit cannot be higher than " + MAX_BUMP_LIMIT)
+  private int bumpLimit;
+
   public Board toBoard() {
     return Board.builder()
         .label(label)
         .name(name)
         .attachmentType(attachmentType)
         .nsfw(nsfw)
+        .threadLimit(threadLimit)
+        .bumpLimit(bumpLimit)
         .build();
   }
 }

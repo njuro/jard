@@ -44,6 +44,7 @@ public class BoardFacade {
     oldBoard.setAttachmentType(updatedBoard.getAttachmentType());
     oldBoard.setNsfw(updatedBoard.isNsfw());
     oldBoard.setThreadLimit(updatedBoard.getThreadLimit());
+    oldBoard.setBumpLimit(updatedBoard.getBumpLimit());
 
     return boardService.updateBoard(oldBoard);
   }

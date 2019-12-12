@@ -54,6 +54,9 @@ public class Board {
   @ColumnDefault("100")
   private int threadLimit;
 
+  @ColumnDefault("300")
+  private int bumpLimit;
+
   @Transient
   @JsonIgnoreProperties("board")
   private List<Thread> threads;

@@ -75,6 +75,10 @@ public class PostService {
     return posts;
   }
 
+  public int getNumberOfPostsInThread(Thread thread) {
+    return postRepository.countByThreadId(thread.getId()).intValue();
+  }
+
   public List<Post> getNewRepliesForThreadSince(Thread thread, Long lastPostNumber) {
     return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
         thread.getId(), lastPostNumber);

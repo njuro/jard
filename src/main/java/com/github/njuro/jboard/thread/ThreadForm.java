@@ -2,7 +2,6 @@ package com.github.njuro.jboard.thread;
 
 import static com.github.njuro.jboard.common.Constants.MAX_SUBJECT_LENGTH;
 
-import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.post.PostForm;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertFalse;
@@ -18,8 +17,6 @@ import lombok.Data;
  */
 @Data
 public class ThreadForm {
-
-  @NotNull private Board board;
 
   @Size(
       max = MAX_SUBJECT_LENGTH,
@@ -43,6 +40,6 @@ public class ThreadForm {
   }
 
   public Thread toThread() {
-    return Thread.builder().subject(subject).locked(locked).stickied(stickied).board(board).build();
+    return Thread.builder().subject(subject).locked(locked).stickied(stickied).build();
   }
 }
