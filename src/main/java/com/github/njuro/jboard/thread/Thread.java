@@ -84,7 +84,7 @@ public class Thread {
   }
 
   @EqualsAndHashCode.Include
-  public Long getPostNumber() {
+  public Long getThreadNumber() {
     return originalPost != null ? originalPost.getPostNumber() : null;
   }
 

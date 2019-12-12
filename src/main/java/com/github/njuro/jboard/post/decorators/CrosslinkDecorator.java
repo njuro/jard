@@ -59,7 +59,7 @@ public class CrosslinkDecorator implements PostDecorator {
             special += CROSSLINK_DIFF_THREAD;
           }
           linkHref +=
-              "/" + linkedPost.getThread().getPostNumber() + "#" + linkedPost.getPostNumber();
+              "/" + linkedPost.getThread().getThreadNumber() + "#" + linkedPost.getPostNumber();
         }
       } catch (BoardNotFoundException | PostNotFoundException e) {
         valid = false;
