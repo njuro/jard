@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.thread;
 
 import com.github.njuro.jboard.ban.BanService;
+import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.post.Post;
 import com.github.njuro.jboard.post.PostFacade;
 import com.github.njuro.jboard.post.PostForm;
@@ -41,6 +42,11 @@ public class ThreadFacade {
     Thread thread = threadForm.toThread();
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
+
+    Board board = threadForm.getBoard();
+    if (threadService.getNumberOfThreadsOnBoard(board) >= board.getThreadLimit()) {
+      threadService.deleteOldestThread(board);
+    }
 
     return threadService.saveThread(thread);
   }

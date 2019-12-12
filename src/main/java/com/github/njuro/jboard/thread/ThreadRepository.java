@@ -11,7 +11,9 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
 
   Optional<Thread> findByBoardLabelAndOriginalPostPostNumber(String label, Long postNumber);
 
-  List<Thread> findByBoardId(Long boardId);
+  List<Thread> findByBoardIdOrderByStickiedDescLastReplyAtDesc(Long boardId, Pageable pageRequest);
 
-  List<Thread> findByBoardId(Long boardId, Pageable pageRequest);
+  Optional<Thread> findTopByBoardIdAndStickiedFalseOrderByLastReplyAtAsc(Long boardId);
+
+  Long countByBoardId(Long boardId);
 }

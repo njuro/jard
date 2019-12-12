@@ -40,11 +40,16 @@ public class ThreadService {
   }
 
   public List<Thread> getAllThreadsFromBoard(Board board) {
-    return threadRepository.findByBoardId(board.getId());
+    return getThreadsFromBoard(board, Pageable.unpaged());
   }
 
   public List<Thread> getThreadsFromBoard(Board board, Pageable pageRequest) {
-    return threadRepository.findByBoardId(board.getId(), pageRequest);
+    return threadRepository.findByBoardIdOrderByStickiedDescLastReplyAtDesc(
+        board.getId(), pageRequest);
+  }
+
+  public int getNumberOfThreadsOnBoard(Board board) {
+    return threadRepository.countByBoardId(board.getId()).intValue();
   }
 
   public Thread updateThread(Thread thread) {
@@ -54,6 +59,12 @@ public class ThreadService {
   public Thread updateLastReplyTimestamp(Thread thread) {
     thread.setLastReplyAt(LocalDateTime.now());
     return threadRepository.save(thread);
+  }
+
+  public void deleteOldestThread(Board board) {
+    threadRepository
+        .findTopByBoardIdAndStickiedFalseOrderByLastReplyAtAsc(board.getId())
+        .ifPresent(this::deleteThread);
   }
 
   public void deleteThread(Thread thread) {

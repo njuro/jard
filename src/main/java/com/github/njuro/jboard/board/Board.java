@@ -14,12 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 /**
  * Entity representing a board
@@ -40,7 +40,6 @@ public class Board {
   @JsonIgnore
   private Long id;
 
-  @NotNull
   @Column(unique = true, nullable = false)
   @EqualsAndHashCode.Include
   private String label;
@@ -51,6 +50,9 @@ public class Board {
   private BoardAttachmentType attachmentType;
 
   private boolean nsfw;
+
+  @ColumnDefault("100")
+  private int threadLimit;
 
   @Transient
   @JsonIgnoreProperties("board")
