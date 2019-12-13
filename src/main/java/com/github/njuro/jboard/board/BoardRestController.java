@@ -50,9 +50,17 @@ public class BoardRestController {
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
+  @FieldFilterSetting(className = Thread.class, fields = "board")
   @DynamicFilter(SensitiveDataFilter.class)
   public Board getBoard(Board board, Pageable pageRequest) {
     return boardFacade.getBoard(board, pageRequest);
+  }
+
+  @GetMapping(Mappings.PATH_VARIABLE_BOARD)
+  @FieldFilterSetting(className = Thread.class, fields = "board")
+  @DynamicFilter(SensitiveDataFilter.class)
+  public Board getBoardCatalog(Board board) {
+    return boardFacade.getBoardCatalog(board);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_BOARD + "/edit")

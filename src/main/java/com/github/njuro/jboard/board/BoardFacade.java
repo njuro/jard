@@ -27,16 +27,34 @@ public class BoardFacade {
     this.postService = postService;
   }
 
-  public List<Board> getAllBoards() {
-    return boardService.getAllBoards();
-  }
-
   public Board createBoard(BoardForm boardForm) {
     if (boardService.doesBoardExist(boardForm.getLabel())) {
       throw new FormValidationException("Board with this label already exists");
     }
 
     return boardService.saveBoard(boardForm.toBoard());
+  }
+
+  public Board getBoard(Board board, Pageable pagination) {
+    List<Thread> threads = threadService.getThreadsFromBoard(board, pagination);
+    threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
+    board.setThreads(threads);
+    return board;
+  }
+
+  public List<Board> getAllBoards() {
+    return boardService.getAllBoards();
+  }
+
+  public Board getBoardCatalog(Board board) {
+    board.setThreads(threadService.getAllThreadsFromBoard(board));
+    return board;
+  }
+
+  public static Set<BoardAttachmentTypeDto> getBoardTypes() {
+    return Arrays.stream(BoardAttachmentType.values())
+        .map(BoardAttachmentTypeDto::fromBoardAttachmentType)
+        .collect(Collectors.toSet());
   }
 
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
@@ -47,19 +65,6 @@ public class BoardFacade {
     oldBoard.setBumpLimit(updatedBoard.getBumpLimit());
 
     return boardService.updateBoard(oldBoard);
-  }
-
-  public static Set<BoardAttachmentTypeDto> getBoardTypes() {
-    return Arrays.stream(BoardAttachmentType.values())
-        .map(BoardAttachmentTypeDto::fromBoardAttachmentType)
-        .collect(Collectors.toSet());
-  }
-
-  public Board getBoard(Board board, Pageable pagination) {
-    List<Thread> threads = threadService.getThreadsFromBoard(board, pagination);
-    threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
-    board.setThreads(threads);
-    return board;
   }
 
   public void deleteBoard(Board board) {

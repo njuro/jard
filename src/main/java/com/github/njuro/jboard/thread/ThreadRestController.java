@@ -37,13 +37,6 @@ public class ThreadRestController {
     this.requestValidator = requestValidator;
   }
 
-  @GetMapping(Mappings.PATH_VARIABLE_THREAD)
-  @FieldFilterSetting(className = Post.class, fields = "thread")
-  @DynamicFilter(SensitiveDataFilter.class)
-  public Thread getThread(Thread thread) {
-    return threadFacade.getThread(thread);
-  }
-
   @PutMapping
   public Thread createThread(
       Board board,
@@ -69,6 +62,13 @@ public class ThreadRestController {
     requestValidator.validate(postForm);
 
     return threadFacade.replyToThread(postForm, thread);
+  }
+
+  @GetMapping(Mappings.PATH_VARIABLE_THREAD)
+  @FieldFilterSetting(className = Post.class, fields = "thread")
+  @DynamicFilter(SensitiveDataFilter.class)
+  public Thread getThread(Thread thread) {
+    return threadFacade.getThread(thread);
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-replies")
