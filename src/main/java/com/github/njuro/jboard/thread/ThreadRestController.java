@@ -70,12 +70,19 @@ public class ThreadRestController {
     return threadFacade.replyToThread(postForm, thread);
   }
 
-  @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-posts")
+  @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/replies")
   @FieldFilterSetting(className = Post.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
-  public List<Post> findNewPosts(
+  public List<Post> getAllReplies(Thread thread) {
+    return threadFacade.getAllReplies(thread);
+  }
+
+  @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-replies")
+  @FieldFilterSetting(className = Post.class, fields = "thread")
+  @DynamicFilter(SensitiveDataFilter.class)
+  public List<Post> getNewReplies(
       Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
-    return threadFacade.findNewPosts(thread, lastPostNumber);
+    return threadFacade.getNewReplies(thread, lastPostNumber);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")

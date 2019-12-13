@@ -76,7 +76,11 @@ public class ThreadFacade {
     return thread;
   }
 
-  public List<Post> findNewPosts(Thread thread, Long lastPostNumber) {
+  public List<Post> getAllReplies(Thread thread) {
+    return postService.getAllRepliesForThread(thread);
+  }
+
+  public List<Post> getNewReplies(Thread thread, Long lastPostNumber) {
     return postService.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
