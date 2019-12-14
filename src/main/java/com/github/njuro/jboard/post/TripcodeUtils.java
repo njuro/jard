@@ -24,7 +24,7 @@ public class TripcodeUtils {
    */
   @SneakyThrows(NoSuchAlgorithmException.class)
   public String generateTripcode(String password) {
-    if (password.isEmpty()) {
+    if (password == null || password.isEmpty()) {
       return null;
     }
 
