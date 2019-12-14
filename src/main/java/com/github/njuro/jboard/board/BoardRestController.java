@@ -56,7 +56,7 @@ public class BoardRestController {
     return boardFacade.getBoard(board, pageRequest);
   }
 
-  @GetMapping(Mappings.PATH_VARIABLE_BOARD)
+  @GetMapping(Mappings.PATH_VARIABLE_BOARD + "/catalog")
   @FieldFilterSetting(className = Thread.class, fields = "board")
   @DynamicFilter(SensitiveDataFilter.class)
   public Board getBoardCatalog(Board board) {
