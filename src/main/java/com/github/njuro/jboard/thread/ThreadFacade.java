@@ -40,9 +40,9 @@ public class ThreadFacade {
     }
 
     Thread thread = threadForm.toThread();
+    thread.setBoard(board);
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
-    thread.setBoard(board);
 
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getThreadLimit()) {
       threadService.deleteOldestThread(board);
