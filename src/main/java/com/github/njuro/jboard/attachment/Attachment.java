@@ -56,7 +56,7 @@ public class Attachment {
 
   @Transient @ToString.Exclude private String url;
 
-  @Transient @ToString.Exclude private File file;
+  @Transient @ToString.Exclude @JsonIgnore private File file;
 
   @Transient @ToString.Exclude @JsonIgnore private MultipartFile sourceFile;
 
