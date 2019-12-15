@@ -47,7 +47,9 @@ public class PostService {
     Board board = post.getThread().getBoard();
     post.setPostNumber(boardService.registerNewPost(board));
 
-    decoratePost(post);
+    if (post.getBody() != null) {
+      decoratePost(post);
+    }
 
     if (post.getAttachment() != null) {
       post.setAttachment(attachmentService.saveAttachment(post.getAttachment()));
