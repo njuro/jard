@@ -12,17 +12,19 @@ import com.github.njuro.jboard.thread.ThreadService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.stereotype.Service;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@Transactional
+@DataJpaTest(
+    includeFilters = {
+      @Filter(Service.class),
+      @Filter(type = FilterType.ASSIGNABLE_TYPE, value = CrosslinkDecorator.class)
+    })
 @UseMockDatabase
 @Slf4j
 class CrosslinkDecoratorTest extends PostDecoratorTest {
