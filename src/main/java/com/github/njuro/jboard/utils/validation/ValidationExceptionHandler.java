@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -21,12 +22,11 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(new ValidationErrors(ex.getBindingResult()), headers, status);
   }
 
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(FormValidationException.class)
-  private ResponseEntity<Object> handleValidationException(FormValidationException ex) {
-    ValidationErrors errors =
-        ex.getBindingResult() != null
-            ? new ValidationErrors(ex.getBindingResult())
-            : new ValidationErrors(ex.getMessage());
-    return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+  private ValidationErrors handleValidationException(FormValidationException ex) {
+    return ex.getBindingResult() != null
+        ? new ValidationErrors(ex.getBindingResult())
+        : new ValidationErrors(ex.getMessage());
   }
 }

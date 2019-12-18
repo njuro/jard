@@ -6,15 +6,12 @@ import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.github.database.rider.spring.api.DBRider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
 @DisabledIf(
     expression = "#{ systemProperties['populate'] == null}",
     reason = "Database populator must be enabled with -Dpopulate flag")

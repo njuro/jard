@@ -1,24 +1,17 @@
 package com.github.njuro.jboard.board;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static com.github.njuro.jboard.common.Constants.MAX_BOARD_LABEL_LENGTH;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.njuro.jboard.common.ControllerTest;
 import com.github.njuro.jboard.common.Mappings;
-import com.github.njuro.jboard.common.WebControllerTest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpMethod;
 
-public class BoardControllerTest extends WebControllerTest {
-
-  @Autowired private ObjectMapper objectMapper;
-
-  @Autowired private MockMvc mockMvc;
+public class BoardControllerTest extends ControllerTest {
 
   @MockBean private BoardFacade boardFacade;
 
@@ -39,12 +32,16 @@ public class BoardControllerTest extends WebControllerTest {
 
   @Test
   public void testCreateBoard() throws Exception {
-    mockMvc
-        .perform(
-            put(Mappings.API_ROOT_BOARDS)
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(boardForm)))
+    performMockRequest(HttpMethod.PUT, Mappings.API_ROOT_BOARDS, boardForm)
         .andExpect(status().isOk());
+
+    boardForm.setLabel(RandomStringUtils.random(MAX_BOARD_LABEL_LENGTH + 1));
+    attempToCreateBoard("Board label too long (allowed " + MAX_BOARD_LABEL_LENGTH + " chars)");
+  }
+
+  private void attempToCreateBoard(String expectedMessage) throws Exception {
+    performMockRequest(HttpMethod.PUT, Mappings.API_ROOT_BOARDS, boardForm)
+        .andExpect(validationError(expectedMessage));
+    setUp();
   }
 }
