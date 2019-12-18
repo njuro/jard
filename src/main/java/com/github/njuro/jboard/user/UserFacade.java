@@ -4,11 +4,14 @@ import com.github.njuro.jboard.utils.validation.FormValidationException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserFacade {
+public class UserFacade implements UserDetailsService {
 
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
@@ -32,6 +35,20 @@ public class UserFacade {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
     return userService.saveUser(user);
+  }
+
+  public User resolveUser(String username) {
+    return userService.resolveUser(username);
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = resolveUser(username);
+    if (user == null) {
+      throw new UsernameNotFoundException("User " + username + " was not found");
+    }
+
+    return user;
   }
 
   public List<User> getAllUsers() {

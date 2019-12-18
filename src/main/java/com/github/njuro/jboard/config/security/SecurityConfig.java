@@ -4,7 +4,7 @@ import com.github.njuro.jboard.common.Constants;
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
-import com.github.njuro.jboard.user.UserService;
+import com.github.njuro.jboard.user.UserFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final UserService userService;
+  private final UserFacade userFacade;
 
   private final AuthenticationSuccessHandler loginSuccessHandler;
   private final AuthenticationFailureHandler loginFailureHandler;
@@ -39,13 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   public SecurityConfig(
-      UserService userService,
+      UserFacade userFacade,
       @Lazy AuthenticationSuccessHandler loginSuccessHandler,
       AuthenticationFailureHandler loginFailureHandler,
       LogoutSuccessHandler logoutSuccessHandler,
       JwtAuthenticationFilter jwtAuthenticationFilter,
       JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-    this.userService = userService;
+    this.userFacade = userFacade;
     this.loginSuccessHandler = loginSuccessHandler;
     this.loginFailureHandler = loginFailureHandler;
     this.logoutSuccessHandler = logoutSuccessHandler;
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userService).passwordEncoder(bcryptEncoder());
+    auth.userDetailsService(userFacade).passwordEncoder(bcryptEncoder());
   }
 
   @Override

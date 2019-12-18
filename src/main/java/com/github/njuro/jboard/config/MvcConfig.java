@@ -6,15 +6,13 @@ import static com.jfilter.FilterConstantsHelper.MEDIA_TYPE_APPLICATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.njuro.jboard.board.BoardResolver;
 import com.github.njuro.jboard.common.Constants;
-import com.github.njuro.jboard.post.PostResolver;
-import com.github.njuro.jboard.thread.ThreadResolver;
-import com.github.njuro.jboard.user.UserResolver;
+import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
 import com.jfilter.EnableJsonFilter;
 import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -28,24 +26,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableJsonFilter
 @EnableSpringDataWebSupport
+@RequiredArgsConstructor
 public class MvcConfig implements WebMvcConfigurer {
 
-  private final BoardResolver boardResolver;
-  private final ThreadResolver threadResolver;
-  private final PostResolver postResolver;
-  private final UserResolver userResolver;
-
-  @Autowired
-  public MvcConfig(
-      BoardResolver boardResolver,
-      ThreadResolver threadResolver,
-      PostResolver postResolver,
-      UserResolver userResolver) {
-    this.boardResolver = boardResolver;
-    this.threadResolver = threadResolver;
-    this.postResolver = postResolver;
-    this.userResolver = userResolver;
-  }
+  private final List<PathVariableArgumentResolver> pathVariableArgumentResolvers;
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
@@ -83,9 +67,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-    resolvers.add(boardResolver);
-    resolvers.add(threadResolver);
-    resolvers.add(postResolver);
-    resolvers.add(userResolver);
+    resolvers.addAll(pathVariableArgumentResolvers);
   }
 }

@@ -2,7 +2,7 @@ package com.github.njuro.jboard.board;
 
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -15,14 +15,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * @author njuro
  */
 @Component
+@RequiredArgsConstructor
 public class BoardResolver implements PathVariableArgumentResolver {
 
-  private final BoardService boardService;
-
-  @Autowired
-  public BoardResolver(BoardService boardService) {
-    this.boardService = boardService;
-  }
+  private final BoardFacade boardFacade;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -37,6 +33,6 @@ public class BoardResolver implements PathVariableArgumentResolver {
       WebDataBinderFactory binderFactory) {
     String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
-    return boardService.resolveBoard(label);
+    return boardFacade.resolveBoard(label);
   }
 }

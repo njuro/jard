@@ -2,7 +2,7 @@ package com.github.njuro.jboard.post;
 
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,14 +16,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * @author njuro
  */
 @Component
+@RequiredArgsConstructor
 public class PostResolver implements PathVariableArgumentResolver {
 
-  private final PostService postService;
-
-  @Autowired
-  public PostResolver(PostService postService) {
-    this.postService = postService;
-  }
+  private final PostFacade postFacade;
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -36,9 +32,9 @@ public class PostResolver implements PathVariableArgumentResolver {
       ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
-    Long postNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
     String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
+    Long postNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_POST, webRequest));
 
-    return postService.resolvePost(board, postNumber);
+    return postFacade.resolvePost(board, postNumber);
   }
 }

@@ -35,6 +35,10 @@ public class BoardFacade {
     return boardService.saveBoard(boardForm.toBoard());
   }
 
+  public Board resolveBoard(String label) {
+    return boardService.resolveBoard(label);
+  }
+
   public Board getBoard(Board board, Pageable pagination) {
     List<Thread> threads = threadService.getThreadsFromBoard(board, pagination);
     threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));

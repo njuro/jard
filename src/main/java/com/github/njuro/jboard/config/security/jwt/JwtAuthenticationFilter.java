@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.config.security.jwt;
 
 import com.github.njuro.jboard.common.Constants;
-import com.github.njuro.jboard.user.UserService;
+import com.github.njuro.jboard.user.UserFacade;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.FilterChain;
@@ -25,12 +25,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
-  private final UserService userService;
+  private final UserFacade userFacade;
 
   @Autowired
-  public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, @Lazy UserService userService) {
+  public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, @Lazy UserFacade userFacade) {
     this.tokenProvider = tokenProvider;
-    this.userService = userService;
+    this.userFacade = userFacade;
   }
 
   @Override
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
         String username = tokenProvider.getUsernameFromJWT(jwt);
 
-        UserDetails userDetails = userService.loadUserByUsername(username);
+        UserDetails userDetails = userFacade.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

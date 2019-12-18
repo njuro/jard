@@ -70,6 +70,10 @@ public class ThreadFacade {
     return post;
   }
 
+  public Thread resolveThread(String boardLabel, Long threadNumber) {
+    return threadService.resolveThread(boardLabel, threadNumber);
+  }
+
   public Thread getThread(Thread thread) {
     List<Post> replies = postService.getAllRepliesForThread(thread);
     thread.setReplies(replies);

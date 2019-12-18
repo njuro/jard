@@ -11,10 +11,12 @@ import org.springframework.stereotype.Component;
 public class PostFacade {
 
   private final AttachmentFacade attachmentFacade;
+  private final PostService postService;
 
   @Autowired
-  public PostFacade(AttachmentFacade attachmentFacade) {
+  public PostFacade(AttachmentFacade attachmentFacade, PostService postService) {
     this.attachmentFacade = attachmentFacade;
+    this.postService = postService;
   }
 
   public Post createPost(@Valid @NotNull PostForm postForm, Thread thread) {
@@ -28,5 +30,9 @@ public class PostFacade {
     post.setThread(thread);
 
     return post;
+  }
+
+  public Post resolvePost(String boardLabel, Long postNumber) {
+    return postService.resolvePost(boardLabel, postNumber);
   }
 }
