@@ -4,6 +4,7 @@ import com.github.njuro.jboard.utils.validation.FormValidationException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +18,7 @@ public class UserFacade implements UserDetailsService {
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserFacade(PasswordEncoder passwordEncoder, UserService userService) {
+  public UserFacade(@Lazy PasswordEncoder passwordEncoder, UserService userService) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
   }
