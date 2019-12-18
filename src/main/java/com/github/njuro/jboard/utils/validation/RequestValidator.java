@@ -1,19 +1,18 @@
 package com.github.njuro.jboard.utils.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Component
 public class RequestValidator {
 
-  private final Validator validator;
+  private final LocalValidatorFactoryBean validator;
 
   @Autowired
-  public RequestValidator(@Qualifier("defaultValidator") Validator validator) {
+  public RequestValidator(LocalValidatorFactoryBean validator) {
     this.validator = validator;
   }
 

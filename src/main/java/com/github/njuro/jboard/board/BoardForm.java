@@ -17,10 +17,8 @@ import lombok.Data;
 @Builder
 public class BoardForm {
 
-  @NotBlank(message = "Board label is required")
-  @Size(
-      max = MAX_BOARD_LABEL_LENGTH,
-      message = "Board label too long (allowed " + MAX_BOARD_LABEL_LENGTH + " chars)")
+  @NotBlank(message = "{validation.board.label.null}")
+  @Size(max = MAX_BOARD_LABEL_LENGTH, message = "{validation.board.label.length}")
   private String label;
 
   @NotBlank(message = "Board name is required")

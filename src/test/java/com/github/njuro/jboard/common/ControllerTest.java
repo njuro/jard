@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.HttpMethod;
@@ -47,6 +48,8 @@ public abstract class ControllerTest {
   @Autowired protected ObjectMapper objectMapper;
 
   @Autowired protected MockMvc mockMvc;
+
+  @Autowired protected MessageSource messageSource;
 
   protected ResultActions performMockRequest(HttpMethod method, String url) throws Exception {
     return performMockRequest(method, url, null);

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.njuro.jboard.common.ControllerTest;
 import com.github.njuro.jboard.common.Mappings;
+import java.util.Locale;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +37,17 @@ public class BoardControllerTest extends ControllerTest {
         .andExpect(status().isOk());
 
     boardForm.setLabel(RandomStringUtils.random(MAX_BOARD_LABEL_LENGTH + 1));
-    attempToCreateBoard("Board label too long (allowed " + MAX_BOARD_LABEL_LENGTH + " chars)");
+    attemptToCreateBoard("validation.board.label.length", MAX_BOARD_LABEL_LENGTH);
+    boardForm.setLabel(null);
+    attemptToCreateBoard("validation.board.label.null");
   }
 
-  private void attempToCreateBoard(String expectedMessage) throws Exception {
+  private void attemptToCreateBoard(String expectedMessageCode, Object... parameters)
+      throws Exception {
     performMockRequest(HttpMethod.PUT, Mappings.API_ROOT_BOARDS, boardForm)
-        .andExpect(validationError(expectedMessage));
+        .andExpect(
+            validationError(
+                messageSource.getMessage(expectedMessageCode, parameters, Locale.getDefault())));
     setUp();
   }
 }
