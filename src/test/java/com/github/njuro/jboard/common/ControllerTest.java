@@ -12,7 +12,7 @@ import com.github.njuro.jboard.thread.ThreadFacade;
 import com.github.njuro.jboard.user.UserFacade;
 import com.github.njuro.jboard.utils.validation.RequestValidator;
 import com.github.njuro.jboard.utils.validation.ValidationErrors;
-import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -73,13 +73,14 @@ public abstract class ControllerTest {
         .content(objectMapper.writeValueAsString(body));
   }
 
-  protected ResultMatcher validationError(String message) {
+  protected ResultMatcher validationError(String... fields) {
     return result -> {
-      List<String> errors =
+      Set<String> errorFields =
           objectMapper
               .readValue(result.getResponse().getContentAsString(), ValidationErrors.class)
-              .getErrors();
-      assertThat(errors).contains(message);
+              .getFieldErrors()
+              .keySet();
+      assertThat(errorFields).containsExactlyInAnyOrder(fields);
       assertThat(result.getResponse().getStatus() == HttpStatus.BAD_REQUEST.value());
     };
   }

@@ -17,27 +17,25 @@ import lombok.Data;
 @Builder
 public class BoardForm {
 
-  @NotBlank(message = "{validation.board.label.null}")
+  @NotBlank(message = "{validation.board.label.blank}")
   @Size(max = MAX_BOARD_LABEL_LENGTH, message = "{validation.board.label.length}")
   private String label;
 
-  @NotBlank(message = "Board name is required")
-  @Size(
-      max = MAX_BOARD_NAME_LENGTH,
-      message = "Board name too long (allowed " + MAX_BOARD_NAME_LENGTH + " chars)")
+  @NotBlank(message = "{validation.board.name.blank}")
+  @Size(max = MAX_BOARD_NAME_LENGTH, message = "{validation.board.name.length}")
   private String name;
 
-  @NotNull(message = "Board type is required")
+  @NotNull(message = "{validation.board.type.null}")
   private BoardAttachmentType attachmentType;
 
   private boolean nsfw;
 
-  @Positive(message = "Thread limit must be a positive number")
-  @Max(value = MAX_THREAD_LIMIT, message = "Thread limit cannot be higher than " + MAX_THREAD_LIMIT)
+  @Positive(message = "{validation.board.threadlimit.positive}")
+  @Max(value = MAX_THREAD_LIMIT, message = "{validation.board.threadlimit.max}")
   private int threadLimit;
 
-  @Positive(message = "Bump limit must be a positive number")
-  @Max(value = MAX_BUMP_LIMIT, message = "Bump limit cannot be higher than " + MAX_BUMP_LIMIT)
+  @Positive(message = "{validation.board.bumplimit.positive}")
+  @Max(value = MAX_BUMP_LIMIT, message = "{validation.board.bumplimit.max}")
   private int bumpLimit;
 
   public Board toBoard() {
