@@ -40,7 +40,7 @@ public class BoardRestController {
   @GetMapping("/types")
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public Set<BoardAttachmentTypeDto> getBoardTypes() {
-    return BoardFacade.getBoardTypes();
+    return boardFacade.getBoardTypes();
   }
 
   @GetMapping

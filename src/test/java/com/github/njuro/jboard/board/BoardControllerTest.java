@@ -4,21 +4,38 @@ import static com.github.njuro.jboard.common.Constants.MAX_BOARD_LABEL_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BOARD_NAME_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BUMP_LIMIT;
 import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.njuro.jboard.common.ControllerTest;
+import com.github.njuro.jboard.common.EntityUtils;
 import com.github.njuro.jboard.common.Mappings;
+import java.util.Collections;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 
 public class BoardControllerTest extends ControllerTest {
 
+  private static final String API_ROOT = Mappings.API_ROOT_BOARDS;
+
   @MockBean private BoardFacade boardFacade;
 
   private BoardForm boardForm;
+
+  @Captor private ArgumentCaptor<BoardForm> boardFormCaptor;
+  @Captor private ArgumentCaptor<Board> boardCaptor;
+  @Captor private ArgumentCaptor<Pageable> pageableCaptor;
 
   @BeforeEach
   public void setUp() {
@@ -35,8 +52,14 @@ public class BoardControllerTest extends ControllerTest {
 
   @Test
   public void testCreateBoard() throws Exception {
-    performMockRequest(HttpMethod.PUT, Mappings.API_ROOT_BOARDS, boardForm)
-        .andExpect(status().isOk());
+    when(boardFacade.createBoard(boardForm)).thenReturn(boardForm.toBoard());
+
+    performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
+        .andExpect(status().isOk())
+        .andExpect(content().json(toJson(boardForm.toBoard())));
+
+    verify(boardFacade).createBoard(boardFormCaptor.capture());
+    assertThat(boardFormCaptor.getValue()).isEqualToComparingFieldByField(boardForm);
 
     boardForm.setLabel(" ");
     expectValidationErrors("label");
@@ -62,8 +85,94 @@ public class BoardControllerTest extends ControllerTest {
     expectValidationErrors("bumpLimit");
   }
 
+  @Test
+  public void testBoardTypes() throws Exception {
+    when(boardFacade.getBoardTypes()).thenCallRealMethod();
+    performMockRequest(HttpMethod.GET, API_ROOT + "/types")
+        .andExpect(status().isOk())
+        .andExpect(content().json(toJson(boardFacade.getBoardTypes())));
+  }
+
+  @Test
+  public void testGetAllBoards() throws Exception {
+    when(boardFacade.getAllBoards()).thenReturn(Collections.singletonList(boardForm.toBoard()));
+    performMockRequest(HttpMethod.GET, API_ROOT)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[*].name").exists())
+        .andExpect(jsonPath("$[*].threads").doesNotExist());
+  }
+
+  @Test
+  public void testGetBoard() throws Exception {
+    // TODO wait for jfilter merging: https://github.com/rkonovalov/jfilter/issues/16
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+    when(boardFacade.getBoard(any(Board.class), any(Pageable.class)))
+        .thenReturn(EntityUtils.randomBoard(1));
+    performMockRequest(
+            HttpMethod.GET,
+            buildUri(
+                API_ROOT + Mappings.PATH_VARIABLE_BOARD + "?page=2&size=10", boardForm.getLabel()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.threads[*]").exists())
+        .andExpect(jsonPath("$.threads[*].board").doesNotExist())
+        .andExpect(jsonPath("$.threads[*].originalPost.ip").doesNotExist());
+
+    verify(boardFacade).getBoard(boardCaptor.capture(), pageableCaptor.capture());
+
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(pageableCaptor.getValue().getPageNumber()).isEqualTo(2);
+    assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(10);
+  }
+
+  @Test
+  public void testGetBoardCatalog() throws Exception {
+    // TODO wait for jfilter merging: https://github.com/rkonovalov/jfilter/issues/16
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+    when(boardFacade.getBoardCatalog(any(Board.class))).thenReturn(EntityUtils.randomBoard(1));
+
+    performMockRequest(
+            HttpMethod.GET,
+            buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD + "/catalog", boardForm.getLabel()))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.threads[*]").exists())
+        .andExpect(jsonPath("$.threads[*].board").doesNotExist())
+        .andExpect(jsonPath("$.threads[*].originalPost.ip").doesNotExist());
+
+    verify(boardFacade).getBoardCatalog(boardCaptor.capture());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+  }
+
+  @Test
+  public void testEditBoard() throws Exception {
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+
+    performMockRequest(
+            HttpMethod.POST,
+            buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD + "/edit", boardForm.getLabel()),
+            boardForm)
+        .andExpect(status().isOk());
+
+    verify(boardFacade).editBoard(boardCaptor.capture(), boardFormCaptor.capture());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(boardFormCaptor.getValue()).isEqualToComparingFieldByField(boardForm);
+  }
+
+  @Test
+  public void testDeleteBoard() throws Exception {
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+
+    performMockRequest(
+            HttpMethod.DELETE,
+            buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD, boardForm.getLabel()))
+        .andExpect(status().isOk());
+
+    verify(boardFacade).deleteBoard(boardCaptor.capture());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+  }
+
+  @Test
   private void expectValidationErrors(String... expectedFieldErrors) throws Exception {
-    performMockRequest(HttpMethod.PUT, Mappings.API_ROOT_BOARDS, boardForm)
+    performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
         .andExpect(validationError(expectedFieldErrors));
     setUp();
   }

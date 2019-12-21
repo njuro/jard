@@ -60,6 +60,10 @@ public class UserFacade implements UserDetailsService {
     return userService.getCurrentUser();
   }
 
+  public boolean hasCurrentUserAuthority(UserAuthority authority) {
+    return userService.hasCurrentUserAuthority(authority);
+  }
+
   public User editUser(User oldUser, UserForm updatedUser) {
     oldUser.setEmail(updatedUser.getEmail());
     return userService.updateUser(oldUser);

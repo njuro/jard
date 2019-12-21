@@ -55,7 +55,7 @@ public class BoardFacade {
     return board;
   }
 
-  public static Set<BoardAttachmentTypeDto> getBoardTypes() {
+  public Set<BoardAttachmentTypeDto> getBoardTypes() {
     return Arrays.stream(BoardAttachmentType.values())
         .map(BoardAttachmentTypeDto::fromBoardAttachmentType)
         .collect(Collectors.toSet());

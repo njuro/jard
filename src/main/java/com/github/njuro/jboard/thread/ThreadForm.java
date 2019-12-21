@@ -8,6 +8,7 @@ import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -16,6 +17,7 @@ import lombok.Data;
  * @author njuro
  */
 @Data
+@Builder
 public class ThreadForm {
 
   @Size(

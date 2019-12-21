@@ -10,11 +10,13 @@ import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 /** Data transfer object for "reply to thread" form */
 @Data
+@Builder
 public class PostForm {
 
   @Size(

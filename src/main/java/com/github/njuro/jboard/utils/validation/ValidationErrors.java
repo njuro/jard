@@ -14,23 +14,23 @@ public class ValidationErrors {
   public static final String OBJECT_ERROR = "object";
 
   private LocalDateTime timestamp;
-  private Map<String, String> fieldErrors;
+  private Map<String, String> errors;
 
   public ValidationErrors() {
     timestamp = LocalDateTime.now();
-    fieldErrors = new HashMap<>();
+    errors = new HashMap<>();
   }
 
   public ValidationErrors(BindingResult validationResult) {
     this();
     //noinspection ConstantConditions
-    fieldErrors =
+    errors =
         validationResult.getFieldErrors().stream()
             .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
   }
 
   public ValidationErrors(String objectError) {
     this();
-    fieldErrors.put(OBJECT_ERROR, objectError);
+    errors.put(OBJECT_ERROR, objectError);
   }
 }
