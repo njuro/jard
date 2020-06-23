@@ -15,10 +15,21 @@ public class BanForm {
   @Pattern(regexp = Constants.IP_PATTERN)
   private String ip;
 
-  private Long postId;
+  private String boardLabel;
+
+  private Long postNumber;
 
   @Size(max = 1000)
   private String reason;
 
   @Future private LocalDateTime end;
+
+  private boolean warning;
+
+  public Ban toBan() {
+    Ban ban = Ban.builder().ip(ip).reason(reason).end(end).build();
+    ban.setStatus(isWarning() ? BanStatus.WARNING : BanStatus.ACTIVE);
+
+    return ban;
+  }
 }
