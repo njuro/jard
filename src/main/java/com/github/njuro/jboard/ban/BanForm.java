@@ -15,10 +15,6 @@ public class BanForm {
   @Pattern(regexp = Constants.IP_PATTERN)
   private String ip;
 
-  private String boardLabel;
-
-  private Long postNumber;
-
   @Size(max = 1000)
   private String reason;
 

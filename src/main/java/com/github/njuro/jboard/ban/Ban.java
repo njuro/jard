@@ -1,7 +1,6 @@
 package com.github.njuro.jboard.ban;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.njuro.jboard.post.Post;
 import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -12,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -40,9 +38,6 @@ public class Ban {
 
   @Enumerated(EnumType.STRING)
   private BanStatus status;
-
-  @OneToOne(targetEntity = Post.class)
-  private Post post;
 
   @ManyToOne(targetEntity = User.class, optional = false)
   private User bannedBy;

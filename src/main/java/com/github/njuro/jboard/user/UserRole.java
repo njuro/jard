@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.user;
 
 import static com.github.njuro.jboard.user.UserAuthority.DELETE_POST;
+import static com.github.njuro.jboard.user.UserAuthority.MANAGE_BANS;
 import static com.github.njuro.jboard.user.UserAuthority.TOGGLE_LOCK_THREAD;
 import static com.github.njuro.jboard.user.UserAuthority.TOGGLE_STICKY_THREAD;
 import static com.github.njuro.jboard.user.UserAuthority.VIEW_IP;
@@ -14,10 +15,10 @@ import lombok.Getter;
 public enum UserRole {
   USER(),
   JANITOR(DELETE_POST),
-  MODERATOR(DELETE_POST, TOGGLE_LOCK_THREAD, TOGGLE_STICKY_THREAD, VIEW_IP),
+  MODERATOR(DELETE_POST, TOGGLE_LOCK_THREAD, TOGGLE_STICKY_THREAD, VIEW_IP, MANAGE_BANS),
   ADMIN(getAllAuthorities());
 
-  @Getter private Set<UserAuthority> defaultAuthorites;
+  @Getter private final Set<UserAuthority> defaultAuthorites;
 
   UserRole(Set<UserAuthority> authorities) {
     defaultAuthorites = authorities;

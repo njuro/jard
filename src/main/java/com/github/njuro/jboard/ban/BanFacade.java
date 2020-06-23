@@ -1,9 +1,6 @@
 package com.github.njuro.jboard.ban;
 
 import com.github.njuro.jboard.common.Constants;
-import com.github.njuro.jboard.post.Post;
-import com.github.njuro.jboard.post.PostNotFoundException;
-import com.github.njuro.jboard.post.PostService;
 import com.github.njuro.jboard.user.User;
 import com.github.njuro.jboard.user.UserService;
 import com.github.njuro.jboard.utils.validation.FormValidationException;
@@ -18,13 +15,11 @@ public class BanFacade {
 
   private final BanService banService;
   private final UserService userService;
-  private final PostService postService;
 
   @Autowired
-  public BanFacade(BanService banService, UserService userService, PostService postService) {
+  public BanFacade(BanService banService, UserService userService) {
     this.banService = banService;
     this.userService = userService;
-    this.postService = postService;
   }
 
   public Ban createBan(BanForm banForm) {
@@ -37,15 +32,7 @@ public class BanFacade {
       throw new FormValidationException("There is already active ban on this IP");
     }
 
-    Post post;
-    try {
-      post = postService.resolvePost(banForm.getBoardLabel(), banForm.getPostNumber());
-    } catch (PostNotFoundException ex) {
-      throw new FormValidationException("Invalid post specified");
-    }
-
     Ban ban = banForm.toBan();
-    ban.setPost(post);
     ban.setBannedBy(loggedUser);
     ban.setStart(LocalDateTime.now());
 
@@ -53,7 +40,7 @@ public class BanFacade {
       ban.setEnd(null);
     }
 
-    return ban;
+    return banService.saveBan(ban);
   }
 
   public Ban unban(UnbanForm unbanForm) {
