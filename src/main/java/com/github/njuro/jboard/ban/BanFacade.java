@@ -70,4 +70,8 @@ public class BanFacade {
           banService.saveBan(ban);
         });
   }
+
+  public List<Ban> getAllBans() {
+    return banService.getAllBans();
+  }
 }

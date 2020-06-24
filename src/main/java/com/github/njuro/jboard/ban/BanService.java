@@ -27,6 +27,10 @@ public class BanService {
     return getActiveBan(ip) != null;
   }
 
+  public List<Ban> getAllBans() {
+    return banRepository.findAll();
+  }
+
   public List<Ban> getExpiredBans() {
     return banRepository.findByStatusAndEndBefore(BanStatus.ACTIVE, LocalDateTime.now());
   }
