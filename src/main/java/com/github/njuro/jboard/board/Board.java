@@ -1,5 +1,7 @@
 package com.github.njuro.jboard.board;
 
+import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jboard.thread.Thread;
@@ -52,8 +54,9 @@ public class Board {
 
   private boolean nsfw;
 
-  @Formula("(SELECT COUNT(*) FROM threads t WHERE t.board_id = id)")
-  private int threadCount;
+  @Formula(
+      "(SELECT CEIL(COUNT(*) / " + MAX_THREADS_PER_PAGE + ") FROM threads t WHERE t.board_id = id)")
+  private int pageCount;
 
   @ColumnDefault("100")
   private int threadLimit;
