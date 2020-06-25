@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class UnbanForm {
 
-  @NotNull
-  @Pattern(regexp = Constants.IP_PATTERN)
+  @NotNull(message = "{validation.ban.ip.null}")
+  @Pattern(regexp = Constants.IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
   private String reason;

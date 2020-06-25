@@ -11,14 +11,15 @@ import lombok.Data;
 @Data
 public class BanForm {
 
-  @NotNull
-  @Pattern(regexp = Constants.IP_PATTERN)
+  @NotNull(message = "{validation.ban.ip.null}")
+  @Pattern(regexp = Constants.IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
-  @Size(max = 1000)
+  @Size(max = 1000, message = "{validation.ban.reason.max}")
   private String reason;
 
-  @Future private LocalDateTime end;
+  @Future(message = "{validation.ban.end.future}")
+  private LocalDateTime end;
 
   private boolean warning;
 
