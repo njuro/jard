@@ -1,5 +1,7 @@
 package com.github.njuro.jboard.board;
 
+import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
+
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.user.UserAuthority;
@@ -10,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,8 +55,9 @@ public class BoardRestController {
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
   @FieldFilterSetting(className = Thread.class, fields = "board")
   @DynamicFilter(SensitiveDataFilter.class)
-  public Board getBoard(Board board, Pageable pageRequest) {
-    return boardFacade.getBoard(board, pageRequest);
+  public Board getBoard(
+      Board board, @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
+    return boardFacade.getBoard(board, PageRequest.of(page - 1, MAX_THREADS_PER_PAGE));
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD + "/catalog")

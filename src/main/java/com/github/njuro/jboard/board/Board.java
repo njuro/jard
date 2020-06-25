@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Formula;
 
 /**
  * Entity representing a board
@@ -50,6 +51,9 @@ public class Board {
   private BoardAttachmentType attachmentType;
 
   private boolean nsfw;
+
+  @Formula("(SELECT COUNT(*) FROM threads t WHERE t.board_id = id)")
+  private int threadCount;
 
   @ColumnDefault("100")
   private int threadLimit;
