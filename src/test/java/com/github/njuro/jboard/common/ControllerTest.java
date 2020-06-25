@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.njuro.jboard.ban.BanFacade;
 import com.github.njuro.jboard.board.BoardFacade;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jboard.post.PostFacade;
@@ -51,7 +52,8 @@ import org.springframework.web.util.UriComponentsBuilder;
   @MockBean(BoardFacade.class),
   @MockBean(UserFacade.class),
   @MockBean(ThreadFacade.class),
-  @MockBean(PostFacade.class)
+  @MockBean(PostFacade.class),
+  @MockBean(BanFacade.class)
 }) // needed for importing of custom argument resolvers
 public abstract class ControllerTest {
 

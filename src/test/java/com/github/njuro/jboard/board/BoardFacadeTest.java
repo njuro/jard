@@ -47,7 +47,8 @@ public class BoardFacadeTest {
     when(boardService.saveBoard(any(Board.class))).thenAnswer(a -> a.getArgument(0));
 
     Board saved = boardFacade.createBoard(boardForm);
-    assertThat(saved).isEqualToIgnoringGivenFields(boardForm, "id", "postCounter", "threads");
+    assertThat(saved)
+        .isEqualToIgnoringGivenFields(boardForm, "id", "postCounter", "threads", "pageCount");
   }
 
   @Test
