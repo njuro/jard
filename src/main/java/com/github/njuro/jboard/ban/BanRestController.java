@@ -30,15 +30,21 @@ public class BanRestController {
     return banFacade.createBan(banForm);
   }
 
-  @PostMapping("/unban")
-  @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
-  public Ban unban(@RequestBody @Valid UnbanForm unbanForm) {
-    return banFacade.unban(unbanForm);
-  }
-
   @GetMapping
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
   public List<Ban> getAllBans() {
     return banFacade.getAllBans();
+  }
+
+  @PostMapping(Mappings.PATH_VARIABLE_BAN + "/edit")
+  @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
+  public Ban editBan(Ban oldBan, @RequestBody @Valid BanForm banForm) {
+    return banFacade.editBan(oldBan, banForm);
+  }
+
+  @PostMapping(Mappings.PATH_VARIABLE_BAN + "/unban")
+  @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
+  public Ban unban(Ban ban, @RequestBody @Valid UnbanForm unbanForm) {
+    return banFacade.unban(ban, unbanForm);
   }
 }

@@ -1,6 +1,5 @@
 package com.github.njuro.jboard.ban;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -30,7 +29,6 @@ public class Ban {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonIgnore
   private Long id;
 
   @Column(nullable = false)

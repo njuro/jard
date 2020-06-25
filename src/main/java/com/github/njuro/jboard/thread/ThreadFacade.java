@@ -54,6 +54,7 @@ public class ThreadFacade {
   public Post replyToThread(@NotNull PostForm postForm, Thread thread) {
     if (banService.hasActiveBan(postForm.getIp())) {
       throw new FormValidationException("Your IP address is banned");
+      // TODO redirect to ban status page
     }
 
     if (thread.isLocked()) {

@@ -5,6 +5,7 @@ import com.github.njuro.jboard.user.User;
 import com.github.njuro.jboard.user.UserService;
 import com.github.njuro.jboard.utils.validation.FormValidationException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,14 +44,30 @@ public class BanFacade {
     return banService.saveBan(ban);
   }
 
-  public Ban unban(UnbanForm unbanForm) {
+  public List<Ban> getAllBans() {
+    List<Ban> bans = banService.getAllBans();
+    bans.sort(Comparator.comparing(Ban::getStart).reversed());
+    return bans;
+  }
+
+  public Ban resolveBan(long id) {
+    return banService.resolveBan(id);
+  }
+
+  public Ban editBan(Ban oldBan, BanForm banForm) {
+    oldBan.setReason(banForm.getReason());
+    oldBan.setEnd(banForm.getEnd());
+
+    return banService.saveBan(oldBan);
+  }
+
+  public Ban unban(Ban ban, UnbanForm unbanForm) {
     User loggedUser = userService.getCurrentUser();
     if (loggedUser == null) {
       throw new FormValidationException("No user is logged in!");
     }
 
-    Ban ban = banService.getActiveBan(unbanForm.getIp());
-    if (ban == null) {
+    if (ban == null || ban.getStatus() != BanStatus.ACTIVE) {
       throw new FormValidationException("There is no active ban on this IP");
     }
 
@@ -69,9 +86,5 @@ public class BanFacade {
           ban.setStatus(BanStatus.EXPIRED);
           banService.saveBan(ban);
         });
-  }
-
-  public List<Ban> getAllBans() {
-    return banService.getAllBans();
   }
 }
