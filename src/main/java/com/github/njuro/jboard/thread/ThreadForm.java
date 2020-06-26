@@ -20,9 +20,7 @@ import lombok.Data;
 @Builder
 public class ThreadForm {
 
-  @Size(
-      max = MAX_SUBJECT_LENGTH,
-      message = "Subject too long (allowed " + MAX_SUBJECT_LENGTH + " chars)")
+  @Size(max = MAX_SUBJECT_LENGTH, message = "{validation.thread.subject.length}")
   private String subject;
 
   private boolean stickied;
@@ -30,13 +28,13 @@ public class ThreadForm {
 
   @Valid @NotNull private PostForm postForm;
 
-  @AssertFalse(message = "First post must have non-empty subject or non-empty body")
+  @AssertFalse(message = "{validation.thread.first.post.empty}")
   public boolean isEmptySubjectAndComment() {
     return (subject == null || subject.trim().isEmpty())
         && (postForm.getBody() == null || postForm.getBody().trim().isEmpty());
   }
 
-  @AssertTrue(message = "First post must have an attachment")
+  @AssertTrue(message = "{validation.thread.first.post.attachment}")
   public boolean isUploadedAttachment() {
     return postForm.getAttachment().getSize() > 0;
   }

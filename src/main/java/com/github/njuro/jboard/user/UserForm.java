@@ -18,28 +18,21 @@ public class UserForm {
   @Size(
       min = MIN_USERNAME_LENGTH,
       max = MAX_USERNAME_LENGTH,
-      message =
-          "Username must have between "
-              + MIN_USERNAME_LENGTH
-              + " and "
-              + MAX_USERNAME_LENGTH
-              + " chars")
+      message = "{validation.user.username.length}")
   private String username;
 
-  @Size(
-      min = MIN_PASSWORD_LENGTH,
-      message = "Password too short (must be at least " + MIN_PASSWORD_LENGTH + ") chars")
+  @Size(min = MIN_PASSWORD_LENGTH, message = "{validation.user.password.length}")
   private String password;
 
   private String passwordRepeated;
 
-  @Email(message = "Invalid email")
+  @Email(message = "{validation.user.email.invalid}")
   private String email;
 
   @Pattern(regexp = IP_PATTERN)
   private String registrationIp;
 
-  @AssertTrue(message = "Passwords do not match")
+  @AssertTrue(message = "{validation.user.password.match")
   public boolean isPasswordMatching() {
     return password.equals(passwordRepeated);
   }
