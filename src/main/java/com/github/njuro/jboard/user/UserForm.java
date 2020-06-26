@@ -32,7 +32,7 @@ public class UserForm {
   @Pattern(regexp = IP_PATTERN)
   private String registrationIp;
 
-  @AssertTrue(message = "{validation.user.password.match")
+  @AssertTrue(message = "{validation.user.password.match}")
   public boolean isPasswordMatching() {
     return password.equals(passwordRepeated);
   }
