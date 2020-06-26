@@ -4,6 +4,7 @@ import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.user.UserAuthority;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,11 @@ public class BanRestController {
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
   public Ban createBan(@RequestBody @Valid BanForm banForm) {
     return banFacade.createBan(banForm);
+  }
+
+  @GetMapping("/me")
+  public Ban getOwnBan(HttpServletRequest request) {
+    return banFacade.getActiveBan(request.getRemoteAddr());
   }
 
   @GetMapping

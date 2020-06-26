@@ -44,6 +44,10 @@ public class BanFacade {
     return banService.saveBan(ban);
   }
 
+  public Ban getActiveBan(String ip) {
+    return banService.getActiveBan(ip);
+  }
+
   public List<Ban> getAllBans() {
     List<Ban> bans = banService.getAllBans();
     bans.sort(Comparator.comparing(Ban::getStart).reversed());
