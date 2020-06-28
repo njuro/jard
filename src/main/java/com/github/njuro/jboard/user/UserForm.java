@@ -7,6 +7,7 @@ import static com.github.njuro.jboard.common.Constants.MIN_USERNAME_LENGTH;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Data;
@@ -32,6 +33,9 @@ public class UserForm {
   @Pattern(regexp = IP_PATTERN)
   private String registrationIp;
 
+  @NotNull(message = "{validation.user.role.null}")
+  private UserRole role;
+
   @AssertTrue(message = "{validation.user.password.match}")
   public boolean isPasswordMatching() {
     return password.equals(passwordRepeated);
@@ -43,8 +47,8 @@ public class UserForm {
         .password(password)
         .email(email)
         .registrationIp(registrationIp)
-        .role(UserRole.USER) // TODO set role as part of user form
-        .authorities(UserRole.USER.getDefaultAuthorites())
+        .role(role)
+        .authorities(role.getDefaultAuthorites())
         .enabled(true)
         .build();
   }

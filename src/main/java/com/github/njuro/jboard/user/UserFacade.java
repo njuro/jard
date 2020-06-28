@@ -66,6 +66,8 @@ public class UserFacade implements UserDetailsService {
 
   public User editUser(User oldUser, UserForm updatedUser) {
     oldUser.setEmail(updatedUser.getEmail());
+    oldUser.setRole(updatedUser.getRole());
+    oldUser.setAuthorities(updatedUser.getRole().getDefaultAuthorites());
     return userService.updateUser(oldUser);
   }
 
