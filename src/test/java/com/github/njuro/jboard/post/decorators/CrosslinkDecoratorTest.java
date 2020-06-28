@@ -50,7 +50,7 @@ class CrosslinkDecoratorTest extends PostDecoratorTest {
   @Test
   void testValidCrossThreadlink() {
     decoratePost(postR, ">>1");
-    assertThat(postR.getBody()).containsSubsequence("/boards/r/1", CROSSLINK_CLASS_VALID);
+    assertThat(postR.getBody()).containsSubsequence("/boards/r/thread/1", CROSSLINK_CLASS_VALID);
   }
 
   @Test
@@ -64,10 +64,10 @@ class CrosslinkDecoratorTest extends PostDecoratorTest {
     decoratePost(postR, "To different thread >>3 more text\n >>1 and to OP");
     assertThat(postR.getBody())
         .containsSubsequence(
-            "/boards/r/3#3",
+            "/boards/r/thread/3#3",
             CROSSLINK_CLASS_VALID,
             CROSSLINK_DIFF_THREAD,
-            "/boards/r/1#1",
+            "/boards/r/thread/1#1",
             CROSSLINK_CLASS_VALID,
             CROSSLINK_OP);
   }
@@ -76,8 +76,8 @@ class CrosslinkDecoratorTest extends PostDecoratorTest {
   void testValidCrossBoardLink() {
     decoratePost(postR, "Some text  >>>/fit/1");
     decoratePost(postF, ">>>/r/4 some text");
-    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit/1");
-    assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/r/3#4");
+    assertThat(postR.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/fit/thread/1");
+    assertThat(postF.getBody()).contains(CROSSLINK_CLASS_VALID, "/boards/r/thread/3#4");
   }
 
   @Test
