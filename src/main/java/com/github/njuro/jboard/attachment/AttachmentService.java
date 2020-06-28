@@ -1,14 +1,15 @@
 package com.github.njuro.jboard.attachment;
 
-import com.github.njuro.jboard.common.Constants;
-import java.io.File;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
+import javax.imageio.ImageIO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Service methods for manipulating {@link Attachment file attachments}
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@Slf4j
 public class AttachmentService {
 
   private final AttachmentRepository attachmentRepository;
@@ -26,25 +28,31 @@ public class AttachmentService {
     this.attachmentRepository = attachmentRepository;
   }
 
-  public Attachment saveAttachment(Attachment attachment) {
-    if (attachment.getSourceFile() != null) {
-      Path path = Paths.get(attachment.getPath(), attachment.getFilename());
-      try {
-        File destFile = Constants.USER_CONTENT_PATH.resolve(path).toFile();
-        destFile.getParentFile().mkdirs();
-        attachment.getSourceFile().transferTo(destFile);
-      } catch (IOException e) {
-        throw new IllegalArgumentException("Cannot save to destination " + path.toString(), e);
-      }
+  public Attachment saveAttachment(Attachment attachment, MultipartFile source) {
+    try {
+      attachment.getFile().mkdirs();
+      source.transferTo(attachment.getFile());
+      ImageUtils.setDimensions(attachment);
+      saveAttachmentThumbnail(attachment);
+    } catch (IOException ex) {
+      log.error("Failed to save attachment: " + ex.getMessage());
     }
 
-    ImageUtils.setDimensions(attachment);
     return attachmentRepository.save(attachment);
+  }
+
+  private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
+    attachment.getThumbnailFile().mkdirs();
+    RenderedImage thumbnail = ImageUtils.createThumbnail(attachment);
+    ImageIO.write(
+        thumbnail,
+        FilenameUtils.getExtension(attachment.getFilename()),
+        attachment.getThumbnailFile());
   }
 
   public void deleteAttachmentFile(Attachment attachment) {
     if (!attachment.getFile().delete()) {
-      throw new IllegalStateException("Attachment file could not be deleted");
+      log.error("Failed to delete attachment");
     }
   }
 

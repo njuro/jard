@@ -6,7 +6,6 @@ import static com.jfilter.FilterConstantsHelper.MEDIA_TYPE_APPLICATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.njuro.jboard.common.Constants;
 import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
 import com.jfilter.EnableJsonFilter;
 import com.jfilter.components.FilterConfiguration;
@@ -23,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -60,13 +58,6 @@ public class MvcConfig implements WebMvcConfigurer {
             HttpMethod.HEAD.name(),
             HttpMethod.OPTIONS.name())
         .allowCredentials(true);
-  }
-
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry
-        .addResourceHandler(Constants.USER_CONTENT_URL + "**")
-        .addResourceLocations(Constants.USER_CONTENT_PATH.toUri().toString());
   }
 
   @Override

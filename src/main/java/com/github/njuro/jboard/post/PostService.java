@@ -51,10 +51,6 @@ public class PostService {
       decoratePost(post);
     }
 
-    if (post.getAttachment() != null) {
-      post.setAttachment(attachmentService.saveAttachment(post.getAttachment()));
-    }
-
     return postRepository.save(post);
   }
 

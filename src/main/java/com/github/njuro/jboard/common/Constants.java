@@ -21,12 +21,12 @@ public class Constants {
           "public",
           "usercontent"); // TODO do it better
 
-  public static final String USER_CONTENT_URL = "/usercontent/";
+  public static final Path USER_CONTENT_THUMBS_PATH = USER_CONTENT_PATH.resolve("thumbs");
 
   /** Images */
-  public static final double IMAGE_MAX_THUMB_WIDTH = 300;
+  public static final double IMAGE_MAX_THUMB_WIDTH = 250;
 
-  public static final double IMAGE_MAX_THUMB_HEIGHT = 300;
+  public static final double IMAGE_MAX_THUMB_HEIGHT = 250;
 
   /** Tripcodes */
   public static final String TRIPCODE_SEPARATOR = "!";

@@ -1,6 +1,5 @@
 package com.github.njuro.jboard.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.common.Constants;
 import java.io.File;
 import java.nio.file.Paths;
@@ -10,16 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Entity representing an attachment to post
@@ -32,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Attachment {
 
   @Id
@@ -50,27 +47,15 @@ public class Attachment {
 
   @Basic private int height;
 
-  @Basic private int thumbWidth;
+  @Basic private int thumbnailWidth;
 
-  @Basic private int thumbHeight;
+  @Basic private int thumbnailHeight;
 
-  @Transient @ToString.Exclude private String url;
-
-  @Transient @ToString.Exclude @JsonIgnore private File file;
-
-  @Transient @ToString.Exclude @JsonIgnore private MultipartFile sourceFile;
-
-  public Attachment(String path, @NotNull String originalFilename, String filename) {
-    this.path = path;
-    this.originalFilename = originalFilename;
-    this.filename = filename;
-
-    initContentPaths();
+  public File getFile() {
+    return Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
   }
 
-  @PostLoad
-  public void initContentPaths() {
-    url = Constants.USER_CONTENT_URL + Paths.get(path, filename).toString();
-    file = Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
+  public File getThumbnailFile() {
+    return Constants.USER_CONTENT_THUMBS_PATH.resolve(Paths.get(path, filename)).toFile();
   }
 }
