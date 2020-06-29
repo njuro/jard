@@ -64,10 +64,9 @@ public class Constants {
   public static final String CROSSLINK_DIFF_THREAD = "→";
   public static final String CROSSLINK_OP = "(OP)";
 
-  // TODO accept [/spoiler] as end tag
   public static final Pattern SPOILER_PATTERN =
       Pattern.compile(
-          "(\\[spoiler]|\\*\\*)(?<content>.*?\\w+.*?)\\1",
+          "(\\[spoiler]|\\*\\*)(?<content>.*?\\w+.*?)(\\[/spoiler]|\\*\\*)",
           Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
   public static final String SPOILER_START = "<span class=\"spoiler\">";
   public static final String SPOILER_END = "</span>";

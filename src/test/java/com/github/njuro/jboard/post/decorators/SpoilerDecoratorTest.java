@@ -17,9 +17,9 @@ class SpoilerDecoratorTest extends PostDecoratorTest {
   @ParameterizedTest
   @ValueSource(
       strings = {
-        "[spoiler]text[spoiler]",
+        "[spoiler]text[/spoiler]",
         "**text**",
-        "[SPOILER]text[spoiler]",
+        "[SPOILER]text[/spoiler]",
         "**multiple** \n [spoiler]\nspoilers\n[spoiler]"
       })
   void testValidSpoiler(String input) {
