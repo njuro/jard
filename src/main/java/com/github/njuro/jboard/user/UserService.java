@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.user;
 
+import com.github.njuro.jboard.ban.BanService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final BanService banService;
 
   @Autowired
-  public UserService(UserRepository userRepository) {
+  public UserService(UserRepository userRepository, BanService banService) {
     this.userRepository = userRepository;
+    this.banService = banService;
   }
 
   public User saveUser(User user) {
@@ -72,7 +75,13 @@ public class UserService {
   }
 
   public void deleteUser(User user) {
-    // TODO delete all bans from user
+    banService
+        .getBansBannedByUser(user)
+        .forEach(
+            ban -> {
+              ban.setBannedBy(null);
+              banService.saveBan(ban);
+            });
     userRepository.delete(user);
   }
 }

@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.ban;
 
+import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,6 @@ public interface BanRepository extends JpaRepository<Ban, Long> {
   List<Ban> findByStatusAndEndBefore(BanStatus status, LocalDateTime dateTime);
 
   Optional<Ban> findByIpAndStatus(String ip, BanStatus status);
+
+  List<Ban> findByBannedBy(User bannedBy);
 }

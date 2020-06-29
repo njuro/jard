@@ -37,7 +37,7 @@ public class Ban {
   @Enumerated(EnumType.STRING)
   private BanStatus status;
 
-  @ManyToOne(targetEntity = User.class, optional = false)
+  @ManyToOne(targetEntity = User.class)
   private User bannedBy;
 
   private String reason;

@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.ban;
 
+import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class BanService {
 
   public List<Ban> getExpiredBans() {
     return banRepository.findByStatusAndEndBefore(BanStatus.ACTIVE, LocalDateTime.now());
+  }
+
+  public List<Ban> getBansBannedByUser(User user) {
+    return banRepository.findByBannedBy(user);
   }
 
   public Ban resolveBan(long id) {
