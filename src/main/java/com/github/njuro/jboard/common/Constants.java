@@ -47,7 +47,7 @@ public class Constants {
   public static final int MAX_TRIPCODE_PASSWORD_LENGTH = 80;
   public static final int MAX_SUBJECT_LENGTH = 255;
   public static final int MAX_POST_LENGTH = 1000;
-  public static final int MAX_ATTACHMENT_SIZE = 2_000_000;
+  public static final int MAX_ATTACHMENT_SIZE = 5_000_000;
 
   /** Decorators */
   public static final Pattern GREENTEXT_PATTERN = Pattern.compile("^\\s*>.*$", Pattern.MULTILINE);
