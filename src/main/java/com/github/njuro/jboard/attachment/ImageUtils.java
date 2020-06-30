@@ -100,6 +100,10 @@ public class ImageUtils {
     } catch (IOException ex) {
       log.error("Error while reading image: " + ex.getMessage());
       return null;
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      // TODO
+      // https://stackoverflow.com/questions/22259714/arrayindexoutofboundsexception-4096-while-reading-gif-file
+      return null;
     }
   }
 }
