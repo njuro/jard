@@ -39,7 +39,7 @@ public class PostForm {
     return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
   }
 
-  @AssertTrue(message = "{validation.post.empty")
+  @AssertTrue(message = "{validation.post.empty}")
   public boolean isAttachmentOrNonEmptyBody() {
     return (attachment != null && attachment.getSize() > 0)
         || (body != null && !body.trim().isEmpty());
