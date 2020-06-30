@@ -30,7 +30,7 @@ public class AttachmentService {
 
   public Attachment saveAttachment(Attachment attachment, MultipartFile source) {
     try {
-      attachment.getFile().mkdirs();
+      attachment.getFile().getParentFile().mkdirs();
       source.transferTo(attachment.getFile());
       ImageUtils.setDimensions(attachment);
       saveAttachmentThumbnail(attachment);
@@ -42,7 +42,7 @@ public class AttachmentService {
   }
 
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
-    attachment.getThumbnailFile().mkdirs();
+    attachment.getThumbnailFile().getParentFile().mkdirs();
     RenderedImage thumbnail = ImageUtils.createThumbnail(attachment);
     ImageIO.write(
         thumbnail,
