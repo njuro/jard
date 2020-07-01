@@ -12,7 +12,7 @@ public interface BanRepository extends JpaRepository<Ban, Long> {
 
   List<Ban> findByIp(String ip);
 
-  List<Ban> findByStatusAndEndBefore(BanStatus status, LocalDateTime dateTime);
+  List<Ban> findByStatusAndValidToBefore(BanStatus status, LocalDateTime dateTime);
 
   Optional<Ban> findByIpAndStatus(String ip, BanStatus status);
 

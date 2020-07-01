@@ -35,10 +35,10 @@ public class BanFacade {
 
     Ban ban = banForm.toBan();
     ban.setBannedBy(loggedUser);
-    ban.setStart(LocalDateTime.now());
+    ban.setValidFrom(LocalDateTime.now());
 
     if (ban.getStatus() == BanStatus.WARNING) {
-      ban.setEnd(null);
+      ban.setValidTo(null);
     }
 
     return banService.saveBan(ban);
@@ -50,7 +50,7 @@ public class BanFacade {
 
   public List<Ban> getAllBans() {
     List<Ban> bans = banService.getAllBans();
-    bans.sort(Comparator.comparing(Ban::getStart).reversed());
+    bans.sort(Comparator.comparing(Ban::getValidFrom).reversed());
     return bans;
   }
 
@@ -60,7 +60,7 @@ public class BanFacade {
 
   public Ban editBan(Ban oldBan, BanForm banForm) {
     oldBan.setReason(banForm.getReason());
-    oldBan.setEnd(banForm.getEnd());
+    oldBan.setValidTo(banForm.getValidTo());
 
     return banService.saveBan(oldBan);
   }

@@ -33,7 +33,7 @@ public class BanService {
   }
 
   public List<Ban> getExpiredBans() {
-    return banRepository.findByStatusAndEndBefore(BanStatus.ACTIVE, LocalDateTime.now());
+    return banRepository.findByStatusAndValidToBefore(BanStatus.ACTIVE, LocalDateTime.now());
   }
 
   public List<Ban> getBansBannedByUser(User user) {

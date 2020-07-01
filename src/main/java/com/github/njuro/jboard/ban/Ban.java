@@ -48,7 +48,7 @@ public class Ban {
   @Size(max = 1000)
   private String unbanReason;
 
-  private LocalDateTime start;
+  private LocalDateTime validFrom;
 
-  private LocalDateTime end;
+  private LocalDateTime validTo;
 }

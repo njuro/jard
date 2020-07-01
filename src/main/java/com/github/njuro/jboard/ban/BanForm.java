@@ -18,13 +18,13 @@ public class BanForm {
   @Size(max = 1000, message = "{validation.ban.reason.max}")
   private String reason;
 
-  @Future(message = "{validation.ban.end.future}")
-  private LocalDateTime end;
+  @Future(message = "{validation.ban.valid.to.future}")
+  private LocalDateTime validTo;
 
   private boolean warning;
 
   public Ban toBan() {
-    Ban ban = Ban.builder().ip(ip).reason(reason).end(end).build();
+    Ban ban = Ban.builder().ip(ip).reason(reason).validTo(validTo).build();
     ban.setStatus(isWarning() ? BanStatus.WARNING : BanStatus.ACTIVE);
 
     return ban;
