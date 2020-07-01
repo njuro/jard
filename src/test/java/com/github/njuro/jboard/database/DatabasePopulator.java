@@ -3,7 +3,10 @@ package com.github.njuro.jboard.database;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jboard.board.Board;
+import com.github.njuro.jboard.board.BoardAttachmentType;
 import com.github.njuro.jboard.board.BoardFacade;
+import com.github.njuro.jboard.board.BoardForm;
+import com.github.njuro.jboard.board.BoardNotFoundException;
 import com.github.njuro.jboard.post.PostForm;
 import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadFacade;
@@ -51,8 +54,8 @@ public class DatabasePopulator {
   @Test
   @Commit
   @Transactional
-  public void populateMockData() throws IOException {
-    Board board = boardFacade.resolveBoard("fit"); // TODO create board if missing
+  public void populateRealData() throws IOException {
+    Board board = createBoard();
     List<File> files =
         Files.list(DATA_PATH)
             .map(Path::toFile)
@@ -80,6 +83,21 @@ public class DatabasePopulator {
       }
 
       log.info(String.format("Populated thread %d of %d", counter++, files.size()));
+    }
+  }
+
+  private Board createBoard() {
+    try {
+      return boardFacade.resolveBoard("fit");
+    } catch (BoardNotFoundException ex) {
+      return boardFacade.createBoard(
+          BoardForm.builder()
+              .label("fit")
+              .name("Fitness")
+              .threadLimit(200)
+              .bumpLimit(300)
+              .attachmentType(BoardAttachmentType.IMAGE)
+              .build());
     }
   }
 
