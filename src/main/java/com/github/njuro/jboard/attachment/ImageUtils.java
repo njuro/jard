@@ -3,12 +3,14 @@ package com.github.njuro.jboard.attachment;
 import static com.github.njuro.jboard.common.Constants.IMAGE_MAX_THUMB_HEIGHT;
 import static com.github.njuro.jboard.common.Constants.IMAGE_MAX_THUMB_WIDTH;
 
+import com.github.njuro.jboard.attachment.GifDecoder.GifImage;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
@@ -97,12 +99,21 @@ public class ImageUtils {
   private BufferedImage getImageFromAttachment(Attachment att) {
     try {
       return ImageIO.read(att.getFile());
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      return getImageFromGifAttachment(att);
     } catch (IOException ex) {
       log.error("Error while reading image: " + ex.getMessage());
       return null;
-    } catch (ArrayIndexOutOfBoundsException ex) {
-      // TODO
-      // https://stackoverflow.com/questions/22259714/arrayindexoutofboundsexception-4096-while-reading-gif-file
+    }
+  }
+
+  private BufferedImage getImageFromGifAttachment(Attachment att) {
+    try {
+      // bug in JDK, need to use custom GIF decoder
+      GifImage gif = GifDecoder.read(new FileInputStream(att.getFile()));
+      return gif.getFrame(0);
+    } catch (IOException ex) {
+      log.error("Error while reading GIF image: " + ex.getMessage());
       return null;
     }
   }
