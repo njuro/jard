@@ -64,8 +64,16 @@ public class DatabasePopulator {
       JsonNode thread = objectMapper.readTree(file);
       JsonNode posts = thread.get("posts");
       JsonNode originalPost = posts.get(0);
+
       ThreadForm threadForm = createThreadForm(thread, originalPost);
+      if (threadForm.getPostForm().getAttachment() == null) {
+        log.warn(
+            String.format(
+                "Skipping thread %d of %d - missing OP attachment", counter++, files.size()));
+        continue;
+      }
       Thread createdThread = threadFacade.createThread(threadForm, board);
+
       for (int i = 1; i < posts.size() - 1; i++) {
         PostForm postForm = createPostForm(posts.get(i));
         threadFacade.replyToThread(postForm, createdThread);
