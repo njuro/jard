@@ -40,6 +40,7 @@ public class UserRestController {
       className = User.class,
       fields = {"username", "email", "enabled", "role", "authorities"},
       behaviour = FilterBehaviour.KEEP_FIELDS)
+  @HasAuthorities(UserAuthority.MANAGE_USERS)
   public List<User> getAllUsers() {
     return userFacade.getAllUsers();
   }
