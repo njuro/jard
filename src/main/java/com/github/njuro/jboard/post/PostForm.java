@@ -34,7 +34,6 @@ public class PostForm {
   private MultipartFile attachment;
 
   @AssertFalse(message = "{validation.post.attachment.size}")
-  // TODO externalize message
   public boolean isAttachmentTooBig() {
     return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
   }
