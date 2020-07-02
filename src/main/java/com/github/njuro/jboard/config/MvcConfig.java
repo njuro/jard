@@ -34,8 +34,8 @@ public class MvcConfig implements WebMvcConfigurer {
   private final List<PathVariableArgumentResolver> pathVariableArgumentResolvers;
   private final MessageSource messageSource;
 
-  @Value("${client.url:localhost}")
-  private String clientUrl;
+  @Value("${client.base.url:localhost}")
+  private String clientBaseUrl;
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
@@ -53,7 +53,7 @@ public class MvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry registry) {
     registry
         .addMapping("/**")
-        .allowedOrigins(clientUrl, "http://localhost:3000", "http://192.168.0.80:3000")
+        .allowedOrigins(clientBaseUrl, "http://localhost:3000", "http://192.168.0.80:3000")
         .allowedMethods(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),

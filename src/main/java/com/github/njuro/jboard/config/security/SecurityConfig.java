@@ -6,7 +6,6 @@ import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jboard.user.UserFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -23,8 +22,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -38,9 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final LogoutSuccessHandler logoutSuccessHandler;
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-  @Value("${client.cookie.domain:localhost}")
-  private String clientDomain;
 
   @Autowired
   public SecurityConfig(
@@ -82,10 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .logoutUrl(Mappings.API_ROOT + "/logout")
         .deleteCookies(Constants.JWT_COOKIE_NAME)
         .and()
+        .cors(Customizer.withDefaults())
         .csrf()
-        .csrfTokenRepository(csrfTokenRepository())
-        .and()
-        .cors(Customizer.withDefaults());
+        .disable(); // TODO enable when custom domain
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -106,13 +99,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public PasswordEncoder bcryptEncoder() {
     return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);
-  }
-
-  @Bean
-  public CsrfTokenRepository csrfTokenRepository() {
-    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-    repository.setCookieDomain(clientDomain);
-
-    return repository;
   }
 }
