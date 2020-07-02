@@ -5,7 +5,12 @@ import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jboard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jboard.user.UserFacade;
+import com.github.njuro.jboard.user.UserForm;
+import com.github.njuro.jboard.user.UserRole;
+import javax.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -26,7 +31,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Value("${app.user.root.enabled:false}")
+  private boolean rootEnabled;
+
+  @Value("${app.user.root.username:root}")
+  private String rootUsername;
+
+  @Value("${app.user.root.password:password}")
+  private String rootPassword;
 
   private final UserFacade userFacade;
 
@@ -50,6 +65,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.logoutSuccessHandler = logoutSuccessHandler;
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+  }
+
+  @PostConstruct
+  public void createRootUser() {
+    if (!rootEnabled || !userFacade.getAllUsers().isEmpty()) {
+      return;
+    }
+    log.info("No users in database, creating root user");
+
+    UserForm root =
+        UserForm.builder()
+            .username(rootUsername)
+            .password(rootPassword)
+            .email("")
+            .registrationIp("127.0.0.1")
+            .role(UserRole.ADMIN)
+            .build();
+
+    userFacade.createUser(root);
   }
 
   @Override
