@@ -7,6 +7,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
+import com.github.njuro.jboard.utils.validation.ValidationMessageInterpolator;
 import com.jfilter.EnableJsonFilter;
 import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;
@@ -74,6 +75,8 @@ public class MvcConfig implements WebMvcConfigurer {
   public LocalValidatorFactoryBean getValidator() {
     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
     bean.setValidationMessageSource(messageSource);
+    bean.setMessageInterpolator(new ValidationMessageInterpolator(messageSource));
+
     return bean;
   }
 }

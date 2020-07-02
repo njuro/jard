@@ -22,7 +22,7 @@ public class PostForm {
   @Size(max = MAX_NAME_LENGTH, message = "{validation.post.name.length}")
   private String name;
 
-  @Size(max = MAX_TRIPCODE_PASSWORD_LENGTH, message = "{validation.post.password.length")
+  @Size(max = MAX_TRIPCODE_PASSWORD_LENGTH, message = "{validation.post.password.length}")
   private String password;
 
   @Size(max = MAX_POST_LENGTH, message = "{validation.post.body.length}")
@@ -33,7 +33,7 @@ public class PostForm {
 
   private MultipartFile attachment;
 
-  @AssertFalse(message = "Attachment is too big (allowed " + MAX_ATTACHMENT_SIZE + " bytes)")
+  @AssertFalse(message = "{validation.post.attachment.size}")
   // TODO externalize message
   public boolean isAttachmentTooBig() {
     return attachment != null && attachment.getSize() > MAX_ATTACHMENT_SIZE;
