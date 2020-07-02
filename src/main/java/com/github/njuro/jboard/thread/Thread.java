@@ -6,6 +6,7 @@ import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.post.Post;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -43,9 +44,9 @@ import org.hibernate.annotations.FetchMode;
 public class Thread {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonIgnore
-  private Long id;
+  private UUID id;
 
   @Basic private String subject;
 

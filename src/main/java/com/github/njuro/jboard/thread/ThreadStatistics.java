@@ -1,6 +1,7 @@
 package com.github.njuro.jboard.thread;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import lombok.Getter;
@@ -24,7 +25,7 @@ import org.hibernate.annotations.Synchronize;
 @Synchronize({"threads", "posts", "attachments"})
 public class ThreadStatistics {
 
-  @Id @JsonIgnore private Long threadId;
+  @Id @JsonIgnore private UUID threadId;
 
   private int replyCount;
   private int attachmentCount;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -43,9 +44,9 @@ public class User implements UserDetails {
   private static final long serialVersionUID = -6709426435122012297L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonIgnore
-  private Long id;
+  private UUID id;
 
   @Basic
   @EqualsAndHashCode.Include

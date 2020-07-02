@@ -2,6 +2,7 @@ package com.github.njuro.jboard.ban;
 
 import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,8 +29,8 @@ import lombok.NoArgsConstructor;
 public class Ban {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   @Column(nullable = false)
   private String ip;

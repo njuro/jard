@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jboard.attachment.Attachment;
 import com.github.njuro.jboard.thread.Thread;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,9 +41,9 @@ import org.hibernate.annotations.FetchMode;
 public class Post {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonIgnore
-  private Long id;
+  private UUID id;
 
   @Basic @EqualsAndHashCode.Include private Long postNumber;
 

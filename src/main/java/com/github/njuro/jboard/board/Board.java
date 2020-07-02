@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jboard.thread.Thread;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,9 +40,9 @@ import org.hibernate.annotations.Formula;
 public class Board {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonIgnore
-  private Long id;
+  private UUID id;
 
   @Column(unique = true, nullable = false)
   @EqualsAndHashCode.Include

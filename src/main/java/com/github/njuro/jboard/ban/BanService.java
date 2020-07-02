@@ -3,6 +3,7 @@ package com.github.njuro.jboard.ban;
 import com.github.njuro.jboard.user.User;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class BanService {
     return banRepository.findByBannedBy(user);
   }
 
-  public Ban resolveBan(long id) {
+  public Ban resolveBan(UUID id) {
     return banRepository.findById(id).orElse(null);
   }
 }

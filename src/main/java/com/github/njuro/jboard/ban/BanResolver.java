@@ -2,6 +2,7 @@ package com.github.njuro.jboard.ban;
 
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.utils.PathVariableArgumentResolver;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,6 @@ public class BanResolver implements PathVariableArgumentResolver {
       WebDataBinderFactory binderFactory) {
     String id = getPathVariable(Mappings.PLACEHOLDER_BAN, webRequest);
 
-    return banFacade.resolveBan(Long.parseLong(id));
+    return banFacade.resolveBan(UUID.fromString(id));
   }
 }

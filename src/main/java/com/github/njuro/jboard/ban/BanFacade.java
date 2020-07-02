@@ -7,6 +7,7 @@ import com.github.njuro.jboard.utils.validation.FormValidationException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ public class BanFacade {
     return bans;
   }
 
-  public Ban resolveBan(long id) {
+  public Ban resolveBan(UUID id) {
     return banService.resolveBan(id);
   }
 

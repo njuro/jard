@@ -3,6 +3,7 @@ package com.github.njuro.jboard.attachment;
 import com.github.njuro.jboard.common.Constants;
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,8 +33,8 @@ import lombok.NoArgsConstructor;
 public class Attachment {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   @Basic @EqualsAndHashCode.Include private String path;
 
