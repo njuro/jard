@@ -8,8 +8,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import java.io.File;
+import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -32,12 +32,11 @@ public class AWSFileService {
   @Value("${app.aws.bucket}")
   private String bucket;
 
-  private final AmazonS3 awsClient;
+  private AmazonS3 awsClient;
 
-  @Autowired
-  public AWSFileService() {
+  @PostConstruct
+  public void initializeClient() {
     if (storageMode != UserContentStorageMode.AWS) {
-      awsClient = null;
       return;
     }
 
