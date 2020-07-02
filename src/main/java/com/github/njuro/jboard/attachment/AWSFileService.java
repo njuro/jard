@@ -17,22 +17,30 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AWSFileService {
 
+  @Value("${app.user.content.storage:LOCAL}")
+  private UserContentStorageMode storageMode;
+
   @Value("${app.aws.accesskey}")
   private String awsAccessKey;
 
-  @Value("${app.aws.secretkey")
+  @Value("${app.aws.secretkey}")
   private String awsSecretKey;
 
-  @Value("${app.aws.region")
+  @Value("${app.aws.region}")
   private Regions region;
 
-  @Value("${app.aws.bucket")
+  @Value("${app.aws.bucket}")
   private String bucket;
 
   private final AmazonS3 awsClient;
 
   @Autowired
   public AWSFileService() {
+    if (storageMode != UserContentStorageMode.AWS) {
+      awsClient = null;
+      return;
+    }
+
     try {
       AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
       awsClient =
@@ -46,6 +54,11 @@ public class AWSFileService {
   }
 
   public void uploadFile(String path, File file) {
+    if (storageMode != UserContentStorageMode.AWS) {
+      log.warn("Storage mode is not set to AWS, skipping upload");
+      return;
+    }
+
     try {
       awsClient.putObject(bucket, path, file);
     } catch (AmazonClientException ex) {
@@ -54,6 +67,11 @@ public class AWSFileService {
   }
 
   public void deleteFile(String path) {
+    if (storageMode != UserContentStorageMode.AWS) {
+      log.warn("Storage mode is not set to AWS, skipping deletion");
+      return;
+    }
+
     try {
       awsClient.deleteObject(bucket, path);
     } catch (AmazonClientException ex) {
