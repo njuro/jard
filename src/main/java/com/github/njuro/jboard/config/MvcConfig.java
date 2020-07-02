@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,9 @@ public class MvcConfig implements WebMvcConfigurer {
   private final List<PathVariableArgumentResolver> pathVariableArgumentResolvers;
   private final MessageSource messageSource;
 
+  @Value("${client.url:localhost}")
+  private String clientUrl;
+
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   public void configureJsonFilter(
@@ -49,7 +53,7 @@ public class MvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry registry) {
     registry
         .addMapping("/**")
-        .allowedOrigins("http://localhost:3000", "http://192.168.0.80:3000")
+        .allowedOrigins(clientUrl, "http://localhost:3000", "http://192.168.0.80:3000")
         .allowedMethods(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
