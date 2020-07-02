@@ -1,6 +1,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 /src/test/resources/datasets/realdata/
+.env
 
 ### STS ###
 .apt_generated
