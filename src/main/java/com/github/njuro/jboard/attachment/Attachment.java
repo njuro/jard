@@ -59,4 +59,8 @@ public class Attachment {
   public File getThumbnailFile() {
     return Constants.USER_CONTENT_THUMBS_PATH.resolve(Paths.get(path, filename)).toFile();
   }
+
+  public String getThumbnailPath() {
+    return Paths.get(path, "thumbs").toString();
+  }
 }
