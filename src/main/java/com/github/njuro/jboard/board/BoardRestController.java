@@ -4,6 +4,7 @@ import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
 
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
+import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.user.UserAuthority;
 import com.github.njuro.jboard.utils.SensitiveDataFilter;
 import com.jfilter.filter.DynamicFilter;
