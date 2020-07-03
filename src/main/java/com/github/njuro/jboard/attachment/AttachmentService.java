@@ -73,12 +73,18 @@ public class AttachmentService {
 
   public void deleteAttachmentFile(Attachment attachment) {
     if (storageMode == UserContentStorageMode.AWS) {
-      awsFileService.deleteFile(attachment.getPath());
-      awsFileService.deleteFile(attachment.getThumbnailPath());
+      awsFileService.deleteFile(
+          Paths.get(attachment.getPath(), attachment.getFilename()).toString());
+      awsFileService.deleteFile(
+          Paths.get(attachment.getThumbnailPath(), attachment.getFilename()).toString());
     }
 
     if (!attachment.getFile().delete()) {
-      log.error("Failed to delete attachment");
+      log.error("Failed to delete attachment file");
+    }
+
+    if (!attachment.getThumbnailFile().delete()) {
+      log.error("Failed to delete attachment thumbnail");
     }
   }
 

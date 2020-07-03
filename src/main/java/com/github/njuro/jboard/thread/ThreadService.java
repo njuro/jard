@@ -69,6 +69,7 @@ public class ThreadService {
 
   public void deleteThread(Thread thread) {
     postService.deletePosts(postService.getAllRepliesForThread(thread));
+    postService.deletePost(thread.getOriginalPost());
     threadRepository.delete(thread);
   }
 
