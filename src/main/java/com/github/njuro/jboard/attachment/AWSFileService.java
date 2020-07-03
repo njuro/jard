@@ -14,9 +14,9 @@ import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @Slf4j
 public class AWSFileService {
 
@@ -29,7 +29,7 @@ public class AWSFileService {
   @Value("${app.aws.secretkey}")
   private String awsSecretKey;
 
-  @Value("${app.aws.region}")
+  @Value("${app.aws.region:eu-central-1}")
   private Regions region;
 
   @Value("${app.aws.bucket}")
