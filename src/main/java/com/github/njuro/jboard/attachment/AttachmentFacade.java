@@ -30,7 +30,7 @@ public class AttachmentFacade {
         Attachment.builder()
             .originalFilename(file.getOriginalFilename())
             .filename(generatedName)
-            .path(folder.toString())
+            .folder(folder.toString())
             .build();
 
     return attachmentService.saveAttachment(attachment, file);

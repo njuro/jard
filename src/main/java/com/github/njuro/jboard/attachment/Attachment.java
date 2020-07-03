@@ -5,11 +5,15 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.UUID;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,7 +40,10 @@ public class Attachment {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Basic @EqualsAndHashCode.Include private String path;
+  @Enumerated(EnumType.STRING)
+  private AttachmentType type;
+
+  @Basic @EqualsAndHashCode.Include private String folder;
 
   @NotNull private String originalFilename;
 
@@ -44,27 +51,23 @@ public class Attachment {
   @EqualsAndHashCode.Include
   private String filename;
 
-  @Basic private int width;
-
-  @Basic private int height;
-
-  @Basic private int thumbnailWidth;
-
-  @Basic private int thumbnailHeight;
-
   private String awsUrl;
 
   private String awsThumbnailUrl;
 
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment")
+  @Builder.Default
+  private AttachmentMetadata metadata = new AttachmentMetadata();
+
   public File getFile() {
-    return Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
+    return Constants.USER_CONTENT_PATH.resolve(Paths.get(folder, filename)).toFile();
   }
 
   public File getThumbnailFile() {
-    return Constants.USER_CONTENT_THUMBS_PATH.resolve(Paths.get(path, filename)).toFile();
+    return Constants.USER_CONTENT_THUMBS_PATH.resolve(Paths.get(folder, filename)).toFile();
   }
 
-  public String getThumbnailPath() {
-    return Paths.get(path, "thumbs").toString();
+  public String getThumbnailFolder() {
+    return Paths.get(folder, "thumbs").toString();
   }
 }

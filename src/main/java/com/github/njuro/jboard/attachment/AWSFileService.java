@@ -55,14 +55,14 @@ public class AWSFileService {
     }
   }
 
-  public String uploadFile(String path, String filename, File file) {
+  public String uploadFile(String folder, String filename, File file) {
     if (storageMode != UserContentStorageMode.AWS) {
       log.warn("Storage mode is not set to AWS, skipping upload");
       return null;
     }
 
     try {
-      String key = Paths.get(path, filename).toString();
+      String key = Paths.get(folder, filename).toString();
       awsClient.putObject(
           new PutObjectRequest(bucket, key, file)
               .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -73,14 +73,14 @@ public class AWSFileService {
     }
   }
 
-  public void deleteFile(String path, String filename) {
+  public void deleteFile(String folder, String filename) {
     if (storageMode != UserContentStorageMode.AWS) {
       log.warn("Storage mode is not set to AWS, skipping deletion");
       return;
     }
 
     try {
-      String key = Paths.get(path, filename).toString();
+      String key = Paths.get(folder, filename).toString();
       awsClient.deleteObject(bucket, key);
     } catch (AmazonClientException ex) {
       log.error("Failed to delete file from AWS: " + ex.getMessage());

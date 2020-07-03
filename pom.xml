@@ -27,6 +27,13 @@
     <junit-platform.version>1.6.2</junit-platform.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>xuggler-repo</id>
+      <url>https://www.dcm4che.org/maven2/</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -53,6 +60,11 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>1.11.814</version>
+    </dependency>
+    <dependency>
+      <groupId>xuggle</groupId>
+      <artifactId>xuggle-xuggler</artifactId>
+      <version>5.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

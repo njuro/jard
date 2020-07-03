@@ -39,26 +39,30 @@ public class AttachmentService {
     try {
       attachment.getFile().getParentFile().mkdirs();
       source.transferTo(attachment.getFile());
-      ImageUtils.setDimensions(attachment);
+      AttachmentUtils.setMetadata(attachment);
 
       if (storageMode == UserContentStorageMode.AWS) {
         String url =
             awsFileService.uploadFile(
-                attachment.getPath(), attachment.getFilename(), attachment.getFile());
+                attachment.getFolder(), attachment.getFilename(), attachment.getFile());
         attachment.setAwsUrl(url);
       }
 
-      saveAttachmentThumbnail(attachment);
+      if (attachment.getType() == AttachmentType.IMAGE) {
+        // TODO thumbnail video
+        saveAttachmentThumbnail(attachment);
+      }
     } catch (IOException ex) {
       log.error("Failed to save attachment: " + ex.getMessage());
     }
 
+    attachment.getMetadata().setAttachment(attachment);
     return attachmentRepository.save(attachment);
   }
 
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
     attachment.getThumbnailFile().getParentFile().mkdirs();
-    RenderedImage thumbnail = ImageUtils.createThumbnail(attachment);
+    RenderedImage thumbnail = AttachmentUtils.createThumbnail(attachment);
     ImageIO.write(
         thumbnail,
         FilenameUtils.getExtension(attachment.getFilename()),
@@ -67,7 +71,7 @@ public class AttachmentService {
     if (storageMode == UserContentStorageMode.AWS) {
       String url =
           awsFileService.uploadFile(
-              attachment.getThumbnailPath(),
+              attachment.getThumbnailFolder(),
               attachment.getFilename(),
               attachment.getThumbnailFile());
       attachment.setAwsThumbnailUrl(url);
@@ -76,8 +80,8 @@ public class AttachmentService {
 
   public void deleteAttachmentFile(Attachment attachment) {
     if (storageMode == UserContentStorageMode.AWS) {
-      awsFileService.deleteFile(attachment.getPath(), attachment.getFilename());
-      awsFileService.deleteFile(attachment.getThumbnailPath(), attachment.getFilename());
+      awsFileService.deleteFile(attachment.getFolder(), attachment.getFilename());
+      awsFileService.deleteFile(attachment.getThumbnailFolder(), attachment.getFilename());
     }
 
     if (!attachment.getFile().delete()) {
