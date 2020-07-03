@@ -52,6 +52,10 @@ public class Attachment {
 
   @Basic private int thumbnailHeight;
 
+  private String awsUrl;
+
+  private String awsThumbnailUrl;
+
   public File getFile() {
     return Constants.USER_CONTENT_PATH.resolve(Paths.get(path, filename)).toFile();
   }

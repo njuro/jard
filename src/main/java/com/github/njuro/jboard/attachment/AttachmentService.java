@@ -42,8 +42,10 @@ public class AttachmentService {
       ImageUtils.setDimensions(attachment);
 
       if (storageMode == UserContentStorageMode.AWS) {
-        awsFileService.uploadFile(
-            attachment.getPath(), attachment.getFilename(), attachment.getFile());
+        String url =
+            awsFileService.uploadFile(
+                attachment.getPath(), attachment.getFilename(), attachment.getFile());
+        attachment.setAwsUrl(url);
       }
 
       saveAttachmentThumbnail(attachment);
@@ -63,8 +65,12 @@ public class AttachmentService {
         attachment.getThumbnailFile());
 
     if (storageMode == UserContentStorageMode.AWS) {
-      awsFileService.uploadFile(
-          attachment.getThumbnailPath(), attachment.getFilename(), attachment.getThumbnailFile());
+      String url =
+          awsFileService.uploadFile(
+              attachment.getThumbnailPath(),
+              attachment.getFilename(),
+              attachment.getThumbnailFile());
+      attachment.setAwsThumbnailUrl(url);
     }
   }
 

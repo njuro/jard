@@ -55,10 +55,10 @@ public class AWSFileService {
     }
   }
 
-  public void uploadFile(String path, String filename, File file) {
+  public String uploadFile(String path, String filename, File file) {
     if (storageMode != UserContentStorageMode.AWS) {
       log.warn("Storage mode is not set to AWS, skipping upload");
-      return;
+      return null;
     }
 
     try {
@@ -66,8 +66,10 @@ public class AWSFileService {
       awsClient.putObject(
           new PutObjectRequest(bucket, key, file)
               .withCannedAcl(CannedAccessControlList.PublicRead));
+      return awsClient.getUrl(bucket, key).toExternalForm();
     } catch (AmazonClientException ex) {
       log.error("Failed to upload file to AWS: " + ex.getMessage());
+      return null;
     }
   }
 
