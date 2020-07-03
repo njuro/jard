@@ -2,7 +2,6 @@ package com.github.njuro.jboard.attachment;
 
 import java.awt.image.RenderedImage;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +43,7 @@ public class AttachmentService {
 
       if (storageMode == UserContentStorageMode.AWS) {
         awsFileService.uploadFile(
-            Paths.get(attachment.getPath(), attachment.getFilename()).toString(),
-            attachment.getFile());
+            attachment.getPath(), attachment.getFilename(), attachment.getFile());
       }
 
       saveAttachmentThumbnail(attachment);
@@ -66,17 +64,14 @@ public class AttachmentService {
 
     if (storageMode == UserContentStorageMode.AWS) {
       awsFileService.uploadFile(
-          Paths.get(attachment.getThumbnailPath(), attachment.getFilename()).toString(),
-          attachment.getThumbnailFile());
+          attachment.getThumbnailPath(), attachment.getFilename(), attachment.getThumbnailFile());
     }
   }
 
   public void deleteAttachmentFile(Attachment attachment) {
     if (storageMode == UserContentStorageMode.AWS) {
-      awsFileService.deleteFile(
-          Paths.get(attachment.getPath(), attachment.getFilename()).toString());
-      awsFileService.deleteFile(
-          Paths.get(attachment.getThumbnailPath(), attachment.getFilename()).toString());
+      awsFileService.deleteFile(attachment.getPath(), attachment.getFilename());
+      awsFileService.deleteFile(attachment.getThumbnailPath(), attachment.getFilename());
     }
 
     if (!attachment.getFile().delete()) {

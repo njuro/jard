@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
+import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,29 +55,31 @@ public class AWSFileService {
     }
   }
 
-  public void uploadFile(String path, File file) {
+  public void uploadFile(String path, String filename, File file) {
     if (storageMode != UserContentStorageMode.AWS) {
       log.warn("Storage mode is not set to AWS, skipping upload");
       return;
     }
 
     try {
+      String key = Paths.get(path, filename).toString();
       awsClient.putObject(
-          new PutObjectRequest(bucket, path, file)
+          new PutObjectRequest(bucket, key, file)
               .withCannedAcl(CannedAccessControlList.PublicRead));
     } catch (AmazonClientException ex) {
       log.error("Failed to upload file to AWS: " + ex.getMessage());
     }
   }
 
-  public void deleteFile(String path) {
+  public void deleteFile(String path, String filename) {
     if (storageMode != UserContentStorageMode.AWS) {
       log.warn("Storage mode is not set to AWS, skipping deletion");
       return;
     }
 
     try {
-      awsClient.deleteObject(bucket, path);
+      String key = Paths.get(path, filename).toString();
+      awsClient.deleteObject(bucket, key);
     } catch (AmazonClientException ex) {
       log.error("Failed to delete file from AWS: " + ex.getMessage());
     }
