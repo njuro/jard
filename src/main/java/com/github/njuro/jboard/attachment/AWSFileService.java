@@ -7,6 +7,8 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +61,9 @@ public class AWSFileService {
     }
 
     try {
-      awsClient.putObject(bucket, path, file);
+      awsClient.putObject(
+          new PutObjectRequest(bucket, path, file)
+              .withCannedAcl(CannedAccessControlList.PublicRead));
     } catch (AmazonClientException ex) {
       log.error("Failed to upload file to AWS: " + ex.getMessage());
     }
