@@ -24,6 +24,8 @@ public class Constants {
   public static final Path USER_CONTENT_THUMBS_PATH = USER_CONTENT_PATH.resolve("thumbs");
 
   /** Images */
+  public static final String DEFAULT_THUMBNAIL_EXTENSION = "png"; // for non-image attachments
+
   public static final double IMAGE_MAX_THUMB_WIDTH = 250;
 
   public static final double IMAGE_MAX_THUMB_HEIGHT = 250;

@@ -117,8 +117,7 @@ public class AttachmentUtils {
   }
 
   public RenderedImage createThumbnail(Attachment attachment) {
-    if (attachment.getType() != AttachmentType.IMAGE) {
-      // TODO support for video
+    if (!attachment.getType().hasThumbnail()) {
       return null;
     }
 
@@ -182,6 +181,19 @@ public class AttachmentUtils {
    * @throws IllegalArgumentException when reading image data fails
    */
   private BufferedImage getImageFromAttachment(Attachment att) {
+    switch (att.getType()) {
+      case IMAGE:
+        return getImageFromBasicAttachment(att);
+      case VIDEO:
+        return getImageFromVideoAttachment(att);
+      case DOCUMENT:
+        return getImageFromDocumentAttachment(att);
+    }
+
+    return null;
+  }
+
+  private BufferedImage getImageFromBasicAttachment(Attachment att) {
     try {
       return ImageIO.read(att.getFile());
     } catch (ArrayIndexOutOfBoundsException ex) {
@@ -201,5 +213,18 @@ public class AttachmentUtils {
       log.error("Error while reading GIF image: " + ex.getMessage());
       return null;
     }
+  }
+
+  private BufferedImage getImageFromVideoAttachment(Attachment att) {
+    try {
+      return VideoThumbnailMaker.getImageFromVideo(att.getFile().toPath().toString());
+    } catch (Exception ex) {
+      log.error("Error while reading video attachment: " + ex.getMessage());
+      return null;
+    }
+  }
+
+  private BufferedImage getImageFromDocumentAttachment(Attachment att) {
+    return null;
   }
 }

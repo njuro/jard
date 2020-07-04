@@ -1,5 +1,8 @@
 package com.github.njuro.jboard.attachment;
 
+import static com.github.njuro.jboard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION;
+import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
+
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.List;
@@ -48,8 +51,7 @@ public class AttachmentService {
         attachment.setAwsUrl(url);
       }
 
-      if (attachment.getType() == AttachmentType.IMAGE) {
-        // TODO thumbnail video
+      if (attachment.getType().hasThumbnail()) {
         saveAttachmentThumbnail(attachment);
       }
     } catch (IOException ex) {
@@ -61,12 +63,18 @@ public class AttachmentService {
   }
 
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
+    String extension =
+        attachment.getType() == AttachmentType.IMAGE
+            ? FilenameUtils.getExtension(attachment.getFilename())
+            : DEFAULT_THUMBNAIL_EXTENSION;
+    attachment.setThumbnailFilename(
+        FilenameUtils.removeExtension(attachment.getFilename())
+            + EXTENSION_SEPARATOR_STR
+            + extension);
     attachment.getThumbnailFile().getParentFile().mkdirs();
     RenderedImage thumbnail = AttachmentUtils.createThumbnail(attachment);
-    ImageIO.write(
-        thumbnail,
-        FilenameUtils.getExtension(attachment.getFilename()),
-        attachment.getThumbnailFile());
+
+    ImageIO.write(thumbnail, extension, attachment.getThumbnailFile());
 
     if (storageMode == UserContentStorageMode.AWS) {
       String url =

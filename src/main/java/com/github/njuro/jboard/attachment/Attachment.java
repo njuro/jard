@@ -51,6 +51,10 @@ public class Attachment {
   @EqualsAndHashCode.Include
   private String filename;
 
+  @Column(unique = true)
+  @EqualsAndHashCode.Include
+  private String thumbnailFilename;
+
   private String awsUrl;
 
   private String awsThumbnailUrl;
@@ -64,7 +68,9 @@ public class Attachment {
   }
 
   public File getThumbnailFile() {
-    return Constants.USER_CONTENT_THUMBS_PATH.resolve(Paths.get(folder, filename)).toFile();
+    return Constants.USER_CONTENT_THUMBS_PATH
+        .resolve(Paths.get(folder, thumbnailFilename))
+        .toFile();
   }
 
   public String getThumbnailFolder() {
