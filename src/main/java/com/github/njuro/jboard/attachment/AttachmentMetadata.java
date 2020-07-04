@@ -46,4 +46,6 @@ public class AttachmentMetadata implements Serializable {
   @Basic private String fileSize;
 
   @Basic private String duration;
+
+  @Basic private String hash;
 }

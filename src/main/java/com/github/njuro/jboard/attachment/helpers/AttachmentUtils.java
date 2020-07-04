@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
@@ -29,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.springframework.util.DigestUtils;
 
 @UtilityClass
 @Slf4j
@@ -49,7 +51,7 @@ public class AttachmentUtils {
         break;
     }
 
-    setFileSize(attachment);
+    setFileMetadata(attachment);
   }
 
   private void setAttachmentType(Attachment attachment) {
@@ -109,7 +111,15 @@ public class AttachmentUtils {
         MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(MILLISECONDS.toMinutes(ms)));
   }
 
-  private void setFileSize(Attachment attachment) {
+  private void setFileMetadata(Attachment attachment) {
+    try {
+      attachment
+          .getMetadata()
+          .setHash(DigestUtils.md5DigestAsHex(Files.readAllBytes(attachment.getFile().toPath())));
+    } catch (IOException ex) {
+      log.error("Failed to calculate file hash: " + ex.getMessage());
+    }
+
     attachment
         .getMetadata()
         .setFileSize(FileUtils.byteCountToDisplaySize(attachment.getFile().length()));
