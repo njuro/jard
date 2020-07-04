@@ -43,7 +43,7 @@ public class BoardForm {
     return Board.builder()
         .label(label)
         .name(name)
-        .attachmentType(attachmentType)
+        .attachmentTypes(attachmentTypes)
         .nsfw(nsfw)
         .threadLimit(threadLimit)
         .bumpLimit(bumpLimit)

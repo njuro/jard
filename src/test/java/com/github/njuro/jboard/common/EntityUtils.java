@@ -9,8 +9,8 @@ import static com.github.njuro.jboard.common.Constants.MAX_SUBJECT_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
 import static com.github.njuro.jboard.common.Constants.MAX_TRIPCODE_PASSWORD_LENGTH;
 
+import com.github.njuro.jboard.attachment.AttachmentType;
 import com.github.njuro.jboard.board.Board;
-import com.github.njuro.jboard.board.BoardAttachmentType;
 import com.github.njuro.jboard.board.BoardForm;
 import com.github.njuro.jboard.post.Post;
 import com.github.njuro.jboard.post.PostForm;
@@ -32,7 +32,7 @@ public class EntityUtils {
     return BoardForm.builder()
         .label(randomString(MAX_BOARD_LABEL_LENGTH))
         .name(randomString(MAX_BOARD_NAME_LENGTH))
-        .attachmentType(randomEnum(BoardAttachmentType.values()))
+        .attachmentTypes(Collections.singleton(randomEnum(AttachmentType.values())))
         .nsfw(randomBoolean())
         .bumpLimit(randomPositiveInt(MAX_BUMP_LIMIT))
         .threadLimit(randomPositiveInt(MAX_THREAD_LIMIT))

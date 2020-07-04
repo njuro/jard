@@ -43,7 +43,6 @@ public class BoardControllerTest extends ControllerTest {
         BoardForm.builder()
             .label("r")
             .name("Random")
-            .attachmentType(BoardAttachmentType.IMAGE)
             .nsfw(true)
             .bumpLimit(350)
             .threadLimit(100)
@@ -70,9 +69,6 @@ public class BoardControllerTest extends ControllerTest {
     expectValidationErrors("name");
     boardForm.setName(RandomStringUtils.random(MAX_BOARD_NAME_LENGTH + 1));
     expectValidationErrors("name");
-
-    boardForm.setAttachmentType(null);
-    expectValidationErrors("attachmentType");
 
     boardForm.setThreadLimit(0);
     expectValidationErrors("threadLimit");

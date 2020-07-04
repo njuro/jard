@@ -44,8 +44,8 @@ public class BoardRestController {
 
   @GetMapping("/attachment-types")
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
-  public Set<BoardAttachmentTypeDto> getBoardTypes() {
-    return boardFacade.getBoardTypes();
+  public Set<AttachmentType.Preview> getBoardAttachmentTypes() {
+    return boardFacade.getAttachmentTypes();
   }
 
   @GetMapping

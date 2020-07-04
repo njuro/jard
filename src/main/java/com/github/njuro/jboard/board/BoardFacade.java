@@ -56,15 +56,15 @@ public class BoardFacade {
     return board;
   }
 
-  public Set<BoardAttachmentTypeDto> getBoardTypes() {
-    return Arrays.stream(BoardAttachmentType.values())
-        .map(BoardAttachmentTypeDto::fromBoardAttachmentType)
+  public Set<AttachmentType.Preview> getAttachmentTypes() {
+    return Arrays.stream(AttachmentType.values())
+        .map(AttachmentType::getPreview)
         .collect(Collectors.toSet());
   }
 
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
     oldBoard.setName(updatedBoard.getName());
-    oldBoard.setAttachmentType(updatedBoard.getAttachmentType());
+    oldBoard.setAttachmentTypes(updatedBoard.getAttachmentTypes());
     oldBoard.setNsfw(updatedBoard.isNsfw());
     oldBoard.setThreadLimit(updatedBoard.getThreadLimit());
     oldBoard.setBumpLimit(updatedBoard.getBumpLimit());

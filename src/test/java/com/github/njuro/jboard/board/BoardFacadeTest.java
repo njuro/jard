@@ -34,7 +34,6 @@ public class BoardFacadeTest {
         BoardForm.builder()
             .label("r")
             .name("Random")
-            .attachmentType(BoardAttachmentType.IMAGE)
             .nsfw(true)
             .bumpLimit(350)
             .threadLimit(100)

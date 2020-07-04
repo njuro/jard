@@ -3,7 +3,6 @@ package com.github.njuro.jboard.database;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jboard.board.Board;
-import com.github.njuro.jboard.board.BoardAttachmentType;
 import com.github.njuro.jboard.board.BoardFacade;
 import com.github.njuro.jboard.board.BoardForm;
 import com.github.njuro.jboard.board.BoardNotFoundException;
@@ -91,13 +90,7 @@ public class DatabasePopulator {
       return boardFacade.resolveBoard("fit");
     } catch (BoardNotFoundException ex) {
       return boardFacade.createBoard(
-          BoardForm.builder()
-              .label("fit")
-              .name("Fitness")
-              .threadLimit(200)
-              .bumpLimit(300)
-              .attachmentType(BoardAttachmentType.IMAGE)
-              .build());
+          BoardForm.builder().label("fit").name("Fitness").threadLimit(200).bumpLimit(300).build());
     }
   }
 
