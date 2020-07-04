@@ -62,6 +62,13 @@ public class BoardFacade {
         .collect(Collectors.toSet());
   }
 
+  public boolean isMimeTypeSupported(Board board, String mimeType) {
+    return board.getAttachmentTypes().stream()
+        .map(AttachmentType::getPreview)
+        .flatMap(preview -> preview.getMimeTypes().stream())
+        .anyMatch(mime -> mime.equalsIgnoreCase(mimeType));
+  }
+
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
     oldBoard.setName(updatedBoard.getName());
     oldBoard.setAttachmentTypes(updatedBoard.getAttachmentTypes());

@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
@@ -54,14 +53,7 @@ public class AttachmentUtils {
   }
 
   private void setAttachmentType(Attachment attachment) {
-    String mimeType = null;
-    try {
-      mimeType = Files.probeContentType(attachment.getFile().toPath());
-    } catch (IOException ex) {
-      log.error("Failed to find out file type: " + ex.getMessage());
-    }
-
-    attachment.getMetadata().setMimeType(mimeType);
+    String mimeType = attachment.getMetadata().getMimeType();
     attachment.setType(AttachmentType.determineAttachmentType(mimeType));
 
     if (attachment.getType() == null) {

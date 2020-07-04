@@ -20,33 +20,34 @@ public enum AttachmentType {
       true,
       MediaType.IMAGE_PNG,
       MediaType.IMAGE_GIF,
-      new MediaType("image", "jpeg", alias("jpg")),
+      new MediaType("image", "jpeg", extension("jpg")),
       new MediaType("image", "bmp"),
       new MediaType("image", "webp"),
-      new MediaType("image", "svg+xml", alias("svg"))),
+      new MediaType("image", "svg+xml", extension("svg"))),
   VIDEO(
       true,
       new MediaType("video", "webm"),
       new MediaType("video", "mp4"),
       new MediaType("application", "mp4"),
-      new MediaType("video", "x-matroska", alias("mkv")),
-      new MediaType("video", "x-msvideo", alias("avi"))),
+      new MediaType("video", "quicktime", extension("mp4")),
+      new MediaType("video", "x-matroska", extension("mkv")),
+      new MediaType("video", "x-msvideo", extension("avi"))),
   AUDIO(
       false,
-      new MediaType("audio", "mpeg", alias("mp3")), // .mp3
+      new MediaType("audio", "mpeg", extension("mp3")), // .mp3
       new MediaType("audio", "wav"),
       new MediaType("audio", "ogg")),
   PDF(true, MediaType.APPLICATION_PDF),
   TEXT(
       false,
-      new MediaType("text", "plain", alias("txt")),
-      new MediaType("application", "msword", alias("doc")),
+      new MediaType("text", "plain", extension("txt")),
+      new MediaType("application", "msword", extension("doc")),
       new MediaType(
           "application",
           "vnd.openxmlformats-officedocument.wordprocessingml.document",
-          alias("docx")));
+          extension("docx")));
 
-  private static final String ALIAS_PARAM = "alias";
+  private static final String EXTENSION_PARAM = "extension";
 
   private final boolean thubmnail;
   @Getter private final Set<MediaType> mediaTypes = new HashSet<>();
@@ -74,14 +75,14 @@ public enum AttachmentType {
                 .map(
                     mediaType ->
                         "."
-                            + Optional.ofNullable(mediaType.getParameter(ALIAS_PARAM))
+                            + Optional.ofNullable(mediaType.getParameter(EXTENSION_PARAM))
                                 .orElse(mediaType.getSubtype()))
                 .collect(Collectors.toSet()))
         .build();
   }
 
-  private static Map<String, String> alias(String alias) {
-    return Collections.singletonMap(ALIAS_PARAM, alias);
+  private static Map<String, String> extension(String extension) {
+    return Collections.singletonMap(EXTENSION_PARAM, extension);
   }
 
   public static AttachmentType determineAttachmentType(String mimeType) {
