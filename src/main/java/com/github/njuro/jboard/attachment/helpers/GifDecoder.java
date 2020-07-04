@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.attachment;
+package com.github.njuro.jboard.attachment.helpers;
 
 import static java.lang.System.arraycopy;
 

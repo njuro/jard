@@ -3,6 +3,7 @@ package com.github.njuro.jboard.attachment;
 import static com.github.njuro.jboard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION;
 import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
 
+import com.github.njuro.jboard.attachment.helpers.AttachmentUtils;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.List;

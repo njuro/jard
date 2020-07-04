@@ -1,4 +1,4 @@
-package com.github.njuro.jboard.attachment;
+package com.github.njuro.jboard.attachment.helpers;
 
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.MediaListenerAdapter;

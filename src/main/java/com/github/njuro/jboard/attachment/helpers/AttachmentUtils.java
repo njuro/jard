@@ -1,18 +1,17 @@
-package com.github.njuro.jboard.attachment;
+package com.github.njuro.jboard.attachment.helpers;
 
 import static com.github.njuro.jboard.common.Constants.IMAGE_MAX_THUMB_HEIGHT;
 import static com.github.njuro.jboard.common.Constants.IMAGE_MAX_THUMB_WIDTH;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-import com.github.njuro.jboard.attachment.GifDecoder.GifImage;
+import com.github.njuro.jboard.attachment.Attachment;
+import com.github.njuro.jboard.attachment.AttachmentMetadata;
+import com.github.njuro.jboard.attachment.AttachmentType;
+import com.github.njuro.jboard.attachment.helpers.GifDecoder.GifImage;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IContainer.Type;
 import com.xuggle.xuggler.IStreamCoder;
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.FileInputStream;
@@ -22,6 +21,11 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.resizers.configurations.AlphaInterpolation;
+import net.coobird.thumbnailator.resizers.configurations.Antialiasing;
+import net.coobird.thumbnailator.resizers.configurations.Dithering;
+import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
@@ -128,25 +132,20 @@ public class AttachmentUtils {
 
     AttachmentMetadata metadata = attachment.getMetadata();
     BufferedImage image = getImageFromAttachment(attachment);
-    Image originalImage =
-        image.getScaledInstance(
-            metadata.getThumbnailWidth(), metadata.getThumbnailHeight(), Image.SCALE_SMOOTH);
 
-    int type = ((image.getType() == 0) ? BufferedImage.TYPE_INT_ARGB : image.getType());
-    BufferedImage resizedImage =
-        new BufferedImage(metadata.getThumbnailWidth(), metadata.getThumbnailHeight(), type);
-
-    Graphics2D g2d = resizedImage.createGraphics();
-    g2d.drawImage(
-        originalImage, 0, 0, metadata.getThumbnailWidth(), metadata.getThumbnailHeight(), null);
-    g2d.dispose();
-    g2d.setComposite(AlphaComposite.Src);
-    g2d.setRenderingHint(
-        RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-    g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-    return resizedImage;
+    try {
+      return Thumbnails.of(image)
+          .size(metadata.getThumbnailWidth(), metadata.getThumbnailHeight())
+          .outputQuality(1.0)
+          .alphaInterpolation(AlphaInterpolation.QUALITY)
+          .scalingMode(ScalingMode.BILINEAR)
+          .antialiasing(Antialiasing.ON)
+          .dithering(Dithering.ENABLE)
+          .asBufferedImage();
+    } catch (IOException ex) {
+      log.error("Error creating thumbnail: " + ex.getMessage());
+      return null;
+    }
   }
 
   /**

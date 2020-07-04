@@ -62,6 +62,11 @@
       <version>1.11.814</version>
     </dependency>
     <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>0.4.11</version>
+    </dependency>
+    <dependency>
       <groupId>xuggle</groupId>
       <artifactId>xuggle-xuggler</artifactId>
       <version>5.4</version>
