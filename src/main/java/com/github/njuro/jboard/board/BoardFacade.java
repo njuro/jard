@@ -1,5 +1,6 @@
 package com.github.njuro.jboard.board;
 
+import com.github.njuro.jboard.attachment.AttachmentType;
 import com.github.njuro.jboard.post.PostService;
 import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadService;

@@ -4,7 +4,11 @@ import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.njuro.jboard.attachment.AttachmentType;
+import com.github.njuro.jboard.attachment.AttachmentType.AttachmentTypeSerializer;
 import com.github.njuro.jboard.thread.Thread;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Basic;

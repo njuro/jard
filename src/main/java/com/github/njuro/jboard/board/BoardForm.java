@@ -5,9 +5,11 @@ import static com.github.njuro.jboard.common.Constants.MAX_BOARD_NAME_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BUMP_LIMIT;
 import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
 
+import com.github.njuro.jboard.attachment.AttachmentType;
+import java.util.HashSet;
+import java.util.Set;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import lombok.Builder;
@@ -25,8 +27,7 @@ public class BoardForm {
   @Size(max = MAX_BOARD_NAME_LENGTH, message = "{validation.board.name.length}")
   private String name;
 
-  @NotNull(message = "{validation.board.type.null}")
-  private BoardAttachmentType attachmentType;
+  @Builder.Default private Set<AttachmentType> attachmentTypes = new HashSet<>();
 
   private boolean nsfw;
 

@@ -87,10 +87,10 @@ public class BoardControllerTest extends ControllerTest {
 
   @Test
   public void testBoardTypes() throws Exception {
-    when(boardFacade.getBoardTypes()).thenCallRealMethod();
+    when(boardFacade.getAttachmentTypes()).thenCallRealMethod();
     performMockRequest(HttpMethod.GET, API_ROOT + "/types")
         .andExpect(status().isOk())
-        .andExpect(content().json(toJson(boardFacade.getBoardTypes())));
+        .andExpect(content().json(toJson(boardFacade.getAttachmentTypes())));
   }
 
   @Test

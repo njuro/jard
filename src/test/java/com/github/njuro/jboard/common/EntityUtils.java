@@ -17,6 +17,7 @@ import com.github.njuro.jboard.post.PostForm;
 import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadForm;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
