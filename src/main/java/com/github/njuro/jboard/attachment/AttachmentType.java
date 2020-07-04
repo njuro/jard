@@ -34,7 +34,7 @@ public enum AttachmentType {
       new MediaType("video", "x-msvideo", extension("avi"))),
   AUDIO(
       false,
-      new MediaType("audio", "mpeg", extension("mp3")), // .mp3
+      new MediaType("audio", "mpeg", extension("mp3")),
       new MediaType("audio", "wav"),
       new MediaType("audio", "ogg")),
   PDF(true, MediaType.APPLICATION_PDF),
