@@ -23,6 +23,9 @@ import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 @UtilityClass
 @Slf4j
@@ -153,6 +156,13 @@ public class AttachmentUtils {
    */
   private void setThumbnailDimensions(Attachment attachment) {
     AttachmentMetadata metadata = attachment.getMetadata();
+
+    if (attachment.getType() == AttachmentType.DOCUMENT) {
+      metadata.setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
+      metadata.setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
+      return;
+    }
+
     if (metadata.getWidth() == 0 || metadata.getHeight() == 0) {
       // set real dimensions first
       setMetadata(attachment);
@@ -225,6 +235,15 @@ public class AttachmentUtils {
   }
 
   private BufferedImage getImageFromDocumentAttachment(Attachment att) {
-    return null;
+    try {
+      PDDocument document = PDDocument.load(att.getFile());
+      PDFRenderer pdfRenderer = new PDFRenderer(document);
+      BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+      document.close();
+      return bim;
+    } catch (IOException ex) {
+      log.error("Error while reading PDF attachment: " + ex.getMessage());
+      return null;
+    }
   }
 }
