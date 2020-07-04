@@ -157,7 +157,7 @@ public class AttachmentUtils {
   private void setThumbnailDimensions(Attachment attachment) {
     AttachmentMetadata metadata = attachment.getMetadata();
 
-    if (attachment.getType() == AttachmentType.DOCUMENT) {
+    if (attachment.getType() == AttachmentType.PDF) {
       metadata.setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
       metadata.setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
       return;
@@ -196,8 +196,8 @@ public class AttachmentUtils {
         return getImageFromBasicAttachment(att);
       case VIDEO:
         return getImageFromVideoAttachment(att);
-      case DOCUMENT:
-        return getImageFromDocumentAttachment(att);
+      case PDF:
+        return getImageFromPdfAttachment(att);
     }
 
     return null;
@@ -234,7 +234,7 @@ public class AttachmentUtils {
     }
   }
 
-  private BufferedImage getImageFromDocumentAttachment(Attachment att) {
+  private BufferedImage getImageFromPdfAttachment(Attachment att) {
     try {
       PDDocument document = PDDocument.load(att.getFile());
       PDFRenderer pdfRenderer = new PDFRenderer(document);

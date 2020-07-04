@@ -27,16 +27,13 @@ public enum AttachmentType {
       new MediaType("audio", "mpeg"), // .mp3
       new MediaType("audio", "wav"),
       new MediaType("audio", "ogg")),
-  DOCUMENT(
-      true,
-      MediaType.APPLICATION_PDF,
-      new MediaType("application", "msword"), // .doc
-      new MediaType(
-          "application", "vnd.openxmlformats-officedocument.wordprocessingml.document")), // .docx
+  PDF(true, MediaType.APPLICATION_PDF),
   TEXT(
       false,
       MediaType.TEXT_PLAIN, // .txt
-      MediaType.TEXT_XML);
+      new MediaType("application", "msword"), // .doc
+      new MediaType(
+          "application", "vnd.openxmlformats-officedocument.wordprocessingml.document")); // .docx
 
   private final boolean thubmnail;
 
