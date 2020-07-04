@@ -216,9 +216,9 @@ public class AttachmentUtils {
   }
 
   private BufferedImage getImageFromGifAttachment(Attachment att) {
-    try {
+    try (FileInputStream inputFile = new FileInputStream(att.getFile())) {
       // bug in JDK, need to use custom GIF decoder
-      GifImage gif = GifDecoder.read(new FileInputStream(att.getFile()));
+      GifImage gif = GifDecoder.read(inputFile);
       return gif.getFrame(0);
     } catch (IOException ex) {
       log.error("Error while reading GIF image: " + ex.getMessage());

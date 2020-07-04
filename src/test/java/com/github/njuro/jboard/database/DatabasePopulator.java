@@ -11,7 +11,6 @@ import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadFacade;
 import com.github.njuro.jboard.thread.ThreadForm;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -128,6 +126,6 @@ public class DatabasePopulator {
         originalFilename,
         originalFilename,
         Files.probeContentType(imagePath),
-        IOUtils.toByteArray(new FileInputStream(imagePath.toFile())));
+        Files.readAllBytes(imagePath));
   }
 }
