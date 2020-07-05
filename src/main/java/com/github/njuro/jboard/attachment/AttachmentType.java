@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -64,12 +63,12 @@ public enum AttachmentType {
   private static final String EXTENSION_PARAM = "extension";
 
   private final boolean thubmnail;
-  @Getter private final Set<MediaType> mediaTypes = new HashSet<>();
+  @Getter private final Set<MediaType> mediaTypes;
   @Getter private final Preview preview;
 
   AttachmentType(boolean thubmnail, MediaType... mediaTypes) {
     this.thubmnail = thubmnail;
-    this.mediaTypes.addAll(Arrays.asList(mediaTypes));
+    this.mediaTypes = Set.of(mediaTypes);
     preview = generatePreview();
   }
 
