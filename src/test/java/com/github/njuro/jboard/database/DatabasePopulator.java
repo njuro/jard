@@ -2,6 +2,7 @@ package com.github.njuro.jboard.database;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.board.BoardFacade;
 import com.github.njuro.jboard.board.BoardForm;
@@ -16,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +90,13 @@ public class DatabasePopulator {
       return boardFacade.resolveBoard("fit");
     } catch (BoardNotFoundException ex) {
       return boardFacade.createBoard(
-          BoardForm.builder().label("fit").name("Fitness").threadLimit(200).bumpLimit(300).build());
+          BoardForm.builder()
+              .label("fit")
+              .name("Fitness")
+              .attachmentCategories(Set.of(AttachmentCategory.IMAGE, AttachmentCategory.VIDEO))
+              .threadLimit(200)
+              .bumpLimit(300)
+              .build());
     }
   }
 
