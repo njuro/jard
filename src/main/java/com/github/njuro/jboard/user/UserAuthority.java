@@ -1,7 +1,5 @@
 package com.github.njuro.jboard.user;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -20,6 +18,6 @@ public enum UserAuthority implements GrantedAuthority {
   }
 
   public static Set<UserAuthority> getAllAuthorities() {
-    return new HashSet<>(Arrays.asList(values()));
+    return Set.of(values());
   }
 }

@@ -7,8 +7,6 @@ import static com.github.njuro.jboard.user.UserAuthority.TOGGLE_STICKY_THREAD;
 import static com.github.njuro.jboard.user.UserAuthority.VIEW_IP;
 import static com.github.njuro.jboard.user.UserAuthority.getAllAuthorities;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 
@@ -25,6 +23,6 @@ public enum UserRole {
   }
 
   UserRole(UserAuthority... authorities) {
-    defaultAuthorites = new HashSet<>(Arrays.asList(authorities));
+    defaultAuthorites = Set.of(authorities);
   }
 }

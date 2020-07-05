@@ -30,8 +30,8 @@ public class JwtTokenProvider {
 
     User user = (User) authentication.getPrincipal();
 
-    Date now = new Date();
-    Date expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
+    var now = new Date();
+    var expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
 
     return Jwts.builder()
         .setSubject(user.getUsername())
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
   }
 
   private Cookie generateCookie(Authentication authentication, int maxAge) {
-    Cookie cookie = new Cookie(Constants.JWT_COOKIE_NAME, generateToken(authentication));
+    var cookie = new Cookie(Constants.JWT_COOKIE_NAME, generateToken(authentication));
     cookie.setPath("/");
     cookie.setHttpOnly(true);
     cookie.setMaxAge(maxAge);
