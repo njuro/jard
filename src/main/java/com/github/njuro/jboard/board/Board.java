@@ -5,14 +5,15 @@ import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.njuro.jboard.attachment.AttachmentType;
-import com.github.njuro.jboard.attachment.AttachmentType.AttachmentTypeSerializer;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
+import com.github.njuro.jboard.attachment.AttachmentCategory.AttachmentCategorySerializer;
 import com.github.njuro.jboard.thread.Thread;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -59,11 +60,12 @@ public class Board {
 
   @SuppressWarnings("JpaDataSourceORMInspection")
   @ElementCollection(fetch = FetchType.EAGER)
-  @Column(name = "attachment_type")
+  @CollectionTable(name = "board_attachment_categories")
+  @Column(name = "attachment_category")
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
-  @JsonSerialize(contentUsing = AttachmentTypeSerializer.class)
-  private Set<AttachmentType> attachmentTypes = new HashSet<>();
+  @JsonSerialize(contentUsing = AttachmentCategorySerializer.class)
+  private Set<AttachmentCategory> attachmentCategories = new HashSet<>();
 
   private boolean nsfw;
 

@@ -1,6 +1,6 @@
 package com.github.njuro.jboard.board;
 
-import com.github.njuro.jboard.attachment.AttachmentType;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.post.PostService;
 import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadService;
@@ -56,22 +56,22 @@ public class BoardFacade {
     return board;
   }
 
-  public Set<AttachmentType.Preview> getAttachmentTypes() {
-    return Arrays.stream(AttachmentType.values())
-        .map(AttachmentType::getPreview)
+  public Set<AttachmentCategory.Preview> getAttachmentCategories() {
+    return Arrays.stream(AttachmentCategory.values())
+        .map(AttachmentCategory::getPreview)
         .collect(Collectors.toSet());
   }
 
   public boolean isMimeTypeSupported(Board board, String mimeType) {
-    return board.getAttachmentTypes().stream()
-        .map(AttachmentType::getPreview)
+    return board.getAttachmentCategories().stream()
+        .map(AttachmentCategory::getPreview)
         .flatMap(preview -> preview.getMimeTypes().stream())
         .anyMatch(mime -> mime.equalsIgnoreCase(mimeType));
   }
 
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
     oldBoard.setName(updatedBoard.getName());
-    oldBoard.setAttachmentTypes(updatedBoard.getAttachmentTypes());
+    oldBoard.setAttachmentCategories(updatedBoard.getAttachmentCategories());
     oldBoard.setNsfw(updatedBoard.isNsfw());
     oldBoard.setThreadLimit(updatedBoard.getThreadLimit());
     oldBoard.setBumpLimit(updatedBoard.getBumpLimit());

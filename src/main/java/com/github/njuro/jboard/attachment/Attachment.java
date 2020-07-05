@@ -1,7 +1,7 @@
 package com.github.njuro.jboard.attachment;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.njuro.jboard.attachment.AttachmentType.AttachmentTypeSerializer;
+import com.github.njuro.jboard.attachment.AttachmentCategory.AttachmentCategorySerializer;
 import com.github.njuro.jboard.common.Constants;
 import java.io.File;
 import java.nio.file.Paths;
@@ -43,8 +43,8 @@ public class Attachment {
   private UUID id;
 
   @Enumerated(EnumType.STRING)
-  @JsonSerialize(using = AttachmentTypeSerializer.class)
-  private AttachmentType type;
+  @JsonSerialize(using = AttachmentCategorySerializer.class)
+  private AttachmentCategory type;
 
   @Basic @EqualsAndHashCode.Include private String folder;
 

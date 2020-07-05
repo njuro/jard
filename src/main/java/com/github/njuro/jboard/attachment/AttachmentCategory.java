@@ -14,7 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.MediaType;
 
-public enum AttachmentType {
+public enum AttachmentCategory {
   IMAGE(
       true,
       MediaType.IMAGE_PNG,
@@ -66,7 +66,7 @@ public enum AttachmentType {
   @Getter private final Set<MediaType> mediaTypes;
   @Getter private final Preview preview;
 
-  AttachmentType(boolean thubmnail, MediaType... mediaTypes) {
+  AttachmentCategory(boolean thubmnail, MediaType... mediaTypes) {
     this.thubmnail = thubmnail;
     this.mediaTypes = Set.of(mediaTypes);
     preview = generatePreview();
@@ -76,7 +76,7 @@ public enum AttachmentType {
     return thubmnail;
   }
 
-  private AttachmentType.Preview generatePreview() {
+  private AttachmentCategory.Preview generatePreview() {
     return Preview.builder()
         .name(name())
         .hasThumbnail(hasThumbnail())
@@ -99,11 +99,11 @@ public enum AttachmentType {
     return Collections.singletonMap(EXTENSION_PARAM, extension);
   }
 
-  public static AttachmentType determineAttachmentType(String mimeType) {
-    return Arrays.stream(AttachmentType.values())
+  public static AttachmentCategory determineAttachmentCategory(String mimeType) {
+    return Arrays.stream(AttachmentCategory.values())
         .filter(
-            attachmentType ->
-                attachmentType.getMediaTypes().stream()
+            attachmentCategory ->
+                attachmentCategory.getMediaTypes().stream()
                     .map(MediaType::toString)
                     .anyMatch(mediaType -> mediaType.startsWith(mimeType)))
         .findAny()
@@ -120,10 +120,11 @@ public enum AttachmentType {
     private final Set<String> mimeTypes;
   }
 
-  public static class AttachmentTypeSerializer extends JsonSerializer<AttachmentType> {
+  public static class AttachmentCategorySerializer extends JsonSerializer<AttachmentCategory> {
 
     @Override
-    public void serialize(AttachmentType value, JsonGenerator gen, SerializerProvider serializers)
+    public void serialize(
+        AttachmentCategory value, JsonGenerator gen, SerializerProvider serializers)
         throws IOException {
       gen.writeObject(value.preview);
     }

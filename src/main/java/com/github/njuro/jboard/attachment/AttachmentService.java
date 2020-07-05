@@ -65,7 +65,7 @@ public class AttachmentService {
 
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
     String extension =
-        attachment.getType() == AttachmentType.IMAGE
+        attachment.getType() == AttachmentCategory.IMAGE
             ? FilenameUtils.getExtension(attachment.getFilename())
             : DEFAULT_THUMBNAIL_EXTENSION;
     attachment.setThumbnailFilename(

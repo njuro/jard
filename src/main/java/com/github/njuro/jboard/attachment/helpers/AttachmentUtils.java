@@ -5,8 +5,8 @@ import static com.github.njuro.jboard.common.Constants.IMAGE_MAX_THUMB_WIDTH;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.github.njuro.jboard.attachment.Attachment;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.attachment.AttachmentMetadata;
-import com.github.njuro.jboard.attachment.AttachmentType;
 import com.github.njuro.jboard.attachment.helpers.GifDecoder.GifImage;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
@@ -37,7 +37,7 @@ import org.springframework.util.DigestUtils;
 public class AttachmentUtils {
 
   public void setMetadata(Attachment attachment) {
-    setAttachmentType(attachment);
+    setAttachmentCategory(attachment);
 
     switch (attachment.getType()) {
       case IMAGE:
@@ -54,9 +54,9 @@ public class AttachmentUtils {
     setFileMetadata(attachment);
   }
 
-  private void setAttachmentType(Attachment attachment) {
+  private void setAttachmentCategory(Attachment attachment) {
     String mimeType = attachment.getMetadata().getMimeType();
-    attachment.setType(AttachmentType.determineAttachmentType(mimeType));
+    attachment.setType(AttachmentCategory.determineAttachmentCategory(mimeType));
 
     if (attachment.getType() == null) {
       throw new IllegalArgumentException("Unknown type of attachment");
@@ -158,7 +158,7 @@ public class AttachmentUtils {
   private void setThumbnailDimensions(Attachment attachment) {
     AttachmentMetadata metadata = attachment.getMetadata();
 
-    if (attachment.getType() == AttachmentType.PDF) {
+    if (attachment.getType() == AttachmentCategory.PDF) {
       metadata.setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
       metadata.setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
       return;

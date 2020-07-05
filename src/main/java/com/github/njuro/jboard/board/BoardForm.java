@@ -5,7 +5,7 @@ import static com.github.njuro.jboard.common.Constants.MAX_BOARD_NAME_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BUMP_LIMIT;
 import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
 
-import com.github.njuro.jboard.attachment.AttachmentType;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.constraints.Max;
@@ -27,7 +27,7 @@ public class BoardForm {
   @Size(max = MAX_BOARD_NAME_LENGTH, message = "{validation.board.name.length}")
   private String name;
 
-  @Builder.Default private Set<AttachmentType> attachmentTypes = new HashSet<>();
+  @Builder.Default private Set<AttachmentCategory> attachmentCategories = new HashSet<>();
 
   private boolean nsfw;
 
@@ -43,7 +43,7 @@ public class BoardForm {
     return Board.builder()
         .label(label)
         .name(name)
-        .attachmentTypes(attachmentTypes)
+        .attachmentCategories(attachmentCategories)
         .nsfw(nsfw)
         .threadLimit(threadLimit)
         .bumpLimit(bumpLimit)

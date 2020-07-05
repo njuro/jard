@@ -2,7 +2,7 @@ package com.github.njuro.jboard.board;
 
 import static com.github.njuro.jboard.common.Constants.MAX_THREADS_PER_PAGE;
 
-import com.github.njuro.jboard.attachment.AttachmentType;
+import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.common.Mappings;
 import com.github.njuro.jboard.config.security.methods.HasAuthorities;
 import com.github.njuro.jboard.thread.Thread;
@@ -42,10 +42,10 @@ public class BoardRestController {
     return boardFacade.createBoard(boardForm);
   }
 
-  @GetMapping("/attachment-types")
+  @GetMapping("/attachment-categories")
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
-  public Set<AttachmentType.Preview> getBoardAttachmentTypes() {
-    return boardFacade.getAttachmentTypes();
+  public Set<AttachmentCategory.Preview> getBoardAttachmentCategories() {
+    return boardFacade.getAttachmentCategories();
   }
 
   @GetMapping
