@@ -1,5 +1,7 @@
 package com.github.njuro.jboard.attachment;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.github.njuro.jboard.attachment.AttachmentType.AttachmentTypeSerializer;
 import com.github.njuro.jboard.common.Constants;
 import java.io.File;
 import java.nio.file.Paths;
@@ -41,6 +43,7 @@ public class Attachment {
   private UUID id;
 
   @Enumerated(EnumType.STRING)
+  @JsonSerialize(using = AttachmentTypeSerializer.class)
   private AttachmentType type;
 
   @Basic @EqualsAndHashCode.Include private String folder;
@@ -68,12 +71,20 @@ public class Attachment {
   }
 
   public File getThumbnailFile() {
+    if (thumbnailFilename == null) {
+      return null;
+    }
+
     return Constants.USER_CONTENT_THUMBS_PATH
         .resolve(Paths.get(folder, thumbnailFilename))
         .toFile();
   }
 
   public String getThumbnailFolder() {
+    if (thumbnailFilename == null) {
+      return null;
+    }
+
     return Paths.get(folder, "thumbs").toString();
   }
 }

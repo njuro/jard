@@ -22,7 +22,6 @@ public enum AttachmentType {
       MediaType.IMAGE_GIF,
       new MediaType("image", "jpeg", extension("jpg")),
       new MediaType("image", "bmp"),
-      new MediaType("image", "webp"),
       new MediaType("image", "svg+xml", extension("svg"))),
   VIDEO(
       true,
@@ -66,6 +65,7 @@ public enum AttachmentType {
   private AttachmentType.Preview generatePreview() {
     return Preview.builder()
         .name(name())
+        .hasThumbnail(hasThumbnail())
         .mimeTypes(
             getMediaTypes().stream()
                 .map(mediaType -> mediaType.toString().split(";")[0])
@@ -101,6 +101,7 @@ public enum AttachmentType {
   public static class Preview {
 
     private final String name;
+    private final boolean hasThumbnail;
     private final Set<String> extensions;
     private final Set<String> mimeTypes;
   }
