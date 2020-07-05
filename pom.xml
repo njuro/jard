@@ -6,26 +6,24 @@
 
   <groupId>com.github.njuro</groupId>
   <artifactId>jboard</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.9.0</version>
   <packaging>jar</packaging>
 
   <name>JBoard</name>
-  <description>A Spring-based anonymous imageboard</description>
+  <description>REST API server for anonymous imageboard</description>
+  <developers>
+    <developer>
+      <id>njuro</id>
+      <url>github.com/njuro</url>
+    </developer>
+  </developers>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.3.1.RELEASE</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
-    <junit-jupiter.version>5.6.2</junit-jupiter.version>
-    <junit-platform.version>1.6.2</junit-platform.version>
-  </properties>
 
   <repositories>
     <repository>
@@ -34,7 +32,29 @@
     </repository>
   </repositories>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>11</java.version>
+    <jjwt.version>0.9.1</jjwt.version>
+    <postgresql.version>42.2.14</postgresql.version>
+    <aws-sdk-s3.version>1.11.814</aws-sdk-s3.version>
+    <tika.version>1.24.1</tika.version>
+    <thumbnailator.version>0.4.11</thumbnailator.version>
+    <xuggler.version>5.4</xuggler.version>
+    <pdfbox.version>2.0.20</pdfbox.version>
+    <commons-io.version>2.7</commons-io.version>
+    <jfilter.version>1.0.17</jfilter.version>
+    <commons-lang3.version>3.10</commons-lang3.version>
+    <lombok.version>1.18.12</lombok.version>
+    <junit-jupiter.version>5.6.2</junit-jupiter.version>
+    <junit-platform.version>1.6.2</junit-platform.version>
+    <rider-spring.version>1.14.0</rider-spring.version>
+    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+  </properties>
+
   <dependencies>
+    <!-- CORE -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -43,50 +63,84 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
+
+    <!-- SECURITY -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
+      <artifactId>spring-boot-starter-validation</artifactId> <!-- User input validations -->
     </dependency>
     <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId> <!-- Authentication with JWT cookies -->
+      <version>${jjwt.version}</version>
+    </dependency>
+
+    <!-- STORAGE -->
+    <dependency>
       <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.2.14</version>
+      <artifactId>postgresql</artifactId> <!-- Relational database -->
+      <version>${postgresql.version}</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.11.814</version>
+      <artifactId>aws-java-sdk-s3</artifactId> <!-- Storing files in AWS S3 bucket -->
+      <version>${aws-sdk-s3.version}</version>
+    </dependency>
+
+    <!-- FILE MANIPULATION -->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId> <!-- Retrieving true MIME type of files -->
+      <version>${tika.version}</version>
     </dependency>
     <dependency>
       <groupId>net.coobird</groupId>
-      <artifactId>thumbnailator</artifactId>
-      <version>0.4.11</version>
+      <artifactId>thumbnailator</artifactId> <!-- Image files thumbnails -->
+      <version>${thumbnailator.version}</version>
     </dependency>
     <dependency>
       <groupId>xuggle</groupId>
-      <artifactId>xuggle-xuggler</artifactId>
-      <version>5.4</version>
+      <artifactId>xuggle-xuggler</artifactId> <!-- Audio/Video files metadata and thumbnails -->
+      <version>${xuggler.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
-      <artifactId>pdfbox</artifactId>
-      <version>2.0.20</version>
+      <artifactId>pdfbox</artifactId> <!-- PDF files metadata and thumbnails -->
+      <version>${pdfbox.version}</version>
+    </dependency>
+
+    <!-- UTILITIES -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId> <!-- Manipulating with files and filenames -->
+      <version>${commons-io.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.tika</groupId>
-      <artifactId>tika-core</artifactId>
-      <version>1.24.1</version>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId> <!-- Generating random strings in tests -->
+      <version>${commons-lang3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.rkonovalov</groupId> <!-- Filtering fields from JSON responses -->
+      <artifactId>jfilter</artifactId>
+      <version>${jfilter.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
+      <artifactId>spring-boot-starter-actuator</artifactId> <!-- Overview of running services -->
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId> <!-- Boilerplate code generation -->
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- TESTING -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -102,41 +156,6 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.10</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>0.9.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.rkonovalov</groupId>
-      <artifactId>jfilter</artifactId>
-      <version>1.0.17</version>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -168,9 +187,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId> <!-- In-memory database -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>com.github.database-rider</groupId>
-      <artifactId>rider-spring</artifactId>
-      <version>1.14.0</version>
+      <artifactId>rider-spring</artifactId> <!-- Populating database from files -->
+      <version>${rider-spring.version}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -189,11 +213,10 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.2</version>
+        <artifactId>maven-surefire-plugin</artifactId> <!-- Running test on Maven install -->
+        <version>${maven-surefire-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
-
 
 </project>
