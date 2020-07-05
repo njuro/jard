@@ -52,7 +52,7 @@ public class AttachmentService {
         attachment.setAwsUrl(url);
       }
 
-      if (attachment.getType().hasThumbnail()) {
+      if (attachment.getCategory().hasThumbnail()) {
         saveAttachmentThumbnail(attachment);
       }
     } catch (IOException ex) {
@@ -65,7 +65,7 @@ public class AttachmentService {
 
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
     String extension =
-        attachment.getType() == AttachmentCategory.IMAGE
+        attachment.getCategory() == AttachmentCategory.IMAGE
             ? FilenameUtils.getExtension(attachment.getFilename())
             : DEFAULT_THUMBNAIL_EXTENSION;
     attachment.setThumbnailFilename(

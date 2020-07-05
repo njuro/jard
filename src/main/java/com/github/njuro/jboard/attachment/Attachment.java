@@ -44,7 +44,7 @@ public class Attachment {
 
   @Enumerated(EnumType.STRING)
   @JsonSerialize(using = AttachmentCategorySerializer.class)
-  private AttachmentCategory type;
+  private AttachmentCategory category;
 
   @Basic @EqualsAndHashCode.Include private String folder;
 

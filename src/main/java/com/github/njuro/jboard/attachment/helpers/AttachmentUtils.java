@@ -39,7 +39,7 @@ public class AttachmentUtils {
   public void setMetadata(Attachment attachment) {
     setAttachmentCategory(attachment);
 
-    switch (attachment.getType()) {
+    switch (attachment.getCategory()) {
       case IMAGE:
         setImageMetadata(attachment);
         break;
@@ -56,9 +56,9 @@ public class AttachmentUtils {
 
   private void setAttachmentCategory(Attachment attachment) {
     String mimeType = attachment.getMetadata().getMimeType();
-    attachment.setType(AttachmentCategory.determineAttachmentCategory(mimeType));
+    attachment.setCategory(AttachmentCategory.determineAttachmentCategory(mimeType));
 
-    if (attachment.getType() == null) {
+    if (attachment.getCategory() == null) {
       throw new IllegalArgumentException("Unknown type of attachment");
     }
   }
@@ -126,7 +126,7 @@ public class AttachmentUtils {
   }
 
   public RenderedImage createThumbnail(Attachment attachment) {
-    if (!attachment.getType().hasThumbnail()) {
+    if (!attachment.getCategory().hasThumbnail()) {
       return null;
     }
 
@@ -158,7 +158,7 @@ public class AttachmentUtils {
   private void setThumbnailDimensions(Attachment attachment) {
     AttachmentMetadata metadata = attachment.getMetadata();
 
-    if (attachment.getType() == AttachmentCategory.PDF) {
+    if (attachment.getCategory() == AttachmentCategory.PDF) {
       metadata.setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
       metadata.setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
       return;
@@ -192,7 +192,7 @@ public class AttachmentUtils {
    * @throws IllegalArgumentException when reading image data fails
    */
   private BufferedImage getImageFromAttachment(Attachment att) {
-    switch (att.getType()) {
+    switch (att.getCategory()) {
       case IMAGE:
         return getImageFromBasicAttachment(att);
       case VIDEO:
