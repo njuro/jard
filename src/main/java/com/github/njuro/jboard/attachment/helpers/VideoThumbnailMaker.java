@@ -27,6 +27,7 @@ public class VideoThumbnailMaker {
       }
     }
 
+    demuxer.close();
     throw new IOException("Failed to get image from video file");
   }
 
@@ -50,6 +51,7 @@ public class VideoThumbnailMaker {
       do {
         bytesRead += decoder.decode(picture, packet, offset);
         if (picture.isComplete()) {
+          demuxer.close();
           return converter.toImage(null, picture);
         }
         offset += bytesRead;

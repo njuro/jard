@@ -87,6 +87,7 @@ public class AttachmentUtils {
         }
       }
 
+      demuxer.close();
     } catch (InterruptedException | IOException ex) {
       log.error("Failed to open video file: " + ex.getMessage());
     }
@@ -97,6 +98,7 @@ public class AttachmentUtils {
       Demuxer demuxer = Demuxer.make();
       demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
       attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
+      demuxer.close();
     } catch (InterruptedException | IOException ex) {
       log.error("Failed to open audio file: " + ex.getMessage());
     }
