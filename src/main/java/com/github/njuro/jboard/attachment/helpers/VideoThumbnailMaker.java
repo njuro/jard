@@ -1,67 +1,62 @@
 package com.github.njuro.jboard.attachment.helpers;
 
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.MediaListenerAdapter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.mediatool.event.IVideoPictureEvent;
-import com.xuggle.xuggler.Global;
+import io.humble.video.Decoder;
+import io.humble.video.Demuxer;
+import io.humble.video.MediaDescriptor.Type;
+import io.humble.video.MediaPacket;
+import io.humble.video.MediaPicture;
+import io.humble.video.awt.MediaPictureConverter;
+import io.humble.video.awt.MediaPictureConverterFactory;
 import java.awt.image.BufferedImage;
-import lombok.Getter;
+import java.io.IOException;
 
 public class VideoThumbnailMaker {
 
-  public static final double SECONDS_BETWEEN_FRAMES = 1;
+  private static Demuxer demuxer;
 
-  // The video stream index, used to ensure we display frames from one and
-  // only one video stream from the media container.
-  private static int videoStreamIndex = -1;
+  public static BufferedImage getImageFromVideo(String inputFilename)
+      throws IOException, InterruptedException {
 
-  // Time of last frame write
-  private static long lastPtsWrite = Global.NO_PTS;
+    demuxer = Demuxer.make();
+    demuxer.open(inputFilename, null, false, true, null, null);
 
-  public static final long MICRO_SECONDS_BETWEEN_FRAMES =
-      (long) (Global.DEFAULT_PTS_PER_SECOND * SECONDS_BETWEEN_FRAMES);
-
-  public static BufferedImage getImageFromVideo(String inputFilename) {
-
-    IMediaReader mediaReader = ToolFactory.makeReader(inputFilename);
-
-    mediaReader.setBufferedImageTypeToGenerate(BufferedImage.TYPE_3BYTE_BGR);
-    ImageSnapListener isListener = new ImageSnapListener();
-    mediaReader.addListener(isListener);
-
-    while (isListener.getImage() == null) {
-      mediaReader.readPacket();
+    for (int i = 0; i < demuxer.getNumStreams(); i++) {
+      Decoder decoder = demuxer.getStream(i).getDecoder();
+      if (decoder != null && decoder.getCodecType() == Type.MEDIA_VIDEO) {
+        return getImageFromVideoStream(decoder, i);
+      }
     }
 
-    return isListener.getImage();
+    throw new IOException("Failed to get image from video file");
   }
 
-  @Getter
-  private static class ImageSnapListener extends MediaListenerAdapter {
+  private static BufferedImage getImageFromVideoStream(Decoder decoder, int streamIndex)
+      throws IOException, InterruptedException {
+    decoder.open(null, null);
+    MediaPicture picture =
+        MediaPicture.make(decoder.getWidth(), decoder.getHeight(), decoder.getPixelFormat());
+    MediaPictureConverter converter =
+        MediaPictureConverterFactory.createConverter(
+            MediaPictureConverterFactory.HUMBLE_BGR_24, picture);
 
-    private BufferedImage image;
-
-    @Override
-    public void onVideoPicture(IVideoPictureEvent event) {
-
-      if (event.getStreamIndex() != videoStreamIndex) {
-
-        if (videoStreamIndex == -1) {
-          videoStreamIndex = event.getStreamIndex();
-        } else {
-          return;
+    MediaPacket packet = MediaPacket.make();
+    while (demuxer.read(packet) >= 0) {
+      if (packet.getStreamIndex() != streamIndex) {
+        continue;
+      }
+      int offset = 0;
+      int bytesRead = 0;
+      decoder.decodeVideo(picture, packet, offset);
+      do {
+        bytesRead += decoder.decode(picture, packet, offset);
+        if (picture.isComplete()) {
+          return converter.toImage(null, picture);
         }
-      }
+        offset += bytesRead;
 
-      if (lastPtsWrite == Global.NO_PTS) {
-        lastPtsWrite = event.getTimeStamp() - MICRO_SECONDS_BETWEEN_FRAMES;
-      }
-
-      if (event.getTimeStamp() - lastPtsWrite >= MICRO_SECONDS_BETWEEN_FRAMES) {
-        image = event.getImage();
-        lastPtsWrite += MICRO_SECONDS_BETWEEN_FRAMES;
-      }
+      } while (offset < packet.getSize());
     }
+
+    throw new IOException("Failed to get image from video file");
   }
 }

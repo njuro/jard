@@ -41,7 +41,7 @@
     <aws-sdk-s3.version>1.11.814</aws-sdk-s3.version>
     <tika.version>1.24.1</tika.version>
     <thumbnailator.version>0.4.11</thumbnailator.version>
-    <xuggler.version>5.4</xuggler.version>
+    <humble-video.version>0.3.0</humble-video.version>
     <pdfbox.version>2.0.20</pdfbox.version>
     <commons-io.version>2.7</commons-io.version>
     <jfilter.version>1.0.17</jfilter.version>
@@ -103,9 +103,9 @@
       <version>${thumbnailator.version}</version>
     </dependency>
     <dependency>
-      <groupId>xuggle</groupId>
-      <artifactId>xuggle-xuggler</artifactId> <!-- Audio/Video files metadata and thumbnails -->
-      <version>${xuggler.version}</version>
+      <groupId>io.humble</groupId>
+      <artifactId>humble-video-all</artifactId> <!-- Audio/Video files metadata and thumbnails -->
+      <version>${humble-video.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>

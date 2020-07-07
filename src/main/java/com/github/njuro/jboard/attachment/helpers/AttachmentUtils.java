@@ -8,10 +8,9 @@ import com.github.njuro.jboard.attachment.Attachment;
 import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.attachment.AttachmentMetadata;
 import com.github.njuro.jboard.attachment.helpers.GifDecoder.GifImage;
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IContainer;
-import com.xuggle.xuggler.IContainer.Type;
-import com.xuggle.xuggler.IStreamCoder;
+import io.humble.video.Decoder;
+import io.humble.video.Demuxer;
+import io.humble.video.MediaDescriptor.Type;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.FileInputStream;
@@ -74,32 +73,33 @@ public class AttachmentUtils {
   }
 
   private void setVideoMetadata(Attachment attachment) {
-    IContainer container = IContainer.make();
-    if (container.open(attachment.getFile().toPath().toString(), Type.READ, null) < 0) {
-      log.error("Failed to open video file");
-      return;
-    }
+    try {
+      Demuxer demuxer = Demuxer.make();
+      demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
+      attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
 
-    attachment.getMetadata().setDuration(convertDuration(container.getDuration()));
-
-    for (int i = 0; i < container.getNumStreams(); i++) {
-      IStreamCoder coder = container.getStream(i).getStreamCoder();
-      if (coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
-        attachment.getMetadata().setWidth(coder.getWidth());
-        attachment.getMetadata().setHeight(coder.getHeight());
-        break;
+      for (int i = 0; i < demuxer.getNumStreams(); i++) {
+        Decoder decoder = demuxer.getStream(i).getDecoder();
+        if (decoder.getCodecType() == Type.MEDIA_VIDEO) {
+          attachment.getMetadata().setWidth(decoder.getWidth());
+          attachment.getMetadata().setHeight(decoder.getHeight());
+          break;
+        }
       }
+
+    } catch (InterruptedException | IOException ex) {
+      log.error("Failed to open video file: " + ex.getMessage());
     }
   }
 
   private void setAudioMetadata(Attachment attachment) {
-    IContainer container = IContainer.make();
-    if (container.open(attachment.getFile().toPath().toString(), Type.READ, null) < 0) {
-      log.error("Failed to open audio file");
-      return;
+    try {
+      Demuxer demuxer = Demuxer.make();
+      demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
+      attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
+    } catch (InterruptedException | IOException ex) {
+      log.error("Failed to open audio file: " + ex.getMessage());
     }
-
-    attachment.getMetadata().setDuration(convertDuration(container.getDuration()));
   }
 
   private String convertDuration(long durationInMicroseconds) {
@@ -229,7 +229,7 @@ public class AttachmentUtils {
   private BufferedImage getImageFromVideoAttachment(Attachment att) {
     try {
       return VideoThumbnailMaker.getImageFromVideo(att.getFile().toPath().toString());
-    } catch (Exception ex) {
+    } catch (IOException | InterruptedException ex) {
       log.error("Error while reading video attachment: " + ex.getMessage());
       return null;
     }
