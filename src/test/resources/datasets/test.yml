@@ -65,3 +65,15 @@ posts:
     created_at: "2018-07-22 12:15:33"
     name: "John"
     thread_id: uuid'f3b73f5f-2974-4e3a-9722-12fee40d853d'
+  - id: uuid'3df900fc-73af-4a31-98cc-5bdea7297898'
+    post_number: 5
+    body: "Sixth post"
+    created_at: "2018-07-22 13:11:48"
+    name: "Anonymous"
+    thread_id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
+  - id: uuid'91dfb37a-c2b7-46d3-9dde-371b5d356bbd'
+    post_number: 6
+    body: "Seventh post"
+    created_at: "2018-07-22 14:11:48"
+    name: "Anonymous"
+    thread_id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
