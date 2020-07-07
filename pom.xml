@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.njuro</groupId>
-  <artifactId>jboard</artifactId>
+  <artifactId>jard</artifactId>
   <version>0.9.0</version>
   <packaging>jar</packaging>
 
-  <name>JBoard</name>
+  <name>jard</name>
   <description>REST API server for anonymous imageboard</description>
   <developers>
     <developer>

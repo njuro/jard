@@ -1,12 +1,12 @@
 users:
   - id: uuid'271c17c3-f5b7-46e6-9cb8-ed15256ff250'
-    email: "admin@jboard"
+    email: "admin@jard"
     enabled: true
     password: "password"
     role: "ADMIN"
     username: "admin"
   - id: uuid'caa675e9-a2b5-48ea-9709-5d5737c06f77'
-    email: "moderator@jboard"
+    email: "moderator@jard"
     enabled: true
     password: "password2"
     role: "MODERATOR"
