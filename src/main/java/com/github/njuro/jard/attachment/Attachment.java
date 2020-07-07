@@ -62,7 +62,7 @@ public class Attachment {
 
   private String awsThumbnailUrl;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment")
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment", optional = false)
   @Builder.Default
   private AttachmentMetadata metadata = new AttachmentMetadata();
 

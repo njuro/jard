@@ -55,7 +55,7 @@ public class Board {
 
   @Basic @JsonIgnore private Long postCounter;
 
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "board")
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "board", optional = false)
   @Builder.Default
   private BoardSettings settings = new BoardSettings();
 
