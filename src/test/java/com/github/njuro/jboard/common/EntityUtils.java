@@ -12,6 +12,7 @@ import static com.github.njuro.jboard.common.Constants.MAX_TRIPCODE_PASSWORD_LEN
 import com.github.njuro.jboard.attachment.AttachmentCategory;
 import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.board.BoardForm;
+import com.github.njuro.jboard.board.BoardSettingsForm;
 import com.github.njuro.jboard.post.Post;
 import com.github.njuro.jboard.post.PostForm;
 import com.github.njuro.jboard.thread.Thread;
@@ -32,10 +33,14 @@ public class EntityUtils {
     return BoardForm.builder()
         .label(randomString(MAX_BOARD_LABEL_LENGTH))
         .name(randomString(MAX_BOARD_NAME_LENGTH))
-        .attachmentCategories(Collections.singleton(randomEnum(AttachmentCategory.values())))
-        .nsfw(randomBoolean())
-        .bumpLimit(randomPositiveInt(MAX_BUMP_LIMIT))
-        .threadLimit(randomPositiveInt(MAX_THREAD_LIMIT))
+        .boardSettingsForm(
+            BoardSettingsForm.builder()
+                .attachmentCategories(
+                    Collections.singleton(randomEnum(AttachmentCategory.values())))
+                .nsfw(randomBoolean())
+                .bumpLimit(randomPositiveInt(MAX_BUMP_LIMIT))
+                .threadLimit(randomPositiveInt(MAX_THREAD_LIMIT))
+                .build())
         .build();
   }
 

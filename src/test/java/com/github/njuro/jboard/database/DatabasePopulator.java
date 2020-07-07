@@ -7,6 +7,7 @@ import com.github.njuro.jboard.board.Board;
 import com.github.njuro.jboard.board.BoardFacade;
 import com.github.njuro.jboard.board.BoardForm;
 import com.github.njuro.jboard.board.BoardNotFoundException;
+import com.github.njuro.jboard.board.BoardSettingsForm;
 import com.github.njuro.jboard.post.PostForm;
 import com.github.njuro.jboard.thread.Thread;
 import com.github.njuro.jboard.thread.ThreadFacade;
@@ -93,9 +94,13 @@ public class DatabasePopulator {
           BoardForm.builder()
               .label("fit")
               .name("Fitness")
-              .attachmentCategories(Set.of(AttachmentCategory.IMAGE, AttachmentCategory.VIDEO))
-              .threadLimit(200)
-              .bumpLimit(300)
+              .boardSettingsForm(
+                  BoardSettingsForm.builder()
+                      .attachmentCategories(
+                          Set.of(AttachmentCategory.IMAGE, AttachmentCategory.VIDEO))
+                      .threadLimit(200)
+                      .bumpLimit(300)
+                      .build())
               .build());
     }
   }

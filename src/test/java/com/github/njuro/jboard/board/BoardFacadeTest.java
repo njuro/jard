@@ -34,9 +34,8 @@ public class BoardFacadeTest {
         BoardForm.builder()
             .label("r")
             .name("Random")
-            .nsfw(true)
-            .bumpLimit(350)
-            .threadLimit(100)
+            .boardSettingsForm(
+                BoardSettingsForm.builder().nsfw(true).bumpLimit(350).threadLimit(100).build())
             .build();
   }
 
@@ -47,7 +46,8 @@ public class BoardFacadeTest {
 
     Board saved = boardFacade.createBoard(boardForm);
     assertThat(saved)
-        .isEqualToIgnoringGivenFields(boardForm, "id", "postCounter", "threads", "pageCount");
+        .isEqualToIgnoringGivenFields(
+            boardForm, "id", "settings", "pageCount", "postCounter", "threads");
   }
 
   @Test

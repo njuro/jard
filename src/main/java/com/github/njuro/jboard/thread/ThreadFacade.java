@@ -44,7 +44,7 @@ public class ThreadFacade {
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
 
-    if (threadService.getNumberOfThreadsOnBoard(board) >= board.getThreadLimit()) {
+    if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
       threadService.deleteOldestThread(board);
     }
 
@@ -64,7 +64,8 @@ public class ThreadFacade {
     Post post = postFacade.createPost(postForm, thread);
     post = postService.savePost(post);
 
-    if (postService.getNumberOfPostsInThread(thread) <= thread.getBoard().getBumpLimit()) {
+    if (postService.getNumberOfPostsInThread(thread)
+        <= thread.getBoard().getSettings().getBumpLimit()) {
       threadService.updateLastReplyTimestamp(thread);
     }
 

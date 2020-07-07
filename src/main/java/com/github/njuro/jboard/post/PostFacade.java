@@ -22,6 +22,11 @@ public class PostFacade {
   public Post createPost(@Valid @NotNull PostForm postForm, Thread thread) {
     Post post = postForm.toPost();
 
+    var boardSettings = thread.getBoard().getSettings();
+    if (boardSettings.isForceDefaultPosterName()) {
+      post.setName(boardSettings.getDefaultPosterName());
+    }
+
     if (postForm.getAttachment() != null) {
       post.setAttachment(
           attachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));

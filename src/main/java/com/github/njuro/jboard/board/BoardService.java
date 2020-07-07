@@ -29,6 +29,7 @@ public class BoardService {
 
   public Board saveBoard(Board board) {
     board.setPostCounter(1L);
+    board.getSettings().setBoard(board);
     return boardRepository.save(board);
   }
 
@@ -55,6 +56,7 @@ public class BoardService {
   }
 
   public Board updateBoard(Board board) {
+    board.getSettings().setBoardId(board.getId());
     return boardRepository.save(board);
   }
 

@@ -63,7 +63,7 @@ public class BoardFacade {
   }
 
   public boolean isMimeTypeSupported(Board board, String mimeType) {
-    return board.getAttachmentCategories().stream()
+    return board.getSettings().getAttachmentCategories().stream()
         .map(AttachmentCategory::getPreview)
         .flatMap(preview -> preview.getMimeTypes().stream())
         .anyMatch(mime -> mime.equalsIgnoreCase(mimeType));
@@ -71,10 +71,7 @@ public class BoardFacade {
 
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
     oldBoard.setName(updatedBoard.getName());
-    oldBoard.setAttachmentCategories(updatedBoard.getAttachmentCategories());
-    oldBoard.setNsfw(updatedBoard.isNsfw());
-    oldBoard.setThreadLimit(updatedBoard.getThreadLimit());
-    oldBoard.setBumpLimit(updatedBoard.getBumpLimit());
+    oldBoard.setSettings(updatedBoard.getBoardSettingsForm().toBoardSettings());
 
     return boardService.updateBoard(oldBoard);
   }

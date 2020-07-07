@@ -2,15 +2,10 @@ package com.github.njuro.jboard.board;
 
 import static com.github.njuro.jboard.common.Constants.MAX_BOARD_LABEL_LENGTH;
 import static com.github.njuro.jboard.common.Constants.MAX_BOARD_NAME_LENGTH;
-import static com.github.njuro.jboard.common.Constants.MAX_BUMP_LIMIT;
-import static com.github.njuro.jboard.common.Constants.MAX_THREAD_LIMIT;
 
-import com.github.njuro.jboard.attachment.AttachmentCategory;
-import java.util.HashSet;
-import java.util.Set;
-import javax.validation.constraints.Max;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
@@ -27,26 +22,13 @@ public class BoardForm {
   @Size(max = MAX_BOARD_NAME_LENGTH, message = "{validation.board.name.length}")
   private String name;
 
-  @Builder.Default private Set<AttachmentCategory> attachmentCategories = new HashSet<>();
-
-  private boolean nsfw;
-
-  @Positive(message = "{validation.board.threadlimit.positive}")
-  @Max(value = MAX_THREAD_LIMIT, message = "{validation.board.threadlimit.max}")
-  private int threadLimit;
-
-  @Positive(message = "{validation.board.bumplimit.positive}")
-  @Max(value = MAX_BUMP_LIMIT, message = "{validation.board.bumplimit.max}")
-  private int bumpLimit;
+  @Valid @NotNull private BoardSettingsForm boardSettingsForm;
 
   public Board toBoard() {
     return Board.builder()
         .label(label)
         .name(name)
-        .attachmentCategories(attachmentCategories)
-        .nsfw(nsfw)
-        .threadLimit(threadLimit)
-        .bumpLimit(bumpLimit)
+        .settings(boardSettingsForm.toBoardSettings())
         .build();
   }
 }
