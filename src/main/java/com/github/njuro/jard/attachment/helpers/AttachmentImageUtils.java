@@ -37,7 +37,7 @@ public class AttachmentImageUtils {
   /**
    * Creates thumbnail for given attachment. Thumbnail dimensions are automatically calculated.
    *
-   * @param attachment to create thumbnail for
+   * @param attachment attachment to create thumbnail for
    * @return created thumbnail
    * @throws NullPointerException if attachment or its category is null
    * @throws IllegalArgumentException if thumbnail creation failed
@@ -73,7 +73,7 @@ public class AttachmentImageUtils {
   /**
    * Calculates thumbnail dimensions for attachment.
    *
-   * @param attachment to calculate thumbnail dimensions for
+   * @param attachment attachment to calculate thumbnail dimensions for
    * @see Constants#IMAGE_MAX_THUMB_HEIGHT
    * @see Constants#IMAGE_MAX_THUMB_WIDTH
    */
@@ -111,7 +111,7 @@ public class AttachmentImageUtils {
    * Retrieves image representation of attachment. What constitutes for image representation is
    * explained in documentation of different getImageFromXAttachment methods.
    *
-   * @param attachment to process
+   * @param attachment attachment to get image from
    * @return image representation of attachment
    * @throws IllegalArgumentException when reading image data fails
    */
@@ -132,7 +132,7 @@ public class AttachmentImageUtils {
   /**
    * Gets image representation of {@link AttachmentCategory#IMAGE} attachments.
    *
-   * @param attachment to process
+   * @param attachment attachment to get image from
    * @return image file
    * @throws IllegalArgumentException if opening image file fails
    */
@@ -155,7 +155,7 @@ public class AttachmentImageUtils {
    * the {@link ImageIO#read(File)} throws {@link ArrayIndexOutOfBoundsException} while reading a
    * {@code gif} file. To solve this, we use custom {@code gif} decoder to read such files.
    *
-   * @param attachment to process
+   * @param attachment attachment to get image from
    * @return image
    * @throws IllegalArgumentException if opening {@code gif} file with custom decoder fails
    * @see GifDecoder
@@ -172,7 +172,7 @@ public class AttachmentImageUtils {
   /**
    * Gets image representation of {@link AttachmentCategory#VIDEO} attachments.
    *
-   * @param attachment to process
+   * @param attachment attachment to get image from
    * @return image created from first complete frame of video
    * @throws IllegalArgumentException if opening video file fails
    * @see VideoThumbnailMaker
@@ -188,7 +188,7 @@ public class AttachmentImageUtils {
   /**
    * Gets image representation of {@link AttachmentCategory#PDF} attachments.
    *
-   * @param attachment to process
+   * @param attachment attachment to get image from
    * @return image created from the first page of PDF document
    * @throws IllegalArgumentException if opening PDF file fails
    * @see VideoThumbnailMaker

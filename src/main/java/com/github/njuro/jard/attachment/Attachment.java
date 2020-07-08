@@ -77,11 +77,11 @@ public class Attachment implements Serializable {
   @EqualsAndHashCode.Include
   private String thumbnailFilename;
 
-  /** (Optional) shareable url to this attachment's file in AWS S3 bucket. */
-  private String awsUrl;
+  /** (Optional) shareable url to this attachment's file in Amazon S3 bucket. */
+  private String amazonS3Url;
 
-  /** (Optional) shareable url to thumbnail for this attachment's file in AWS S3 bucket. */
-  private String awsThumbnailUrl;
+  /** (Optional) shareable url to thumbnail for this attachment's file in Amazon S3 bucket. */
+  private String amazonS3ThumbnailUrl;
 
   /**
    * Metadata for this attachment.

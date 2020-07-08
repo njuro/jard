@@ -17,53 +17,73 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Service methods for manipulating {@link Attachment file attachments}
- *
- * @author njuro
- */
 @Service
 @Transactional
 @Slf4j
 public class AttachmentService {
 
+  /**
+   * Active storage mode.
+   *
+   * @see UserContentStorageMode
+   */
   @Value("${app.user.content.storage:LOCAL}")
   private UserContentStorageMode storageMode;
 
-  private final AWSFileService awsFileService;
+  private final AmazonS3FileService amazonS3FileService;
   private final AttachmentRepository attachmentRepository;
 
   @Autowired
   public AttachmentService(
-      AWSFileService awsFileService, AttachmentRepository attachmentRepository) {
-    this.awsFileService = awsFileService;
+      AmazonS3FileService amazonS3FileService, AttachmentRepository attachmentRepository) {
+    this.amazonS3FileService = amazonS3FileService;
     this.attachmentRepository = attachmentRepository;
   }
 
-  public Attachment saveAttachment(Attachment attachment, MultipartFile source) {
-    try {
-      attachment.getFile().getParentFile().mkdirs();
-      source.transferTo(attachment.getFile());
-      AttachmentMetadataUtils.setMetadata(attachment);
+  /**
+   * Saves {@link Attachment} and its retrieved {@link AttachmentMetadata} to database and stores
+   * its file (specific way of storing the file is determined by active {@link
+   * UserContentStorageMode}).
+   *
+   * <p>Depending on category of the attachment also creates and stores its thumbnail.
+   *
+   * @param attachment attachment to be saved
+   * @param source uploaded file
+   * @return saved {@link Attachment}
+   * @throws IOException if storing to local filesystem fails
+   * @throws IllegalArgumentException if something goes wrong during setting of metadata or
+   *     uploading to remote server
+   */
+  public Attachment saveAttachment(Attachment attachment, MultipartFile source) throws IOException {
+    //noinspection ResultOfMethodCallIgnored
+    attachment.getFile().getParentFile().mkdirs();
+    source.transferTo(attachment.getFile());
+    AttachmentMetadataUtils.setMetadata(attachment);
 
-      if (storageMode == UserContentStorageMode.AWS) {
-        String url =
-            awsFileService.uploadFile(
-                attachment.getFolder(), attachment.getFilename(), attachment.getFile());
-        attachment.setAwsUrl(url);
-      }
+    if (storageMode == UserContentStorageMode.AMAZON_S3) {
+      String url =
+          amazonS3FileService.uploadFile(
+              attachment.getFolder(), attachment.getFilename(), attachment.getFile());
+      attachment.setAmazonS3Url(url);
+    }
 
-      if (attachment.getCategory().hasThumbnail()) {
-        saveAttachmentThumbnail(attachment);
-      }
-    } catch (IOException ex) {
-      log.error("Failed to save attachment: " + ex.getMessage());
+    if (attachment.getCategory().hasThumbnail()) {
+      saveAttachmentThumbnail(attachment);
     }
 
     attachment.getMetadata().setAttachment(attachment);
     return attachmentRepository.save(attachment);
   }
 
+  /**
+   * Creates and stores thumbnail of given attachment (specific way of storing the file is
+   * determined by active {@link UserContentStorageMode}).
+   *
+   * @param attachment attachment to create and store thumbnail for
+   * @throws IOException if storing to local filesystem fails
+   * @throws IllegalArgumentException if something goes wrong during setting of metadata or
+   *     uploading to remote server
+   */
   private void saveAttachmentThumbnail(Attachment attachment) throws IOException {
     String extension =
         attachment.getCategory() == AttachmentCategory.IMAGE
@@ -78,32 +98,48 @@ public class AttachmentService {
 
     ImageIO.write(thumbnail, extension, attachment.getThumbnailFile());
 
-    if (storageMode == UserContentStorageMode.AWS) {
+    if (storageMode == UserContentStorageMode.AMAZON_S3) {
       String url =
-          awsFileService.uploadFile(
+          amazonS3FileService.uploadFile(
               attachment.getThumbnailFolder(),
               attachment.getFilename(),
               attachment.getThumbnailFile());
-      attachment.setAwsThumbnailUrl(url);
+      attachment.setAmazonS3ThumbnailUrl(url);
     }
   }
 
-  public void deleteAttachmentFile(Attachment attachment) {
-    if (storageMode == UserContentStorageMode.AWS) {
-      awsFileService.deleteFile(attachment.getFolder(), attachment.getFilename());
-      awsFileService.deleteFile(attachment.getThumbnailFolder(), attachment.getFilename());
+  /**
+   * Deletes attachment's file.
+   *
+   * @param attachment attachment, which file to delete
+   * @throws IOException if deleting from local filesystem fails
+   * @throws IllegalArgumentException if deleting from remote server fails
+   */
+  public void deleteAttachmentFile(Attachment attachment) throws IOException {
+    if (storageMode == UserContentStorageMode.AMAZON_S3) {
+      amazonS3FileService.deleteFile(attachment.getFolder(), attachment.getFilename());
+      amazonS3FileService.deleteFile(attachment.getThumbnailFolder(), attachment.getFilename());
     }
 
     if (!attachment.getFile().delete()) {
-      log.error("Failed to delete attachment file");
+      throw new IOException("Failed to delete attachment file");
     }
 
     if (!attachment.getThumbnailFile().delete()) {
-      log.error("Failed to delete attachment thumbnail");
+      throw new IOException("Failed to delete attachment thumbnail");
     }
   }
 
-  public void deleteAttachmentFiles(List<Attachment> attachments) {
-    attachments.forEach(this::deleteAttachmentFile);
+  /**
+   * Deletes files of given attachments
+   *
+   * @param attachments list of attachments which files to delete
+   * @throws IOException if deleting from local filesystem fails
+   * @throws IllegalArgumentException if deleting from remote server fails
+   */
+  public void deleteAttachmentFiles(List<Attachment> attachments) throws IOException {
+    for (Attachment attachment : attachments) {
+      deleteAttachmentFile(attachment);
+    }
   }
 }

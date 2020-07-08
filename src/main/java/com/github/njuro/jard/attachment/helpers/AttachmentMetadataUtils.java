@@ -29,7 +29,7 @@ public class AttachmentMetadataUtils {
    * Determines category of {@link Attachment} and sets appropriate metadata for this category. May
    * also create thumbnail for attachment (if this category supports it).
    *
-   * @param attachment to process
+   * @param attachment attachment to set metadata on
    * @throws IllegalArgumentException if attachment has missing/unknown values for properly setting
    *     metadata
    * @throws NullPointerException if attachment is null
@@ -57,7 +57,7 @@ public class AttachmentMetadataUtils {
   /**
    * Determines and sets category of attachment based on its MIME type.
    *
-   * @param attachment to process
+   * @param attachment attachment to set category on
    * @throws IllegalArgumentException if attachment has MIME type which does not belong to any
    *     category
    * @see AttachmentCategory
@@ -75,7 +75,7 @@ public class AttachmentMetadataUtils {
    * Sets metadata for {@link AttachmentCategory#IMAGE} attachments: {@code width } and {@code
    * height}.
    *
-   * @param attachment to process
+   * @param attachment attachment to set image metadata on
    * @throws IllegalArgumentException if opening image file fails
    */
   private void setImageMetadata(Attachment attachment) {
@@ -88,7 +88,7 @@ public class AttachmentMetadataUtils {
    * Sets metadata for {@link AttachmentCategory#VIDEO} attachments: {@code duration}, {@code width}
    * and {@code height}.
    *
-   * @param attachment to process
+   * @param attachment attachment to set video metadata on
    * @throws IllegalArgumentException if opening or closing video file fails
    */
   private void setVideoMetadata(Attachment attachment) {
@@ -115,7 +115,7 @@ public class AttachmentMetadataUtils {
   /**
    * Sets metadata for {@link AttachmentCategory#AUDIO} attachments: {@code duration}.
    *
-   * @param attachment to process
+   * @param attachment attachment to set audio metadata on
    * @throws IllegalArgumentException if opening or closing audio file fails
    */
   private void setAudioMetadata(Attachment attachment) {
@@ -132,7 +132,7 @@ public class AttachmentMetadataUtils {
   /**
    * Converts duration of video/audio file to human readable form:
    *
-   * @param duration in microseconds
+   * @param duration duration in microseconds
    * @return duration in format hh:mm:ss
    */
   private String convertDuration(long duration) {
@@ -147,7 +147,7 @@ public class AttachmentMetadataUtils {
   /**
    * Sets metadata common for all attachment categories: {@code fileSize} and {@code checksum}.
    *
-   * @param attachment to process
+   * @param attachment attachment to set file metadata on
    * @throws IllegalArgumentException if calculation of checksum fails
    */
   private void setFileMetadata(Attachment attachment) {

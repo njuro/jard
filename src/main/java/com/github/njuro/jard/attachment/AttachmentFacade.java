@@ -29,6 +29,15 @@ public class AttachmentFacade {
     mimeTypeDetector = new Tika();
   }
 
+  /**
+   * Creates and stores new attachment.
+   *
+   * @param file uploaded file
+   * @param board {@link Board} to which the file was uploaded
+   * @return created {@link Attachment}
+   * @throws FormValidationException if MIME type of uploaded file is not supported on given board
+   *     or saving of attachment fails
+   */
   public Attachment createAttachment(MultipartFile file, Board board) {
     String mimeType = detectMimeType(file);
     if (!boardFacade.isMimeTypeSupported(board, mimeType)) {
@@ -38,10 +47,27 @@ public class AttachmentFacade {
     return createAttachment(file, mimeType, Paths.get(board.getLabel()));
   }
 
+  /**
+   * Creates and stores new attachment.
+   *
+   * @param file uploaded file
+   * @param folder path to folder where uploaded file should be stored
+   * @return created {@link Attachment}
+   * @throws FormValidationException if saving of attachment fails
+   */
   public Attachment createAttachment(MultipartFile file, Path folder) {
     return createAttachment(file, detectMimeType(file), folder);
   }
 
+  /**
+   * Creates and stores new attachment.
+   *
+   * @param file uploaded file
+   * @param mimeType MIME type of uploaded file
+   * @param folder path to folder where uploaded file should be stored
+   * @return created {@link Attachment}
+   * @throws FormValidationException if saving of attachment fails
+   */
   public Attachment createAttachment(MultipartFile file, String mimeType, Path folder) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
@@ -53,9 +79,20 @@ public class AttachmentFacade {
             .build();
     attachment.getMetadata().setMimeType(mimeType);
 
-    return attachmentService.saveAttachment(attachment, file);
+    try {
+      return attachmentService.saveAttachment(attachment, file);
+    } catch (IOException ex) {
+      log.error("Saving of attachment failed", ex);
+      throw new FormValidationException("Saving of attachment failed");
+    }
   }
 
+  /**
+   * Detects MIME type of given file.
+   *
+   * @param file file to detect MIME type of
+   * @return detected MIME type or {@code null} if none was found
+   */
   private String detectMimeType(MultipartFile file) {
     try {
       return mimeTypeDetector.detect(file.getInputStream());

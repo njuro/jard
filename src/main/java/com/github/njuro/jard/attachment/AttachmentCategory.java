@@ -111,7 +111,7 @@ public enum AttachmentCategory {
   /**
    * Determines category the given MIME type belongs to.
    *
-   * @param mimeType to determine
+   * @param mimeType MIME type to determine
    * @return determined category, or {@code null} if such category was not found
    */
   public static AttachmentCategory determineAttachmentCategory(String mimeType) {

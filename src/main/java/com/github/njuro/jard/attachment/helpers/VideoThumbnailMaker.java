@@ -20,7 +20,7 @@ public class VideoThumbnailMaker {
   /**
    * Gets image from video file.
    *
-   * @param pathToFile - full path to video file
+   * @param pathToFile full path to video file
    * @return image from first complete frame of given video file
    * @throws IOException if opening video file or getting image fails
    */
@@ -44,7 +44,7 @@ public class VideoThumbnailMaker {
   /**
    * Retrieves image from given video stream.
    *
-   * @param decoder for given stream
+   * @param decoder decoder for given stream
    * @param streamIndex index of given stream
    * @return image from first complete frame of given stream
    * @throws IOException if getting image fails
