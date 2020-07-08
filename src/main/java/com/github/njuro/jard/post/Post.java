@@ -75,6 +75,9 @@ public class Post implements Serializable {
   @Column(nullable = false)
   private String ip;
 
+  /** Sage means the post will not bump the thread. Applies only to replies (not original posts). */
+  @Basic private boolean sage;
+
   /** {@link Thread} this post belongs to. */
   @ManyToOne(targetEntity = Thread.class, fetch = FetchType.EAGER)
   @EqualsAndHashCode.Include

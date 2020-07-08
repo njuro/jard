@@ -43,7 +43,9 @@ public class ThreadFacade {
     thread.setBoard(board);
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
     thread.setLastReplyAt(LocalDateTime.now());
+    thread.setLastBumpAt(LocalDateTime.now());
 
+    thread.getOriginalPost().setSage(false); // original post cannot be sage
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
       threadService.deleteStalestThread(board);
     }
@@ -63,10 +65,12 @@ public class ThreadFacade {
 
     Post post = postFacade.createPost(postForm, thread);
     post = postService.savePost(post);
+    threadService.updateLastReplyTimestamp(thread);
 
-    if (postService.getNumberOfPostsInThread(thread)
-        <= thread.getBoard().getSettings().getBumpLimit()) {
-      threadService.updateLastReplyTimestamp(thread);
+    if (!post.isSage()
+        && postService.getNumberOfPostsInThread(thread)
+            <= thread.getBoard().getSettings().getBumpLimit()) {
+      threadService.updateLastBumpTimestamp(thread);
     }
 
     return post;

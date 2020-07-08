@@ -44,7 +44,7 @@ public class ThreadService {
   }
 
   public List<Thread> getThreadsFromBoard(Board board, Pageable pageRequest) {
-    return threadRepository.findByBoardIdOrderByStickiedDescLastReplyAtDesc(
+    return threadRepository.findByBoardIdOrderByStickiedDescLastBumpAtDesc(
         board.getId(), pageRequest);
   }
 
@@ -61,9 +61,14 @@ public class ThreadService {
     return threadRepository.save(thread);
   }
 
+  public Thread updateLastBumpTimestamp(Thread thread) {
+    thread.setLastBumpAt(LocalDateTime.now());
+    return threadRepository.save(thread);
+  }
+
   public void deleteStalestThread(Board board) {
     threadRepository
-        .findTopByBoardIdAndStickiedFalseOrderByLastReplyAtAsc(board.getId())
+        .findTopByBoardIdAndStickiedFalseOrderByLastBumpAtAsc(board.getId())
         .ifPresent(this::deleteThread);
   }
 

@@ -37,6 +37,8 @@ public class PostForm {
   @Pattern(regexp = IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
+  private boolean sage;
+
   /** Source file of uploaded attachment. */
   private MultipartFile attachment;
 
@@ -63,6 +65,7 @@ public class PostForm {
         .tripcode(TripcodeUtils.generateTripcode(password))
         .body(body)
         .ip(ip)
+        .sage(sage)
         .build();
   }
 }

@@ -64,9 +64,13 @@ public class Thread implements Serializable {
   @Column(nullable = false)
   private LocalDateTime createdAt;
 
-  /** Date and time this thread was last bumped. */
+  /** Date and time this thread was last replied to. */
   @Column(nullable = false)
   private LocalDateTime lastReplyAt;
+
+  /** Date and time this thread was last bumped. */
+  @Column(nullable = false)
+  private LocalDateTime lastBumpAt;
 
   /** {@link Board} this board belongs to. */
   @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER, optional = false)
