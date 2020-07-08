@@ -3,7 +3,8 @@ package com.github.njuro.jard.attachment;
 import static com.github.njuro.jard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION;
 import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
 
-import com.github.njuro.jard.attachment.helpers.AttachmentUtils;
+import com.github.njuro.jard.attachment.helpers.AttachmentImageUtils;
+import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.List;
@@ -43,7 +44,7 @@ public class AttachmentService {
     try {
       attachment.getFile().getParentFile().mkdirs();
       source.transferTo(attachment.getFile());
-      AttachmentUtils.setMetadata(attachment);
+      AttachmentMetadataUtils.setMetadata(attachment);
 
       if (storageMode == UserContentStorageMode.AWS) {
         String url =
@@ -73,7 +74,7 @@ public class AttachmentService {
             + EXTENSION_SEPARATOR_STR
             + extension);
     attachment.getThumbnailFile().getParentFile().mkdirs();
-    RenderedImage thumbnail = AttachmentUtils.createThumbnail(attachment);
+    RenderedImage thumbnail = AttachmentImageUtils.createThumbnail(attachment);
 
     ImageIO.write(thumbnail, extension, attachment.getThumbnailFile());
 

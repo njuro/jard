@@ -9,16 +9,26 @@ import io.humble.video.awt.MediaPictureConverter;
 import io.humble.video.awt.MediaPictureConverterFactory;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import lombok.experimental.UtilityClass;
 
+/** Utility class with methods for making images from video files. */
+@UtilityClass
 public class VideoThumbnailMaker {
 
-  private static Demuxer demuxer;
+  private Demuxer demuxer;
 
-  public static BufferedImage getImageFromVideo(String inputFilename)
+  /**
+   * Gets image from video file.
+   *
+   * @param pathToFile - full path to video file
+   * @return image from first complete frame of given video file
+   * @throws IOException if opening video file or getting image fails
+   */
+  public BufferedImage getImageFromVideo(String pathToFile)
       throws IOException, InterruptedException {
 
     demuxer = Demuxer.make();
-    demuxer.open(inputFilename, null, false, true, null, null);
+    demuxer.open(pathToFile, null, false, true, null, null);
 
     for (int i = 0; i < demuxer.getNumStreams(); i++) {
       Decoder decoder = demuxer.getStream(i).getDecoder();
@@ -31,7 +41,15 @@ public class VideoThumbnailMaker {
     throw new IOException("Failed to get image from video file");
   }
 
-  private static BufferedImage getImageFromVideoStream(Decoder decoder, int streamIndex)
+  /**
+   * Retrieves image from given video stream.
+   *
+   * @param decoder for given stream
+   * @param streamIndex index of given stream
+   * @return image from first complete frame of given stream
+   * @throws IOException if getting image fails
+   */
+  private BufferedImage getImageFromVideoStream(Decoder decoder, int streamIndex)
       throws IOException, InterruptedException {
     decoder.open(null, null);
     MediaPicture picture =
