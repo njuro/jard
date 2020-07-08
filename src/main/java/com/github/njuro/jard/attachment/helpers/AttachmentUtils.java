@@ -117,7 +117,8 @@ public class AttachmentUtils {
     try {
       attachment
           .getMetadata()
-          .setHash(DigestUtils.md5DigestAsHex(Files.readAllBytes(attachment.getFile().toPath())));
+          .setChecksum(
+              DigestUtils.md5DigestAsHex(Files.readAllBytes(attachment.getFile().toPath())));
     } catch (IOException ex) {
       log.error("Failed to calculate file hash: " + ex.getMessage());
     }

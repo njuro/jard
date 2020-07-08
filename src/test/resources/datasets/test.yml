@@ -11,27 +11,41 @@ boards:
     label: "sp"
     name: "Sports"
     post_counter: 1
+board_settings:
+  - board_id: uuid'6592b20b-2d09-4af6-bf60-1980c41aec00'
+    force_default_poster_name: false
+    nsfw: false
+  - board_id: uuid'deb57599-25fc-427e-9576-9df15ee05c33'
+    force_default_poster_name: false
+    nsfw: false
+  - board_id: uuid'195502ea-250d-43fb-bd33-9f2569707080'
+    force_default_poster_name: false
+    nsfw: false
 threads:
   - id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
     created_at: "2018-07-22 12:05:34"
+    last_reply_at: "2018-07-22 12:05:34"
     stickied: true
     locked: true
     board_id: uuid'6592b20b-2d09-4af6-bf60-1980c41aec00'
     original_post_id: uuid'71fd63b2-3b2f-4512-a47e-0b4226607ef2'
   - id: uuid'0a9e16ae-c0f0-4c77-afbe-5be9ffc6f694'
     created_at: "2018-07-22 12:11:48"
+    last_reply_at: "2018-07-22 12:11:48"
     stickied: false
     locked: false
     board_id: uuid'6592b20b-2d09-4af6-bf60-1980c41aec00'
     original_post_id: uuid'dfc87a2d-2135-4978-b8e5-8435075e6fe5'
   - id: uuid'f3b73f5f-2974-4e3a-9722-12fee40d853d'
     created_at: "2018-07-22 12:15:33"
+    last_reply_at: "2018-07-22 12:15:33"
     stickied: false
     locked: false
     board_id: uuid'deb57599-25fc-427e-9576-9df15ee05c33'
     original_post_id: uuid'e4af4cf5-eb2e-4c39-801e-4bf86378836a'
 posts:
   - id: uuid'71fd63b2-3b2f-4512-a47e-0b4226607ef2'
+    ip: "127.0.0.1"
     post_number: 1
     body: "First post"
     created_at: "2018-07-22 12:05:34"
@@ -39,36 +53,42 @@ posts:
     tripcode: "!ab0cacbc86"
     thread_id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
   - id: uuid'344c6261-6565-4296-80af-6080abb04550'
+    ip: "127.0.0.1"
     post_number: 2
     body: "Second post"
     created_at: "2018-07-22 12:11:48"
     name: "Anonymous"
     thread_id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
   - id: uuid'dfc87a2d-2135-4978-b8e5-8435075e6fe5'
+    ip: "127.0.0.1"
     post_number: 3
     body: "Third post"
     created_at: "2018-07-22 12:12:04"
     name: "Anonymous"
     thread_id: uuid'0a9e16ae-c0f0-4c77-afbe-5be9ffc6f694'
   - id: uuid'c5c7169f-ffee-479a-98b4-aa56cdc5ddfe'
+    ip: "127.0.0.1"
     post_number: 4
     body: "Fourth post"
     created_at: "2018-07-22 12:13:58"
     name: "Anonymous"
     thread_id: uuid'0a9e16ae-c0f0-4c77-afbe-5be9ffc6f694'
   - id: uuid'e4af4cf5-eb2e-4c39-801e-4bf86378836a'
+    ip: "127.0.0.1"
     post_number: 1
     body: "Fifth post"
     created_at: "2018-07-22 12:15:33"
     name: "John"
     thread_id: uuid'f3b73f5f-2974-4e3a-9722-12fee40d853d'
   - id: uuid'3df900fc-73af-4a31-98cc-5bdea7297898'
+    ip: "127.0.0.1"
     post_number: 5
     body: "Sixth post"
     created_at: "2018-07-22 13:11:48"
     name: "Anonymous"
     thread_id: uuid'adf57470-ab38-4771-b709-f752e36f7c4f'
   - id: uuid'91dfb37a-c2b7-46d3-9dde-371b5d356bbd'
+    ip: "127.0.0.1"
     post_number: 6
     body: "Seventh post"
     created_at: "2018-07-22 14:11:48"

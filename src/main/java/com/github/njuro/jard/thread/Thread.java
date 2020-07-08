@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.post.Post;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,11 +31,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-/**
- * Entity representing a thread submitted to board
- *
- * @author njuro
- */
+/** Entity representing a thread on board. */
 @Entity
 @Table(name = "threads")
 @Data
@@ -41,49 +39,75 @@ import org.hibernate.annotations.FetchMode;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Thread {
+@ToString(onlyExplicitlyIncluded = true)
+public class Thread implements Serializable {
 
+  private static final long serialVersionUID = -7257462911390779498L;
+
+  /** Unique identifier of this thread. */
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(updatable = false)
   @JsonIgnore
   private UUID id;
 
+  /** (Optional) subject of this thread. */
   @Basic private String subject;
 
+  /** Whether this thread is locked (new replies cannot be submitted). */
   @Basic private boolean locked;
 
+  /** Whether this thread is stickied (always on top of the board). */
   @Basic private boolean stickied;
 
+  /** Date and time when this thread was created. */
+  @Column(nullable = false)
   private LocalDateTime createdAt;
 
+  /** Date and time this thread was last bumped. */
+  @Column(nullable = false)
   private LocalDateTime lastReplyAt;
 
+  /** {@link Board} this board belongs to. */
   @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER, optional = false)
   @EqualsAndHashCode.Include
-  @ToString.Exclude
   private Board board;
 
+  /** Original (first) post of this thread. */
   @OneToOne(targetEntity = Post.class, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
   @Fetch(FetchMode.JOIN)
   @JsonIgnoreProperties("thread")
+  @ToString.Include
   private Post originalPost;
 
+  /**
+   * Calculated statistics for this thread.
+   *
+   * @see ThreadStatistics
+   */
   @SuppressWarnings("JpaDataSourceORMInspection")
   @OneToOne(targetEntity = ThreadStatistics.class, fetch = FetchType.EAGER)
   @Fetch(FetchMode.JOIN)
   @JoinColumn(name = "id", referencedColumnName = "thread_id")
   private ThreadStatistics statistics;
 
+  /**
+   * (Sub)collection of replies to this thread. Fetched by different services when needed.
+   *
+   * @see Post
+   */
   @Transient
   @JsonIgnoreProperties("thread")
   private List<Post> replies;
 
+  /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   private void setCreatedAt() {
     createdAt = LocalDateTime.now();
     setLastReplyAt(LocalDateTime.now());
   }
 
+  /** Returns thread number, which is post number of its original post. */
   @EqualsAndHashCode.Include
   public Long getThreadNumber() {
     return originalPost != null ? originalPost.getPostNumber() : null;

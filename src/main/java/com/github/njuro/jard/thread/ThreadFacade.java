@@ -45,7 +45,7 @@ public class ThreadFacade {
     thread.setLastReplyAt(LocalDateTime.now());
 
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
-      threadService.deleteOldestThread(board);
+      threadService.deleteStalestThread(board);
     }
 
     return threadService.saveThread(thread);

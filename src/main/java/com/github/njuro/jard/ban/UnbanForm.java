@@ -5,12 +5,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Data;
 
+/** Form for invalidating ban before its natural expiration. */
 @Data
+@SuppressWarnings("JavadocReference")
 public class UnbanForm {
 
+  /** @see Ban#ip */
   @NotNull(message = "{validation.ban.ip.null}")
   @Pattern(regexp = Constants.IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
+  /** @see Ban#unbanReason */
   private String reason;
 }

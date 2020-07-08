@@ -26,11 +26,7 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * Entity representing registered user.
- *
- * @author njuro
- */
+/** Entity representing registered user. */
 @Entity
 @Table(name = "users")
 @Data
@@ -38,46 +34,75 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
 
   private static final long serialVersionUID = -6709426435122012297L;
 
+  /** Unique identifier of this user. */
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(updatable = false)
   @JsonIgnore
   private UUID id;
 
+  /** Unique username of this user. */
   @Basic
-  @EqualsAndHashCode.Include
   @Column(nullable = false, unique = true)
+  @EqualsAndHashCode.Include
+  @ToString.Include
   private String username;
 
-  @Basic @ToString.Exclude @JsonIgnore private String password;
+  /** Password of this user. */
+  @Basic
+  @Column(nullable = false)
+  @JsonIgnore
+  private String password;
 
+  /** Unique e-mail address of this user. */
   @Basic
   @Column(unique = true)
+  @ToString.Include
   private String email;
 
+  /** Whether is this user enabled */
   @Basic private boolean enabled;
 
+  /**
+   * Active role of this user.
+   *
+   * @see UserRole
+   */
   @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false)
+  @ToString.Include
   private UserRole role;
 
+  /**
+   * Authorities of this user.
+   *
+   * @see UserAuthority
+   */
   @SuppressWarnings("JpaDataSourceORMInspection")
   @ElementCollection(fetch = FetchType.EAGER)
   @Column(name = "authority")
   @Enumerated(value = EnumType.STRING)
   private Set<UserAuthority> authorities;
 
-  @Basic @ToString.Exclude private String registrationIp;
+  /** IP this user registered from. */
+  @Basic private String registrationIp;
 
-  @Basic @ToString.Exclude private String lastLoginIp;
+  /** IP from which this user logged into system most recently. */
+  @Basic private String lastLoginIp;
 
+  /** Date and time of last login of this user. */
   private LocalDateTime lastLogin;
 
-  @ToString.Exclude private LocalDateTime createdAt;
+  /** Date and time when this user was created. */
+  @Column(nullable = false)
+  private LocalDateTime createdAt;
 
+  /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   public void setCreatedAt() {
     createdAt = LocalDateTime.now();

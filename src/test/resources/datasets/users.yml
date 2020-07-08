@@ -5,12 +5,14 @@ users:
     password: "password"
     role: "ADMIN"
     username: "admin"
+    created_at: "2018-07-22 12:11:48"
   - id: uuid'caa675e9-a2b5-48ea-9709-5d5737c06f77'
     email: "moderator@jard"
     enabled: true
     password: "password2"
     role: "MODERATOR"
     username: "moderator"
+    created_at: "2018-07-22 12:11:48"
 
 user_authorities:
   - user_id: uuid'271c17c3-f5b7-46e6-9cb8-ed15256ff250'

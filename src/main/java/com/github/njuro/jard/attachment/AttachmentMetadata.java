@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -15,6 +16,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** Entity representing metadata of {@link Attachment}. */
 @Entity
 @Table(name = "attachments_metadata")
 @Data
@@ -25,27 +27,45 @@ public class AttachmentMetadata implements Serializable {
 
   private static final long serialVersionUID = -8455977079986712310L;
 
+  /** Identifier of these metadata. Equals to primary key of owning {@link #attachment}. */
   @Id @JsonIgnore private UUID attachmentId;
 
+  /** {@link Attachment} these metadata belong to. */
   @OneToOne
   @JoinColumn(name = "attachment_id")
   @MapsId
   @JsonIgnore
   private Attachment attachment;
 
-  @Basic private String mimeType;
+  /** Standard MIME type of this attachment's file, e.g. {@code image/jpeg}. */
+  @Basic
+  @Column(nullable = false)
+  private String mimeType;
 
+  /** (Optional) width (in pixels) of this attachment's file. */
   @Basic private int width;
 
+  /** (Optional) height (in pixels) of this attachment's file. */
   @Basic private int height;
 
+  /** (Optional) width (in pixels) of thumbnail for this attachment's file. */
   @Basic private int thumbnailWidth;
 
+  /** (Optional) height (in pixels) of thumbnail for this attachment's file. */
   @Basic private int thumbnailHeight;
 
-  @Basic private String fileSize;
+  /** Formatted size of this attachment's file, e.g. {@code 2.5MB}. */
+  @Basic
+  @Column(nullable = false)
+  private String fileSize;
 
+  /** (Optional) formatted duration of this attachment's file, e.g. {@code 00:02:30}. */
   @Basic private String duration;
 
-  @Basic private String hash;
+  /**
+   * Hash of content bytes of this attachment's files e.g. {@code 9e107d9d372bb6826bd81d3542a419d6}
+   */
+  @Basic
+  @Column(nullable = false)
+  private String checksum;
 }

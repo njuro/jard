@@ -13,36 +13,45 @@ import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
-/** Data transfer object for "create new user" form */
+/** Form for creating/updating a {@link User} */
 @Data
 @Builder
+@SuppressWarnings("JavadocReference")
 public class UserForm {
 
+  /** @see User#username */
   @Size(
       min = MIN_USERNAME_LENGTH,
       max = MAX_USERNAME_LENGTH,
       message = "{validation.user.username.length}")
   private String username;
 
+  /** @see User#password */
   @Size(min = MIN_PASSWORD_LENGTH, message = "{validation.user.password.length}")
   private String password;
 
+  /** @see User#password */
   private String passwordRepeated;
 
+  /** @see User#email */
   @Email(message = "{validation.user.email.invalid}")
   private String email;
 
+  /** @see User#registrationIp */
   @Pattern(regexp = IP_PATTERN)
   private String registrationIp;
 
+  /** @see User#role */
   @NotNull(message = "{validation.user.role.null}")
   private UserRole role;
 
+  /** Validates that {@link #password} and {@link #passwordRepeated} are equal. */
   @AssertTrue(message = "{validation.user.password.match}")
   public boolean isPasswordMatching() {
-    return password.equals(passwordRepeated);
+    return password != null && password.equals(passwordRepeated);
   }
 
+  /** Creates {@link User} from values of this form and marks him/her as enabled. */
   public User toUser() {
     return User.builder()
         .username(username)

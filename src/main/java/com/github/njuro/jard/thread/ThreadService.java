@@ -61,7 +61,7 @@ public class ThreadService {
     return threadRepository.save(thread);
   }
 
-  public void deleteOldestThread(Board board) {
+  public void deleteStalestThread(Board board) {
     threadRepository
         .findTopByBoardIdAndStickiedFalseOrderByLastReplyAtAsc(board.getId())
         .ifPresent(this::deleteThread);

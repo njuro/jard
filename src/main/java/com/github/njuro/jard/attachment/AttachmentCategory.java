@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.MediaType;
 
+/** Enum representing different categories of {@link Attachment} (more precisely of their files). */
 public enum AttachmentCategory {
   IMAGE(
       true,
@@ -60,10 +61,16 @@ public enum AttachmentCategory {
           "vnd.openxmlformats-officedocument.wordprocessingml.document",
           extension("docx")));
 
+  /** Name of special parameter to store file extension related to given MIME type */
   private static final String EXTENSION_PARAM = "extension";
 
+  /** Whether we can generate and store thumbnail for this category. */
   private final boolean thubmnail;
+
+  /** Collection of MIME types (wrapped by {@link MediaType}) belonging to this category. */
   @Getter private final Set<MediaType> mediaTypes;
+
+  /** A {@link Preview} of this attachment category. */
   @Getter private final Preview preview;
 
   AttachmentCategory(boolean thubmnail, MediaType... mediaTypes) {
@@ -76,6 +83,7 @@ public enum AttachmentCategory {
     return thubmnail;
   }
 
+  /** @return {@link Preview} of this attachment category. */
   private AttachmentCategory.Preview generatePreview() {
     return Preview.builder()
         .name(name())
@@ -95,10 +103,17 @@ public enum AttachmentCategory {
         .build();
   }
 
+  /** Adds parameter specifying file extension related to given MIME type. */
   private static Map<String, String> extension(String extension) {
     return Collections.singletonMap(EXTENSION_PARAM, extension);
   }
 
+  /**
+   * Determines category the given MIME type belongs to.
+   *
+   * @param mimeType to determine
+   * @return determined category, or {@code null} if such category was not found
+   */
   public static AttachmentCategory determineAttachmentCategory(String mimeType) {
     return Arrays.stream(AttachmentCategory.values())
         .filter(
@@ -110,16 +125,25 @@ public enum AttachmentCategory {
         .orElse(null);
   }
 
+  /** Client-friendly view (DTO) of {@link AttachmentCategory}. */
   @Builder
   @Getter
   public static class Preview {
 
+    /** Name of the attachment category. */
     private final String name;
+
+    /** Whether we can generate and store thumbnail for this category. */
     private final boolean hasThumbnail;
+
+    /** File extensions associated with this category, e.g. {@code .jpg, .png}. */
     private final Set<String> extensions;
+
+    /** MIME types associated with this category, e.g. {@code image/jpeg}. */
     private final Set<String> mimeTypes;
   }
 
+  /** Custom JSON serializer to serialize {@link AttachmentCategory} as {@link Preview}. */
   public static class AttachmentCategorySerializer extends JsonSerializer<AttachmentCategory> {
 
     @Override
