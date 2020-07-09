@@ -4,3 +4,11 @@ dist: bionic
 language: java
 jdk:
   - oraclejdk11
+addons:
+  sonarcloud:
+    organization: "jard"
+    token:
+      secure: "secure: "Wli+qqUZ20ioRUNpaHx315p8/hg6aufp602E0EAd/BcJKOyR9wKOX4NHtGtwGPBPjXzRo3U9Q0IuxmuO+5Rxm8LT8I5U4Qnlp2ovOCG0CYUIrDN+DqCQsN6xstR4nhAqTuTDky7cmZkUmWX/Hw1lXU9YfF4DRfZnf03AsBf2Q31tFOPKO4rDml6nxxustgZ3oQHhhUsBmaHhj3fv1wIxwHVRStYujIRUK9TMZviOUrCOYhYTQQ+1xmvRT9VwtBzrRY3E4oP2tX32BodXqTQkW9aJS7R/HjqPiV+2UVsokOpo6dWB85d8cnM586Hm6CoDuqRX2VszTngLeEaxCu0HWyTpq9pErw5KSLAzaJOrZafi88nUMO3JncL/7jT58HwE17LsqHUyWjo+GCQGPib5VPracfzn1bfKQB3vXSawuu/qJxCc4n3byVSHtSIkoAWaJf+etusYYxXhHCxFRs9RZDJcvECeKT779FdSY2F8sJPAOPLBrxdDOrn6vv8V3RfSZ+IFFbr2dm042GZLmpn7PQNBKSIAQmLTbKY5xagJatfzT8j3G/jaLnhQgXicSoKSwp3xQMX1keMJUaeq4GbJjdfEBNiwteqOwsVaqBASu55MNbh9L8g9z8RB4kF3HWwCsCYeqnUno+kfAqph2C02hUwP6XwI7xQmtIpTREHS3YE="
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=njuro_jard
