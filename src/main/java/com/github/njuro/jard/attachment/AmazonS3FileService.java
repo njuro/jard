@@ -13,7 +13,6 @@ import java.io.File;
 import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
  * <p>Must be enabled by {@link UserContentStorageMode#AMAZON_S3}
  */
 @Service
-@ConditionalOnProperty(name = "app.user.content.storage", havingValue = "AMAZON_S3")
 public class AmazonS3FileService {
 
   /**
@@ -53,15 +51,16 @@ public class AmazonS3FileService {
   private AmazonS3 awsClient;
 
   /**
-   * Initialize and authenticate to Amazon S3 client.
+   * Initialize and authenticate to Amazon S3 client (only if Amazon S3 storage mode is enables,
+   * otherwise does nothing).
    *
-   * @throws IllegalStateException if Amazon S3 storoage mode is not enabled
    * @throws IllegalArgumentException if authentication to Amazon S3 client fails
+   * @see UserContentStorageMode
    */
   @PostConstruct
   public void initializeClient() {
     if (storageMode != UserContentStorageMode.AMAZON_S3) {
-      throw new IllegalStateException("Amazon S3 storage mode is not enabled");
+      return;
     }
 
     try {
