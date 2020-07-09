@@ -9,6 +9,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/** Resolver for mapping username (path variable) to respective {@link User} object */
 @Component
 @RequiredArgsConstructor
 public class UserResolver implements PathVariableArgumentResolver {

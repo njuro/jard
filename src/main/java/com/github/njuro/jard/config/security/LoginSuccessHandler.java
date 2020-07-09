@@ -42,7 +42,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     User user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
     user.setLastLogin(LocalDateTime.now());
-    userService.updateUser(user);
+    userService.saveUser(user);
     log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
 
     super.onAuthenticationSuccess(request, response, authentication);

@@ -8,11 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service methods for manipulating {@link User users}
- *
- * @author njuro
- */
 @Service
 @Transactional
 @Slf4j
@@ -27,30 +22,58 @@ public class UserService {
     this.banService = banService;
   }
 
+  /**
+   * Saves new user to database.
+   *
+   * @param user user to be saved
+   * @return saved user
+   */
   public User saveUser(User user) {
     return userRepository.save(user);
   }
 
+  /** @return all users in database */
   public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
+  /**
+   * Resolves user by given identifier.
+   *
+   * @param username name of the user
+   * @return resolved user or {@code null} if no such user is found
+   */
   public User resolveUser(String username) {
     return userRepository.findByUsernameIgnoreCase(username).orElse(null);
   }
 
+  /**
+   * Resolves user by given email
+   *
+   * @param email e-mail address to check
+   * @return resolved user or {@code null} if no such user is found
+   */
   public User findUserByEmail(String email) {
     return userRepository.findByEmailIgnoreCase(email);
   }
 
+  /**
+   * @param username name of the user
+   * @return true if user with such username exists, {@code null} otherwise
+   */
   public boolean doesUserExists(String username) {
     return resolveUser(username) != null;
   }
 
+  /**
+   * @param email e-mail address of the user
+   * @return true if user with such email exists, {@code null} otherwise
+   */
   public boolean doesEmailExists(String email) {
     return findUserByEmail(email) != null;
   }
 
+  /** @return user currently logged in the system */
   public User getCurrentUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -61,6 +84,12 @@ public class UserService {
     return (User) principal;
   }
 
+  /**
+   * Checks if currently logged user has given authority
+   *
+   * @param authority user authority to check
+   * @return true if current user has given authority, false otherwise
+   */
   public boolean hasCurrentUserAuthority(UserAuthority authority) {
     User current = getCurrentUser();
     if (current == null) {
@@ -70,10 +99,12 @@ public class UserService {
     return current.getAuthorities().contains(authority);
   }
 
-  public User updateUser(User user) {
-    return userRepository.save(user);
-  }
-
+  /**
+   * Deletes given user. Also deletes him/her from all of the bans he/she created - however the bans
+   * remain active.
+   *
+   * @param user user to delete
+   */
   public void deleteUser(User user) {
     banService
         .getBansBannedByUser(user)
