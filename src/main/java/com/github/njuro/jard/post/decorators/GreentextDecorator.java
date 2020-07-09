@@ -8,6 +8,10 @@ import com.github.njuro.jard.post.Post;
 import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decorator for marking lines starting with "{@code >}" as <a
+ * href="https://knowyourmeme.com/memes/greentext-stories">greentext</a>.
+ */
 @Component
 public class GreentextDecorator implements PostDecorator {
 

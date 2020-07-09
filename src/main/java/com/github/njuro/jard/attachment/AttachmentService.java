@@ -8,6 +8,7 @@ import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -53,8 +54,12 @@ public class AttachmentService {
    * @throws IOException if storing to local filesystem fails
    * @throws IllegalArgumentException if something goes wrong during setting of metadata or
    *     uploading to remote server
+   * @throws NullPointerException if one of the parameters is {@code null}
    */
   public Attachment saveAttachment(Attachment attachment, MultipartFile source) throws IOException {
+    Objects.requireNonNull(attachment, "Attachment cannot be null");
+    Objects.requireNonNull(source, "Source file cannot be null");
+
     //noinspection ResultOfMethodCallIgnored
     attachment.getFile().getParentFile().mkdirs();
     source.transferTo(attachment.getFile());
@@ -114,8 +119,11 @@ public class AttachmentService {
    * @param attachment attachment, which file to delete
    * @throws IOException if deleting from local filesystem fails
    * @throws IllegalArgumentException if deleting from remote server fails
+   * @throws NullPointerException if attachment is {@code null}
    */
   public void deleteAttachmentFile(Attachment attachment) throws IOException {
+    Objects.requireNonNull(attachment, "Attachment cannot be null");
+
     if (storageMode == UserContentStorageMode.AMAZON_S3) {
       amazonS3FileService.deleteFile(attachment.getFolder(), attachment.getFilename());
       amazonS3FileService.deleteFile(attachment.getThumbnailFolder(), attachment.getFilename());
@@ -131,13 +139,15 @@ public class AttachmentService {
   }
 
   /**
-   * Deletes files of given attachments
+   * Deletes files of given attachments.
    *
    * @param attachments list of attachments which files to delete
    * @throws IOException if deleting from local filesystem fails
    * @throws IllegalArgumentException if deleting from remote server fails
+   * @throws NullPointerException if attachment list is {@code null}
    */
   public void deleteAttachmentFiles(List<Attachment> attachments) throws IOException {
+    Objects.requireNonNull(attachments, "Attachment list cannot be null");
     for (Attachment attachment : attachments) {
       deleteAttachmentFile(attachment);
     }

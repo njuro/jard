@@ -1,7 +1,10 @@
 package com.github.njuro.jard.post;
 
+import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.AttachmentFacade;
+import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.thread.Thread;
+import com.github.njuro.jard.utils.validation.FormValidationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,16 @@ public class PostFacade {
     this.postService = postService;
   }
 
+  /**
+   * Creates {@link Post} from {@link PostForm} and attaches it to {@link Thread}. This may
+   * optionally include creating and storing {@link Attachment}, if post has one. Poster name may be
+   * overwritten if containing {@link Board} enforces use of default poster name.
+   *
+   * @param postForm form with post
+   * @param thread thread this post belongs to
+   * @return created post
+   * @throws FormValidationException if post is not validated by business logic
+   */
   public Post createPost(@Valid @NotNull PostForm postForm, Thread thread) {
     Post post = postForm.toPost();
 
@@ -37,6 +50,7 @@ public class PostFacade {
     return post;
   }
 
+  /** @see PostService#resolvePost(String, Long) */
   public Post resolvePost(String boardLabel, Long postNumber) {
     return postService.resolvePost(boardLabel, postNumber);
   }

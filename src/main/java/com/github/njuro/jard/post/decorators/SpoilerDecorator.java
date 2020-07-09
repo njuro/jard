@@ -8,6 +8,10 @@ import com.github.njuro.jard.post.Post;
 import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decorator for marking text between {@code [spoiler]} and {@code [/spoiler]} tags or between pair
+ * of "{@code **}" as spoiler.
+ */
 @Component
 public class SpoilerDecorator implements PostDecorator {
 

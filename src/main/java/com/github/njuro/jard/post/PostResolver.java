@@ -12,8 +12,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 /**
  * Resolver for mapping post number and board label (path variables) to respective {@link Post}
  * object
- *
- * @author njuro
  */
 @Component
 @RequiredArgsConstructor

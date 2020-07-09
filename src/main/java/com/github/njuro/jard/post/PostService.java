@@ -6,6 +6,7 @@ import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardService;
 import com.github.njuro.jard.post.decorators.PostDecorator;
 import com.github.njuro.jard.thread.Thread;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +45,7 @@ public class PostService {
    * Generates and sets post number of given {@link Post}, process its body using registered post
    * decorators and saves it to database.
    *
-   * @param post to be saved - cannot be null
+   * @param post post to be saved - cannot be null
    * @return saved post (with assigned id)
    * @see #decoratePost(Post)
    */
@@ -65,8 +66,8 @@ public class PostService {
   /**
    * Attempts to resolve {@link Post} by given identifiers.
    *
-   * @param boardLabel - label of {@link Board} the post belongs to
-   * @param postNumber - number of the post
+   * @param boardLabel label of {@link Board} the post belongs to
+   * @param postNumber number of the post
    * @return resolved post
    * @throws PostNotFoundException if such post does not exist in database
    */
@@ -79,7 +80,7 @@ public class PostService {
   /**
    * Retrieves all posts belonging to given thread (excluding thread's original post).
    *
-   * @param thread to get replies of - cannot be null
+   * @param thread thread to get replies for - cannot be null
    * @return thread replies ordered by their creation date from least to most recent
    * @throws NullPointerException if thread is null
    */
@@ -93,7 +94,7 @@ public class PostService {
   /**
    * Retrieves up to 5 most recent posts from given thread (excluding thread's original post).
    *
-   * @param thread to get replies from - cannot be null
+   * @param thread thread to get replies for - cannot be null
    * @return most recent replies to thread ordered by their creation date from least to most recent
    * @throws NullPointerException if thread is null or thread's original post is null
    */
@@ -111,9 +112,9 @@ public class PostService {
   /***
    * Counts number of posts in given thread.
    *
-   * @param thread to count posts in
+   * @param thread thread to count posts in - cannot be null
    * @return total number of posts in thread (including original post)
-   * @throws NullPointerException if thread is null
+   * @throws NullPointerException if thread is {@code null}
    * */
   public int getNumberOfPostsInThread(Thread thread) {
     Objects.requireNonNull(thread, "Thread cannot be null");
@@ -139,8 +140,8 @@ public class PostService {
    * Process body of given post with all registered implementations of {@link PostDecorator} and
    * escapes any HTML in user input.
    *
-   * @param post to process - cannot be null
-   * @throws NullPointerException if post is null
+   * @param post post to decorate - cannot be {@code null}
+   * @throws NullPointerException if post is {@code null}
    */
   private void decoratePost(Post post) {
     Objects.requireNonNull(post, "Post cannot be null");
@@ -157,9 +158,11 @@ public class PostService {
   /**
    * Deletes given post from database and also its attachment (if it has one).
    *
-   * @param post to delete - cannot be null
+   * @param post to delete - cannot be {@code null}
+   * @throws NullPointerException if post is {@code null}
+   * @throws IOException if deletion of attachment file fails
    */
-  public void deletePost(Post post) {
+  public void deletePost(Post post) throws IOException {
     Objects.requireNonNull(post, "Post cannot be null");
 
     if (post.getAttachment() != null) {
@@ -171,14 +174,19 @@ public class PostService {
   /**
    * Deletes all given posts from database and also their attachments (if they have any).
    *
-   * @param posts to delete
+   * @param posts posts to delete - cannot be {@code null}
+   * @throws NullPointerException if post list is {@code null}
+   * @throws IOException if deletion of attachment file fails
    */
-  public void deletePosts(List<Post> posts) {
+  public void deletePosts(List<Post> posts) throws IOException {
+    Objects.requireNonNull(posts, "Post list cannot be null");
+
     List<Attachment> attachments =
         posts.stream()
             .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
+
     attachmentService.deleteAttachmentFiles(attachments);
     postRepository.deleteAll(posts);
   }

@@ -8,6 +8,10 @@ import com.github.njuro.jard.post.Post;
 import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decorator for marking text between {@code [code]} and {@code [/code]} tags as block of formatted
+ * code. *
+ */
 @Component
 public class CodeDecorator implements PostDecorator {
 

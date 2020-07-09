@@ -19,6 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+/**
+ * Decorator for rendering words starting with "{@code >>}" or "{@code >>>}" as links to other
+ * active posts/threads/boards and checking if the linked entity exists.
+ */
 @Component
 public class CrosslinkDecorator implements PostDecorator {
 
