@@ -10,6 +10,7 @@ import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.utils.SensitiveDataFilter;
 import com.jfilter.filter.DynamicFilter;
 import com.jfilter.filter.FieldFilterSetting;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
@@ -78,7 +79,11 @@ public class BoardRestController {
   @DeleteMapping(Mappings.PATH_VARIABLE_BOARD)
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public ResponseEntity<?> deleteBoard(Board board) {
-    boardFacade.deleteBoard(board);
-    return ResponseEntity.ok().build();
+    try {
+      boardFacade.deleteBoard(board);
+      return ResponseEntity.ok().build();
+    } catch (IOException ex) {
+      return ResponseEntity.badRequest().body(ex.getMessage());
+    }
   }
 }

@@ -5,6 +5,7 @@ import com.github.njuro.jard.post.PostService;
 import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.thread.ThreadService;
 import com.github.njuro.jard.utils.validation.FormValidationException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,13 @@ public class BoardFacade {
     this.postService = postService;
   }
 
+  /**
+   * Creates and save new board.
+   *
+   * @param boardForm form with board values
+   * @return created board
+   * @throws FormValidationException if board with such label already exists
+   */
   public Board createBoard(BoardForm boardForm) {
     if (boardService.doesBoardExist(boardForm.getLabel())) {
       throw new FormValidationException("Board with this label already exists");
@@ -36,10 +44,18 @@ public class BoardFacade {
     return boardService.saveBoard(boardForm.toBoard());
   }
 
+  /** @see BoardService#resolveBoard(String) */
   public Board resolveBoard(String label) {
     return boardService.resolveBoard(label);
   }
 
+  /**
+   * Retrieves board with (sub)collection of its threads. Each retrieved thread has set original
+   * post and up to 5 most recent replies.
+   *
+   * @param board board to get
+   * @param pagination parameter specifying pagination of threads
+   */
   public Board getBoard(Board board, Pageable pagination) {
     List<Thread> threads = threadService.getThreadsFromBoard(board, pagination);
     threads.forEach(thread -> thread.setReplies(postService.getLatestRepliesForThread(thread)));
@@ -51,17 +67,36 @@ public class BoardFacade {
     return boardService.getAllBoards();
   }
 
+  /**
+   * Retrieves board's catalog.
+   *
+   * @param board board to get catalog for
+   * @return board with all of its threads (each thread has only original post set - not replies)
+   */
   public Board getBoardCatalog(Board board) {
     board.setThreads(threadService.getAllThreadsFromBoard(board));
     return board;
   }
 
+  /**
+   * @return all attachment categories mapped to their previews
+   * @see AttachmentCategory
+   */
   public Set<AttachmentCategory.Preview> getAttachmentCategories() {
     return Arrays.stream(AttachmentCategory.values())
         .map(AttachmentCategory::getPreview)
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Checks if given MIME type is supported on given board based on allowed attachment categories on
+   * this board.
+   *
+   * @param board Board to check MIME type on
+   * @param mimeType MIME type to check - case insensitive
+   * @return true if MIME type is supported on given board, false otherwise
+   * @see AttachmentCategory
+   */
   public boolean isMimeTypeSupported(Board board, String mimeType) {
     return board.getSettings().getAttachmentCategories().stream()
         .map(AttachmentCategory::getPreview)
@@ -69,6 +104,14 @@ public class BoardFacade {
         .anyMatch(mime -> mime.equalsIgnoreCase(mimeType));
   }
 
+  /**
+   * Edits a board. Only board's name and its settings can be edited.
+   *
+   * @param oldBoard board to edit
+   * @param updatedBoard form with new values
+   * @return edited board
+   * @see BoardSettings
+   */
   public Board editBoard(Board oldBoard, BoardForm updatedBoard) {
     oldBoard.setName(updatedBoard.getName());
     oldBoard.setSettings(updatedBoard.getBoardSettingsForm().toBoardSettings());
@@ -76,7 +119,8 @@ public class BoardFacade {
     return boardService.updateBoard(oldBoard);
   }
 
-  public void deleteBoard(Board board) {
+  /** @see BoardService#deleteBoard(Board) */
+  public void deleteBoard(Board board) throws IOException {
     boardService.deleteBoard(board);
   }
 }

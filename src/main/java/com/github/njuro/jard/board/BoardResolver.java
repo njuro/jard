@@ -9,11 +9,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-/**
- * Resolver for mapping board label (path variable) to respective {@link Board} object
- *
- * @author njuro
- */
+/** Resolver for mapping board label from path variables to respective {@link Board} object */
 @Component
 @RequiredArgsConstructor
 public class BoardResolver implements PathVariableArgumentResolver {
