@@ -66,10 +66,14 @@ public class AttachmentFacade {
    * @param mimeType MIME type of uploaded file
    * @param folder path to folder where uploaded file should be stored
    * @return created {@link Attachment}
-   * @throws FormValidationException if saving of attachment fails
+   * @throws FormValidationException if saving of attachment fails or filename has no extension
    */
   public Attachment createAttachment(MultipartFile file, String mimeType, Path folder) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+    if (ext == null || ext.isEmpty()) {
+      throw new FormValidationException("Name of uploaded file must have an extension");
+    }
+
     String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
     Attachment attachment =
         Attachment.builder()
