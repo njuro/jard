@@ -10,11 +10,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-/**
- * Resolver for mapping board label (path variable) to respective {@link Ban} object
- *
- * @author njuro
- */
+/** Resolver for mapping ban id (path variable) to respective {@link Ban} object */
 @Component
 @RequiredArgsConstructor
 public class BanResolver implements PathVariableArgumentResolver {

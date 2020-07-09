@@ -32,7 +32,7 @@ public class BoardFacade {
   /**
    * Creates and save new board.
    *
-   * @param boardForm form with board values
+   * @param boardForm form with board data
    * @return created board
    * @throws FormValidationException if board with such label already exists
    */
