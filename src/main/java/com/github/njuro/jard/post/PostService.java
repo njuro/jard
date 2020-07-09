@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-/** Service methods for storing/processing/retrieving/deleting {@link Post} entities. */
 @Service
 @Transactional(noRollbackFor = PostNotFoundException.class)
 public class PostService {

@@ -10,10 +10,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
- * Resolver for mapping thread number and board label (path variables) to respective {@link Thread}
- * object
- *
- * @author njuro
+ * Resolver for mapping thread number (= its original post's number) and board label from path
+ * variables to respective {@link Thread} object
  */
 @Component
 @RequiredArgsConstructor

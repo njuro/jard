@@ -7,13 +7,16 @@ import com.github.njuro.jard.post.PostFacade;
 import com.github.njuro.jard.post.PostForm;
 import com.github.njuro.jard.post.PostService;
 import com.github.njuro.jard.utils.validation.FormValidationException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ThreadFacade {
 
   private final ThreadService threadService;
@@ -34,6 +37,15 @@ public class ThreadFacade {
     this.postFacade = postFacade;
   }
 
+  /**
+   * Creates and save new {@link Thread} and its original post. Also deletes the stalest thread from
+   * containing {@link Board} if its thread limit is surpassed.
+   *
+   * @param threadForm form with thread data
+   * @param board board the thread belongs to
+   * @return created thread
+   * @throws FormValidationException if poster IP is banned
+   */
   public Thread createThread(@NotNull ThreadForm threadForm, Board board) {
     if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
@@ -47,12 +59,25 @@ public class ThreadFacade {
 
     thread.getOriginalPost().setSage(false); // original post cannot be sage
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
-      threadService.deleteStalestThread(board);
+      try {
+        threadService.deleteStalestThread(board);
+      } catch (IOException ex) {
+        log.error("Failed to delete stalest thread", ex);
+      }
     }
 
     return threadService.saveThread(thread);
   }
 
+  /**
+   * Creates and saves reply to {@link Thread}. This also means updating last reply time of given
+   * thread and (if thread's bump limit is not yet surpassed) after last bump time of it.
+   *
+   * @param postForm form with {@link Post} data
+   * @param thread thread this reply belongs to
+   * @return created reply
+   * @throws FormValidationException if poster IP is banned or thread is locked
+   */
   public Post replyToThread(@NotNull PostForm postForm, Thread thread) {
     if (banService.hasActiveBan(postForm.getIp())) {
       throw new FormValidationException("Your IP address is banned");
@@ -76,31 +101,56 @@ public class ThreadFacade {
     return post;
   }
 
+  /** @see ThreadService#resolveThread(String, Long) */
   public Thread resolveThread(String boardLabel, Long threadNumber) {
     return threadService.resolveThread(boardLabel, threadNumber);
   }
 
+  /**
+   * Retrieves and set all replies to given thread.
+   *
+   * @param thread to get replies to
+   * @return thread with its replies set
+   */
   public Thread getThread(Thread thread) {
     List<Post> replies = postService.getAllRepliesForThread(thread);
     thread.setReplies(replies);
     return thread;
   }
 
+  /** @see PostService#getNewRepliesForThreadSince(Thread, Long) */
   public List<Post> getNewReplies(Thread thread, Long lastPostNumber) {
     return postService.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
+  /**
+   * @param thread thread to toggle stickied status on
+   * @return updated thread
+   */
   public Thread toggleStickyOnThread(Thread thread) {
     thread.toggleSticky();
     return threadService.updateThread(thread);
   }
 
+  /**
+   * @param thread thread to toggle locked status on
+   * @return updated thread
+   */
   public Thread toggleLockOnThread(Thread thread) {
     thread.toggleLock();
     return threadService.updateThread(thread);
   }
 
-  public void deletePost(Thread thread, Post post) {
+  /**
+   * Deletes post. If the post is original post of some thread, that thread is deleted too. What
+   * constitutes for deletion is explained more in documentation of {@link
+   * PostService#deletePost(Post)} and {@link ThreadService#deleteThread(Thread)}.
+   *
+   * @param thread thread containing post to be deleted
+   * @param post post to delete
+   * @throws IOException if deletion of one of the attachments' file fails
+   */
+  public void deletePost(Thread thread, Post post) throws IOException {
     if (thread.getOriginalPost().equals(post)) {
       // delete whole thread
       threadService.deleteThread(thread);

@@ -10,6 +10,7 @@ import com.github.njuro.jard.utils.SensitiveDataFilter;
 import com.github.njuro.jard.utils.validation.RequestValidator;
 import com.jfilter.filter.DynamicFilter;
 import com.jfilter.filter.FieldFilterSetting;
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,11 @@ public class ThreadRestController {
   @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
   public ResponseEntity<?> deletePost(Thread thread, Post post) {
-    threadFacade.deletePost(thread, post);
-    return ResponseEntity.ok().build();
+    try {
+      threadFacade.deletePost(thread, post);
+      return ResponseEntity.ok().build();
+    } catch (IOException ex) {
+      return ResponseEntity.badRequest().body(ex.getMessage());
+    }
   }
 }
