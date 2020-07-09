@@ -108,13 +108,13 @@ public class PostService {
     return posts;
   }
 
-  /***
+  /**
    * Counts number of posts in given thread.
    *
    * @param thread thread to count posts in - cannot be null
    * @return total number of posts in thread (including original post)
    * @throws NullPointerException if thread is {@code null}
-   * */
+   */
   public int getNumberOfPostsInThread(Thread thread) {
     Objects.requireNonNull(thread, "Thread cannot be null");
 
