@@ -21,9 +21,9 @@ Code-wise is jard written entirely from scratch and is not a fork of any existin
  3. I wanted to try and learn new concepts, technologies, approaches and try to create and maintain my very own project bigger than regular TicTacToe / FizzBuzz app. This is actually the biggest motivation factor of them all and the only one I am sure is true, because it already gave me much.
 
 ### What technologies is jard built with?
-The backend is written in Java 11, with Spring Boot 2.x framework (powered by Spring 5.x), using PostgreSQL as relational database (tests use in-memory H2 database) and Hibernate as ORM. Files uploaded by users are stored in Amazon S3 bucket.  Authentication is handled with JWT cookies (using jjwt library). Backend exposes REST API with protected endpoints. Several other libraries are used for different functionality, as described in *pom.xml* file.
+The backend is written in `Java 11`, with `Spring Boot 2.x` framework (powered by `Spring 5.x`), using `PostgreSQL` as relational database (tests use in-memory `H2` database) and `Hibernate` as ORM. Files uploaded by users are stored in `Amazon S3` bucket.  Authentication is handled with JWT cookies (using `jjwt` library). Backend exposes REST API with protected endpoints. Several other libraries are used for different functionality, as described in *pom.xml* file.
 
-Travis CI is enabled for the project and master branch is regulary deployed to Heroku.
+`Travis CI` is enabled for the project and master branch is regulary deployed to `Heroku`.
 For frontend technologies see [jard-client](https://github.com/njuro/jard-client).  
 
 ## Features
