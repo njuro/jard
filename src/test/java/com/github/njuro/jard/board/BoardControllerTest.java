@@ -18,7 +18,6 @@ import com.github.njuro.jard.common.Mappings;
 import java.util.Collections;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -99,9 +98,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  @Disabled
   public void testGetBoard() throws Exception {
-    // TODO wait for jfilter merging: https://github.com/rkonovalov/jfilter/issues/16
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
     when(boardFacade.getBoard(any(Board.class), any(Pageable.class)))
         .thenReturn(EntityUtils.randomBoard(1));
@@ -117,14 +114,12 @@ public class BoardControllerTest extends ControllerTest {
     verify(boardFacade).getBoard(boardCaptor.capture(), pageableCaptor.capture());
 
     assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
-    assertThat(pageableCaptor.getValue().getPageNumber()).isEqualTo(2);
+    assertThat(pageableCaptor.getValue().getPageNumber()).isEqualTo(1);
     assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(10);
   }
 
   @Test
-  @Disabled
   public void testGetBoardCatalog() throws Exception {
-    // TODO wait for jfilter merging: https://github.com/rkonovalov/jfilter/issues/16
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
     when(boardFacade.getBoardCatalog(any(Board.class))).thenReturn(EntityUtils.randomBoard(1));
 

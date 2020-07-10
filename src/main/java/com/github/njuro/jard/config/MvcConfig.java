@@ -11,6 +11,7 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import com.github.njuro.jard.utils.validation.ValidationMessageInterpolator;
 import com.jfilter.EnableJsonFilter;
+import com.jfilter.components.FilterAdvice;
 import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -19,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.CacheControl;
@@ -35,6 +39,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableJsonFilter
 @EnableSpringDataWebSupport
 @RequiredArgsConstructor
+/**
+ * Annotation below disables jfilter's own {@link FilterAdvice}. For more information, see
+ * documentation of {@link MergingFilterAdvice}.
+ */
+@ComponentScan(
+    value = {"com.jfilter", "com.jfilter.components"},
+    excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = FilterAdvice.class))
 public class MvcConfig implements WebMvcConfigurer {
 
   private final List<PathVariableArgumentResolver> pathVariableArgumentResolvers;
