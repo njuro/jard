@@ -1,4 +1,6 @@
 # jard
+[![Build Status](https://travis-ci.org/njuro/jard.svg?branch=master)](https://travis-ci.org/njuro/jard)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=njuro_jard&metric=alert_status)](https://sonarcloud.io/dashboard?id=njuro_jard)
 ## Basic FAQ
 ### What is jard?
 **jard** (pronounced like *yard*)  is a software for running an anonymous imageboard. Citing from Wikipedia:
@@ -14,6 +16,7 @@ Code-wise is jard written entirely from scratch and is not a fork of any existin
 
 ### Why make another imageboard software?
 **Short answer:** I don't know, why not?
+
 **Long answer:** I identified 3 main motivation factors behind the creation of jard:
 
  1. Many of the software behind popular imageboards is either closed-source (4chan) and/or aged and no longer actively developed or maintained (example of this is vichan - fork of Tinyboard - software which powered 8chan). Also from the rumors and [code leaks](https://gist.github.com/dvliman/11264471), they are often undocumented monolithic PHP applications hacked together throughout the years with little attention to code quality, testability and maintainability. While I don't want to bash them (they are time-tested and work +- reliably most of the time), my vision was to create open-source, documented software which can be easily customized and extended by almost anyone willing to put effort into it. There is a long way to go to achieve this goal, but you need to start somewhere. Note: I am also aware that similiar attempts to produce "modern" imageboard software exist, however from my short research most of them are merely proofs of concept and lack many important functionality and polishing.
