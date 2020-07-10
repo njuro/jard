@@ -14,7 +14,7 @@ public class Constants {
 
   /** User content location */
   public static final Path USER_CONTENT_PATH =
-      Paths.get("/tmp/jard-usercontent"); // TODO do it better
+      Paths.get(System.getProperty("user.home"), "/jard-usercontent");
 
   public static final Path USER_CONTENT_THUMBS_PATH = USER_CONTENT_PATH.resolve("thumbs");
 
