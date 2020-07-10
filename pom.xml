@@ -52,6 +52,7 @@
     <rider-spring.version>1.14.0</rider-spring.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <git-code-format-maven-plugin.version>2.5</git-code-format-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -235,6 +236,25 @@
             <id>validate-code-format</id>
             <goals>
               <goal>validate-code-format</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId> <!-- Test coverage report -->
+        <version>${jacoco-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
             </goals>
           </execution>
         </executions>
