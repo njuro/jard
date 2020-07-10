@@ -16,8 +16,6 @@ public class Constants {
   public static final Path USER_CONTENT_PATH =
       Paths.get(System.getProperty("user.home"), "/jard-usercontent");
 
-  public static final Path USER_CONTENT_THUMBS_PATH = USER_CONTENT_PATH.resolve("thumbs");
-
   /** Images */
   public static final String DEFAULT_THUMBNAIL_EXTENSION = "png"; // for non-image attachments
 

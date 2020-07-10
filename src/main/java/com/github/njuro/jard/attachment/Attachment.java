@@ -1,6 +1,7 @@
 package com.github.njuro.jard.attachment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.njuro.jard.attachment.AttachmentCategory.AttachmentCategorySerializer;
 import com.github.njuro.jard.common.Constants;
@@ -106,15 +107,14 @@ public class Attachment implements Serializable {
       return null;
     }
 
-    return Constants.USER_CONTENT_THUMBS_PATH
-        .resolve(Paths.get(folder, thumbnailFilename))
-        .toFile();
+    return Constants.USER_CONTENT_PATH.resolve(Paths.get(getThumbnailFolder(), filename)).toFile();
   }
 
   /**
    * @return parent folder(s) thumbnail for this attachment's file is stored in. If thumbnail does
    *     not exist, returns {@code null}.
    */
+  @JsonProperty("thumbnailFolder")
   public String getThumbnailFolder() {
     if (thumbnailFilename == null) {
       return null;
