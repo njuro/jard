@@ -25,4 +25,5 @@ public class Mappings {
   public static final String API_ROOT_THREADS = API_ROOT_BOARDS + PATH_VARIABLE_BOARD + "/thread";
   public static final String API_ROOT_USERS = API_ROOT + "/users";
   public static final String API_ROOT_BANS = API_ROOT + "/bans";
+  public static final String API_ROOT_USERCONTENT = API_ROOT + "/usercontent";
 }

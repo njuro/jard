@@ -14,12 +14,7 @@ public class Constants {
 
   /** User content location */
   public static final Path USER_CONTENT_PATH =
-      Paths.get(
-          System.getProperty("user.home"),
-          "WebstormProjects",
-          "jard-client",
-          "public",
-          "usercontent"); // TODO do it better
+      Paths.get("/tmp/jard-usercontent"); // TODO do it better
 
   public static final Path USER_CONTENT_THUMBS_PATH = USER_CONTENT_PATH.resolve("thumbs");
 
