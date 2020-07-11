@@ -8,6 +8,11 @@ import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
+/**
+ * Registers {@link AuthorityVoter} as mechanism for granting access to endpoints.
+ *
+ * @see HasAuthorities
+ */
 @Configuration
 @EnableGlobalMethodSecurity
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {

@@ -10,6 +10,12 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.method.AbstractMethodSecurityMetadataSource;
 
+/**
+ * Gets required authorities from {@link HasAuthorities} annotation and converts them to config
+ * attributes.
+ *
+ * @see AuthorityAttribute *
+ */
 public class AuthorityMetadataSource extends AbstractMethodSecurityMetadataSource {
 
   @Override

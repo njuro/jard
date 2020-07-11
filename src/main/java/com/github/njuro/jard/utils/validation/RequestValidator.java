@@ -16,6 +16,12 @@ public class RequestValidator {
     this.validator = validator;
   }
 
+  /**
+   * Validates JSR 303 annotations on given bean
+   *
+   * @param target object to validate
+   * @throws FormValidationException if validation fails
+   */
   public void validate(Object target) {
     BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
     validator.validate(target, bindingResult);

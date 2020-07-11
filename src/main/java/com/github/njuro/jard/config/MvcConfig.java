@@ -35,14 +35,15 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/** Configuration of Spring MVC. */
 @Configuration
 @EnableJsonFilter
-@EnableSpringDataWebSupport
+@EnableSpringDataWebSupport // for resolving of parameters in controllers, such as Pageable
 @RequiredArgsConstructor
-/**
- * Annotation below disables jfilter's own {@link FilterAdvice}. For more information, see
- * documentation of {@link MergingFilterAdvice}.
- */
+/*
+ Annotation below disables jfilter's own FilterAdvice. For more information, see
+ documentation of MergingFilterAdvice.
+*/
 @ComponentScan(
     value = {"com.jfilter", "com.jfilter.components"},
     excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = FilterAdvice.class))
@@ -54,7 +55,7 @@ public class MvcConfig implements WebMvcConfigurer {
   @Value("${client.base.url:localhost}")
   private String clientBaseUrl;
 
-  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  /** Sets JSON {@link ObjectMapper} for jfilter filter classes. */
   @Autowired
   public void configureJsonFilter(
       FilterConfiguration filterConfiguration, ObjectMapper objectMapper) {
@@ -68,6 +69,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    // serve content of local user content folder on user content endpoint
+    // useful mostly for local development
     registry
         .addResourceHandler(Mappings.API_ROOT_USERCONTENT + "/**")
         .addResourceLocations("file:" + Constants.USER_CONTENT_PATH.toAbsolutePath() + "/")
@@ -86,7 +89,7 @@ public class MvcConfig implements WebMvcConfigurer {
             HttpMethod.DELETE.name(),
             HttpMethod.HEAD.name(),
             HttpMethod.OPTIONS.name())
-        .allowCredentials(true);
+        .allowCredentials(true); // for CSRF protection
   }
 
   @Override
@@ -98,6 +101,8 @@ public class MvcConfig implements WebMvcConfigurer {
   @Bean
   @Primary
   public LocalValidatorFactoryBean getValidator() {
+    // register custom bean validator which loads validation messages from messages.properties
+    // resource file and optionally do custom interpolation of variables in them
     var bean = new LocalValidatorFactoryBean();
     bean.setValidationMessageSource(messageSource);
     bean.setMessageInterpolator(new ValidationMessageInterpolator(messageSource));

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.access.ConfigAttribute;
 
+/** Configuration attribute based on {@link UserAuthority}. */
 @AllArgsConstructor
 public class AuthorityAttribute implements ConfigAttribute {
 

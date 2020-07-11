@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/** Filter which handles authentication via JSON Web Token (JWT) cookies. */
 @Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -58,6 +59,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
+  /**
+   * Finds JWT cookie and extracts token from it.
+   *
+   * @param request incoming HTTP request
+   * @return JWT, or {@code null} if no token was found
+   */
   private String getJwtFromRequest(HttpServletRequest request) {
     return Arrays.stream(request.getCookies())
         .filter(cookie -> cookie.getName().equals(Constants.JWT_COOKIE_NAME))

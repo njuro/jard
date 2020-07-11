@@ -9,6 +9,12 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 
+/**
+ * Grants or denies access to endpoint based on user authority config attributes.
+ *
+ * @see AuthorityAttribute
+ * @see HasAuthorities
+ */
 public class AuthorityVoter implements AccessDecisionVoter<MethodInvocation> {
 
   @Override

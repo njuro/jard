@@ -8,6 +8,7 @@ import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpo
 import org.springframework.context.MessageSource;
 import org.springframework.validation.beanvalidation.MessageSourceResourceBundleLocator;
 
+/** Custom interpolator of validation messages. */
 public class ValidationMessageInterpolator implements MessageInterpolator {
 
   private final MessageInterpolator defaultInterpolator;

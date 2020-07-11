@@ -29,6 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+/** Configuration of Spring Security. */
 @Configuration
 @EnableWebSecurity
 @Slf4j
@@ -67,6 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
   }
 
+  /**
+   * If enabled and no users are defined in database, inserts root user with predefined credentials
+   * into database.
+   */
   @PostConstruct
   public void createRootUser() {
     if (!rootEnabled || !userFacade.getAllUsers().isEmpty()) {
@@ -118,6 +123,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
+  /**
+   * Filter for users authentication check.
+   *
+   * @see JsonUsernamePasswordAuthenticationFilter
+   */
   @Bean
   public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordFilter() throws Exception {
     JsonUsernamePasswordAuthenticationFilter filter =
@@ -130,6 +140,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return filter;
   }
 
+  /** Encoder for hashing user's passwords (not tripcodes). */
   @Bean
   public PasswordEncoder bcryptEncoder() {
     return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);

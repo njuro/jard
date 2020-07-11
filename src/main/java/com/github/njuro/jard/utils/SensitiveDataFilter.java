@@ -11,6 +11,7 @@ import com.jfilter.request.RequestSession;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 
+/** Filter to dynamically remove sensitive data from JSON responses for certain users. */
 @DynamicFilterComponent
 @RequiredArgsConstructor
 public class SensitiveDataFilter implements DynamicFilterEvent {
@@ -19,6 +20,7 @@ public class SensitiveDataFilter implements DynamicFilterEvent {
 
   @Override
   public void onRequest(Comparator<RequestSession, FilterFields> comparator) {
+    // only authenticated users with VIEW_IP authority can view posters IP addresses
     comparator.compare(
         request -> !userFacade.hasCurrentUserAuthority(UserAuthority.VIEW_IP),
         result -> FilterFields.getFieldsBy(Post.class, Collections.singletonList("ip")));

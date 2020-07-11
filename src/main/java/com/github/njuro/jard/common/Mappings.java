@@ -2,6 +2,8 @@ package com.github.njuro.jard.common;
 
 import lombok.experimental.UtilityClass;
 
+/** Mappings for REST endpoints used in controllers. */
+@SuppressWarnings("RedundantModifiersUtilityClassLombok")
 @UtilityClass
 public class Mappings {
 

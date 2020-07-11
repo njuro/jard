@@ -9,18 +9,14 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerMapping;
 
-/**
- * Common interface for resolvers resolving path variables
- *
- * @author njuro
- */
+/** Common interface for resolvers resolving method arguments from path variables. */
 public interface PathVariableArgumentResolver extends HandlerMethodArgumentResolver {
 
   /**
-   * Resolves path variable from request
+   * Resolves path variable from request.
    *
-   * @param name of path variable
-   * @param request - web request
+   * @param name name of path variable
+   * @param request http request
    * @return String representation of given path variable or null, if path variable does not exists
    */
   default String getPathVariable(String name, NativeWebRequest request) {
@@ -28,7 +24,9 @@ public interface PathVariableArgumentResolver extends HandlerMethodArgumentResol
   }
 
   /**
-   * @param request - web request
+   * Resolves all path variables from request.
+   *
+   * @param request http request
    * @return map of path variables from given request
    */
   default Map<String, String> getPathVariables(NativeWebRequest request) {

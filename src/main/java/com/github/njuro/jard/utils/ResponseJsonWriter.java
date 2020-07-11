@@ -17,6 +17,13 @@ public class ResponseJsonWriter {
     this.objectMapper = objectMapper;
   }
 
+  /**
+   * Serializes given object and writes is as response body.
+   *
+   * @param response response to HTTP request
+   * @param object object to serialize
+   * @throws IOException if serializing or writing to response fails
+   */
   public void writeJsonToResponse(HttpServletResponse response, Object object) throws IOException {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.getWriter().write(objectMapper.writeValueAsString(object));

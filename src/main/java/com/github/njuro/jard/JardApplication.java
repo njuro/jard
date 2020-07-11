@@ -7,11 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
-/**
- * Entry point for the jard application
- *
- * @author njuro
- */
+/** Main entry point of the application. */
 @EntityScan(basePackageClasses = {JardApplication.class, Jsr310JpaConverters.class})
 @SpringBootApplication
 public class JardApplication {
