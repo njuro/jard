@@ -6,7 +6,7 @@ import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserService;
 import com.github.njuro.jard.utils.ResponseJsonWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
       throws IOException, ServletException {
     User user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
-    user.setLastLogin(LocalDateTime.now());
+    user.setLastLogin(OffsetDateTime.now());
     userService.saveUser(user);
     log.debug("User {} logged from IP {}", user.getUsername(), user.getLastLoginIp());
 

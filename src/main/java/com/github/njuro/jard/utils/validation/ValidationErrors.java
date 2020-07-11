@@ -1,6 +1,6 @@
 package com.github.njuro.jard.utils.validation;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,11 +13,11 @@ public class ValidationErrors {
 
   public static final String OBJECT_ERROR = "object";
 
-  private LocalDateTime timestamp;
+  private OffsetDateTime timestamp;
   private Map<String, String> errors;
 
   public ValidationErrors() {
-    timestamp = LocalDateTime.now();
+    timestamp = OffsetDateTime.now();
     errors = new HashMap<>();
   }
 

@@ -3,7 +3,7 @@ package com.github.njuro.jard.thread;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.post.PostService;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +97,7 @@ public class ThreadService {
    * @return updated thread
    */
   public Thread updateLastReplyTimestamp(Thread thread) {
-    thread.setLastReplyAt(LocalDateTime.now());
+    thread.setLastReplyAt(OffsetDateTime.now());
     return threadRepository.save(thread);
   }
 
@@ -108,7 +108,7 @@ public class ThreadService {
    * @return updated thread
    */
   public Thread updateLastBumpTimestamp(Thread thread) {
-    thread.setLastBumpAt(LocalDateTime.now());
+    thread.setLastBumpAt(OffsetDateTime.now());
     return threadRepository.save(thread);
   }
 

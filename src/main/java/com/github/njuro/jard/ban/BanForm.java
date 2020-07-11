@@ -1,7 +1,7 @@
 package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.common.Constants;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -24,7 +24,7 @@ public class BanForm {
 
   /** @see Ban#validTo */
   @Future(message = "{validation.ban.valid.to.future}")
-  private LocalDateTime validTo;
+  private OffsetDateTime validTo;
 
   /** Whether this ban is only a warning. */
   private boolean warning;

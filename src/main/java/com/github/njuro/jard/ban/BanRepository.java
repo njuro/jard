@@ -1,7 +1,7 @@
 package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.user.User;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,7 +13,7 @@ public interface BanRepository extends JpaRepository<Ban, UUID> {
 
   List<Ban> findByIp(String ip);
 
-  List<Ban> findByStatusAndValidToBefore(BanStatus status, LocalDateTime dateTime);
+  List<Ban> findByStatusAndValidToBefore(BanStatus status, OffsetDateTime dateTime);
 
   Optional<Ban> findByIpAndStatus(String ip, BanStatus status);
 

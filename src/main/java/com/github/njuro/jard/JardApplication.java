@@ -1,5 +1,7 @@
 package com.github.njuro.jard;
 
+import java.util.TimeZone;
+import javax.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -16,5 +18,11 @@ public class JardApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(JardApplication.class, args);
+  }
+
+  @PostConstruct
+  public void init() {
+    // set default timezone to UTC
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
   }
 }

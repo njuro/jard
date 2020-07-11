@@ -2,7 +2,7 @@ package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.user.User;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -78,11 +78,11 @@ public class Ban implements Serializable {
   /** Date and time this ban started to be valid. */
   @Column(nullable = false)
   @ToString.Include
-  private LocalDateTime validFrom;
+  private OffsetDateTime validFrom;
 
   /**
    * (Optional) date and time this ban expired / will expire. Value of {@code null} means the ban is
    * permanent (unless the ban is just a warning).
    */
-  @ToString.Include private LocalDateTime validTo;
+  @ToString.Include private OffsetDateTime validTo;
 }

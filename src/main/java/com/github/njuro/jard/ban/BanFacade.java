@@ -4,7 +4,7 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserService;
 import com.github.njuro.jard.utils.validation.FormValidationException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +44,7 @@ public class BanFacade {
 
     Ban ban = banForm.toBan();
     ban.setBannedBy(loggedUser);
-    ban.setValidFrom(LocalDateTime.now());
+    ban.setValidFrom(OffsetDateTime.now());
 
     if (ban.getStatus() == BanStatus.WARNING) {
       ban.setValidTo(null);

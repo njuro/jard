@@ -5,7 +5,7 @@ import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.thread.Thread;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -68,7 +68,7 @@ public class Post implements Serializable {
 
   /** Date and time when this post was created. */
   @Column(nullable = false)
-  private LocalDateTime createdAt;
+  private OffsetDateTime createdAt;
 
   /** IP of the poster. */
   @Basic
@@ -91,6 +91,6 @@ public class Post implements Serializable {
   /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   private void setCreatedAt() {
-    createdAt = LocalDateTime.now();
+    createdAt = OffsetDateTime.now();
   }
 }

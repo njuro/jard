@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.post.Post;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Basic;
@@ -62,15 +62,15 @@ public class Thread implements Serializable {
 
   /** Date and time when this thread was created. */
   @Column(nullable = false)
-  private LocalDateTime createdAt;
+  private OffsetDateTime createdAt;
 
   /** Date and time this thread was last replied to. */
   @Column(nullable = false)
-  private LocalDateTime lastReplyAt;
+  private OffsetDateTime lastReplyAt;
 
   /** Date and time this thread was last bumped. */
   @Column(nullable = false)
-  private LocalDateTime lastBumpAt;
+  private OffsetDateTime lastBumpAt;
 
   /** {@link Board} this board belongs to. */
   @ManyToOne(targetEntity = Board.class, fetch = FetchType.EAGER, optional = false)
@@ -107,8 +107,8 @@ public class Thread implements Serializable {
   /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   private void setCreatedAt() {
-    createdAt = LocalDateTime.now();
-    setLastReplyAt(LocalDateTime.now());
+    createdAt = OffsetDateTime.now();
+    setLastReplyAt(OffsetDateTime.now());
   }
 
   /** Returns thread number, which is post number of its original post. */

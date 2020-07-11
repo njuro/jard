@@ -1,7 +1,7 @@
 package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.user.User;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class BanService {
 
   /** @return list of active bans past their expiration date */
   public List<Ban> getExpiredBans() {
-    return banRepository.findByStatusAndValidToBefore(BanStatus.ACTIVE, LocalDateTime.now());
+    return banRepository.findByStatusAndValidToBefore(BanStatus.ACTIVE, OffsetDateTime.now());
   }
 
   /**

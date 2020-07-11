@@ -8,7 +8,7 @@ import com.github.njuro.jard.post.PostForm;
 import com.github.njuro.jard.post.PostService;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -54,8 +54,8 @@ public class ThreadFacade {
     Thread thread = threadForm.toThread();
     thread.setBoard(board);
     thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
-    thread.setLastReplyAt(LocalDateTime.now());
-    thread.setLastBumpAt(LocalDateTime.now());
+    thread.setLastReplyAt(OffsetDateTime.now());
+    thread.setLastBumpAt(OffsetDateTime.now());
 
     thread.getOriginalPost().setSage(false); // original post cannot be sage
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {

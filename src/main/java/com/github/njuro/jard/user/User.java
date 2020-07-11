@@ -1,7 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
@@ -96,16 +96,16 @@ public class User implements UserDetails {
   @Basic private String lastLoginIp;
 
   /** Date and time of last login of this user. */
-  private LocalDateTime lastLogin;
+  private OffsetDateTime lastLogin;
 
   /** Date and time when this user was created. */
   @Column(nullable = false)
-  private LocalDateTime createdAt;
+  private OffsetDateTime createdAt;
 
   /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   public void setCreatedAt() {
-    createdAt = LocalDateTime.now();
+    createdAt = OffsetDateTime.now();
   }
 
   @Override
