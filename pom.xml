@@ -47,6 +47,7 @@
     <git-code-format-maven-plugin.version>2.5</git-code-format-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <flyway.version>6.5.0</flyway.version>
+    <skipGitHooks>false</skipGitHooks>
   </properties>
 
   <dependencies>
@@ -226,6 +227,9 @@
         <groupId>com.cosium.code</groupId>
         <artifactId>git-code-format-maven-plugin</artifactId>
         <version>${git-code-format-maven-plugin.version}</version>
+        <configuration>
+          <skip>${skipGitHooks}</skip>
+        </configuration>
         <executions>
           <!-- On commit, format the modified java files -->
           <execution>
