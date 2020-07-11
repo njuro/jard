@@ -1,0 +1,59 @@
+{
+  "properties": [
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String",
+      "description": "Secret key for encrypting JSON Web Tokens."
+    },
+    {
+      "name": "app.jwt.expiration",
+      "type": "java.lang.Integer",
+      "description": "Expiration for JWT cookies (in seconds) - used with Remember Me functionality."
+    },
+    {
+      "name": "client.base.url",
+      "type": "java.lang.String",
+      "description": "Base URL of client making requests to API (for CORS settings)."
+    },
+    {
+      "name": "app.user.content.storage",
+      "type": "com.github.njuro.jard.attachment.UserContentStorageMode",
+      "description": "Where should the user uploaded content be stored."
+    },
+    {
+      "name": "app.user.root.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether the root user should be created when there are no users in database."
+    },
+    {
+      "name": "app.user.root.username",
+      "type": "java.lang.String",
+      "description": "Name of the root user."
+    },
+    {
+      "name": "app.user.root.password",
+      "type": "java.lang.String",
+      "description": "Password of the root user."
+    },
+    {
+      "name": "app.aws.s3.region",
+      "type": "java.lang.String",
+      "description": "Region of Amazon S3 bucket for storing user content."
+    },
+    {
+      "name": "app.aws.s3.bucket",
+      "type": "java.lang.String",
+      "description": "Name of Amazon S3 bucket for storing user content."
+    },
+    {
+      "name": "app.aws.accesskey",
+      "type": "java.lang.String",
+      "description": "Access key for Amazon Web Services."
+    },
+    {
+      "name": "app.aws.secretkey",
+      "type": "java.lang.String",
+      "description": "Secret key for Amazon Web Services."
+    }
+  ]
+}

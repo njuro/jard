@@ -40,11 +40,11 @@ public class AmazonS3FileService {
   private String awsSecretKey;
 
   /** Region the Amazon S3 bucket is located in. */
-  @Value("${app.aws.region:eu-central-1}")
+  @Value("${app.aws.s3.region:eu-central-1}")
   private Regions region;
 
   /** Name of the Amazon S3 bucket the files are stored in. */
-  @Value("${app.aws.bucket}")
+  @Value("${app.aws.s3.bucket}")
   private String bucket;
 
   /** Amazon S3 client. */
