@@ -18,6 +18,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
+import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -108,5 +110,11 @@ public class MvcConfig implements WebMvcConfigurer {
     bean.setMessageInterpolator(new ValidationMessageInterpolator(messageSource));
 
     return bean;
+  }
+
+  /** Enables Spring Actuator /httptrace endpoint for seeing most recent requests */
+  @Bean
+  public HttpTraceRepository httpTraceRepository() {
+    return new InMemoryHttpTraceRepository();
   }
 }

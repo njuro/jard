@@ -4,6 +4,7 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jard.config.security.jwt.JwtAuthenticationFilter;
+import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
@@ -11,6 +12,7 @@ import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -103,6 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .requiresSecure()
         .and()
         .authorizeRequests()
+        .requestMatchers(EndpointRequest.toAnyEndpoint())
+        .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
         .antMatchers(Mappings.API_ROOT_USERS + "/current")
         .authenticated()
         .anyRequest()

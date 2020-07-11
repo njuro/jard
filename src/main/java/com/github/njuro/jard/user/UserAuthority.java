@@ -29,7 +29,9 @@ public enum UserAuthority implements GrantedAuthority {
   /** Allows to view IP from which the {@link Post} was created. */
   VIEW_IP,
   /** Allows to create/update/delete {@link Ban} */
-  MANAGE_BANS;
+  MANAGE_BANS,
+  /** Allows access to Spring Actuator endpoints * */
+  ACTUATOR_ACCESS;
 
   @Override
   public String getAuthority() {

@@ -2,6 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 /src/test/resources/datasets/realdata/
 .env
+*.log
 
 ### STS ###
 .apt_generated

@@ -156,12 +156,12 @@
     </dependency>
     <dependency>
       <groupId>org.ehcache</groupId>
-      <artifactId>ehcache</artifactId>
+      <artifactId>ehcache</artifactId> <!-- Cache -->
       <version>${ehcache.version}</version>
     </dependency>
     <dependency>
       <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
-      <artifactId>bucket4j-spring-boot-starter</artifactId> <!-- limit API calls -->
+      <artifactId>bucket4j-spring-boot-starter</artifactId> <!-- API call rate limiting -->
       <version>${bucket4j-spring.version}</version>
     </dependency>
 
@@ -235,6 +235,17 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-info</goal> <!-- generate info about last build -->
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId> <!-- Generate info about last git commit -->
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
