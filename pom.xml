@@ -47,6 +47,8 @@
     <git-code-format-maven-plugin.version>2.5</git-code-format-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <flyway.version>6.5.0</flyway.version>
+    <ehcache.version>3.8.1</ehcache.version>
+    <bucket4j-spring.version>0.2.0</bucket4j-spring.version>
     <skipGitHooks>false</skipGitHooks>
   </properties>
 
@@ -145,6 +147,22 @@
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId> <!-- Database migrations -->
       <version>${flyway.version}</version>
+    </dependency>
+
+    <!-- CACHING AND RATE-LIMITING -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>${ehcache.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
+      <artifactId>bucket4j-spring-boot-starter</artifactId> <!-- limit API calls -->
+      <version>${bucket4j-spring.version}</version>
     </dependency>
 
     <!-- TESTING -->
