@@ -83,7 +83,11 @@ public class MvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry registry) {
     registry
         .addMapping("/**")
-        .allowedOrigins(clientBaseUrl, "http://localhost:3000", "http://192.168.0.80:3000")
+        .allowedOrigins(
+            clientBaseUrl,
+            "http://localhost:3000",
+            "http://192.168.0.80:3000",
+            "http://192.168.0.106:3000")
         .allowedMethods(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
