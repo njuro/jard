@@ -140,7 +140,7 @@
     </dependency>
     <dependency>
       <groupId>de.codecentric</groupId>
-      <artifactId>spring-boot-admin-starter-client</artifactId> <!-- UI for actuator -->
+      <artifactId>spring-boot-admin-starter-client</artifactId> <!-- UI for Spring Actuator -->
       <version>${spring-boot-admin.version}</version>
     </dependency>
     <dependency>

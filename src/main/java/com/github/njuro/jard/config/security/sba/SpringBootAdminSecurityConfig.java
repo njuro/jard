@@ -14,11 +14,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+/** Configuration of authentication between Spring Boot Admin server and client instances. */
 @Configuration
 public class SpringBootAdminSecurityConfig {
 
+  /** Properties of Spring Boot Admin client. */
   private final ClientProperties clientProperties;
 
+  /** Spring Boot Admin secret (used for authentication). */
   @Value("${app.sba.secret}")
   private String sbaSecret;
 
@@ -26,6 +29,7 @@ public class SpringBootAdminSecurityConfig {
     this.clientProperties = clientProperties;
   }
 
+  /** Adds header with Spring Boot Admin secret to all requests from SBA server to client. */
   @Bean
   public HttpHeadersProvider httpHeadersProvider() {
     return (instance -> {
@@ -35,6 +39,9 @@ public class SpringBootAdminSecurityConfig {
     });
   }
 
+  /**
+   * Adds header with Spring Boot Admin secret to registration request from SBA client to server.
+   */
   @Bean
   public BlockingRegistrationClient registrationClient() {
     RestTemplate template =

@@ -16,21 +16,21 @@ import org.springframework.security.core.GrantedAuthority;
  * @see HasAuthorities
  */
 public enum UserAuthority implements GrantedAuthority {
-  /** Allows to create/update/delete {@link Board} and their settings */
+  /** Allows to create/update/delete {@link Board} and their settings. */
   MANAGE_BOARDS,
-  /** Allows to toggle {@code stickied} status of {@link Thread} */
+  /** Allows to toggle {@code stickied} status of {@link Thread}. */
   TOGGLE_STICKY_THREAD,
-  /** Allows to toggle {@code locked} status of {@link Thread} */
+  /** Allows to toggle {@code locked} status of {@link Thread}. */
   TOGGLE_LOCK_THREAD,
-  /** Allows to delete {@link Post} or whole {@link Thread} */
+  /** Allows to delete {@link Post} or whole {@link Thread}. */
   DELETE_POST,
-  /** Allows to create/update/delete {@link User} */
+  /** Allows to create/update/delete {@link User}. */
   MANAGE_USERS,
   /** Allows to view IP from which the {@link Post} was created. */
   VIEW_IP,
-  /** Allows to create/update/delete {@link Ban} */
+  /** Allows to create/update/delete {@link Ban}. */
   MANAGE_BANS,
-  /** Allows access to Spring Actuator endpoints * */
+  /** Allows access to Spring Actuator endpoints and to Spring Boot Admin interface. */
   ACTUATOR_ACCESS;
 
   @Override

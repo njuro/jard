@@ -2,6 +2,7 @@ package com.github.njuro.jard.config.security.sba;
 
 import static com.github.njuro.jard.common.Constants.SBA_SECRET_HEADER;
 
+import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.user.UserAuthority;
 import java.io.IOException;
 import java.util.Collections;
@@ -17,6 +18,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Filter for authentication between Spring Boot Admin server and client instances. Secret key is
+ * stored in HTTP header with name defined in {@link Constants#SBA_SECRET_HEADER}. On successful
+ * extraction and validation of secret key, fictional "user" with name is authenticated with single
+ * authority - {@link UserAuthority#ACTUATOR_ACCESS} enabling him to access Spring Actuator
+ * endpoints.
+ */
 @Component
 @Slf4j
 public class SpringBootAdminAuthenticationFilter extends OncePerRequestFilter {
@@ -24,12 +32,15 @@ public class SpringBootAdminAuthenticationFilter extends OncePerRequestFilter {
   @Value("${spring.boot.admin.context-path}")
   private String sbaContextPath;
 
+  @Value("${management.server.servlet.context-path}")
+  private String actuatorContextPath;
+
   @Value("${app.sba.secret}")
   private String sbaSecret;
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    return !request.getRequestURI().startsWith("/actuator")
+    return !request.getRequestURI().startsWith(actuatorContextPath)
         && !request.getRequestURI().startsWith(sbaContextPath);
   }
 
