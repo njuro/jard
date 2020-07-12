@@ -54,6 +54,11 @@
       "name": "app.aws.secretkey",
       "type": "java.lang.String",
       "description": "Secret key for Amazon Web Services."
+    },
+    {
+      "name": "app.sba.secret",
+      "type": "java.lang.String",
+      "description": "Secret key for registering app in Spring Boot Admin."
     }
   ]
 }

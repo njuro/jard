@@ -1,5 +1,6 @@
 package com.github.njuro.jard;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 @EntityScan(basePackageClasses = {JardApplication.class, Jsr310JpaConverters.class})
 @SpringBootApplication
 @EnableCaching
+@EnableAdminServer
 public class JardApplication {
 
   public static void main(String[] args) {

@@ -49,6 +49,7 @@
     <flyway.version>6.5.0</flyway.version>
     <ehcache.version>3.8.1</ehcache.version>
     <bucket4j-spring.version>0.2.0</bucket4j-spring.version>
+    <spring-boot-admin.version>2.2.3</spring-boot-admin.version>
     <skipGitHooks>false</skipGitHooks>
   </properties>
 
@@ -131,6 +132,16 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId> <!-- Overview of running services -->
+    </dependency>
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-server</artifactId>
+      <version>${spring-boot-admin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-client</artifactId> <!-- UI for actuator -->
+      <version>${spring-boot-admin.version}</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

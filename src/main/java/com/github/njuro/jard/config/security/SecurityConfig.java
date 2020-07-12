@@ -4,10 +4,12 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.github.njuro.jard.config.security.jwt.JwtAuthenticationFilter;
+import com.github.njuro.jard.config.security.sba.SpringBootAdminAuthenticationFilter;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
+import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final LogoutSuccessHandler logoutSuccessHandler;
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final SpringBootAdminAuthenticationFilter springBootAdminAuthenticationFilter;
+  private final AdminServerProperties springBootAdminProperties;
 
   @Autowired
   public SecurityConfig(
@@ -61,13 +65,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       AuthenticationFailureHandler loginFailureHandler,
       LogoutSuccessHandler logoutSuccessHandler,
       JwtAuthenticationFilter jwtAuthenticationFilter,
-      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+      JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+      SpringBootAdminAuthenticationFilter springBootAdminAuthenticationFilter,
+      AdminServerProperties springBootAdminProperties) {
     this.userFacade = userFacade;
     this.loginSuccessHandler = loginSuccessHandler;
     this.loginFailureHandler = loginFailureHandler;
     this.logoutSuccessHandler = logoutSuccessHandler;
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+    this.springBootAdminAuthenticationFilter = springBootAdminAuthenticationFilter;
+    this.springBootAdminProperties = springBootAdminProperties;
   }
 
   /**
@@ -105,6 +113,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .requiresSecure()
         .and()
         .authorizeRequests()
+        .antMatchers(springBootAdminProperties.getContextPath() + "/**")
+        .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
         .requestMatchers(EndpointRequest.toAnyEndpoint())
         .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
         .antMatchers(Mappings.API_ROOT_USERS + "/current")
@@ -129,6 +139,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(
+        springBootAdminAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
   /**

@@ -25,6 +25,8 @@ public class Constants {
    */
   public static final String JWT_REMEMBER_ME_ATTRIBUTE = "jard.jwt.rememberme";
 
+  public static final String SBA_SECRET_HEADER = "X-SBA-SECRET";
+
   /** Root folder for storing files uploaded by posters on local filesystem. */
   public static final Path USER_CONTENT_PATH =
       Paths.get(System.getProperty("user.home"), "jard-usercontent");

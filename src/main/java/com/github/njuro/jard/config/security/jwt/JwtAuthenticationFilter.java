@@ -66,6 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    * @return JWT, or {@code null} if no token was found
    */
   private String getJwtFromRequest(HttpServletRequest request) {
+    if (request.getCookies() == null) {
+      return null;
+    }
+
     return Arrays.stream(request.getCookies())
         .filter(cookie -> cookie.getName().equals(Constants.JWT_COOKIE_NAME))
         .map(Cookie::getValue)
