@@ -159,6 +159,14 @@
       <artifactId>flyway-core</artifactId> <!-- Database migrations -->
       <version>${flyway.version}</version>
     </dependency>
+    <!-- TEMPORARY: SPRING BOOT 2.3.1 USES 0.9.8 VERSION OF reactor-netty CAUSING FILE ERRORS -->
+    <!-- https://github.com/spring-projects/spring-boot/issues/21934 -->
+    <dependency>
+      <groupId>io.projectreactor.netty</groupId>
+      <artifactId>reactor-netty</artifactId>
+      <version>0.9.9.RELEASE</version>
+    </dependency>
+
 
     <!-- CACHING AND RATE-LIMITING -->
     <dependency>
