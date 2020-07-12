@@ -257,6 +257,9 @@
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId> <!-- Generate info about last git commit -->
+        <configuration>
+          <skip>${skipGitHooks}</skip>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
