@@ -39,6 +39,8 @@ public class PostForm {
 
   private boolean sage;
 
+  private boolean capcode;
+
   /** Source file of uploaded attachment. */
   private MultipartFile attachment;
 

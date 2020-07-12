@@ -107,7 +107,9 @@ public class Attachment implements Serializable {
       return null;
     }
 
-    return Constants.USER_CONTENT_PATH.resolve(Paths.get(getThumbnailFolder(), filename)).toFile();
+    return Constants.USER_CONTENT_PATH
+        .resolve(Paths.get(getThumbnailFolder(), thumbnailFilename))
+        .toFile();
   }
 
   /**

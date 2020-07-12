@@ -4,6 +4,8 @@ import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.AttachmentFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.thread.Thread;
+import com.github.njuro.jard.user.User;
+import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,11 +16,14 @@ import org.springframework.stereotype.Component;
 public class PostFacade {
 
   private final AttachmentFacade attachmentFacade;
+  private final UserFacade userFacade;
   private final PostService postService;
 
   @Autowired
-  public PostFacade(AttachmentFacade attachmentFacade, PostService postService) {
+  public PostFacade(
+      AttachmentFacade attachmentFacade, UserFacade userFacade, PostService postService) {
     this.attachmentFacade = attachmentFacade;
+    this.userFacade = userFacade;
     this.postService = postService;
   }
 
@@ -34,6 +39,13 @@ public class PostFacade {
    */
   public Post createPost(@Valid @NotNull PostForm postForm, Thread thread) {
     Post post = postForm.toPost();
+
+    if (postForm.isCapcode()) {
+      User current = userFacade.getCurrentUser();
+      if (current != null) {
+        post.setCapcode(current.getRole());
+      }
+    }
 
     var boardSettings = thread.getBoard().getSettings();
     if (boardSettings.isForceDefaultPosterName()) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.thread.Thread;
+import com.github.njuro.jard.user.UserRole;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -11,6 +12,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -60,6 +63,13 @@ public class Post implements Serializable {
 
   /** (Optional) hashed password of the poster. Used to prove identity across different post. */
   @Basic private String tripcode;
+
+  /**
+   * (Optional) logged in user can decide to show his/her role in his/her post (for example as proof
+   * of identity)
+   */
+  @Enumerated(EnumType.STRING)
+  private UserRole capcode;
 
   /** Body of the post. */
   @Basic
