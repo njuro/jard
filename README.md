@@ -75,4 +75,7 @@ From **admin** perspective:
 - [ ] Many more...
 
 ## Contributing
-The software is in early state, so contributing / deploying guidelines are not developed yet. I will try to create them ASAP. For now, share the word and if you somehow manage to get it running by yourself and have something to contribute, feel free to open issue / pull request, it will make my day.
+There are several ways for contributing to the project. I will be thankful for all of them.
+- Star the repository and share the word
+- Open a new issue if you encounter a bug or have feature/improvement request
+- Contribute to the code - see [CONTRIBUTING.md](https://github.com/njuro/jard/blob/master/CONTRIBUTING.md) for details

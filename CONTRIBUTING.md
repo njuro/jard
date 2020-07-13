@@ -1,11 +1,13 @@
 # Contributing
 
 This section contains instructions for setting up developer enviroment in order to contribute to the code of **jard**.
+For contribution to frontend project [see this file](https://github.com/njuro/jard-client/blob/master/CONTRIBUTING.md).
 
 ## Required
 - `git` - with hooks enabled (they should be enabled by default).
 - `JDK 11` - I use Oracle version, but OpenJDK should be fine too.
 - `Maven` - at least version 3.5 (alternatively use Maven wrapper builded with the project).
+- `PostgreSQL database` - version 12.x
 - `Lombok plugin` - this project uses Lombok for boilerplate code generation. In order for IDE to stop yelling at you for "missing" methods and fields, install Lombok plugin - [most used IDEs are supported](https://projectlombok.org/setup/overview).
 
 ## Recommended
@@ -17,7 +19,8 @@ This section contains instructions for setting up developer enviroment in order 
 - Fork the base repository
 - Clone your fork with `git clone` 
 - Install dependencies with `mvn clean install`
-- Make changes in code
+- Set up database connection properties in `application-dev.properties` in `resources` folder
+- Make changes in code and test them (either manually or with automated tests)
 - Commit and push to your fork
 - Open pull request on base repository (optionally - link issue this PR relates to)
 	- Allow code changes in PR from base repository maintainers
