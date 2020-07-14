@@ -126,14 +126,18 @@ public class AttachmentService {
 
     if (storageMode == UserContentStorageMode.AMAZON_S3) {
       amazonS3FileService.deleteFile(attachment.getFolder(), attachment.getFilename());
-      amazonS3FileService.deleteFile(attachment.getThumbnailFolder(), attachment.getFilename());
+
+      if (attachment.getThumbnailFilename() != null) {
+        amazonS3FileService.deleteFile(
+            attachment.getThumbnailFolder(), attachment.getThumbnailFilename());
+      }
     }
 
     if (!attachment.getFile().delete()) {
       throw new IOException("Failed to delete attachment file");
     }
 
-    if (!attachment.getThumbnailFile().delete()) {
+    if (attachment.getThumbnailFilename() != null && !attachment.getThumbnailFile().delete()) {
       throw new IOException("Failed to delete attachment thumbnail");
     }
   }
