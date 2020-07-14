@@ -82,21 +82,21 @@ public class ThreadRestController {
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
-  public ResponseEntity<?> toggleStickyOnThread(Thread thread) {
+  public ResponseEntity<Object> toggleStickyOnThread(Thread thread) {
     threadFacade.toggleStickyOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
-  public ResponseEntity<?> toggleLockOnThread(Thread thread) {
+  public ResponseEntity<Object> toggleLockOnThread(Thread thread) {
     threadFacade.toggleLockOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
   @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
-  public ResponseEntity<?> deletePost(Thread thread, Post post) {
+  public ResponseEntity<Object> deletePost(Thread thread, Post post) {
     try {
       threadFacade.deletePost(thread, post);
       return ResponseEntity.ok().build();

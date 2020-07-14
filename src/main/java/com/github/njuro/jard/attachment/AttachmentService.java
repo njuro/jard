@@ -7,6 +7,7 @@ import com.github.njuro.jard.attachment.helpers.AttachmentImageUtils;
 import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import javax.imageio.ImageIO;
@@ -133,13 +134,8 @@ public class AttachmentService {
       }
     }
 
-    if (!attachment.getFile().delete()) {
-      throw new IOException("Failed to delete attachment file");
-    }
-
-    if (attachment.getThumbnailFilename() != null && !attachment.getThumbnailFile().delete()) {
-      throw new IOException("Failed to delete attachment thumbnail");
-    }
+    Files.delete(attachment.getFile().toPath());
+    Files.deleteIfExists(attachment.getThumbnailFile().toPath());
   }
 
   /**

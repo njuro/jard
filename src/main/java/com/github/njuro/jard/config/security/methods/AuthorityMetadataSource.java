@@ -32,6 +32,6 @@ public class AuthorityMetadataSource extends AbstractMethodSecurityMetadataSourc
 
   @Override
   public Collection<ConfigAttribute> getAllConfigAttributes() {
-    return null;
+    return Collections.emptyList();
   }
 }

@@ -25,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 
-public class BoardControllerTest extends ControllerTest {
+class BoardControllerTest extends ControllerTest {
 
   private static final String API_ROOT = Mappings.API_ROOT_BOARDS;
 
@@ -49,7 +49,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testCreateBoard() throws Exception {
+  void testCreateBoard() throws Exception {
     when(boardFacade.createBoard(boardForm)).thenReturn(boardForm.toBoard());
 
     performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
@@ -81,7 +81,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testBoardTypes() throws Exception {
+  void testBoardTypes() throws Exception {
     when(boardFacade.getAttachmentCategories()).thenCallRealMethod();
     performMockRequest(HttpMethod.GET, API_ROOT + "/attachment-categories")
         .andExpect(status().isOk())
@@ -89,7 +89,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testGetAllBoards() throws Exception {
+  void testGetAllBoards() throws Exception {
     when(boardFacade.getAllBoards()).thenReturn(Collections.singletonList(boardForm.toBoard()));
     performMockRequest(HttpMethod.GET, API_ROOT)
         .andExpect(status().isOk())
@@ -98,7 +98,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testGetBoard() throws Exception {
+  void testGetBoard() throws Exception {
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
     when(boardFacade.getBoard(any(Board.class), any(Pageable.class)))
         .thenReturn(EntityUtils.randomBoard(1));
@@ -119,7 +119,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testGetBoardCatalog() throws Exception {
+  void testGetBoardCatalog() throws Exception {
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
     when(boardFacade.getBoardCatalog(any(Board.class))).thenReturn(EntityUtils.randomBoard(1));
 
@@ -136,7 +136,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testEditBoard() throws Exception {
+  void testEditBoard() throws Exception {
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
 
     performMockRequest(
@@ -151,7 +151,7 @@ public class BoardControllerTest extends ControllerTest {
   }
 
   @Test
-  public void testDeleteBoard() throws Exception {
+  void testDeleteBoard() throws Exception {
     when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
 
     performMockRequest(
@@ -163,7 +163,6 @@ public class BoardControllerTest extends ControllerTest {
     assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
   }
 
-  @Test
   private void expectValidationErrors(String... expectedFieldErrors) throws Exception {
     performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
         .andExpect(validationError(expectedFieldErrors));

@@ -1,5 +1,7 @@
 package com.github.njuro.jard.database;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jard.attachment.AttachmentCategory;
@@ -39,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @ActiveProfiles(profiles = "dev", inheritProfiles = false)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Slf4j
-public class DatabasePopulator {
+class DatabasePopulator {
 
   @Autowired private ThreadFacade threadFacade;
 
@@ -54,7 +56,7 @@ public class DatabasePopulator {
   @Test
   @Commit
   @Transactional
-  public void populateRealData() throws IOException {
+  void populateRealData() throws IOException {
     Board board = createBoard();
     List<File> files =
         Files.list(DATA_PATH)
@@ -84,6 +86,8 @@ public class DatabasePopulator {
 
       log.info(String.format("Populated thread %d of %d", counter++, files.size()));
     }
+
+    assertThat(boardFacade.getBoardCatalog(board).getThreads()).isNotEmpty();
   }
 
   private Board createBoard() {

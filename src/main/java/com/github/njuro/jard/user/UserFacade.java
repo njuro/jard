@@ -52,7 +52,7 @@ public class UserFacade implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) {
     User user = resolveUser(username);
     if (user == null) {
       throw new UsernameNotFoundException("User " + username + " was not found");

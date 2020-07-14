@@ -180,8 +180,11 @@ public class AttachmentImageUtils {
   private BufferedImage getImageFromVideoAttachment(Attachment attachment) {
     try {
       return VideoThumbnailMaker.getImageFromVideo(attachment.getFile().toPath().toString());
-    } catch (IOException | InterruptedException ex) {
+    } catch (IOException ex) {
       throw new IllegalArgumentException("Reading video file failed", ex);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+      throw new IllegalStateException(ex);
     }
   }
 

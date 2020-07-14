@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class BoardFacadeTest {
+class BoardFacadeTest {
 
   @Mock private BoardService boardService;
 
@@ -40,7 +40,7 @@ public class BoardFacadeTest {
   }
 
   @Test
-  public void testCreateBoard() {
+  void testCreateBoard() {
     when(boardService.doesBoardExist(boardForm.getLabel())).thenReturn(false);
     when(boardService.saveBoard(any(Board.class))).thenAnswer(a -> a.getArgument(0));
 
@@ -51,7 +51,7 @@ public class BoardFacadeTest {
   }
 
   @Test
-  public void testCreateBoardAlreadyExists() {
+  void testCreateBoardAlreadyExists() {
     when(boardService.doesBoardExist(boardForm.getLabel())).thenReturn(true);
 
     assertThatExceptionOfType(FormValidationException.class)

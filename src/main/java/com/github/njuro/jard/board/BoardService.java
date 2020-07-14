@@ -49,7 +49,7 @@ public class BoardService {
    * @return resolved board
    * @throws BoardNotFoundException if such board is not found in database
    */
-  public Board resolveBoard(String label) throws BoardNotFoundException {
+  public Board resolveBoard(String label) {
     return boardRepository.findByLabel(label).orElseThrow(BoardNotFoundException::new);
   }
 

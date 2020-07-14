@@ -62,7 +62,7 @@ public class UserRestController {
 
   @DeleteMapping(Mappings.PATH_VARIABLE_USER)
   @HasAuthorities(UserAuthority.MANAGE_USERS)
-  public ResponseEntity<?> deleteUser(User user) {
+  public ResponseEntity<Object> deleteUser(User user) {
     userFacade.deleteUser(user);
     return ResponseEntity.ok().build();
   }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /** Custom filter which enables to receive authentication request in JSON form. */
@@ -20,7 +19,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
   @Override
   public Authentication attemptAuthentication(
-      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+      HttpServletRequest request, HttpServletResponse response) {
     try {
       LoginRequest login = objectMapper.readValue(request.getReader(), LoginRequest.class);
       UsernamePasswordAuthenticationToken authRequest =

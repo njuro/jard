@@ -49,6 +49,8 @@ public class AttachmentMetadataUtils {
       case AUDIO:
         setAudioMetadata(attachment);
         break;
+      default:
+        break;
     }
 
     setFileMetadata(attachment);
@@ -107,8 +109,10 @@ public class AttachmentMetadataUtils {
       }
 
       demuxer.close();
-    } catch (InterruptedException | IOException ex) {
+    } catch (IOException ex) {
       throw new IllegalArgumentException("Failed to open video file", ex);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -124,8 +128,10 @@ public class AttachmentMetadataUtils {
       demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
       attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
       demuxer.close();
-    } catch (InterruptedException | IOException ex) {
+    } catch (IOException ex) {
       throw new IllegalArgumentException("Failed to open audio file", ex);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
     }
   }
 

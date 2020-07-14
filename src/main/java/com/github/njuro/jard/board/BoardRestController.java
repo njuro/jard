@@ -78,7 +78,7 @@ public class BoardRestController {
 
   @DeleteMapping(Mappings.PATH_VARIABLE_BOARD)
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
-  public ResponseEntity<?> deleteBoard(Board board) {
+  public ResponseEntity<Object> deleteBoard(Board board) {
     try {
       boardFacade.deleteBoard(board);
       return ResponseEntity.ok().build();

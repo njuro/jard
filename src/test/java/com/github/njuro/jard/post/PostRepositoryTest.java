@@ -24,7 +24,7 @@ class PostRepositoryTest extends RepositoryTest {
   }
 
   @Test
-  public void testFindByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc() {
+  void testFindByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc() {
     assertThat(
             postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(THREAD_ID, 2L))
         .extracting(Post::getPostNumber)
