@@ -11,8 +11,8 @@ Most notable examples of imageboards include 2channel, 4chan, 8chan, Krautchan e
 
 This repository contains backend exposing REST API, which is consumed by frontend client written in React (see [jard-client](https://github.com/njuro/jard-client)).
 
-### Is jard based on existing software?
-Code-wise is jard written entirely from scratch and is not a fork of any existing software. Design- and feature-wise it is heavily influenced by aforementioned imageboards.
+### Is jard based on existing imageboard software?
+Code-wise is jard written "from scratch" and is not a fork of any existing imageboard. Design- and feature-wise it is heavily influenced by aforementioned imageboards.
 
 ### Why make another imageboard software?
 **Short answer:** I don't know, why not?
