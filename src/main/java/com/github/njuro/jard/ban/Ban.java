@@ -71,9 +71,7 @@ public class Ban implements Serializable {
   private User unbannedBy;
 
   /** (Optional) reason for ending this ban before its natural expiration */
-  @Basic
-  @Column(nullable = false)
-  private String unbanReason;
+  @Basic private String unbanReason;
 
   /** Date and time this ban started to be valid. */
   @Column(nullable = false)
