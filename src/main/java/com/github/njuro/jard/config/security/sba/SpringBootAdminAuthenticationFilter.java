@@ -32,15 +32,15 @@ public class SpringBootAdminAuthenticationFilter extends OncePerRequestFilter {
   @Value("${spring.boot.admin.context-path}")
   private String sbaContextPath;
 
-  @Value("${management.server.servlet.context-path}")
-  private String actuatorContextPath;
+  @Value("${management.endpoints.web.base-path}")
+  private String actuatorBasePath;
 
   @Value("${app.sba.secret}")
   private String sbaSecret;
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    return !request.getRequestURI().startsWith(actuatorContextPath)
+    return !request.getRequestURI().startsWith(actuatorBasePath)
         && !request.getRequestURI().startsWith(sbaContextPath);
   }
 
