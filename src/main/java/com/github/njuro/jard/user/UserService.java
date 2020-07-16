@@ -75,8 +75,12 @@ public class UserService {
 
   /** @return user currently logged in the system */
   public User getCurrentUser() {
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      return null;
+    }
 
+    Object principal = authentication.getPrincipal();
     if (!(principal instanceof User)) {
       return null;
     }
