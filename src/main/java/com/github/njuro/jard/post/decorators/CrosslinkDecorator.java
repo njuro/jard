@@ -45,14 +45,14 @@ public class CrosslinkDecorator implements PostDecorator {
       String boardLabel =
           Optional.ofNullable(matcher.group("board"))
               .orElse(post.getThread().getBoard().getLabel());
-      String postNumber = matcher.group("postNo");
+      String postNumber = Optional.ofNullable(matcher.group("postNo")).orElse("");
 
       String linkHref = "/boards/" + boardLabel;
       boolean valid = true;
       String special = "";
 
       try {
-        if (postNumber == null || postNumber.isEmpty()) {
+        if (postNumber.isEmpty()) {
           boardService.resolveBoard(boardLabel);
         } else {
           Post linkedPost = postService.resolvePost(boardLabel, Long.valueOf(postNumber));
@@ -75,6 +75,8 @@ public class CrosslinkDecorator implements PostDecorator {
       String linkClass = valid ? CROSSLINK_CLASS_VALID : CROSSLINK_CLASS_INVALID;
       String crosslinkStart =
           CROSSLINK_START
+              .replace("${postNumber}", postNumber)
+              .replace("${boardLabel}", boardLabel)
               .replace("${linkHref}", valid ? linkHref : "#")
               .replace("${linkClass}", linkClass);
 

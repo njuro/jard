@@ -92,7 +92,8 @@ public class Constants {
           ">>(?:>/(?<board>.+)/)?(?:(?<postNo>\\d+)|(?<=/)\\s*)"); // >>5, >>>/b/, >>>/b/5 etc.
 
   /** Tag to put at the beginning of crosslink. */
-  public static final String CROSSLINK_START = "<a href=\"${linkHref}\" class=\"${linkClass}\">";
+  public static final String CROSSLINK_START =
+      "<a data-post-number=\"${postNumber}\" data-board-label=\"${boardLabel}\" href=\"${linkHref}\" class=\"${linkClass}\">";
 
   /** Tag to put at the end of crosslink. */
   public static final String CROSSLINK_END = "</a>";
