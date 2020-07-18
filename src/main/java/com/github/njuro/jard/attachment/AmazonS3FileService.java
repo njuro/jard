@@ -13,6 +13,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,15 +22,8 @@ import org.springframework.stereotype.Service;
  * <p>Must be enabled by {@link UserContentStorageMode#AMAZON_S3}
  */
 @Service
+@ConditionalOnProperty(name = "${app.user.content.storage}", havingValue = "AMAZON_S3")
 public class AmazonS3FileService {
-
-  /**
-   * Active storage mode.
-   *
-   * @see UserContentStorageMode
-   */
-  @Value("${app.user.content.storage:LOCAL}")
-  private UserContentStorageMode storageMode;
 
   /** Access key for AWS. */
   @Value("${app.aws.accesskey}")
@@ -59,10 +53,6 @@ public class AmazonS3FileService {
    */
   @PostConstruct
   public void initializeClient() {
-    if (storageMode != UserContentStorageMode.AMAZON_S3) {
-      return;
-    }
-
     try {
       AWSCredentials credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
       awsClient =
@@ -82,14 +72,9 @@ public class AmazonS3FileService {
    * @param filename name of the uploaded file in the bucket
    * @param file file to upload
    * @return shareable url to uploaded file
-   * @throws IllegalStateException if Amazon S3 storage mode is not enabled
    * @throws IllegalArgumentException if upload of file fails
    */
   public String uploadFile(String folder, String filename, File file) {
-    if (storageMode != UserContentStorageMode.AMAZON_S3) {
-      throw new IllegalStateException("Amazon S3 storage mode is not enabled");
-    }
-
     try {
       String key = Paths.get(folder, filename).toString();
       awsClient.putObject(
@@ -106,14 +91,9 @@ public class AmazonS3FileService {
    *
    * @param folder path to the folder in the bucket where the file is located
    * @param filename name of the file
-   * @throws IllegalStateException if Amazon S3 storage mode is not enabled
    * @throws IllegalArgumentException if deletion of file fails
    */
   public void deleteFile(String folder, String filename) {
-    if (storageMode != UserContentStorageMode.AMAZON_S3) {
-      throw new IllegalStateException("Amazon S3 storage mode is not enabled");
-    }
-
     try {
       String key = Paths.get(folder, filename).toString();
       awsClient.deleteObject(bucket, key);

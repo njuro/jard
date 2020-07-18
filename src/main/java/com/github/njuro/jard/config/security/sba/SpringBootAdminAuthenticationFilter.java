@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -27,6 +28,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 @Component
 @Slf4j
+@ConditionalOnProperty(
+    name = "spring.boot.admin.client.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class SpringBootAdminAuthenticationFilter extends OncePerRequestFilter {
 
   @Value("${spring.boot.admin.context-path}")

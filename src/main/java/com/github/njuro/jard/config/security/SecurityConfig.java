@@ -66,7 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       LogoutSuccessHandler logoutSuccessHandler,
       JwtAuthenticationFilter jwtAuthenticationFilter,
       JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-      SpringBootAdminAuthenticationFilter springBootAdminAuthenticationFilter,
+      @Autowired(required = false)
+          SpringBootAdminAuthenticationFilter springBootAdminAuthenticationFilter,
       AdminServerProperties springBootAdminProperties) {
     this.userFacade = userFacade;
     this.loginSuccessHandler = loginSuccessHandler;
@@ -139,8 +140,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
-    http.addFilterBefore(
-        springBootAdminAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    if (springBootAdminAuthenticationFilter != null) {
+
+      http.addFilterBefore(
+          springBootAdminAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
   }
 
   /**
