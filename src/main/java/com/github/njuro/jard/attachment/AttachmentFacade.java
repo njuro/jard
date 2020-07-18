@@ -1,5 +1,7 @@
 package com.github.njuro.jard.attachment;
 
+import ac.simons.oembed.OembedException;
+import com.github.njuro.jard.attachment.embedded.EmbedService;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardFacade;
 import com.github.njuro.jard.utils.validation.FormValidationException;
@@ -20,12 +22,15 @@ public class AttachmentFacade {
 
   private final BoardFacade boardFacade;
   private final AttachmentService attachmentService;
+  private final EmbedService embedService;
   private final Tika mimeTypeDetector;
 
   @Autowired
-  public AttachmentFacade(BoardFacade boardFacade, AttachmentService attachmentService) {
+  public AttachmentFacade(
+      BoardFacade boardFacade, AttachmentService attachmentService, EmbedService embedService) {
     this.boardFacade = boardFacade;
     this.attachmentService = attachmentService;
+    this.embedService = embedService;
     mimeTypeDetector = new Tika();
   }
 
@@ -75,11 +80,12 @@ public class AttachmentFacade {
     }
 
     String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
-    Attachment attachment =
+    var attachment =
         Attachment.builder()
             .originalFilename(file.getOriginalFilename())
             .filename(generatedName)
             .folder(folder.toString())
+            .metadata(new AttachmentMetadata())
             .build();
     attachment.getMetadata().setMimeType(mimeType);
 
@@ -104,5 +110,29 @@ public class AttachmentFacade {
       log.error("Failed to detect mime type: " + ex.getMessage());
       return null;
     }
+  }
+
+  /**
+   * Creates and stores new embedded attachment.
+   *
+   * @param embedUrl URL of content to be embedded.
+   * @param board {@link Board} to which the file was uploaded
+   * @return created {@link Attachment}
+   * @throws FormValidationException if embedded attachments are not allowed on given board
+   */
+  public Attachment createEmbeddedAttachment(String embedUrl, Board board) {
+    if (!board.getSettings().getAttachmentCategories().contains(AttachmentCategory.EMBED)) {
+      throw new FormValidationException("Embedded attachments are not allowed for this board");
+    }
+
+    var attachment = Attachment.builder().category(AttachmentCategory.EMBED).build();
+    try {
+      embedService.processEmbedded(embedUrl, attachment);
+    } catch (IllegalArgumentException | OembedException ex) {
+      log.error("Processing of embedded attachment failed", ex);
+      throw new FormValidationException("Processing of embedded attachment failed");
+    }
+
+    return attachmentService.saveEmbeddedAttachment(attachment);
   }
 }

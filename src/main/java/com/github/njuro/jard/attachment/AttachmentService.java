@@ -3,6 +3,7 @@ package com.github.njuro.jard.attachment;
 import static com.github.njuro.jard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION;
 import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
 
+import com.github.njuro.jard.attachment.embedded.EmbedData;
 import com.github.njuro.jard.attachment.helpers.AttachmentImageUtils;
 import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
 import java.awt.image.RenderedImage;
@@ -37,7 +38,8 @@ public class AttachmentService {
 
   @Autowired
   public AttachmentService(
-      AmazonS3FileService amazonS3FileService, AttachmentRepository attachmentRepository) {
+      @Autowired(required = false) AmazonS3FileService amazonS3FileService,
+      AttachmentRepository attachmentRepository) {
     this.amazonS3FileService = amazonS3FileService;
     this.attachmentRepository = attachmentRepository;
   }
@@ -115,6 +117,20 @@ public class AttachmentService {
   }
 
   /**
+   * Saves embedded {@link Attachment} and its retrieved {@link EmbedData} to database. *
+   *
+   * @param attachment attachment to be saved
+   * @return saved {@link Attachment}
+   * @throws NullPointerException if attachment is {@code null}
+   */
+  public Attachment saveEmbeddedAttachment(Attachment attachment) {
+    Objects.requireNonNull(attachment, "Attachment cannot be null");
+
+    attachment.getEmbedData().setAttachment(attachment);
+    return attachmentRepository.save(attachment);
+  }
+
+  /**
    * Deletes attachment's file.
    *
    * @param attachment attachment, which file to delete
@@ -135,7 +151,9 @@ public class AttachmentService {
     }
 
     Files.delete(attachment.getFile().toPath());
-    Files.deleteIfExists(attachment.getThumbnailFile().toPath());
+    if (attachment.getThumbnailFile() != null) {
+      Files.delete(attachment.getThumbnailFile().toPath());
+    }
   }
 
   /**

@@ -52,7 +52,10 @@ public class PostFacade {
       post.setName(boardSettings.getDefaultPosterName());
     }
 
-    if (postForm.getAttachment() != null) {
+    if (postForm.getEmbedUrl() != null && !postForm.getEmbedUrl().isBlank()) {
+      post.setAttachment(
+          attachmentFacade.createEmbeddedAttachment(postForm.getEmbedUrl(), thread.getBoard()));
+    } else if (postForm.getAttachment() != null) {
       post.setAttachment(
           attachmentFacade.createAttachment(postForm.getAttachment(), thread.getBoard()));
     }

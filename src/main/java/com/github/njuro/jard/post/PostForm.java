@@ -44,6 +44,9 @@ public class PostForm {
   /** Source file of uploaded attachment. */
   private MultipartFile attachment;
 
+  /** URL of content to be embedded. */
+  private String embedUrl;
+
   /**
    * Validates that attachment's size is not too big as defined by {@link
    * Constants#MAX_ATTACHMENT_SIZE}, false otherwise
@@ -56,7 +59,7 @@ public class PostForm {
   /** Validates that post have either non-empty body and / or attachment. */
   @AssertTrue(message = "{validation.post.empty}")
   public boolean isAttachmentOrNonEmptyBody() {
-    return (attachment != null && attachment.getSize() > 0)
+    return (embedUrl != null || (attachment != null && attachment.getSize() > 0))
         || (body != null && !body.trim().isEmpty());
   }
 

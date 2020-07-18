@@ -45,7 +45,8 @@ public class ThreadForm {
   /** Validates that original post has non-empty attachment. */
   @AssertTrue(message = "{validation.thread.first.post.attachment}")
   public boolean isUploadedAttachment() {
-    return postForm.getAttachment().getSize() > 0;
+    return (postForm.getEmbedUrl() != null && !postForm.getEmbedUrl().isBlank())
+        || (postForm.getAttachment() != null && postForm.getAttachment().getSize() > 0);
   }
 
   /** @return {@link Thread} created from values of this form. */

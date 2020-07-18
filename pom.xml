@@ -36,6 +36,7 @@
     <thumbnailator.version>0.4.11</thumbnailator.version>
     <humble-video.version>0.3.0</humble-video.version>
     <pdfbox.version>2.0.20</pdfbox.version>
+    <oembed.version>0.8.1</oembed.version>
     <commons-io.version>2.7</commons-io.version>
     <jfilter.version>1.0.17</jfilter.version>
     <commons-lang3.version>3.10</commons-lang3.version>
@@ -48,6 +49,7 @@
     <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <flyway.version>6.5.0</flyway.version>
     <ehcache.version>3.8.1</ehcache.version>
+    <ehcache-legacy.version>2.10.6</ehcache-legacy.version>
     <bucket4j-spring.version>0.2.0</bucket4j-spring.version>
     <spring-boot-admin.version>2.2.3</spring-boot-admin.version>
     <skipGitHooks>false</skipGitHooks>
@@ -111,6 +113,17 @@
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox</artifactId> <!-- PDF files metadata and thumbnails -->
       <version>${pdfbox.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>eu.michael-simons</groupId>
+      <artifactId>java-oembed</artifactId> <!-- Content embedding -->
+      <version>${oembed.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>net.sf.ehcache</groupId>
+          <artifactId>ehcache</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- UTILITIES -->
@@ -177,6 +190,12 @@
       <groupId>org.ehcache</groupId>
       <artifactId>ehcache</artifactId> <!-- Cache -->
       <version>${ehcache.version}</version>
+    </dependency>
+    <!-- Legacy version of ehcache needed for java-oembed -->
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <version>${ehcache-legacy.version}</version>
     </dependency>
     <dependency>
       <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>

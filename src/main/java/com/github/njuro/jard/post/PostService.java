@@ -1,6 +1,7 @@
 package com.github.njuro.jard.post;
 
 import com.github.njuro.jard.attachment.Attachment;
+import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.AttachmentService;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardService;
@@ -164,9 +165,11 @@ public class PostService {
   public void deletePost(Post post) throws IOException {
     Objects.requireNonNull(post, "Post cannot be null");
 
-    if (post.getAttachment() != null) {
-      attachmentService.deleteAttachmentFile(post.getAttachment());
+    var attachment = post.getAttachment();
+    if (attachment != null && attachment.getCategory() != AttachmentCategory.EMBED) {
+      attachmentService.deleteAttachmentFile(attachment);
     }
+
     postRepository.delete(post);
   }
 
@@ -182,7 +185,10 @@ public class PostService {
 
     List<Attachment> attachments =
         posts.stream()
-            .filter(post -> post.getAttachment() != null)
+            .filter(
+                post ->
+                    post.getAttachment() != null
+                        && post.getAttachment().getCategory() != AttachmentCategory.EMBED)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
 

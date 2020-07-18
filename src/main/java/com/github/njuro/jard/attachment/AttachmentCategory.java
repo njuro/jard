@@ -59,7 +59,8 @@ public enum AttachmentCategory {
       new MediaType(
           "application",
           "vnd.openxmlformats-officedocument.wordprocessingml.document",
-          extension("docx")));
+          extension("docx"))),
+  EMBED(true);
 
   /** Name of special parameter to store file extension related to given MIME type */
   private static final String EXTENSION_PARAM = "extension";
