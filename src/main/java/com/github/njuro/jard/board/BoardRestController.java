@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_BOARDS)
+@Slf4j
 public class BoardRestController {
 
   private final BoardFacade boardFacade;
@@ -83,7 +85,8 @@ public class BoardRestController {
       boardFacade.deleteBoard(board);
       return ResponseEntity.ok().build();
     } catch (IOException ex) {
-      return ResponseEntity.badRequest().body(ex.getMessage());
+      log.error("Deleting board failed", ex);
+      return ResponseEntity.badRequest().body("Deleting board failed");
     }
   }
 }

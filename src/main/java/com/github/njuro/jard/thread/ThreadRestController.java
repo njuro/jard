@@ -13,6 +13,7 @@ import com.jfilter.filter.FieldFilterSetting;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_THREADS)
+@Slf4j
 public class ThreadRestController {
 
   private final ThreadFacade threadFacade;
@@ -101,7 +103,8 @@ public class ThreadRestController {
       threadFacade.deletePost(thread, post);
       return ResponseEntity.ok().build();
     } catch (IOException ex) {
-      return ResponseEntity.badRequest().body(ex.getMessage());
+      log.error("Deleting post failed", ex);
+      return ResponseEntity.badRequest().body("Deleting post failed");
     }
   }
 }
