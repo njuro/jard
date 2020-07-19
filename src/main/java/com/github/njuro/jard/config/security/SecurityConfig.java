@@ -10,6 +10,8 @@ import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /** Configuration of Spring Security. */
@@ -39,6 +42,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Value("${client.base.url:localhost}")
+  private String clientBaseUrl;
 
   @Value("${app.user.root.enabled:false}")
   private boolean rootEnabled;
@@ -133,7 +139,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .cors(Customizer.withDefaults())
         .csrf()
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        .csrfTokenRepository(csrfTokenRepository());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -166,5 +172,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public PasswordEncoder bcryptEncoder() {
     return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);
+  }
+
+  /** Configures CSRF token domain based on client base url. */
+  @Bean
+  public CsrfTokenRepository csrfTokenRepository() throws URISyntaxException {
+    var repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+    String domain = new URI(clientBaseUrl).getHost();
+    domain = domain.startsWith("www.") ? domain.substring(4) : domain;
+    repository.setCookieDomain("." + domain);
+    return repository;
   }
 }
