@@ -181,8 +181,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public CsrfTokenRepository csrfTokenRepository() throws URISyntaxException {
     var repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
     String domain = new URI(clientBaseUrl).getHost();
-    domain = domain.startsWith("www.") ? domain.substring(4) : domain;
-    repository.setCookieDomain(domain);
+    if (domain != null) {
+      domain = domain.startsWith("www.") ? domain.substring(4) : domain;
+      repository.setCookieDomain(domain);
+    }
     return repository;
   }
 }
