@@ -139,6 +139,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .cors(Customizer.withDefaults())
         .csrf()
+        .ignoringRequestMatchers(EndpointRequest.toAnyEndpoint())
+        .ignoringAntMatchers(springBootAdminProperties.getContextPath() + "/**")
         .csrfTokenRepository(csrfTokenRepository());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
