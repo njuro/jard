@@ -21,7 +21,7 @@ public class EmbeddedSoundcloudHandler implements EmbeddedAttachmentHandler {
     var oembed = new OembedEndpoint();
     oembed.setName(getProviderName());
     oembed.setFormat(Format.json);
-    oembed.setEndpoint("https://soundcloud.com/oembed");
+    oembed.setEndpoint("https://soundcloud.com/oembed?auto_play=true&show_comments=false");
     // Default width for SC is "100%" which causes JSON parsing exception
     oembed.setMaxWidth((int) IMAGE_MAX_THUMB_WIDTH);
     oembed.setUrlSchemes(Collections.singletonList("https?://soundcloud.com/.*/.*"));

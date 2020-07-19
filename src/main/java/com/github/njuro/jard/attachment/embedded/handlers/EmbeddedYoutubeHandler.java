@@ -5,7 +5,9 @@ import ac.simons.oembed.OembedResponse;
 import ac.simons.oembed.OembedResponse.Format;
 import com.github.njuro.jard.attachment.Attachment;
 import java.util.Arrays;
+import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /** Handler for embedding videos from YouTube. */
 @Component
@@ -36,6 +38,14 @@ public class EmbeddedYoutubeHandler implements EmbeddedAttachmentHandler {
         oembedResponse
             .getHtml()
             .replaceAll("(?:youtu\\.be|youtube\\.com)", "youtube-nocookie.com"));
+
+    var iframe = Jsoup.parseBodyFragment(oembedResponse.getHtml()).body().child(0);
+    iframe.attr(
+        "src",
+        UriComponentsBuilder.fromHttpUrl(iframe.attr("src"))
+            .queryParam("autoplay", 1)
+            .toUriString());
+    oembedResponse.setHtml(iframe.outerHtml());
 
     EmbeddedAttachmentHandler.super.setEmbedData(oembedResponse, embedUrl, attachment);
   }

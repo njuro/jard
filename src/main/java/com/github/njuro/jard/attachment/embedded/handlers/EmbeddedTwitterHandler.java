@@ -5,7 +5,6 @@ import ac.simons.oembed.OembedResponse;
 import ac.simons.oembed.OembedResponse.Format;
 import com.github.njuro.jard.attachment.Attachment;
 import java.util.Arrays;
-import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 
 /** Handler for embedding tweets from Twitter. */
@@ -22,7 +21,7 @@ public class EmbeddedTwitterHandler implements EmbeddedAttachmentHandler {
     var oembed = new OembedEndpoint();
     oembed.setName(getProviderName());
     oembed.setFormat(Format.json);
-    oembed.setEndpoint("https://publish.twitter.com/oembed");
+    oembed.setEndpoint("https://publish.twitter.com/oembed?dnt=true&hide_thread=true");
     oembed.setUrlSchemes(
         Arrays.asList(
             "https?://(?:www|mobile\\.)?twitter\\.com/(?:#!/)?([^/]+)/status(?:es)?/(\\d+)"));
@@ -37,11 +36,6 @@ public class EmbeddedTwitterHandler implements EmbeddedAttachmentHandler {
   @Override
   public void setEmbedData(OembedResponse oembedResponse, String embedUrl, Attachment attachment) {
     oembedResponse.setThumbnailUrl("https://i.imgur.com/4QGqHUC.png");
-    var document = Jsoup.parseBodyFragment(oembedResponse.getHtml());
-    document
-        .getElementsByClass("twitter-tweet")
-        .forEach(element -> element.attr("data-dnt", "true"));
-    oembedResponse.setHtml(document.body().html());
 
     EmbeddedAttachmentHandler.super.setEmbedData(oembedResponse, embedUrl, attachment);
   }
