@@ -3,7 +3,6 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import com.github.njuro.jard.attachment.Attachment;
-import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.embedded.EmbedData;
 import com.github.njuro.jard.attachment.embedded.EmbedService;
 
@@ -23,8 +22,17 @@ public interface EmbeddedAttachmentHandler {
    */
   OembedEndpoint registerEndpoint();
 
-  /** @return general category of content from this provider (used for creating thumbnails) */
-  AttachmentCategory getAttachmentCategory();
+  /**
+   * @return title of this attachment. Used as file name for classic attachments. Cannot be {@code
+   *     null}.
+   */
+  default String getTitle(OembedResponse response) {
+    if (response.getTitle() != null) {
+      return response.getTitle();
+    }
+
+    return getProviderName();
+  }
 
   /**
    * Sets embed data on given attachment.
@@ -36,11 +44,8 @@ public interface EmbeddedAttachmentHandler {
    * @see EmbedData
    */
   default void setEmbedData(OembedResponse oembedResponse, String embedUrl, Attachment attachment) {
-    attachment.setOriginalFilename(getProviderName());
-
     var embedData =
         EmbedData.builder()
-            .category(getAttachmentCategory())
             .providerName(getProviderName())
             .embedUrl(embedUrl)
             .uploaderName(oembedResponse.getAuthorName())

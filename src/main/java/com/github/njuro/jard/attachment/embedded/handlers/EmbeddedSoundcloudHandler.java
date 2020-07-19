@@ -4,7 +4,6 @@ import static com.github.njuro.jard.common.Constants.IMAGE_MAX_THUMB_WIDTH;
 
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse.Format;
-import com.github.njuro.jard.attachment.AttachmentCategory;
 import java.util.Collections;
 import org.springframework.stereotype.Component;
 
@@ -27,10 +26,5 @@ public class EmbeddedSoundcloudHandler implements EmbeddedAttachmentHandler {
     oembed.setMaxWidth((int) IMAGE_MAX_THUMB_WIDTH);
     oembed.setUrlSchemes(Collections.singletonList("https?://soundcloud.com/.*/.*"));
     return oembed;
-  }
-
-  @Override
-  public AttachmentCategory getAttachmentCategory() {
-    return AttachmentCategory.AUDIO;
   }
 }

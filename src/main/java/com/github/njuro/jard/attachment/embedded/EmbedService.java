@@ -59,6 +59,7 @@ public class EmbedService {
             .orElseThrow(() -> new IllegalArgumentException("Failed to get oembed response"));
     var handler = getHandlerForProvider(response.getProviderName());
     handler.setEmbedData(response, url, attachment);
+    attachment.setOriginalFilename(handler.getTitle(response));
   }
 
   /**

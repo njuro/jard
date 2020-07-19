@@ -1,8 +1,9 @@
 package com.github.njuro.jard.attachment.embedded.handlers;
 
 import ac.simons.oembed.OembedEndpoint;
+import ac.simons.oembed.OembedResponse;
 import ac.simons.oembed.OembedResponse.Format;
-import com.github.njuro.jard.attachment.AttachmentCategory;
+import com.github.njuro.jard.attachment.Attachment;
 import java.util.Arrays;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,13 @@ public class EmbeddedYoutubeHandler implements EmbeddedAttachmentHandler {
   }
 
   @Override
-  public AttachmentCategory getAttachmentCategory() {
-    return AttachmentCategory.VIDEO;
+  public void setEmbedData(OembedResponse oembedResponse, String embedUrl, Attachment attachment) {
+    // use privacy respecting domain for embedding
+    oembedResponse.setHtml(
+        oembedResponse
+            .getHtml()
+            .replaceAll("(?:youtu\\.be|youtube\\.com)", "youtube-nocookie.com"));
+
+    EmbeddedAttachmentHandler.super.setEmbedData(oembedResponse, embedUrl, attachment);
   }
 }

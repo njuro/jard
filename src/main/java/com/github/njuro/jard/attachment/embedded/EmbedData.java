@@ -2,15 +2,12 @@ package com.github.njuro.jard.attachment.embedded;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jard.attachment.Attachment;
-import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -41,11 +38,6 @@ public class EmbedData implements Serializable {
   @MapsId
   @JsonIgnore
   private Attachment attachment;
-
-  /** @see EmbeddedAttachmentHandler#getAttachmentCategory() */
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private AttachmentCategory category;
 
   /** URL to content to be embedded. */
   @Basic
