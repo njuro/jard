@@ -174,13 +174,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2B, 31);
   }
 
-  /** Configures CSRF token domain based on client base url. */
+  /** Configures CSRF token cookie domain based on client base url. */
   @Bean
   public CsrfTokenRepository csrfTokenRepository() throws URISyntaxException {
     var repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
     String domain = new URI(clientBaseUrl).getHost();
     domain = domain.startsWith("www.") ? domain.substring(4) : domain;
-    repository.setCookieDomain("." + domain);
+    repository.setCookieDomain(domain);
     return repository;
   }
 }
