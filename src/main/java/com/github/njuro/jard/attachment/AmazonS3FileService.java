@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * <p>Must be enabled by {@link UserContentStorageMode#AMAZON_S3}
  */
 @Service
-@ConditionalOnProperty(name = "${app.user.content.storage}", havingValue = "AMAZON_S3")
+@ConditionalOnProperty(name = "app.user.content.storage", havingValue = "AMAZON_S3")
 public class AmazonS3FileService {
 
   /** Access key for AWS. */
