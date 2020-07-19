@@ -31,6 +31,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /** Configuration of Spring Security. */
@@ -132,7 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .cors(Customizer.withDefaults())
         .csrf()
-        .disable(); // TODO enable when custom domain
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
