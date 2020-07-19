@@ -41,6 +41,7 @@ From **user** perspective:
 	 - [x] image/video/pdf files with generated thumbnails
 	 - [x] audio/txt/word files with placeholder thumbnails (based on file type)
 	 - [x] metadata available (duration, resolution, file size, checksum etc.)
+- [x] Embedding content from providers with [oEmbed](https://oembed.com) endpoints: YouTube, Twitter, SoundCloud...	 
 - [x] Using [SAGE](https://knowyourmeme.com/memes/sage) when posting
 - [x] Using secure [tripcode](https://en.wiktionary.org/wiki/tripcode) when posting
 - [x] Using [code] tags for block of formatted code
@@ -48,6 +49,7 @@ From **user** perspective:
 - [x] Using greentext (>)
 - [x] Crosslinking to different posts/threads/boards (e.g. >>>/g/123#4)
 - [x] Quoting post by selecting content and clicking on its number
+- [x] Highlighting own posts and replies to them (`(You)`)
 - [x] Both manual and auto updating of opened threads
 
 From **admin** perspective:
@@ -64,11 +66,9 @@ From **admin** perspective:
 ### Planned
 
 - [ ] Multiple attachments per post
-- [ ] Youtube / Vimeo embedding as attachment
 - [ ]  Allow to define user roles with custom set of permissions
 - [ ]  Warning instead of ban
 - [ ]  Post report system
-- [ ] (You) to highlight replies to one's own posts
 - [ ] Password reset system
 - [ ] Custom user themes
 - [ ]  Better logo
