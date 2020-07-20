@@ -8,6 +8,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * Grants or denies access to endpoint based on user authority config attributes.
@@ -32,18 +33,22 @@ public class AuthorityVoter implements AccessDecisionVoter<MethodInvocation> {
       Authentication authentication,
       MethodInvocation object,
       Collection<ConfigAttribute> attributes) {
-    Set<UserAuthority> requiredAuthorities =
+    Set<String> requiredAuthorities =
         attributes.stream()
             .filter(att -> att instanceof AuthorityAttribute)
             .map(AuthorityAttribute.class::cast)
             .map(AuthorityAttribute::getAuthority)
+            .map(UserAuthority::getAuthority)
             .collect(Collectors.toSet());
 
     if (requiredAuthorities.isEmpty()) {
       return AccessDecisionVoter.ACCESS_ABSTAIN;
     }
 
-    return authentication.getAuthorities().containsAll(requiredAuthorities)
+    return authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toSet())
+            .containsAll(requiredAuthorities)
         ? ACCESS_GRANTED
         : ACCESS_DENIED;
   }

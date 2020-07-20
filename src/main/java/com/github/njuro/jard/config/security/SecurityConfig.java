@@ -43,6 +43,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  @Value("${spring.boot.admin.client.enabled:true}")
+  private boolean springBootAdminEnabled;
+
   @Value("${client.base.url:localhost}")
   private String clientBaseUrl;
 
@@ -117,14 +120,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers(springBootAdminProperties.getContextPath() + "/**")
-        .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
         .requestMatchers(EndpointRequest.toAnyEndpoint())
         .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
         .antMatchers(Mappings.API_ROOT_USERS + "/current")
         .authenticated()
-        .anyRequest()
-        .permitAll()
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -140,17 +139,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .cors(Customizer.withDefaults())
         .csrf()
         .ignoringRequestMatchers(EndpointRequest.toAnyEndpoint())
-        .ignoringAntMatchers(springBootAdminProperties.getContextPath() + "/**")
         .csrfTokenRepository(csrfTokenRepository());
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterBefore(jsonUsernamePasswordFilter(), UsernamePasswordAuthenticationFilter.class);
 
-    if (springBootAdminAuthenticationFilter != null) {
+    if (springBootAdminEnabled) {
+      http.authorizeRequests()
+          .antMatchers(springBootAdminProperties.getContextPath() + "/**")
+          .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
+          .and()
+          .csrf()
+          .ignoringAntMatchers(springBootAdminProperties.getContextPath() + "/**");
 
       http.addFilterBefore(
           springBootAdminAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+    http.authorizeRequests().anyRequest().permitAll();
   }
 
   /**
