@@ -11,7 +11,6 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import com.github.njuro.jard.utils.validation.ValidationMessageInterpolator;
 import com.jfilter.EnableJsonFilter;
-import com.jfilter.components.FilterAdvice;
 import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -22,10 +21,7 @@ import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.CacheControl;
@@ -42,13 +38,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableJsonFilter
 @EnableSpringDataWebSupport // for resolving of parameters in controllers, such as Pageable
 @RequiredArgsConstructor
-/*
- Annotation below disables jfilter's own FilterAdvice. For more information, see
- documentation of MergingFilterAdvice.
-*/
-@ComponentScan(
-    value = {"com.jfilter", "com.jfilter.components"},
-    excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = FilterAdvice.class))
 public class MvcConfig implements WebMvcConfigurer {
 
   private final List<PathVariableArgumentResolver> pathVariableArgumentResolvers;
@@ -60,7 +49,9 @@ public class MvcConfig implements WebMvcConfigurer {
   /** Sets JSON {@link ObjectMapper} for jfilter filter classes. */
   @Autowired
   public void configureJsonFilter(
-      FilterConfiguration filterConfiguration, ObjectMapper objectMapper) {
+      @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+          FilterConfiguration filterConfiguration,
+      ObjectMapper objectMapper) {
     filterConfiguration.setMapper(APPLICATION_JSON, objectMapper);
     filterConfiguration.setMapper(
         new MediaType(MEDIA_TYPE_APPLICATION, MEDIA_SUB_TYPE_JSON, Charset.defaultCharset()),
