@@ -1,6 +1,7 @@
 package com.github.njuro.jard.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,7 +24,6 @@ public class BoardIntegrationTest extends MockRequestTest {
 
   private static final String API_ROOT = Mappings.API_ROOT_BOARDS;
 
-  @Autowired private BoardRepository boardRepository;
   @Autowired private BoardFacade boardFacade;
 
   private BoardForm boardForm;
@@ -53,7 +53,7 @@ public class BoardIntegrationTest extends MockRequestTest {
         .andExpect(status().isOk())
         .andExpect(content().json(toJson(boardForm.toBoard())));
 
-    assertThat(boardRepository.findByLabel(boardForm.getLabel())).isPresent();
+    assertThat(boardFacade.resolveBoard(boardForm.getLabel())).isNotNull();
   }
 
   @Test
@@ -99,9 +99,10 @@ public class BoardIntegrationTest extends MockRequestTest {
   public void testEditBoard() throws Exception {
     boardFacade.createBoard(boardForm);
 
-    assertThat(boardRepository.findByLabel(boardForm.getLabel()))
-        .isPresent()
-        .hasValueSatisfying(board -> assertThat(board.getName()).isEqualTo(boardForm.getName()));
+    assertThat(boardFacade.resolveBoard(boardForm.getLabel()))
+        .isNotNull()
+        .extracting(Board::getName)
+        .isEqualTo(boardForm.getName());
 
     String newName = "Technology";
     boardForm.setName(newName);
@@ -111,9 +112,10 @@ public class BoardIntegrationTest extends MockRequestTest {
             boardForm)
         .andExpect(status().isOk());
 
-    assertThat(boardRepository.findByLabel(boardForm.getLabel()))
-        .isPresent()
-        .hasValueSatisfying(board -> assertThat(board.getName()).isEqualTo(newName));
+    assertThat(boardFacade.resolveBoard(boardForm.getLabel()))
+        .isNotNull()
+        .extracting(Board::getName)
+        .isEqualTo(newName);
   }
 
   @Test
@@ -121,13 +123,14 @@ public class BoardIntegrationTest extends MockRequestTest {
   public void testDeleteBoard() throws Exception {
     boardFacade.createBoard(boardForm);
 
-    assertThat(boardRepository.findByLabel(boardForm.getLabel())).isPresent();
+    assertThat(boardFacade.resolveBoard(boardForm.getLabel())).isNotNull();
 
     performMockRequest(
             HttpMethod.DELETE,
             buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD, boardForm.getLabel()))
         .andExpect(status().isOk());
 
-    assertThat(boardRepository.findByLabel(boardForm.getLabel())).isNotPresent();
+    assertThatThrownBy(() -> boardFacade.resolveBoard(boardForm.getLabel()))
+        .isInstanceOf(BoardNotFoundException.class);
   }
 }
