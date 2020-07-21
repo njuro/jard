@@ -3,7 +3,6 @@ package com.github.njuro.jard.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
@@ -111,7 +110,7 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return new HashSet<>(authorities);
+    return authorities;
   }
 
   @Override
