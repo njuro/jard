@@ -67,10 +67,15 @@ public abstract class MockRequestTest {
 
   protected ResultActions performMockRequest(HttpMethod method, URI url, Object body)
       throws Exception {
-    return mockMvc.perform(buildRequest(method, url, body));
+    return performMockRequest(buildRequest(method, url, body));
   }
 
-  private MockHttpServletRequestBuilder buildRequest(HttpMethod method, URI url, Object body) {
+  protected ResultActions performMockRequest(MockHttpServletRequestBuilder request)
+      throws Exception {
+    return mockMvc.perform(request);
+  }
+
+  protected MockHttpServletRequestBuilder buildRequest(HttpMethod method, URI url, Object body) {
     MockHttpServletRequestBuilder request =
         request(method, url).accept(MediaType.APPLICATION_JSON).with(csrf());
     if (body == null) {
@@ -90,7 +95,7 @@ public abstract class MockRequestTest {
     return mockMvc.perform(buildMultipartRequest(method, url, files));
   }
 
-  private MockHttpServletRequestBuilder buildMultipartRequest(
+  protected MockHttpServletRequestBuilder buildMultipartRequest(
       HttpMethod method, URI url, MockMultipartFile... files) {
     var multipartRequest = multipart(url);
     for (MockMultipartFile file : files) {
@@ -181,6 +186,9 @@ public abstract class MockRequestTest {
   }
 
   protected ResultMatcher nonEmptyBody() {
-    return result -> assertThat(result.getResponse().getContentAsString()).isNotBlank();
+    return result ->
+        assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
+            .isNotBlank()
+            .isNotEqualTo("null");
   }
 }

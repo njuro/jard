@@ -41,10 +41,13 @@ public class UserService {
    * Resolves user by given identifier.
    *
    * @param username name of the user
-   * @return resolved user or {@code null} if no such user is found
+   * @return resolved user
+   * @throws UserNotFoundException if such user is not found in database
    */
   public User resolveUser(String username) {
-    return userRepository.findByUsernameIgnoreCase(username).orElse(null);
+    return userRepository
+        .findByUsernameIgnoreCase(username)
+        .orElseThrow(UserNotFoundException::new);
   }
 
   /**
@@ -59,10 +62,15 @@ public class UserService {
 
   /**
    * @param username name of the user
-   * @return true if user with such username exists, {@code null} otherwise
+   * @return true if user with such username exists, false otherwise
    */
   public boolean doesUserExists(String username) {
-    return resolveUser(username) != null;
+    try {
+      resolveUser(username);
+      return true;
+    } catch (UserNotFoundException ex) {
+      return false;
+    }
   }
 
   /**
