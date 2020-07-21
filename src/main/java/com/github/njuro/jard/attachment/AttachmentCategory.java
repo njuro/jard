@@ -14,7 +14,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.MediaType;
 
 /** Enum representing different categories of {@link Attachment} (more precisely of their files). */
@@ -132,10 +134,12 @@ public enum AttachmentCategory {
   /** Client-friendly view (DTO) of {@link AttachmentCategory}. */
   @Builder
   @Getter
+  @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+  @ToString(onlyExplicitlyIncluded = true)
   public static class Preview {
 
     /** Name of the attachment category. */
-    private final String name;
+    @EqualsAndHashCode.Include @ToString.Include private final String name;
 
     /** Whether we can generate and store thumbnail for this category. */
     private final boolean hasThumbnail;

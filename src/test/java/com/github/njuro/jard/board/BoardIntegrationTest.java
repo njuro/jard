@@ -9,18 +9,21 @@ import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
+import com.github.njuro.jard.common.WithMockUserAuthorities;
+import com.github.njuro.jard.user.UserAuthority;
+import java.util.List;
+import java.util.Set;
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-public class BoardIntegrationTest extends MockRequestTest {
+class BoardIntegrationTest extends MockRequestTest {
 
   private static final String API_ROOT = Mappings.API_ROOT_BOARDS;
 
@@ -47,8 +50,8 @@ public class BoardIntegrationTest extends MockRequestTest {
   }
 
   @Test
-  @WithMockUser(authorities = "MANAGE_BOARDS")
-  public void testCreateBoard() throws Exception {
+  @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+  void testCreateBoard() throws Exception {
     performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
         .andExpect(status().isOk())
         .andExpect(content().json(toJson(boardForm.toBoard())));
@@ -57,46 +60,70 @@ public class BoardIntegrationTest extends MockRequestTest {
   }
 
   @Test
-  @WithMockUser(authorities = "MANAGE_BOARDS")
-  public void testGetAttachmentCategories() throws Exception {
-    performMockRequest(HttpMethod.GET, API_ROOT + "/attachment-categories", boardForm)
-        .andExpect(status().isOk())
-        .andExpect(nonEmptyBody());
+  @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+  void testGetAttachmentCategories() throws Exception {
+    var result =
+        performMockRequest(HttpMethod.GET, API_ROOT + "/attachment-categories", boardForm)
+            .andExpect(status().isOk())
+            .andExpect(nonEmptyBody())
+            .andReturn();
+
+    assertThat(getResponseCollection(result, Set.class, AttachmentCategory.Preview.class))
+        .containsExactlyInAnyOrderElementsOf(boardFacade.getAttachmentCategories());
   }
 
   @Test
-  public void testGetAllBoards() throws Exception {
+  void testGetAllBoards() throws Exception {
     boardFacade.createBoard(boardForm);
 
-    performMockRequest(HttpMethod.GET, API_ROOT)
-        .andExpect(status().isOk())
-        .andExpect(nonEmptyBody());
+    var result =
+        performMockRequest(HttpMethod.GET, API_ROOT)
+            .andExpect(status().isOk())
+            .andExpect(nonEmptyBody())
+            .andReturn();
+
+    assertThat(getResponseCollection(result, List.class, Board.class))
+        .containsExactlyInAnyOrderElementsOf(boardFacade.getAllBoards());
   }
 
   @Test
-  public void testGetBoard() throws Exception {
+  void testGetBoard() throws Exception {
     boardFacade.createBoard(boardForm);
 
-    performMockRequest(
-            HttpMethod.GET, buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD, boardForm.getLabel()))
-        .andExpect(status().isOk())
-        .andExpect(nonEmptyBody());
+    var result =
+        performMockRequest(
+                HttpMethod.GET,
+                buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD, boardForm.getLabel()))
+            .andExpect(status().isOk())
+            .andExpect(nonEmptyBody())
+            .andReturn();
+
+    assertThat(getResponse(result, Board.class))
+        .extracting(Board::getLabel)
+        .isEqualTo(boardForm.getLabel());
   }
 
   @Test
-  public void testGetBoardCatalog() throws Exception {
+  void testGetBoardCatalog() throws Exception {
     boardFacade.createBoard(boardForm);
 
-    performMockRequest(
-            HttpMethod.GET,
-            buildUri(API_ROOT + Mappings.PATH_VARIABLE_BOARD + "/catalog", boardForm.getLabel()))
-        .andExpect(status().isOk())
-        .andExpect(nonEmptyBody());
+    var result =
+        performMockRequest(
+                HttpMethod.GET,
+                buildUri(
+                    API_ROOT + Mappings.PATH_VARIABLE_BOARD + "/catalog", boardForm.getLabel()))
+            .andExpect(status().isOk())
+            .andExpect(nonEmptyBody())
+            .andReturn();
+
+    assertThat(getResponse(result, Board.class))
+        .extracting(Board::getLabel)
+        .isEqualTo(boardForm.getLabel());
   }
 
   @Test
-  @WithMockUser(authorities = "MANAGE_BOARDS")
-  public void testEditBoard() throws Exception {
+  @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+  void testEditBoard() throws Exception {
     boardFacade.createBoard(boardForm);
 
     assertThat(boardFacade.resolveBoard(boardForm.getLabel()))
@@ -119,8 +146,8 @@ public class BoardIntegrationTest extends MockRequestTest {
   }
 
   @Test
-  @WithMockUser(authorities = "MANAGE_BOARDS")
-  public void testDeleteBoard() throws Exception {
+  @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+  void testDeleteBoard() throws Exception {
     boardFacade.createBoard(boardForm);
 
     assertThat(boardFacade.resolveBoard(boardForm.getLabel())).isNotNull();
