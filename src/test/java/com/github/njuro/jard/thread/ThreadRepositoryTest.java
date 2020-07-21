@@ -1,9 +1,8 @@
-package com.github.njuro.jard.thread.repositories;
+package com.github.njuro.jard.thread;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.njuro.jard.common.RepositoryTest;
-import com.github.njuro.jard.thread.ThreadRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

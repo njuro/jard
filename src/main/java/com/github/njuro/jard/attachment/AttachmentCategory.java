@@ -1,6 +1,9 @@
 package com.github.njuro.jard.attachment;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
@@ -149,9 +152,20 @@ public enum AttachmentCategory {
 
     @Override
     public void serialize(
-        AttachmentCategory value, JsonGenerator gen, SerializerProvider serializers)
+        AttachmentCategory value, JsonGenerator generator, SerializerProvider serializers)
         throws IOException {
-      gen.writeObject(value.preview);
+      generator.writeObject(value.preview);
+    }
+  }
+
+  /** Custom JSON deserializer to deserialize {@link Preview} as {@link AttachmentCategory} */
+  public static class AttachmentCategoryDeserializer extends JsonDeserializer<AttachmentCategory> {
+
+    @Override
+    public AttachmentCategory deserialize(JsonParser parser, DeserializationContext context)
+        throws IOException {
+      var preview = parser.readValueAs(Preview.class);
+      return AttachmentCategory.valueOf(preview.getName());
     }
   }
 }
