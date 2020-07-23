@@ -5,6 +5,7 @@ import com.github.njuro.jard.common.Constants;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -35,10 +36,10 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
   }
 
   @Getter
-  private static class LoginRequest {
-
-    private String username;
-    private String password;
-    private boolean rememberMe;
+  @Builder
+  public static class LoginRequest {
+    private final String username;
+    private final String password;
+    private final boolean rememberMe;
   }
 }
