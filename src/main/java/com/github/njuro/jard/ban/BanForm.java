@@ -6,10 +6,12 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 /** Form for creating/updating a {@link Ban}. */
 @Data
+@Builder
 @SuppressWarnings("JavadocReference")
 public class BanForm {
 

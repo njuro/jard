@@ -2,7 +2,7 @@ package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.user.User;
-import com.github.njuro.jard.user.UserService;
+import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class BanFacade {
 
+  private final UserFacade userFacade;
   private final BanService banService;
-  private final UserService userService;
 
   @Autowired
-  public BanFacade(BanService banService, UserService userService) {
+  public BanFacade(UserFacade userFacade, BanService banService) {
+    this.userFacade = userFacade;
     this.banService = banService;
-    this.userService = userService;
   }
 
   /**
@@ -33,7 +33,7 @@ public class BanFacade {
    *     IP
    */
   public Ban createBan(BanForm banForm) {
-    User loggedUser = userService.getCurrentUser();
+    User loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
       throw new FormValidationException("No user is logged in");
     }
@@ -93,7 +93,7 @@ public class BanFacade {
    * @throws FormValidationException if no user is logged in or there is no active ban on given IP
    */
   public Ban unban(Ban ban, UnbanForm unbanForm) {
-    User loggedUser = userService.getCurrentUser();
+    User loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
       throw new FormValidationException("No user is logged in!");
     }

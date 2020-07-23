@@ -1,18 +1,15 @@
 package com.github.njuro.jard.common;
 
 import com.github.njuro.jard.common.WithMockUserAuthorities.WithMockUserAuthoritiesSecurityContext;
+import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserAuthority;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 import java.util.Arrays;
+import java.util.HashSet;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
@@ -38,8 +35,11 @@ public @interface WithMockUserAuthorities {
     @Override
     public SecurityContext createSecurityContext(WithMockUserAuthorities withAuthorities) {
       User principal =
-          new User(
-              "user", "password", true, true, true, true, Arrays.asList(withAuthorities.value()));
+          User.builder()
+              .username("user")
+              .password("password")
+              .authorities(new HashSet<>(Arrays.asList(withAuthorities.value())))
+              .build();
       Authentication authentication =
           new UsernamePasswordAuthenticationToken(
               principal, principal.getPassword(), principal.getAuthorities());
