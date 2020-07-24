@@ -6,6 +6,7 @@ import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
 import com.github.njuro.jard.attachment.embedded.EmbedData;
 import com.github.njuro.jard.attachment.helpers.AttachmentImageUtils;
 import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
+import com.github.njuro.jard.attachment.storage.RemoteStorageService;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +16,6 @@ import javax.imageio.ImageIO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,22 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class AttachmentService {
 
-  /**
-   * Active storage mode.
-   *
-   * @see UserContentStorageMode
-   */
-  @Value("${app.user.content.storage:LOCAL}")
-  private UserContentStorageMode storageMode;
-
-  private final AmazonS3FileService amazonS3FileService;
+  private final RemoteStorageService remoteStorageService;
   private final AttachmentRepository attachmentRepository;
 
   @Autowired
   public AttachmentService(
-      @Autowired(required = false) AmazonS3FileService amazonS3FileService,
+      @Autowired(required = false) RemoteStorageService remoteStorageService,
       AttachmentRepository attachmentRepository) {
-    this.amazonS3FileService = amazonS3FileService;
+    this.remoteStorageService = remoteStorageService;
     this.attachmentRepository = attachmentRepository;
   }
 
@@ -68,11 +60,11 @@ public class AttachmentService {
     source.transferTo(attachment.getFile());
     AttachmentMetadataUtils.setMetadata(attachment);
 
-    if (storageMode == UserContentStorageMode.AMAZON_S3) {
+    if (remoteStorageService != null) {
       String url =
-          amazonS3FileService.uploadFile(
+          remoteStorageService.uploadFile(
               attachment.getFolder(), attachment.getFilename(), attachment.getFile());
-      attachment.setAmazonS3Url(url);
+      attachment.setRemoteStorageUrl(url);
     }
 
     if (attachment.getCategory().hasThumbnail()) {
@@ -106,13 +98,13 @@ public class AttachmentService {
 
     ImageIO.write(thumbnail, extension, attachment.getThumbnailFile());
 
-    if (storageMode == UserContentStorageMode.AMAZON_S3) {
+    if (remoteStorageService != null) {
       String url =
-          amazonS3FileService.uploadFile(
+          remoteStorageService.uploadFile(
               attachment.getThumbnailFolder(),
               attachment.getFilename(),
               attachment.getThumbnailFile());
-      attachment.setAmazonS3ThumbnailUrl(url);
+      attachment.setRemoteStorageThumbnailUrl(url);
     }
   }
 
@@ -141,11 +133,11 @@ public class AttachmentService {
   public void deleteAttachmentFile(Attachment attachment) throws IOException {
     Objects.requireNonNull(attachment, "Attachment cannot be null");
 
-    if (storageMode == UserContentStorageMode.AMAZON_S3) {
-      amazonS3FileService.deleteFile(attachment.getFolder(), attachment.getFilename());
+    if (remoteStorageService != null) {
+      remoteStorageService.deleteFile(attachment.getFolder(), attachment.getFilename());
 
       if (attachment.getThumbnailFilename() != null) {
-        amazonS3FileService.deleteFile(
+        remoteStorageService.deleteFile(
             attachment.getThumbnailFolder(), attachment.getThumbnailFilename());
       }
     }

@@ -1,4 +1,4 @@
-package com.github.njuro.jard.attachment;
+package com.github.njuro.jard.attachment.storage;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.github.njuro.jard.attachment.UserContentStorageMode;
 import java.io.File;
 import java.nio.file.Paths;
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @ConditionalOnProperty(name = "app.user.content.storage", havingValue = "AMAZON_S3")
-public class AmazonS3FileService {
+public class AmazonS3FileService implements RemoteStorageService {
 
   /** Access key for AWS. */
   @Value("${app.aws.accesskey}")
@@ -65,15 +66,8 @@ public class AmazonS3FileService {
     }
   }
 
-  /**
-   * Uploads file to Amazon S3 bucket.
-   *
-   * @param folder path to the folder to which the file should be put in the bucket
-   * @param filename name of the uploaded file in the bucket
-   * @param file file to upload
-   * @return shareable url to uploaded file
-   * @throws IllegalArgumentException if upload of file fails
-   */
+  /** {@inheritDoc} */
+  @Override
   public String uploadFile(String folder, String filename, File file) {
     try {
       String key = Paths.get(folder, filename).toString();
@@ -86,13 +80,8 @@ public class AmazonS3FileService {
     }
   }
 
-  /**
-   * Deletes file from Amazon S3 bucket.
-   *
-   * @param folder path to the folder in the bucket where the file is located
-   * @param filename name of the file
-   * @throws IllegalArgumentException if deletion of file fails
-   */
+  /** {@inheritDoc} */
+  @Override
   public void deleteFile(String folder, String filename) {
     try {
       String key = Paths.get(folder, filename).toString();

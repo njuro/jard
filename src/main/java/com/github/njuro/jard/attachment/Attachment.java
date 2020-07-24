@@ -11,23 +11,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
 
 /** Entity representing an attachment to {@link Post}. */
 @Entity
@@ -85,11 +70,11 @@ public class Attachment implements Serializable {
   @EqualsAndHashCode.Include
   private String thumbnailFilename;
 
-  /** (Optional) shareable url to this attachment's file in Amazon S3 bucket. */
-  private String amazonS3Url;
+  /** (Optional) shareable url to this attachment's file on remote storage server. */
+  private String remoteStorageUrl;
 
-  /** (Optional) shareable url to thumbnail for this attachment's file in Amazon S3 bucket. */
-  private String amazonS3ThumbnailUrl;
+  /** (Optional) shareable url to thumbnail for this attachment's file on remote storage server. */
+  private String remoteStorageThumbnailUrl;
 
   /**
    * (Optional) metadata for this attachment.
