@@ -41,7 +41,8 @@ From **user** perspective:
 	 - [x] image/video/pdf files with generated thumbnails
 	 - [x] audio/txt/word files with placeholder thumbnails (based on file type)
 	 - [x] metadata available (duration, resolution, file size, checksum etc.)
-- [x] Embedding content from providers with [oEmbed](https://oembed.com) endpoints: YouTube, Twitter, SoundCloud...	 
+- [x] Embedding content from providers with [oEmbed](https://oembed.com) endpoints:
+     - [x] YouTube, Twitter, SoundCloud, CodePen, CodeSandbox, Vimeo, Scribd...
 - [x] Using [SAGE](https://knowyourmeme.com/memes/sage) when posting
 - [x] Using secure [tripcode](https://en.wiktionary.org/wiki/tripcode) when posting
 - [x] Using [code] tags for block of formatted code
