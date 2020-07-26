@@ -6,6 +6,7 @@ import com.github.njuro.jard.post.Post;
 import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
+/** Decorator for creating navigable HTML anchors from valid URLs (starting with http/https). */
 @Component
 public class HyperlinkDecorator implements PostDecorator {
 
