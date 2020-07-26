@@ -37,7 +37,7 @@ public class EmbedService {
             .map(EmbeddedAttachmentHandler::registerEndpoint)
             .collect(Collectors.toList());
 
-    var service = new OembedService(HttpClientBuilder.create().build(), null, endpoints, "jard");
+    var service = new OembedService(HttpClientBuilder.create().build(), null, endpoints, null);
     service.setAutodiscovery(true);
     service.setCacheName("oembed");
 
