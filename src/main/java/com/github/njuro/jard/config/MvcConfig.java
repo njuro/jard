@@ -1,8 +1,6 @@
 package com.github.njuro.jard.config;
 
-import static com.jfilter.FilterConstantsHelper.MEDIA_SUB_TYPE_JSON;
-import static com.jfilter.FilterConstantsHelper.MEDIA_SUB_TYPE_JSON2;
-import static com.jfilter.FilterConstantsHelper.MEDIA_TYPE_APPLICATION;
+import static com.jfilter.FilterConstantsHelper.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,6 +44,9 @@ public class MvcConfig implements WebMvcConfigurer {
   @Value("${client.base.url:localhost}")
   private String clientBaseUrl;
 
+  @Value("${server.base.url:localhost}")
+  private String serverBaseUrl;
+
   /** Sets JSON {@link ObjectMapper} for jfilter filter classes. */
   @Autowired
   public void configureJsonFilter(
@@ -76,6 +77,7 @@ public class MvcConfig implements WebMvcConfigurer {
         .addMapping("/**")
         .allowedOrigins(
             clientBaseUrl,
+            serverBaseUrl,
             "http://localhost:3000",
             "http://192.168.0.80:3000",
             "http://192.168.0.106:3000")

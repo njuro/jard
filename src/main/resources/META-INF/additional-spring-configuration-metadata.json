@@ -16,6 +16,11 @@
       "description": "Base URL of client making requests to API (for CORS settings)."
     },
     {
+      "name": "server.base.url",
+      "type": "java.lang.String",
+      "description": "Base URL of server making requests to API (for CORS settings)."
+    },
+    {
       "name": "app.user.content.storage",
       "type": "com.github.njuro.jard.attachment.UserContentStorageMode",
       "description": "Where should the user uploaded content be stored."
