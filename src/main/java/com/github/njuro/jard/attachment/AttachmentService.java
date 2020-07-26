@@ -142,9 +142,9 @@ public class AttachmentService {
       }
     }
 
-    Files.delete(attachment.getFile().toPath());
+    Files.deleteIfExists(attachment.getFile().toPath());
     if (attachment.getThumbnailFile() != null) {
-      Files.delete(attachment.getThumbnailFile().toPath());
+      Files.deleteIfExists(attachment.getThumbnailFile().toPath());
     }
   }
 
