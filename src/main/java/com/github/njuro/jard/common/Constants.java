@@ -122,7 +122,7 @@ public class Constants {
   /** Tag to put at the end of spoiler. */
   public static final String SPOILER_END = "</span>";
 
-  /** Pater for detecting code block. */
+  /** Pattern for detecting code block. */
   public static final Pattern CODE_PATTERN =
       Pattern.compile(
           "\\[code](?<content>.*?\\w+.*?)\\[/code]",
@@ -133,6 +133,19 @@ public class Constants {
 
   /** Tag to put at the end of code block. */
   public static final String CODE_END = "</div>";
+
+  /** Pattern for detecting hyperlink. */
+  public static final Pattern HYPERLINK_PATTERN =
+      Pattern.compile(
+          "(?<href>https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*))",
+          Pattern.CASE_INSENSITIVE);
+
+  /** Tag to put at the beginning of hyperlink. */
+  public static final String HYPERLINK_START =
+      "<a href=\"${href}\" target=\"_blank\" rel=\"noopener nofollow noreferrer\">";
+
+  /** Tag to put at the end of hyperlink. */
+  public static final String HYPERLINK_END = "</a>";
 
   /** Min length of {@link User#username} (in characters). */
   public static final int MIN_USERNAME_LENGTH = 2;
