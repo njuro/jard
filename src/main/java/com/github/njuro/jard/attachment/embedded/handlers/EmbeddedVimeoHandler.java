@@ -21,7 +21,7 @@ public class EmbeddedVimeoHandler implements EmbeddedAttachmentHandler {
     oembed.setName(getProviderName());
     oembed.setFormat(OembedResponse.Format.json);
     oembed.setEndpoint("https://vimeo.com/api/oembed.json?autoplay=true&dnt=true");
-    oembed.setUrlSchemes(Arrays.asList("https?://(?:www\\.)?vimeo\\.com/\\d+"));
+    oembed.setUrlSchemes(Arrays.asList("https?://(?:www\\.)?vimeo\\.com/(channels/.+/)?\\d+"));
     return oembed;
   }
 
