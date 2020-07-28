@@ -1,8 +1,6 @@
 package com.github.njuro.jard.board;
 
-import static com.github.njuro.jard.common.Constants.MAX_BUMP_LIMIT;
-import static com.github.njuro.jard.common.Constants.MAX_NAME_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_THREAD_LIMIT;
+import static com.github.njuro.jard.common.Constants.*;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import java.util.HashSet;
@@ -44,6 +42,9 @@ public class BoardSettingsForm {
   /** @see BoardSettings#forceDefaultPosterName */
   private boolean forceDefaultPosterName;
 
+  /** @see BoardSettings#countryFlags */
+  private boolean countryFlags;
+
   /** @return {@link BoardSettings} created from values of this form */
   public BoardSettings toBoardSettings() {
     return BoardSettings.builder()
@@ -53,6 +54,7 @@ public class BoardSettingsForm {
         .nsfw(nsfw)
         .defaultPosterName(defaultPosterName)
         .forceDefaultPosterName(forceDefaultPosterName)
+        .countryFlags(countryFlags)
         .build();
   }
 }

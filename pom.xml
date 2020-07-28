@@ -39,6 +39,7 @@
         <oembed.version>0.8.1</oembed.version>
         <commons-io.version>2.7</commons-io.version>
         <jfilter.version>1.0.18</jfilter.version>
+        <offline-geoip.version>0.1.12</offline-geoip.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <lombok.version>1.18.12</lombok.version>
         <junit-jupiter.version>5.6.2</junit-jupiter.version>
@@ -141,6 +142,11 @@
             <groupId>com.github.rkonovalov</groupId> <!-- Filtering fields from JSON responses -->
             <artifactId>jfilter</artifactId>
             <version>${jfilter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tornaia</groupId>
+            <artifactId>java-offline-geoip</artifactId> <!-- Getting poster country from IP -->
+            <version>${offline-geoip.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

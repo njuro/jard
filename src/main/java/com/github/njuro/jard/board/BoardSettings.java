@@ -8,19 +8,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -86,4 +74,7 @@ public class BoardSettings implements Serializable {
 
   /** If true, all new posts will have poster name set to {@link #defaultPosterName}. */
   @Basic private boolean forceDefaultPosterName;
+
+  /** If true, post will have flags indicating country of the poster (based on IP address). */
+  @Basic private boolean countryFlags;
 }

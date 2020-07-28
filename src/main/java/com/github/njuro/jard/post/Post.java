@@ -8,26 +8,8 @@ import com.github.njuro.jard.user.UserRole;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -84,6 +66,12 @@ public class Post implements Serializable {
   @Basic
   @Column(nullable = false)
   private String ip;
+
+  /** Country code of poster (based on {@link #ip}). */
+  @Basic private String countryCode;
+
+  /** Country name of poster (based on {@link #ip}). */
+  @Basic private String countryName;
 
   /** Sage means the post will not bump the thread. Applies only to replies (not original posts). */
   @Basic private boolean sage;

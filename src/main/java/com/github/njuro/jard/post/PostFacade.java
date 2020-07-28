@@ -7,6 +7,8 @@ import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.tornaia.geoip.GeoIP;
+import com.github.tornaia.geoip.GeoIPProvider;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ public class PostFacade {
   private final AttachmentFacade attachmentFacade;
   private final UserFacade userFacade;
   private final PostService postService;
+  private final GeoIP geoIP;
 
   @Autowired
   public PostFacade(
@@ -25,6 +28,7 @@ public class PostFacade {
     this.attachmentFacade = attachmentFacade;
     this.userFacade = userFacade;
     this.postService = postService;
+    geoIP = GeoIPProvider.getGeoIP();
   }
 
   /**
@@ -50,6 +54,12 @@ public class PostFacade {
     var boardSettings = thread.getBoard().getSettings();
     if (boardSettings.isForceDefaultPosterName()) {
       post.setName(boardSettings.getDefaultPosterName());
+    }
+
+    if (boardSettings.isCountryFlags()) {
+      post.setCountryCode(
+          geoIP.getTwoLetterCountryCode(post.getIp()).map(String::toLowerCase).orElse(null));
+      post.setCountryName(geoIP.getCountryName(post.getIp()).orElse(null));
     }
 
     if (postForm.getEmbedUrl() != null && !postForm.getEmbedUrl().isBlank()) {
