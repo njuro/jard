@@ -156,6 +156,16 @@ public class PostService {
   }
 
   /**
+   * Updates given post.
+   *
+   * @param post Post to update
+   * @return updated post
+   */
+  public Post updatePost(Post post) {
+    return postRepository.save(post);
+  }
+
+  /**
    * Deletes given post from database and also its attachment (if it has one).
    *
    * @param post to delete - cannot be {@code null}

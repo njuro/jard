@@ -1,10 +1,6 @@
 package com.github.njuro.jard.post;
 
-import static com.github.njuro.jard.common.Constants.IP_PATTERN;
-import static com.github.njuro.jard.common.Constants.MAX_ATTACHMENT_SIZE;
-import static com.github.njuro.jard.common.Constants.MAX_NAME_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_POST_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_TRIPCODE_PASSWORD_LENGTH;
+import static com.github.njuro.jard.common.Constants.*;
 
 import com.github.njuro.jard.common.Constants;
 import javax.validation.constraints.AssertFalse;
@@ -67,7 +63,7 @@ public class PostForm {
   public Post toPost() {
     return Post.builder()
         .name(name)
-        .tripcode(TripcodeUtils.generateTripcode(password))
+        .tripcode(HashGenerationUtils.generateTripcode(password))
         .body(body)
         .ip(ip)
         .sage(sage)

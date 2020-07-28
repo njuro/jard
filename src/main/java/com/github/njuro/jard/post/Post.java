@@ -3,6 +3,7 @@ package com.github.njuro.jard.post;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.board.Board;
+import com.github.njuro.jard.board.BoardSettings;
 import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.user.UserRole;
 import java.io.Serializable;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.FetchMode;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@SuppressWarnings("JavadocReference")
 public class Post implements Serializable {
 
   private static final long serialVersionUID = 5654328565108212395L;
@@ -67,11 +69,26 @@ public class Post implements Serializable {
   @Column(nullable = false)
   private String ip;
 
-  /** Country code of poster (based on {@link #ip}). */
+  /**
+   * (Optional) country name of poster (based on {@link #ip}). Must be enabled on board level.
+   *
+   * @see BoardSettings#countryFlags
+   */
   @Basic private String countryCode;
 
-  /** Country name of poster (based on {@link #ip}). */
+  /**
+   * (Optional) country name of poster (based on {@link #ip}). Must be enabled on board level.
+   *
+   * @see BoardSettings#countryFlags
+   */
   @Basic private String countryName;
+
+  /**
+   * (Optional) unique thread ID of poster (based on {@link #ip}). Must be enabled on board level.
+   *
+   * @see BoardSettings#posterThreadIds
+   */
+  @Basic private String posterThreadId;
 
   /** Sage means the post will not bump the thread. Applies only to replies (not original posts). */
   @Basic private boolean sage;

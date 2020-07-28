@@ -2,10 +2,7 @@ package com.github.njuro.jard.thread;
 
 import com.github.njuro.jard.ban.BanService;
 import com.github.njuro.jard.board.Board;
-import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.post.PostFacade;
-import com.github.njuro.jard.post.PostForm;
-import com.github.njuro.jard.post.PostService;
+import com.github.njuro.jard.post.*;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -53,11 +50,13 @@ public class ThreadFacade {
 
     Thread thread = threadForm.toThread();
     thread.setBoard(board);
-    thread.setOriginalPost(postFacade.createPost(threadForm.getPostForm(), thread));
+
+    Post originalPost = postFacade.createPost(threadForm.getPostForm(), thread);
+    thread.setOriginalPost(originalPost);
     thread.setLastReplyAt(OffsetDateTime.now());
     thread.setLastBumpAt(OffsetDateTime.now());
 
-    thread.getOriginalPost().setSage(false); // original post cannot be sage
+    originalPost.setSage(false); // original post cannot be sage
     if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
       try {
         threadService.deleteStalestThread(board);
@@ -66,7 +65,14 @@ public class ThreadFacade {
       }
     }
 
-    return threadService.saveThread(thread);
+    thread = threadService.saveThread(thread);
+    if (board.getSettings().isPosterThreadIds()) {
+      originalPost.setPosterThreadId(
+          HashGenerationUtils.generatePosterThreadId(originalPost.getIp(), thread.getId()));
+      postService.updatePost(originalPost);
+    }
+
+    return thread;
   }
 
   /**
@@ -89,6 +95,10 @@ public class ThreadFacade {
     }
 
     Post post = postFacade.createPost(postForm, thread);
+    if (thread.getBoard().getSettings().isPosterThreadIds()) {
+      post.setPosterThreadId(
+          HashGenerationUtils.generatePosterThreadId(post.getIp(), thread.getId()));
+    }
     post = postService.savePost(post);
     threadService.updateLastReplyTimestamp(thread);
 

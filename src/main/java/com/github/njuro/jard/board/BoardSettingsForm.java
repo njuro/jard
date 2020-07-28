@@ -45,6 +45,9 @@ public class BoardSettingsForm {
   /** @see BoardSettings#countryFlags */
   private boolean countryFlags;
 
+  /** @see BoardSettings#posterThreadIds */
+  private boolean posterThreadIds;
+
   /** @return {@link BoardSettings} created from values of this form */
   public BoardSettings toBoardSettings() {
     return BoardSettings.builder()
@@ -55,6 +58,7 @@ public class BoardSettingsForm {
         .defaultPosterName(defaultPosterName)
         .forceDefaultPosterName(forceDefaultPosterName)
         .countryFlags(countryFlags)
+        .posterThreadIds(posterThreadIds)
         .build();
   }
 }

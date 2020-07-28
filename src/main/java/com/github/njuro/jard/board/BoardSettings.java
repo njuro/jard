@@ -77,4 +77,9 @@ public class BoardSettings implements Serializable {
 
   /** If true, post will have flags indicating country of the poster (based on IP address). */
   @Basic private boolean countryFlags;
+
+  /**
+   * If true, each unique IP address in thread will have assigned and displayed random string ID.
+   */
+  @Basic private boolean posterThreadIds;
 }
