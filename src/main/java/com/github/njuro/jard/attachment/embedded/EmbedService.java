@@ -5,9 +5,17 @@ import ac.simons.oembed.OembedException;
 import ac.simons.oembed.OembedService;
 import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +45,12 @@ public class EmbedService {
             .map(EmbeddedAttachmentHandler::registerEndpoint)
             .collect(Collectors.toList());
 
-    var service = new OembedService(HttpClientBuilder.create().build(), null, endpoints, null);
+    var service =
+        new OembedService(
+            HttpClientBuilder.create().addInterceptorLast(new OembedResponseFixer()).build(),
+            null,
+            endpoints,
+            null);
     service.setAutodiscovery(true);
     service.setCacheName("oembed");
 
@@ -75,5 +88,45 @@ public class EmbedService {
             () ->
                 new IllegalArgumentException(
                     "Failed to get handler for provider: " + providerName));
+  }
+
+  /**
+   * Response interceptor which fixes responses not adhering to Oembed format and thus causing
+   * parsing exception.
+   */
+  static class OembedResponseFixer implements HttpResponseInterceptor {
+
+    /**
+     * Pattern for matching width and height parameters in JSON/XML responses containing (illegal)
+     * percentage value.
+     */
+    private static final Pattern PERCENTAGE_DIMENSION_PATTERN =
+        Pattern.compile(
+            "(?:<width.*>|\"width\":|<height.*>|\"height\":)\\s*\"?(\\d+%)\"?\\s*(?:</width>|</height>)?",
+            Pattern.CASE_INSENSITIVE);
+
+    @Override
+    public void process(HttpResponse response, HttpContext context) throws IOException {
+      var entity = new BasicHttpEntity();
+      String content = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+      entity.setContent(
+          IOUtils.toInputStream(removePercentageDimensions(content), StandardCharsets.UTF_8));
+      response.setEntity(entity);
+    }
+
+    /**
+     * Replaces all dimensions parameters (width, height) in the response with percentage values
+     * with {@code 0}.
+     */
+    private String removePercentageDimensions(String response) {
+      var matcher = PERCENTAGE_DIMENSION_PATTERN.matcher(response);
+      var sb = new StringBuffer();
+      while (matcher.find()) {
+        matcher.appendReplacement(
+            sb, matcher.group(0).replaceFirst(Pattern.quote(matcher.group(1)), "0"));
+      }
+      matcher.appendTail(sb);
+      return sb.toString();
+    }
   }
 }

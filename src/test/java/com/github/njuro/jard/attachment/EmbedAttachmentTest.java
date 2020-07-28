@@ -58,6 +58,11 @@ class EmbedAttachmentTest {
   }
 
   @Test
+  void testTikTok() {
+    testEmbed("https://www.tiktok.com/@scout2015/video/6718335390845095173");
+  }
+
+  @Test
   void testTwitter() {
     testEmbed("https://twitter.com/elonmusk/status/1284291528328790016");
   }
