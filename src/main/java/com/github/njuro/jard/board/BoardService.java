@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +38,9 @@ public class BoardService {
     return boardRepository.save(board);
   }
 
-  /** @return all active boards */
+  /** @return all active boards sorted from least to most recent. */
   public List<Board> getAllBoards() {
-    return new ArrayList<>(boardRepository.findAll());
+    return new ArrayList<>(boardRepository.findAll(Sort.by("createdAt").ascending()));
   }
 
   /**

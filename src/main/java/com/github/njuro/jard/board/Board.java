@@ -8,24 +8,11 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.thread.Thread;
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 /** Entity representing a board (usually with a set topic) which can contain threads */
@@ -80,6 +67,16 @@ public class Board implements Serializable {
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "board", optional = false)
   @Builder.Default
   private BoardSettings settings = new BoardSettings();
+
+  /** Date and time when this board was created. */
+  @Column(nullable = false)
+  private OffsetDateTime createdAt;
+
+  /** Before inserting to database, set creation date to current date and time. */
+  @PrePersist
+  private void setCreatedAt() {
+    createdAt = OffsetDateTime.now();
+  }
 
   /**
    * (Sub)collection of active threads on this board. Fetched by different services when needed.

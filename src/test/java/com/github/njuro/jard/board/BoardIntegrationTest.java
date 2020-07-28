@@ -2,7 +2,6 @@ package com.github.njuro.jard.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
@@ -54,7 +53,7 @@ class BoardIntegrationTest extends MockRequestTest {
   void testCreateBoard() throws Exception {
     performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
         .andExpect(status().isOk())
-        .andExpect(content().json(toJson(boardForm.toBoard())));
+        .andExpect(nonEmptyBody());
 
     assertThat(boardFacade.resolveBoard(boardForm.getLabel())).isNotNull();
   }

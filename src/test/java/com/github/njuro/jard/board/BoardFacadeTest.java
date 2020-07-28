@@ -47,7 +47,7 @@ class BoardFacadeTest {
     Board saved = boardFacade.createBoard(boardForm);
     assertThat(saved)
         .isEqualToIgnoringGivenFields(
-            boardForm, "id", "settings", "pageCount", "postCounter", "threads");
+            boardForm, "id", "settings", "pageCount", "postCounter", "threads", "createdAt");
   }
 
   @Test
