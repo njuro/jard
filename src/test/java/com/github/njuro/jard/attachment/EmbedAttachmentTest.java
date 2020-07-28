@@ -58,6 +58,12 @@ class EmbedAttachmentTest {
   }
 
   @Test
+  void testSpotify() {
+    testEmbed(
+        "https://open.spotify.com/album/0YvYmLBFFwYxgI4U9KKgUm?highlight=spotify:track:2qToAcex0ruZfbEbAy9OhW");
+  }
+
+  @Test
   void testTikTok() {
     testEmbed("https://www.tiktok.com/@scout2015/video/6718335390845095173");
   }
