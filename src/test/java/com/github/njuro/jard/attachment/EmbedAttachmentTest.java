@@ -44,7 +44,8 @@ class EmbedAttachmentTest {
   @Test
   void testReddit() {
     testEmbed(
-        "https://reddit.com/r/java/comments/hyb41c/what_is_your_favourite_java_libraryframework/");
+        "https://reddit.com/r/java/comments/hyb41c/what_is_your_favourite_java_libraryframework/",
+        false);
   }
 
   @Test
@@ -70,12 +71,12 @@ class EmbedAttachmentTest {
 
   @Test
   void testTwitter() {
-    testEmbed("https://twitter.com/elonmusk/status/1284291528328790016");
+    testEmbed("https://twitter.com/elonmusk/status/1284291528328790016", false);
   }
 
   @Test
   void testVimeo() {
-    testEmbed("https://vimeo.com/437808118");
+    testEmbed("https://vimeo.com/437808118", false);
   }
 
   @Test
@@ -84,6 +85,10 @@ class EmbedAttachmentTest {
   }
 
   private void testEmbed(String url) {
+    testEmbed(url, true);
+  }
+
+  private void testEmbed(String url, boolean requiredThumbnail) {
     attachment = Attachment.builder().build();
     embedService.processEmbedded(url, attachment);
     assertThat(attachment.getEmbedData()).isNotNull();
@@ -93,6 +98,9 @@ class EmbedAttachmentTest {
     assertThat(embedData.getUploaderName()).isNotBlank();
     assertThat(embedData.getEmbedUrl()).isNotBlank();
     assertThat(embedData.getProviderName()).isNotBlank();
-    assertThat(embedData.getThumbnailUrl()).isNotBlank();
+
+    if (requiredThumbnail) {
+      assertThat(embedData.getThumbnailUrl()).isNotBlank();
+    }
   }
 }
