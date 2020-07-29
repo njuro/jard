@@ -6,6 +6,7 @@ import com.github.njuro.jard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jard.post.PostFacade;
 import com.github.njuro.jard.thread.ThreadFacade;
 import com.github.njuro.jard.user.UserFacade;
+import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.validation.RequestValidator;
 import com.jfilter.filter.DynamicFilterComponent;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,6 +20,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 @WebMvcTest(
     includeFilters = {
       @Filter(type = FilterType.ASSIGNABLE_TYPE, value = RequestValidator.class),
+      @Filter(type = FilterType.ASSIGNABLE_TYPE, value = HttpUtils.class),
       @Filter(DynamicFilterComponent.class)
     },
     excludeFilters = {
