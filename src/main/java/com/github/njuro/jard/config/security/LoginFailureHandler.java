@@ -1,6 +1,6 @@
 package com.github.njuro.jard.config.security;
 
-import com.github.njuro.jard.utils.ResponseJsonWriter;
+import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.validation.ValidationErrors;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
-  private final ResponseJsonWriter responseJsonWriter;
+  private final HttpUtils httpUtils;
 
   @Autowired
-  public LoginFailureHandler(ResponseJsonWriter responseJsonWriter) {
-    this.responseJsonWriter = responseJsonWriter;
+  public LoginFailureHandler(HttpUtils httpUtils) {
+    this.httpUtils = httpUtils;
   }
 
   @Override
@@ -26,7 +26,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
       HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
       throws IOException {
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
-    responseJsonWriter.writeJsonToResponse(
+    httpUtils.writeJsonToResponse(
         response, new ValidationErrors("Authentication failed: " + exception.getMessage()));
   }
 }

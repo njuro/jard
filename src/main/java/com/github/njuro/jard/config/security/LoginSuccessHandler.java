@@ -4,7 +4,7 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.config.security.jwt.JwtTokenProvider;
 import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserService;
-import com.github.njuro.jard.utils.ResponseJsonWriter;
+import com.github.njuro.jard.utils.HttpUtils;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import javax.servlet.ServletException;
@@ -22,16 +22,14 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
-  private final ResponseJsonWriter responseJsonWriter;
+  private final HttpUtils httpUtils;
 
   @Autowired
   public LoginSuccessHandler(
-      UserService userService,
-      JwtTokenProvider jwtTokenProvider,
-      ResponseJsonWriter responseJsonWriter) {
+      UserService userService, JwtTokenProvider jwtTokenProvider, HttpUtils httpUtils) {
     this.userService = userService;
     this.jwtTokenProvider = jwtTokenProvider;
-    this.responseJsonWriter = responseJsonWriter;
+    this.httpUtils = httpUtils;
     setRedirectStrategy(new NoRedirectStrategy());
   }
 
@@ -53,6 +51,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         rememberMe
             ? jwtTokenProvider.generateRememberMeCookie(authentication)
             : jwtTokenProvider.generateSessionCookie(authentication));
-    responseJsonWriter.writeJsonToResponse(response, userService.getCurrentUser());
+    httpUtils.writeJsonToResponse(response, userService.getCurrentUser());
   }
 }

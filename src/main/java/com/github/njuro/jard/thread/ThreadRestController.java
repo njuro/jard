@@ -6,6 +6,7 @@ import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.PostForm;
 import com.github.njuro.jard.user.UserAuthority;
+import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.SensitiveDataFilter;
 import com.github.njuro.jard.utils.validation.RequestValidator;
 import com.jfilter.filter.DynamicFilter;
@@ -16,14 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -33,11 +27,14 @@ public class ThreadRestController {
 
   private final ThreadFacade threadFacade;
   private final RequestValidator requestValidator;
+  private final HttpUtils httpUtils;
 
   @Autowired
-  public ThreadRestController(ThreadFacade threadFacade, RequestValidator requestValidator) {
+  public ThreadRestController(
+      ThreadFacade threadFacade, RequestValidator requestValidator, HttpUtils httpUtils) {
     this.threadFacade = threadFacade;
     this.requestValidator = requestValidator;
+    this.httpUtils = httpUtils;
   }
 
   @PutMapping
@@ -47,7 +44,7 @@ public class ThreadRestController {
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
     threadForm.getPostForm().setAttachment(attachment);
-    threadForm.getPostForm().setIp(request.getRemoteAddr());
+    threadForm.getPostForm().setIp(httpUtils.getClientIp(request));
     requestValidator.validate(threadForm);
 
     return threadFacade.createThread(threadForm, board);
@@ -61,7 +58,7 @@ public class ThreadRestController {
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
     postForm.setAttachment(attachment);
-    postForm.setIp(request.getRemoteAddr());
+    postForm.setIp(httpUtils.getClientIp(request));
     requestValidator.validate(postForm);
 
     return threadFacade.replyToThread(postForm, thread);
