@@ -13,10 +13,16 @@ import com.jfilter.components.FilterConfiguration;
 import java.nio.charset.Charset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.Context;
+import org.apache.tomcat.util.http.CookieProcessor;
+import org.apache.tomcat.util.http.Rfc6265CookieProcessor;
+import org.apache.tomcat.util.http.SameSiteCookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -113,5 +119,23 @@ public class MvcConfig implements WebMvcConfigurer {
   @Bean
   public HttpTraceRepository httpTraceRepository() {
     return new InMemoryHttpTraceRepository();
+  }
+
+  @Bean
+  @Primary
+  public CookieProcessor cookieProcessor() {
+    var rfc6265CookieProcessor = new Rfc6265CookieProcessor();
+    rfc6265CookieProcessor.setSameSiteCookies(SameSiteCookies.STRICT.getValue());
+    return rfc6265CookieProcessor;
+  }
+
+  @Bean
+  public ServletWebServerFactory servletContainer() {
+    return new TomcatServletWebServerFactory() {
+      @Override
+      protected void postProcessContext(Context context) {
+        context.setCookieProcessor(cookieProcessor());
+      }
+    };
   }
 }

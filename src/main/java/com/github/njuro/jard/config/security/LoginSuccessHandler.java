@@ -8,10 +8,13 @@ import com.github.njuro.jard.utils.HttpUtils;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.CookieProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -23,13 +26,18 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
   private final HttpUtils httpUtils;
+  private final CookieProcessor cookieProcessor;
 
   @Autowired
   public LoginSuccessHandler(
-      UserService userService, JwtTokenProvider jwtTokenProvider, HttpUtils httpUtils) {
+      UserService userService,
+      JwtTokenProvider jwtTokenProvider,
+      HttpUtils httpUtils,
+      CookieProcessor cookieProcessor) {
     this.userService = userService;
     this.jwtTokenProvider = jwtTokenProvider;
     this.httpUtils = httpUtils;
+    this.cookieProcessor = cookieProcessor;
     setRedirectStrategy(new NoRedirectStrategy());
   }
 
@@ -47,10 +55,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     boolean rememberMe =
         Boolean.parseBoolean(request.getAttribute(Constants.JWT_REMEMBER_ME_ATTRIBUTE).toString());
-    response.addCookie(
+
+    Cookie cookie =
         rememberMe
             ? jwtTokenProvider.generateRememberMeCookie(authentication)
-            : jwtTokenProvider.generateSessionCookie(authentication));
+            : jwtTokenProvider.generateSessionCookie(authentication);
+    response.addHeader(HttpHeaders.SET_COOKIE, cookieProcessor.generateHeader(cookie, request));
+
     httpUtils.writeJsonToResponse(response, userService.getCurrentUser());
   }
 }
