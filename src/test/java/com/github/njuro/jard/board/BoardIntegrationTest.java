@@ -1,11 +1,12 @@
 package com.github.njuro.jard.board;
 
+import static com.github.njuro.jard.common.InputConstraints.MAX_BUMP_LIMIT;
+import static com.github.njuro.jard.common.InputConstraints.MAX_THREAD_LIMIT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
-import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
@@ -38,8 +39,8 @@ class BoardIntegrationTest extends MockRequestTest {
             .label("r")
             .boardSettingsForm(
                 BoardSettingsForm.builder()
-                    .bumpLimit(Constants.MAX_BUMP_LIMIT)
-                    .threadLimit(Constants.MAX_THREAD_LIMIT)
+                    .bumpLimit(MAX_BUMP_LIMIT)
+                    .threadLimit(MAX_THREAD_LIMIT)
                     .attachmentCategories(Sets.newLinkedHashSet(AttachmentCategory.values()))
                     .nsfw(true)
                     .defaultPosterName("Anonymous")

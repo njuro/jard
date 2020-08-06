@@ -1,6 +1,6 @@
 package com.github.njuro.jard.board;
 
-import static com.github.njuro.jard.common.Constants.*;
+import static com.github.njuro.jard.common.InputConstraints.*;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import java.util.HashSet;

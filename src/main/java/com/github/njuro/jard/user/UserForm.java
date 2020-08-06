@@ -1,15 +1,9 @@
 package com.github.njuro.jard.user;
 
 import static com.github.njuro.jard.common.Constants.IP_PATTERN;
-import static com.github.njuro.jard.common.Constants.MAX_USERNAME_LENGTH;
-import static com.github.njuro.jard.common.Constants.MIN_PASSWORD_LENGTH;
-import static com.github.njuro.jard.common.Constants.MIN_USERNAME_LENGTH;
+import static com.github.njuro.jard.common.InputConstraints.*;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 

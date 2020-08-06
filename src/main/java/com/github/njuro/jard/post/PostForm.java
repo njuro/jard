@@ -1,8 +1,9 @@
 package com.github.njuro.jard.post;
 
-import static com.github.njuro.jard.common.Constants.*;
+import static com.github.njuro.jard.common.Constants.IP_PATTERN;
+import static com.github.njuro.jard.common.InputConstraints.*;
 
-import com.github.njuro.jard.common.Constants;
+import com.github.njuro.jard.common.InputConstraints;
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Pattern;
@@ -45,7 +46,7 @@ public class PostForm {
 
   /**
    * Validates that attachment's size is not too big as defined by {@link
-   * Constants#MAX_ATTACHMENT_SIZE}, false otherwise
+   * InputConstraints#MAX_ATTACHMENT_SIZE}, false otherwise
    */
   @AssertFalse(message = "{validation.post.attachment.size}")
   public boolean isAttachmentTooBig() {

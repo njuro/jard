@@ -1,6 +1,6 @@
 package com.github.njuro.jard.thread;
 
-import static com.github.njuro.jard.common.Constants.MAX_SUBJECT_LENGTH;
+import static com.github.njuro.jard.common.InputConstraints.MAX_SUBJECT_LENGTH;
 
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.post.PostForm;

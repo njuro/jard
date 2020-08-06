@@ -1,10 +1,5 @@
 package com.github.njuro.jard.common;
 
-import com.github.njuro.jard.board.Board;
-import com.github.njuro.jard.board.BoardSettings;
-import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.thread.Thread;
-import com.github.njuro.jard.user.User;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
@@ -13,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 /** Various constants for configuration purposes. */
 @UtilityClass
-@SuppressWarnings({"JavadocReference", "RedundantModifiersUtilityClassLombok"})
+@SuppressWarnings({"RedundantModifiersUtilityClassLombok"})
 public class Constants {
 
   /** Name of HTTP cookie the JSON Web Token is stored in. */
@@ -46,35 +41,8 @@ public class Constants {
   /** Length of tripcode (akka first {@code n} chars of hashed poster password). */
   public static final int TRIPCODE_LENGTH = 10;
 
-  /** Max length of {@link Board#label} (in characters). */
-  public static final int MAX_BOARD_LABEL_LENGTH = 4;
-
-  /** Max length of {@link Board#name} (in characters). */
-  public static final int MAX_BOARD_NAME_LENGTH = 32;
-
-  /** Max possible value for {@link BoardSettings#threadLimit }. */
-  public static final int MAX_THREAD_LIMIT = 200;
-
-  /** Max possible value for {@link BoardSettings#bumpLimit }. */
-  public static final int MAX_BUMP_LIMIT = 1000;
-
   /** Max threads per one page of board. */
   public static final int MAX_THREADS_PER_PAGE = 10;
-
-  /** Max length of {@link Post#name } (in characters). */
-  public static final int MAX_NAME_LENGTH = 32;
-
-  /** Max length of {@link Post#password } (in characters). */
-  public static final int MAX_TRIPCODE_PASSWORD_LENGTH = 80;
-
-  /** Max length of {@link Thread#subject } (in characters). */
-  public static final int MAX_SUBJECT_LENGTH = 255;
-
-  /** Max length of {@link Post#body } (in characters). */
-  public static final int MAX_POST_LENGTH = 1000;
-
-  /** Max size of single poster uploaded file (in bytes). */
-  public static final int MAX_ATTACHMENT_SIZE = 5_000_000;
 
   /** Pattern for detecting greentext. */
   public static final Pattern GREENTEXT_PATTERN =
@@ -146,15 +114,6 @@ public class Constants {
 
   /** Tag to put at the end of hyperlink. */
   public static final String HYPERLINK_END = "</a>";
-
-  /** Min length of {@link User#username} (in characters). */
-  public static final int MIN_USERNAME_LENGTH = 2;
-
-  /** Max length of {@link User#username} (in characters). */
-  public static final int MAX_USERNAME_LENGTH = 32;
-
-  /** Min length of {@link User#password} (in characters). */
-  public static final int MIN_PASSWORD_LENGTH = 8;
 
   /**
    * How often should system check for expired bans.

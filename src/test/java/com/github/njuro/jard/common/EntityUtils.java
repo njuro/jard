@@ -1,13 +1,6 @@
 package com.github.njuro.jard.common;
 
-import static com.github.njuro.jard.common.Constants.MAX_BOARD_LABEL_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_BOARD_NAME_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_BUMP_LIMIT;
-import static com.github.njuro.jard.common.Constants.MAX_NAME_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_POST_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_SUBJECT_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_THREAD_LIMIT;
-import static com.github.njuro.jard.common.Constants.MAX_TRIPCODE_PASSWORD_LENGTH;
+import static com.github.njuro.jard.common.InputConstraints.*;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.board.Board;

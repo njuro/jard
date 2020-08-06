@@ -1,7 +1,7 @@
 package com.github.njuro.jard.board;
 
-import static com.github.njuro.jard.common.Constants.MAX_BOARD_LABEL_LENGTH;
-import static com.github.njuro.jard.common.Constants.MAX_BOARD_NAME_LENGTH;
+import static com.github.njuro.jard.common.InputConstraints.MAX_BOARD_LABEL_LENGTH;
+import static com.github.njuro.jard.common.InputConstraints.MAX_BOARD_NAME_LENGTH;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

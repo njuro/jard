@@ -1,6 +1,6 @@
 package com.github.njuro.jard.utils.validation;
 
-import static com.github.njuro.jard.common.Constants.MAX_ATTACHMENT_SIZE;
+import static com.github.njuro.jard.common.InputConstraints.MAX_ATTACHMENT_SIZE;
 
 import java.util.Locale;
 import javax.validation.MessageInterpolator;
