@@ -280,7 +280,7 @@
                 </executions>
                 <configuration>
                     <image>
-                        <name>njuro/jard-server:latest</name>
+                        <name>jard-server</name>
                     </image>
                 </configuration>
             </plugin>
