@@ -52,6 +52,8 @@ From **user** perspective:
 - [x] Quoting post by selecting content and clicking on its number
 - [x] Highlighting own posts and replies to them (`(You)`)
 - [x] Both manual and auto updating of opened threads
+- [x] (Optional) posts with country flag based on poster IP
+- [x] (Optional) unique poster ID per thread per IP
 
 From **admin** perspective:
 

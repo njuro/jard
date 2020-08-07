@@ -278,6 +278,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <image>
+                        <name>njuro/jard-server:latest</name>
+                    </image>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>

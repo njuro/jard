@@ -1,4 +1,4 @@
-version: ~> 1.0
+version: "~> 1.0"
 if: branch = master
 os: linux
 dist: bionic
@@ -7,15 +7,23 @@ jdk:
   - oraclejdk11
 addons:
   sonarcloud:
-    organization: "jard"
+    organization: jard
     token:
-      secure: "Wli+qqUZ20ioRUNpaHx315p8/hg6aufp602E0EAd/BcJKOyR9wKOX4NHtGtwGPBPjXzRo3U9Q0IuxmuO+5Rxm8LT8I5U4Qnlp2ovOCG0CYUIrDN+DqCQsN6xstR4nhAqTuTDky7cmZkUmWX/Hw1lXU9YfF4DRfZnf03AsBf2Q31tFOPKO4rDml6nxxustgZ3oQHhhUsBmaHhj3fv1wIxwHVRStYujIRUK9TMZviOUrCOYhYTQQ+1xmvRT9VwtBzrRY3E4oP2tX32BodXqTQkW9aJS7R/HjqPiV+2UVsokOpo6dWB85d8cnM586Hm6CoDuqRX2VszTngLeEaxCu0HWyTpq9pErw5KSLAzaJOrZafi88nUMO3JncL/7jT58HwE17LsqHUyWjo+GCQGPib5VPracfzn1bfKQB3vXSawuu/qJxCc4n3byVSHtSIkoAWaJf+etusYYxXhHCxFRs9RZDJcvECeKT779FdSY2F8sJPAOPLBrxdDOrn6vv8V3RfSZ+IFFbr2dm042GZLmpn7PQNBKSIAQmLTbKY5xagJatfzT8j3G/jaLnhQgXicSoKSwp3xQMX1keMJUaeq4GbJjdfEBNiwteqOwsVaqBASu55MNbh9L8g9z8RB4kF3HWwCsCYeqnUno+kfAqph2C02hUwP6XwI7xQmtIpTREHS3YE="
+      secure: Wli+qqUZ20ioRUNpaHx315p8/hg6aufp602E0EAd/BcJKOyR9wKOX4NHtGtwGPBPjXzRo3U9Q0IuxmuO+5Rxm8LT8I5U4Qnlp2ovOCG0CYUIrDN+DqCQsN6xstR4nhAqTuTDky7cmZkUmWX/Hw1lXU9YfF4DRfZnf03AsBf2Q31tFOPKO4rDml6nxxustgZ3oQHhhUsBmaHhj3fv1wIxwHVRStYujIRUK9TMZviOUrCOYhYTQQ+1xmvRT9VwtBzrRY3E4oP2tX32BodXqTQkW9aJS7R/HjqPiV+2UVsokOpo6dWB85d8cnM586Hm6CoDuqRX2VszTngLeEaxCu0HWyTpq9pErw5KSLAzaJOrZafi88nUMO3JncL/7jT58HwE17LsqHUyWjo+GCQGPib5VPracfzn1bfKQB3vXSawuu/qJxCc4n3byVSHtSIkoAWaJf+etusYYxXhHCxFRs9RZDJcvECeKT779FdSY2F8sJPAOPLBrxdDOrn6vv8V3RfSZ+IFFbr2dm042GZLmpn7PQNBKSIAQmLTbKY5xagJatfzT8j3G/jaLnhQgXicSoKSwp3xQMX1keMJUaeq4GbJjdfEBNiwteqOwsVaqBASu55MNbh9L8g9z8RB4kF3HWwCsCYeqnUno+kfAqph2C02hUwP6XwI7xQmtIpTREHS3YE=
 script:
-  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=njuro_jard
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar spring-boot:build-image -Dsonar.projectKey=njuro_jard
 git:
   depth: false
 cache:
   directories:
-    - $HOME/.m2
+    - "$HOME/.m2"
 before_cache: rm -rf $HOME/.m2/repository/com/github/njuro
+services:
+  - docker
+deploy:
+  provider: script
+  script: bash docker_push.sh
+env:
+  global:
+    - secure: d7q7Ue4C5TIswM+FMz61K4SKtR1BWO8oPHLBOffmcM4zP45RDS4fQrUW9k1ruUUkeC7/O7UHpfOHZOCxVSPcumrdmmZKJSepAFohFu01mhA7voE2RHMrPgEq5Gm2oTf6RTLwlqyq22ABXcd91m3Y2zWdYYOqXNznRbnl2u4Lf46f5NLEh3wN4O/LS0zbYXVWzPMm5U3MgYkEvFEfNN0TwzACTtBcwmLUbTh3cejF6bOqHKc/R7PquOCductUf66doZXL21CxhWufI6wqQ7Nz3XLVP/WlTrUxpSde+Hz+HnMtAsjnIQE2nifiAbA6nwYnnrVElCNYxzQhL/XAwQwDoR7xHEeU92AnlP5LiMfYrxdG3VkOx4HX2GGfkwCDbPWgVZXS85Qon1avXwmLJhpcvYeUmU3FvW9du40hbthyCyTzfdk6C40EXXMOt1/2xjoKzmaEA0tWCvZUqzIIkw0N+mt/YyCq1Ps6m/4xJv7yhh92noULcRpg18iRXQiknDH8gr+FBZOM7/MD6Lbdp/CqwQfQsMNqK3QVPNFRkH8OOe/ZzUlh+a60PPLQl+2qqKKyXDwR3XozvzUIRYNhyINDQ0vaZlCNnYrl8sODlhNFIAMtOO12mT1T1fBCJkGYb0lZU2d8ahPVXUI3QQ3DpjIqaOiry+UXIeeISqF3scg2tBU=
+    - secure: UUvBUD6t4DsKy5x03UIhpsvpR2guN/gNco5o3KzihENFDOvDJzaK59qRfJqd+SHPdf+AReS16MgxymNl+60EBmYkz297rTdi6AybR+Awb7gXilbrYEIvuATAmxLZhCq0e+ctEhmO0g3Osy7zY9CBsh7kC9AcJl1JsQiConIgMl+/NlWnOaDeFBGS02jtmcJ4qxiVwvQxc39f6BKKz3PY7qe/yE4vCQ6jCC8ZRuTDP9MC6KJEPEAsB21FrIEbyQYw442JQt+pLnzYkDPwhO4fCsuXG/E1FEzd8wUBixKR3D/kGzrtQffTVEM6BHVyAuZS9ouD09R8PJZSe0ODTUd8cbzOUg+SEOuNWWkrHyFKe9EDYVp5LtaDYAsINMzHqiXjDn3nViHdggQI9HIq5LlMrC6nN7hnStVmyMOzllDl715l7Y8Y4GOOUEPy4TtdphCxUCG7jQE7x8wBJg6mHy22y9XPP3OkxmE1F75dLtk95Xn14u4bHm1+TtjLHNCn1knhO/0EPQYEpWG/LUCkTdyef0OxW/sXL7MA5sR7Z217HN+yXYuouI+p0Ti55tRkNz9CLdC8RpSndtx1Wvm9BaeGw8d7EIallD+s0vJg4ykId+fmoktc3qD55sAl8blmuZqTnpCDMVhuTXyGIHHtQCO+srxHRItM34F5yVzSDftcgdA=
