@@ -1,0 +1,81 @@
+{
+  "name": "jard-server",
+  "description": "jard imageboard - API server",
+  "keywords": [
+    "jard",
+    "imageboard",
+    "jard-server",
+    "jard-api"
+  ],
+  "website": "https://jard.buzz/",
+  "repository": "https://github.com/njuro/jard",
+  "logo": "https://raw.githubusercontent.com/njuro/jard-client/master/public/assets/jard-logo-name.png",
+  "success_url": "/",
+  "env": {
+    "CLIENT_BASE_URL": {
+      "description": "URL of running jard client instance (for CORS settings)"
+    },
+    "SERVER_BASE_URL": {
+      "description": "URL of running jard server instance (for CORS settings)"
+    },
+    "JWT_SECRET": {
+      "description": "Secret for signing JSON Web Tokens (used for authentication)",
+      "generator": "secret"
+    },
+    "SBA_SECRET": {
+      "description": "Secret for authentication between Spring Boot Admin server and client instances",
+      "generator": "secret"
+    },
+    "ROOT_ENABLED": {
+      "description": "Whether the root user should be created when there are no users in database",
+      "value": "false"
+    },
+    "ROOT_USERNAME": {
+      "description": "Root user name"
+    },
+    "ROOT_PASSWORD": {
+      "description": "Root user password"
+    },
+    "USER_CONTENT_STORAGE": {
+      "description": "How should the poster uploaded files be stored. Valid options are: LOCAL, AMAZON_S3",
+      "value": "AMAZON_S3"
+    },
+    "AWS_S3_REGION": {
+      "description": "Region of Amazon S3 bucket for storing files"
+    },
+    "AWS_S3_BUCKET": {
+      "description": "Name of Amazon S3 bucket for storing files"
+    },
+    "AWS_ACCESS_KEY": {
+      "description": "Access key for Amazon Web Services"
+    },
+    "AWS_SECRET_KEY": {
+      "description": "Access key for Amazon Web Services"
+    },
+    "MAVEN_CUSTOM_OPS": {
+      "description": "Settings for Maven (Heroku specific - probably don't change)",
+      "value": "-DskipTests=true -DskipGitHooks=true"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "as": "DATABASE",
+      "options": {
+        "version": "12"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/java"
+    }
+  ],
+  "stack": "heroku-18"
+}
