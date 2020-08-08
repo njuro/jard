@@ -13,10 +13,12 @@
   "success_url": "/",
   "env": {
     "CLIENT_BASE_URL": {
-      "description": "URL of running jard client instance (for CORS settings)"
+      "description": "URL of running jard client instance (for CORS settings)",
+      "required": false
     },
     "SERVER_BASE_URL": {
-      "description": "URL of running jard server instance (for CORS settings)"
+      "description": "URL of this jard server instance (for CORS settings) - set after first deploy",
+      "required": false
     },
     "JWT_SECRET": {
       "description": "Secret for signing JSON Web Tokens (used for authentication)",
@@ -31,10 +33,12 @@
       "value": "false"
     },
     "ROOT_USERNAME": {
-      "description": "Root user name"
+      "description": "Root user name",
+      "required": false
     },
     "ROOT_PASSWORD": {
-      "description": "Root user password"
+      "description": "Root user password",
+      "required": false
     },
     "USER_CONTENT_STORAGE": {
       "description": "How should the poster uploaded files be stored. Valid options are: LOCAL, AMAZON_S3",
