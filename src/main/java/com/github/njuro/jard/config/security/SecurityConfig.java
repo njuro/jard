@@ -58,6 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Value("${app.user.root.password:password}")
   private String rootPassword;
 
+  @Value("${DISABLE_CSRF_PROTECTION:false}")
+  private boolean disableCsrfProtection;
+
   private final UserFacade userFacade;
 
   private final AuthenticationSuccessHandler loginSuccessHandler;
@@ -152,6 +155,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
       http.addFilterBefore(
           springBootAdminAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    if (disableCsrfProtection) {
+      http.csrf().disable();
     }
 
     http.authorizeRequests().anyRequest().permitAll();

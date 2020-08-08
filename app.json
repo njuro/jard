@@ -65,6 +65,10 @@
     "MAVEN_CUSTOM_OPTS": {
       "description": "Settings for Maven (Heroku specific - probably don't change)",
       "value": "-DskipTests=true -DskipGitHooks=true"
+    },
+    "DISABLE_CSRF_PROTECTION": {
+      "description": "Disable CSRF protection - required for Heroku apps without custom domains",
+      "value": "true"
     }
   },
   "formation": {
