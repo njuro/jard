@@ -53,6 +53,9 @@ public class MvcConfig implements WebMvcConfigurer {
   @Value("${server.base.url:localhost}")
   private String serverBaseUrl;
 
+  @Value("${DISABLE_CSRF_PROTECTION:false}")
+  private boolean disableCsrfProtection;
+
   /** Sets JSON {@link ObjectMapper} for jfilter filter classes. */
   @Autowired
   public void configureJsonFilter(
@@ -125,7 +128,8 @@ public class MvcConfig implements WebMvcConfigurer {
   @Primary
   public CookieProcessor cookieProcessor() {
     var rfc6265CookieProcessor = new Rfc6265CookieProcessor();
-    rfc6265CookieProcessor.setSameSiteCookies(SameSiteCookies.STRICT.getValue());
+    var sameSitePolicy = disableCsrfProtection ? SameSiteCookies.NONE : SameSiteCookies.STRICT;
+    rfc6265CookieProcessor.setSameSiteCookies(sameSitePolicy.getValue());
     return rfc6265CookieProcessor;
   }
 
