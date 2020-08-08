@@ -45,18 +45,22 @@
       "value": "AMAZON_S3"
     },
     "AWS_S3_REGION": {
-      "description": "Region of Amazon S3 bucket for storing files"
+      "description": "Region of Amazon S3 bucket for storing files",
+      "required": false
     },
     "AWS_S3_BUCKET": {
-      "description": "Name of Amazon S3 bucket for storing files"
+      "description": "Name of Amazon S3 bucket for storing files",
+      "required": false
     },
     "AWS_ACCESS_KEY": {
-      "description": "Access key for Amazon Web Services"
+      "description": "Access key for Amazon Web Services",
+      "required": false
     },
     "AWS_SECRET_KEY": {
-      "description": "Access key for Amazon Web Services"
+      "description": "Access key for Amazon Web Services",
+      "required": false
     },
-    "MAVEN_CUSTOM_OPS": {
+    "MAVEN_CUSTOM_OPTS": {
       "description": "Settings for Maven (Heroku specific - probably don't change)",
       "value": "-DskipTests=true -DskipGitHooks=true"
     }
