@@ -30,15 +30,17 @@
     },
     "ROOT_ENABLED": {
       "description": "Whether the root user should be created when there are no users in database",
-      "value": "false"
+      "value": "true"
     },
     "ROOT_USERNAME": {
       "description": "Root user name",
-      "required": false
+      "required": false,
+      "value": "root"
     },
     "ROOT_PASSWORD": {
       "description": "Root user password",
-      "required": false
+      "required": false,
+      "value": "changeme"
     },
     "USER_CONTENT_STORAGE": {
       "description": "How should the poster uploaded files be stored. Valid options are: LOCAL, AMAZON_S3",
