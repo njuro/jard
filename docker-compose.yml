@@ -1,0 +1,57 @@
+version: "3.7"
+services:
+  server:
+    image: njuro/jard-server:latest
+    container_name: jard-server
+    volumes:
+      - type: volume
+        source: jard-usercontent
+        target: /home/cnb/jard-usercontent
+    depends_on:
+      - database
+    tty: true
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+    environment:
+      PORT: 8081
+      SERVER_BASE_URL: http://server:8081
+      CLIENT_BASE_URL: http://client:3000
+      JDBC_DATABASE_URL: jdbc:postgresql://database:5432/${DOCKER_COMPOSE_DATABASE_NAME}
+      JDBC_DATABASE_USERNAME: ${DOCKER_COMPOSE_DATABASE_USERNAME}
+      JDBC_DATABASE_PASSWORD: ${DOCKER_COMPOSE_DATABASE_PASSWORD}
+    restart: unless-stopped
+  client:
+    image: njuro/jard-client:latest
+    container_name: jard-client
+    tty: true
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      REACT_APP_API_URL: "http://server:8081/api"
+    restart: unless-stopped
+    depends_on:
+      - server
+  database:
+    image: library/postgres:12.3
+    container_name: jard-database
+    ports:
+      - 5433:5432
+    tty: true
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DOCKER_COMPOSE_DATABASE_NAME:?Missing database name}
+      POSTGRES_USER: ${DOCKER_COMPOSE_DATABASE_USERNAME:?Missing database user}
+      POSTGRES_PASSWORD: ${DOCKER_COMPOSE_DATABASE_PASSWORD:?Missing database password}
+    restart: unless-stopped
+volumes:
+  jard-usercontent:
+  postgres-data:
+
