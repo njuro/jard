@@ -2,14 +2,18 @@ package com.github.njuro.jard.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 /** Utility class for working with HTTP requests and responses. */
 @Component
+@Slf4j
 public class HttpUtils {
 
   private final ObjectMapper objectMapper;
@@ -65,5 +69,22 @@ public class HttpUtils {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.getWriter().write(objectMapper.writeValueAsString(object));
     response.getWriter().flush();
+  }
+
+  /**
+   * Gets origin URL from given url string.
+   *
+   * @param url URL to be parsed
+   * @return origin URL or unchanged input if given url string is {@code null} or malformed
+   */
+  public static String getOriginUrl(String url) {
+    try {
+      var urlObject = new URL(url);
+      return new URL(urlObject.getProtocol(), urlObject.getHost(), urlObject.getPort(), "")
+          .toExternalForm();
+    } catch (MalformedURLException e) {
+      log.error("Invalid URL string passed");
+      return url;
+    }
   }
 }

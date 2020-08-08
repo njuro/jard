@@ -6,6 +6,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.common.Mappings;
+import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import com.github.njuro.jard.utils.validation.ValidationMessageInterpolator;
 import com.jfilter.EnableJsonFilter;
@@ -85,8 +86,8 @@ public class MvcConfig implements WebMvcConfigurer {
     registry
         .addMapping("/**")
         .allowedOrigins(
-            clientBaseUrl,
-            serverBaseUrl,
+            HttpUtils.getOriginUrl(clientBaseUrl),
+            HttpUtils.getOriginUrl(serverBaseUrl),
             "http://localhost:3000",
             "http://192.168.0.80:3000",
             "http://192.168.0.106:3000")
@@ -100,6 +101,7 @@ public class MvcConfig implements WebMvcConfigurer {
         .allowCredentials(true); // for CSRF protection
   }
 
+  /** Parses URL and returns */
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
     resolvers.addAll(pathVariableArgumentResolvers);
