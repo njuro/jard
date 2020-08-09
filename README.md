@@ -1,4 +1,6 @@
 # jard
+![jard](https://raw.githubusercontent.com/njuro/jard-client/master/public/assets/jard-logo-name.png)
+
 [![Build Status](https://travis-ci.org/njuro/jard.svg?branch=master)](https://travis-ci.org/njuro/jard)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=njuro_jard&metric=alert_status)](https://sonarcloud.io/dashboard?id=njuro_jard)
 ## Basic FAQ
@@ -72,10 +74,49 @@ From **admin** perspective:
 - [ ]  Allow to define user roles with custom set of permissions
 - [ ]  Warning instead of ban
 - [ ]  Post report system
+- [ ] Allow users to delete own posts
 - [ ] Password reset system
 - [ ] Custom user themes
-- [ ]  Better logo
+- [ ] Fulltext search across all posts
+- [ ] User-managed boards
+- [ ] Real-time posting
 - [ ] Many more...
+
+## Deploying your own instance  
+jard aims to allow anyone to quickly and painlessly set up and manage their very own anonymous imageboard. Currently the  following ways of deploying are supported:  
+
+### Heroku
+Probably the most convenient way is to deploy straight to Heroku (PaaS) with this button:  
+  
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/njuro/jard)
+
+**Deployment notes for Heroku**
+- Heroku has *[ephemeral filesystem](https://help.heroku.com/K1PPS2WM/why-are-my-file-uploads-missing-deleted)*, meaning that altough it is possible to set `USER_CONTENT_STORAGE` variable to `LOCAL`, the uploaded attachments will disappear after a while, so recommended value for production is `AMAZON_S3` and providing credentials to S3 buckets.
+- Due to `*.herokuapp.com` being listed in *[public suffix list](https://devcenter.heroku.com/articles/cookies-and-herokuapp-com)*, in order to share cookies (used for authentication etc.) between jard server and client, the CSRF protection must be disabled via enviroment variable `DISABLE_CSRF_PROTECTION=true`. This causes two thing:
+	- CSRF protection via `XSRF-TOKEN` cookie is disabled
+	- Cookies set by server have `SameSite` attribute set to `None` instead of  `Strict` 
+- It is not needed to disable CSRF protection as described above, if you plan to use custom domain for your server instance.
+- By default deploying via the button will provide you with free (as in free beer) instance of Heroku dyno, meaning that it will hibernate after 30 minutes of inactivity. This can be upgraded in Heroku panel at any time.
+
+### Docker  (client, server, database)
+If you prefer to deploy locally on your own computer/VPS, you can use `docker-compose` to deploy the whole jard stack at once.
+
+**Steps**
+1. Download / copy the [docker-compose.yml](https://github.com/njuro/jard/blob/master/docker-compose.yml) file.
+2. Download / copy the [.env-template](https://github.com/njuro/jard/blob/master/.env-template) file, rename it to `.env` and store it in the same directory as docker-compose file.
+3. Fill in the enviroment variables in `.env` file - be careful to use `DOCKER_COMPOSE_DATABASE_*` variables, instead of `JDBC_DATABASE_*` variables. There is also no need to set `CLIENT_BASE_URL`or `SERVER_BASE_URL`. 
+4. Run commands described in [docker-compose_run.sh](https://github.com/njuro/jard/blob/master/docker-compose_run.sh) while being in the same directory.
+5. Wait ~2 minutes, afterwards you should have jard server running at port `8081`, jard client running at port `3000` and PostgresSQL database at port `5433` (all of the ports can be changed in docker compose file)
+
+### Docker (server only)
+Alternatively, you could deploy just the server container. This requires to have set up PostgresSQL database and linking it via enviroment variables.
+
+1. Download / copy the [.env-template](https://github.com/njuro/jard/blob/master/.env-template) file, rename it to `.env` and fill in the enviroment variables.
+2. Run commands described in [docker_run.sh](https://github.com/njuro/jard/blob/master/docker_run.sh) 
+3. Wait ~2 minutes, afterwards you should have jard server running at port defined in `PORT` variable.
+
+### After deployment (all ways)
+It is recommended to configure root user via `ROOT_USER_*` enviroment variables. This will provide you with initial admin user. After setting up everything, head to client `/login` page and use the root user credentials. This will allow you to access the Dashboard and set up additional users/create boards etc.
 
 ## Contributing
 There are several ways for contributing to the project. I will be thankful for all of them.
