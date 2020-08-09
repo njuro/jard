@@ -87,6 +87,15 @@ public class UserFacade implements UserDetailsService {
     oldUser.setEmail(updatedUser.getEmail());
     oldUser.setRole(updatedUser.getRole());
     oldUser.setAuthorities(updatedUser.getRole().getDefaultAuthorites());
+    if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+      if (updatedUser.isPasswordMatching()) {
+        oldUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+      } else {
+        // TODO automatic validation / no hardcoded message
+        throw new FormValidationException("Passwords do not match");
+      }
+    }
+
     return userService.saveUser(oldUser);
   }
 
