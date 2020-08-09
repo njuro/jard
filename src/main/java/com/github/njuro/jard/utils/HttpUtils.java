@@ -87,4 +87,34 @@ public class HttpUtils {
       return url;
     }
   }
+
+  /**
+   * Gets domain from given url string.
+   *
+   * @param url URL to be parsed
+   * @return parsed domain or unchanged input if given url string is {@code null} or malformed
+   */
+  public static String getDomain(String url) {
+    try {
+      if (url.toLowerCase().startsWith("localhost")) {
+        return "localhost";
+      }
+
+      var urlObject = new URL(url);
+      String host = urlObject.getHost();
+      if (host.startsWith("www.")) {
+        host = host.substring(4);
+      }
+      if (!host.contains(".")) {
+        // assume domains without TLD are local - this can be for instance case of named docker
+        // containers
+        host = "localhost";
+      }
+
+      return host;
+    } catch (MalformedURLException e) {
+      log.error("Invalid URL string passed");
+      return url;
+    }
+  }
 }

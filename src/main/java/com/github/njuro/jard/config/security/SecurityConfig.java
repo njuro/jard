@@ -9,9 +9,8 @@ import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
+import com.github.njuro.jard.utils.HttpUtils;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
-import java.net.URI;
-import java.net.URISyntaxException;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,6 +157,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     if (disableCsrfProtection) {
+      log.warn("CSRF Protection disabled by enviroment variable!");
       http.csrf().disable();
     }
 
@@ -189,13 +189,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   /** Configures CSRF token cookie domain based on client base url. */
   @Bean
-  public CsrfTokenRepository csrfTokenRepository() throws URISyntaxException {
+  public CsrfTokenRepository csrfTokenRepository() {
     var repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-    String domain = new URI(clientBaseUrl).getHost();
-    if (domain != null) {
-      domain = domain.startsWith("www.") ? domain.substring(4) : domain;
-      repository.setCookieDomain(domain);
-    }
+    repository.setCookieDomain(HttpUtils.getDomain(clientBaseUrl));
     return repository;
   }
 }
