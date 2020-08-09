@@ -118,6 +118,8 @@ Alternatively, you could deploy just the server container. This requires to have
 ### After deployment (all ways)
 It is recommended to configure root user via `ROOT_USER_*` enviroment variables. This will provide you with initial admin user. After setting up everything, head to client `/login` page and use the root user credentials. This will allow you to access the Dashboard and set up additional users/create boards etc.
 
+There is also running [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin) instance available at `/sba` endpoint on your server instance. This can be used for checking logs and various metrics, such as memory consumption of application. To access you need to be logged in as user with `ACTUATOR_ACCESS` permission (root user has it).
+
 ## Contributing
 There are several ways for contributing to the project. I will be thankful for all of them.
 - Star the repository and share the word
