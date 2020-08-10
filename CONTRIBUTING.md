@@ -19,7 +19,7 @@ For contribution to frontend project [see this file](https://github.com/njuro/ja
 - Fork the base repository
 - Clone your fork with `git clone` 
 - Install dependencies with `mvn clean install`
-- Set up database connection properties in `application-dev.properties` in `resources` folder
+- [Set up database connection properties](#setting-up-postgresql) in `application-dev.properties` in `resources` folder
 - Make changes in code and test them (either manually or with automated tests)
 - Commit and push to your fork
 - Open pull request on base repository (optionally - link issue this PR relates to)
@@ -27,3 +27,54 @@ For contribution to frontend project [see this file](https://github.com/njuro/ja
 - Wait for PR approval/feedback/merge
 
 Thanks for all the future contributions!
+
+## Setting up PostgreSQL
+
+This step is necessary before starting the Spring Boot application.
+
+### Install PostgreSQL
+
+#### Ubuntu 18.04
+
+```sh
+$ sudo apt update
+$ sudo apt install postgresql
+```
+
+#### macOS
+
+Recommended installation using [Homebrew](brew.sh)
+
+```
+$ brew update
+$ brew install postgresql
+```
+
+#### Windows
+
+Recommended installation using [Chocolatey](https://chocolatey.org/)
+
+```powershell
+PS C:\> choco install postgresql12
+```
+
+### Post-install
+
+Create **jard** database and **jard_user** using postgres (default user):
+```sh
+$ sudo -u postgres createdb jard
+$ sudo -u postgres createuser jard_user
+```
+
+Access psql prompt and set password for **jard_user** (password is **testpw**):
+```sh
+$ psql -d jard -U jard_user
+
+psql (12.3)
+Type "help" for help.
+
+jard-> \password jard_user
+Enter new password: testpw
+Enter it again: testpw
+jard-> \q
+```
