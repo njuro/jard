@@ -3,7 +3,7 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import com.github.njuro.jard.attachment.Attachment;
-import com.github.njuro.jard.attachment.embedded.EmbedData;
+import com.github.njuro.jard.attachment.EmbedData;
 import com.github.njuro.jard.attachment.embedded.EmbedService;
 
 /**

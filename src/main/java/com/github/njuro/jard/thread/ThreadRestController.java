@@ -1,10 +1,13 @@
 package com.github.njuro.jard.thread;
 
-import com.github.njuro.jard.board.Board;
+import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.post.PostForm;
+import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.post.dto.PostForm;
+import com.github.njuro.jard.thread.dto.ThreadDto;
+import com.github.njuro.jard.thread.dto.ThreadForm;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.SensitiveDataFilter;
@@ -38,8 +41,8 @@ public class ThreadRestController {
   }
 
   @PutMapping
-  public Thread createThread(
-      Board board,
+  public ThreadDto createThread(
+      BoardDto board,
       @RequestPart ThreadForm threadForm,
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
@@ -52,8 +55,8 @@ public class ThreadRestController {
 
   @PutMapping(Mappings.PATH_VARIABLE_THREAD)
   @FieldFilterSetting(className = Post.class, fields = "thread")
-  public Post replyToThread(
-      Thread thread,
+  public PostDto replyToThread(
+      ThreadDto thread,
       @RequestPart PostForm postForm,
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
@@ -67,35 +70,35 @@ public class ThreadRestController {
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
   @FieldFilterSetting(className = Post.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
-  public Thread getThread(Thread thread) {
+  public ThreadDto getThread(ThreadDto thread) {
     return threadFacade.getThread(thread);
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-replies")
   @FieldFilterSetting(className = Post.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
-  public List<Post> getNewReplies(
-      Thread thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
+  public List<PostDto> getNewReplies(
+      ThreadDto thread, @RequestParam(name = "lastPost") Long lastPostNumber) {
     return threadFacade.getNewReplies(thread, lastPostNumber);
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
-  public ResponseEntity<Object> toggleStickyOnThread(Thread thread) {
+  public ResponseEntity<Object> toggleStickyOnThread(ThreadDto thread) {
     threadFacade.toggleStickyOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
-  public ResponseEntity<Object> toggleLockOnThread(Thread thread) {
+  public ResponseEntity<Object> toggleLockOnThread(ThreadDto thread) {
     threadFacade.toggleLockOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
   @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
-  public ResponseEntity<Object> deletePost(Thread thread, Post post) {
+  public ResponseEntity<Object> deletePost(ThreadDto thread, PostDto post) {
     try {
       threadFacade.deletePost(thread, post);
       return ResponseEntity.ok().build();

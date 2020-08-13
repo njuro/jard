@@ -7,6 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.board.dto.BoardForm;
+import com.github.njuro.jard.board.dto.BoardSettingsDto;
 import com.github.njuro.jard.common.ControllerTest;
 import com.github.njuro.jard.common.EntityUtils;
 import com.github.njuro.jard.common.Mappings;
@@ -29,7 +32,7 @@ class BoardControllerTest extends ControllerTest {
   private BoardForm boardForm;
 
   @Captor private ArgumentCaptor<BoardForm> boardFormCaptor;
-  @Captor private ArgumentCaptor<Board> boardCaptor;
+  @Captor private ArgumentCaptor<BoardDto> boardCaptor;
   @Captor private ArgumentCaptor<Pageable> pageableCaptor;
 
   @BeforeEach
@@ -39,17 +42,17 @@ class BoardControllerTest extends ControllerTest {
             .label("r")
             .name("Random")
             .boardSettingsForm(
-                BoardSettingsForm.builder().nsfw(true).bumpLimit(350).threadLimit(100).build())
+                BoardSettingsDto.builder().nsfw(true).bumpLimit(350).threadLimit(100).build())
             .build();
   }
 
   @Test
   void testCreateBoard() throws Exception {
-    when(boardFacade.createBoard(boardForm)).thenReturn(boardForm.toBoard());
+    when(boardFacade.createBoard(boardForm)).thenReturn(boardForm.toDto());
 
     performMockRequest(HttpMethod.PUT, API_ROOT, boardForm)
         .andExpect(status().isOk())
-        .andExpect(content().json(toJson(boardForm.toBoard())));
+        .andExpect(content().json(toJson(boardForm.toDto())));
 
     verify(boardFacade).createBoard(boardFormCaptor.capture());
     assertThat(boardFormCaptor.getValue()).isEqualToComparingFieldByField(boardForm);
@@ -85,7 +88,7 @@ class BoardControllerTest extends ControllerTest {
 
   @Test
   void testGetAllBoards() throws Exception {
-    when(boardFacade.getAllBoards()).thenReturn(Collections.singletonList(boardForm.toBoard()));
+    when(boardFacade.getAllBoards()).thenReturn(Collections.singletonList(boardForm.toDto()));
     performMockRequest(HttpMethod.GET, API_ROOT)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[*].name").exists())
@@ -94,8 +97,8 @@ class BoardControllerTest extends ControllerTest {
 
   @Test
   void testGetBoard() throws Exception {
-    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
-    when(boardFacade.getBoard(any(Board.class), any(Pageable.class)))
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toDto());
+    when(boardFacade.getBoard(any(BoardDto.class), any(Pageable.class)))
         .thenReturn(EntityUtils.randomBoard(1));
     performMockRequest(
             HttpMethod.GET,
@@ -108,15 +111,15 @@ class BoardControllerTest extends ControllerTest {
 
     verify(boardFacade).getBoard(boardCaptor.capture(), pageableCaptor.capture());
 
-    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toDto());
     assertThat(pageableCaptor.getValue().getPageNumber()).isEqualTo(1);
     assertThat(pageableCaptor.getValue().getPageSize()).isEqualTo(10);
   }
 
   @Test
   void testGetBoardCatalog() throws Exception {
-    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
-    when(boardFacade.getBoardCatalog(any(Board.class))).thenReturn(EntityUtils.randomBoard(1));
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toDto());
+    when(boardFacade.getBoardCatalog(any(BoardDto.class))).thenReturn(EntityUtils.randomBoard(1));
 
     performMockRequest(
             HttpMethod.GET,
@@ -127,12 +130,12 @@ class BoardControllerTest extends ControllerTest {
         .andExpect(jsonPath("$.threads[*].originalPost.ip").doesNotExist());
 
     verify(boardFacade).getBoardCatalog(boardCaptor.capture());
-    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toDto());
   }
 
   @Test
   void testEditBoard() throws Exception {
-    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toDto());
 
     performMockRequest(
             HttpMethod.POST,
@@ -141,13 +144,13 @@ class BoardControllerTest extends ControllerTest {
         .andExpect(status().isOk());
 
     verify(boardFacade).editBoard(boardCaptor.capture(), boardFormCaptor.capture());
-    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toDto());
     assertThat(boardFormCaptor.getValue()).isEqualToComparingFieldByField(boardForm);
   }
 
   @Test
   void testDeleteBoard() throws Exception {
-    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toBoard());
+    when(boardFacade.resolveBoard(boardForm.getLabel())).thenReturn(boardForm.toDto());
 
     performMockRequest(
             HttpMethod.DELETE,
@@ -155,7 +158,7 @@ class BoardControllerTest extends ControllerTest {
         .andExpect(status().isOk());
 
     verify(boardFacade).deleteBoard(boardCaptor.capture());
-    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toBoard());
+    assertThat(boardCaptor.getValue()).isEqualToComparingFieldByField(boardForm.toDto());
   }
 
   private void expectValidationErrors(String... expectedFieldErrors) throws Exception {

@@ -36,7 +36,7 @@ public class AttachmentMetadataUtils {
    * @see AttachmentCategory
    */
   public void setMetadata(Attachment attachment) {
-    Objects.requireNonNull(attachment, "Attachment cannot be null");
+    Objects.requireNonNull(attachment);
     setAttachmentCategory(attachment);
 
     switch (attachment.getCategory()) {

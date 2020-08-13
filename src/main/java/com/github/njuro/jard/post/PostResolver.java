@@ -1,6 +1,7 @@
 package com.github.njuro.jard.post;
 
 import com.github.njuro.jard.common.Mappings;
+import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -21,7 +22,7 @@ public class PostResolver implements PathVariableArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterType().equals(Post.class);
+    return parameter.getParameterType().equals(PostDto.class);
   }
 
   @Override

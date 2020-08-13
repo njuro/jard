@@ -101,7 +101,7 @@ public class BoardService {
    * @throws IOException when deletion of one of the attachments' file fails
    */
   public void deleteBoard(Board board) throws IOException {
-    threadService.deleteThreads(threadService.getAllThreadsFromBoard(board));
+    threadService.deleteThreads(threadService.getAllThreadsFromBoard(board.getId()));
     boardRepository.delete(board);
   }
 }

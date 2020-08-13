@@ -12,11 +12,11 @@ import lombok.Data;
 @SuppressWarnings("JavadocReference")
 public class UnbanForm {
 
-  /** @see Ban#ip */
+  /** {@link Ban#ip} */
   @NotNull(message = "{validation.ban.ip.null}")
   @Pattern(regexp = Constants.IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
-  /** @see Ban#unbanReason */
+  /** {@link Ban#unbanReason} */
   private String reason;
 }

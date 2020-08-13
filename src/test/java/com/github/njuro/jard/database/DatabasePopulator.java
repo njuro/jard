@@ -5,15 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.njuro.jard.attachment.AttachmentCategory;
-import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardFacade;
-import com.github.njuro.jard.board.BoardForm;
 import com.github.njuro.jard.board.BoardNotFoundException;
-import com.github.njuro.jard.board.BoardSettingsForm;
-import com.github.njuro.jard.post.PostForm;
-import com.github.njuro.jard.thread.Thread;
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.board.dto.BoardForm;
+import com.github.njuro.jard.board.dto.BoardSettingsDto;
+import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.ThreadFacade;
-import com.github.njuro.jard.thread.ThreadForm;
+import com.github.njuro.jard.thread.dto.ThreadDto;
+import com.github.njuro.jard.thread.dto.ThreadForm;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,7 +57,7 @@ class DatabasePopulator {
   @Commit
   @Transactional
   void populateRealData() throws IOException {
-    Board board = createBoard();
+    BoardDto board = createBoard();
     List<File> files =
         Files.list(DATA_PATH)
             .map(Path::toFile)
@@ -77,7 +77,7 @@ class DatabasePopulator {
                 "Skipping thread %d of %d - missing OP attachment", counter++, files.size()));
         continue;
       }
-      Thread createdThread = threadFacade.createThread(threadForm, board);
+      ThreadDto createdThread = threadFacade.createThread(threadForm, board);
 
       for (int i = 1; i < posts.size() - 1; i++) {
         PostForm postForm = createPostForm(posts.get(i));
@@ -90,7 +90,7 @@ class DatabasePopulator {
     assertThat(boardFacade.getBoardCatalog(board).getThreads()).isNotEmpty();
   }
 
-  private Board createBoard() {
+  private BoardDto createBoard() {
     try {
       return boardFacade.resolveBoard("fit");
     } catch (BoardNotFoundException ex) {
@@ -99,7 +99,7 @@ class DatabasePopulator {
               .label("fit")
               .name("Fitness")
               .boardSettingsForm(
-                  BoardSettingsForm.builder()
+                  BoardSettingsDto.builder()
                       .attachmentCategories(
                           Set.of(AttachmentCategory.IMAGE, AttachmentCategory.VIDEO))
                       .threadLimit(200)

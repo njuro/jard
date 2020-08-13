@@ -1,9 +1,10 @@
-package com.github.njuro.jard.thread;
+package com.github.njuro.jard.thread.dto;
 
 import static com.github.njuro.jard.common.InputConstraints.MAX_SUBJECT_LENGTH;
 
 import com.github.njuro.jard.board.Board;
-import com.github.njuro.jard.post.PostForm;
+import com.github.njuro.jard.post.dto.PostForm;
+import com.github.njuro.jard.thread.Thread;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.AssertTrue;
@@ -13,19 +14,19 @@ import lombok.Builder;
 import lombok.Data;
 
 /** Form for creating new {@link Thread} on {@link Board}. */
+@SuppressWarnings("JavadocReference")
 @Data
 @Builder
-@SuppressWarnings("JavadocReference")
 public class ThreadForm {
 
-  /** @see Thread#subject */
+  /** {@link Thread#subject} */
   @Size(max = MAX_SUBJECT_LENGTH, message = "{validation.thread.subject.length}")
   private String subject;
 
-  /** @see Thread#stickied */
+  /** {@link Thread#stickied} */
   private boolean stickied;
 
-  /** @see Thread#locked */
+  /** {@link Thread#locked} */
   private boolean locked;
 
   /**
@@ -49,8 +50,8 @@ public class ThreadForm {
         || (postForm.getAttachment() != null && postForm.getAttachment().getSize() > 0);
   }
 
-  /** @return {@link Thread} created from values of this form. */
-  public Thread toThread() {
-    return Thread.builder().subject(subject).locked(locked).stickied(stickied).build();
+  /** @return {@link ThreadDto} created from values of this form. */
+  public ThreadDto toDto() {
+    return ThreadDto.builder().subject(subject).locked(locked).stickied(stickied).build();
   }
 }

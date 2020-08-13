@@ -1,9 +1,6 @@
 package com.github.njuro.jard.board;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.njuro.jard.attachment.AttachmentCategory;
-import com.github.njuro.jard.attachment.AttachmentCategory.AttachmentCategorySerializer;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,13 +24,12 @@ public class BoardSettings implements Serializable {
   private static final long serialVersionUID = 7024830970057024626L;
 
   /** Identifier of these settings. Equals to primary key of owning {@link #board}. */
-  @Id @JsonIgnore private UUID boardId;
+  @Id private UUID boardId;
 
   /** {@link Board} these settings belong to. */
   @OneToOne
   @JoinColumn(name = "board_id")
   @MapsId
-  @JsonIgnore
   private Board board;
 
   /**
@@ -41,7 +37,6 @@ public class BoardSettings implements Serializable {
    *
    * @see AttachmentCategory
    */
-  @SuppressWarnings("JpaDataSourceORMInspection")
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
       name = "board_attachment_categories",
@@ -49,7 +44,6 @@ public class BoardSettings implements Serializable {
   @Column(name = "attachment_category")
   @Enumerated(value = EnumType.STRING)
   @Builder.Default
-  @JsonSerialize(contentUsing = AttachmentCategorySerializer.class)
   private Set<AttachmentCategory> attachmentCategories = new HashSet<>();
 
   /**

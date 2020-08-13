@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.common.Mappings;
+import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-/** Resolver for mapping username (path variable) to respective {@link User} object */
+/** Resolver for mapping username (path variable) to respective {@link UserDto} object */
 @Component
 @RequiredArgsConstructor
 public class UserResolver implements PathVariableArgumentResolver {
@@ -18,7 +19,7 @@ public class UserResolver implements PathVariableArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterType().equals(User.class);
+    return parameter.getParameterType().equals(UserDto.class);
   }
 
   @Override

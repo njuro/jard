@@ -1,25 +1,13 @@
 package com.github.njuro.jard.ban;
 
+import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.user.User;
-import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * Entity representing a ban on IP, which prevents it from posting. Special case of this is warning,
@@ -28,20 +16,14 @@ import lombok.ToString;
 @Entity
 @Table(name = "bans")
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
-public class Ban implements Serializable {
+public class Ban extends BaseEntity {
 
   private static final long serialVersionUID = -3032088825735160580L;
-
-  /** Unique identifier of this ban. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(updatable = false)
-  private UUID id;
 
   /** Banned IP (e.g. {@code 127.0.0.1}) */
   @Basic
@@ -60,14 +42,16 @@ public class Ban implements Serializable {
   private BanStatus status;
 
   /** User who created this ban. Can be {@code null} if the user was deleted meanwhile. */
-  @ManyToOne(targetEntity = User.class)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @Fetch(FetchMode.JOIN)
   private User bannedBy;
 
   /** Reason for this ban (e.g. {@code spam}). */
   @Basic private String reason;
 
   /** (Optional) user who ended this ban before its natural expiration. */
-  @ManyToOne(targetEntity = User.class)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @Fetch(FetchMode.JOIN)
   private User unbannedBy;
 
   /** (Optional) reason for ending this ban before its natural expiration */

@@ -5,21 +5,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
-import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardFacade;
-import com.github.njuro.jard.board.BoardForm;
-import com.github.njuro.jard.board.BoardSettingsForm;
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.board.dto.BoardForm;
+import com.github.njuro.jard.board.dto.BoardSettingsDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
-import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.PostFacade;
-import com.github.njuro.jard.post.PostForm;
 import com.github.njuro.jard.post.PostNotFoundException;
+import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.post.dto.PostForm;
+import com.github.njuro.jard.thread.dto.ThreadDto;
+import com.github.njuro.jard.thread.dto.ThreadForm;
 import com.github.njuro.jard.user.UserAuthority;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +37,12 @@ class ThreadIntegrationTest extends MockRequestTest {
 
   private static final String API_ROOT = Mappings.API_ROOT_THREADS;
 
+  @Autowired private EntityManager entityManager;
   @Autowired private BoardFacade boardFacade;
   @Autowired private ThreadFacade threadFacade;
   @Autowired private PostFacade postFacade;
 
-  private Board board;
+  private BoardDto board;
   private ThreadForm threadForm;
 
   @BeforeEach
@@ -49,7 +53,7 @@ class ThreadIntegrationTest extends MockRequestTest {
                 .label("r")
                 .name("Random")
                 .boardSettingsForm(
-                    BoardSettingsForm.builder()
+                    BoardSettingsDto.builder()
                         .defaultPosterName("Anonymous")
                         .threadLimit(200)
                         .bumpLimit(300)
@@ -87,7 +91,7 @@ class ThreadIntegrationTest extends MockRequestTest {
   }
 
   @Test
-  void replyToThread() throws Exception {
+  void testReplyToThread() throws Exception {
     var thread = createThreadDirectly();
 
     PostForm reply = PostForm.builder().body("Reply").build();
@@ -104,7 +108,7 @@ class ThreadIntegrationTest extends MockRequestTest {
   }
 
   @Test
-  void getThread() throws Exception {
+  void testGetThread() throws Exception {
     var thread = createThreadDirectly();
 
     var result =
@@ -115,12 +119,12 @@ class ThreadIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, Thread.class).getThreadNumber())
+    assertThat(getResponse(result, ThreadDto.class).getThreadNumber())
         .isEqualTo(thread.getThreadNumber());
   }
 
   @Test
-  void getNewReplies() throws Exception {
+  void testGetNewReplies() throws Exception {
     var thread = createThreadDirectly();
     var reply1 = createReplyDirectly(thread);
     var reply2 = createReplyDirectly(thread);
@@ -139,14 +143,14 @@ class ThreadIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponseCollection(result, List.class, Post.class))
-        .extracting(Post::getPostNumber)
+    assertThat(getResponseCollection(result, List.class, PostDto.class))
+        .extracting(PostDto::getPostNumber)
         .containsExactly(reply2.getPostNumber(), reply3.getPostNumber());
   }
 
   @Test
   @WithMockUserAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
-  void toggleStickyOnThread() throws Exception {
+  void testToggleStickyOnThread() throws Exception {
     var thread = createThreadDirectly();
 
     boolean originalSticky = threadForm.isStickied();
@@ -157,12 +161,13 @@ class ThreadIntegrationTest extends MockRequestTest {
                 API_ROOT + Mappings.PATH_VARIABLE_THREAD + "/sticky", thread.getThreadNumber()))
         .andExpect(status().isOk());
 
-    assertThat(threadFacade.getThread(thread).isStickied()).isNotEqualTo(originalSticky);
+    assertThat(threadFacade.resolveThread(board.getLabel(), thread.getThreadNumber()).isStickied())
+        .isNotEqualTo(originalSticky);
   }
 
   @Test
   @WithMockUserAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
-  void toggleLockOnThread() throws Exception {
+  void testToggleLockOnThread() throws Exception {
     var thread = createThreadDirectly();
 
     boolean originalLock = thread.isLocked();
@@ -172,12 +177,39 @@ class ThreadIntegrationTest extends MockRequestTest {
             buildUri(API_ROOT + Mappings.PATH_VARIABLE_THREAD + "/lock", thread.getThreadNumber()))
         .andExpect(status().isOk());
 
-    assertThat(threadFacade.getThread(thread).isLocked()).isNotEqualTo(originalLock);
+    assertThat(threadFacade.resolveThread(board.getLabel(), thread.getThreadNumber()).isLocked())
+        .isNotEqualTo(originalLock);
   }
 
   @Test
   @WithMockUserAuthorities(UserAuthority.DELETE_POST)
-  void deletePost() throws Exception {
+  void testDeleteThread() throws Exception {
+    var thread = createThreadDirectly();
+
+    assertThat(postFacade.resolvePost(board.getLabel(), thread.getOriginalPost().getPostNumber()))
+        .isNotNull();
+
+    entityManager.clear();
+
+    performMockRequest(
+            HttpMethod.DELETE,
+            buildUri(
+                API_ROOT + Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST,
+                thread.getThreadNumber(),
+                thread.getOriginalPost().getPostNumber()))
+        .andExpect(status().isOk());
+
+    assertThatThrownBy(
+            () ->
+                postFacade.resolvePost(board.getLabel(), thread.getOriginalPost().getPostNumber()))
+        .isInstanceOf(PostNotFoundException.class);
+    assertThatThrownBy(() -> threadFacade.resolveThread(board.getLabel(), thread.getThreadNumber()))
+        .isInstanceOf(ThreadNotFoundException.class);
+  }
+
+  @Test
+  @WithMockUserAuthorities(UserAuthority.DELETE_POST)
+  void testDeletePost() throws Exception {
     var thread = createThreadDirectly();
     var reply = createReplyDirectly(thread);
 
@@ -202,14 +234,14 @@ class ThreadIntegrationTest extends MockRequestTest {
     return super.buildUri(url, ArrayUtils.addFirst(pathVariables, board.getLabel()));
   }
 
-  private Thread createThreadDirectly() throws Exception {
+  private ThreadDto createThreadDirectly() throws Exception {
     threadForm
         .getPostForm()
         .setAttachment(buildMultipartFile("attachment", "test_attachment_1.png"));
     return threadFacade.createThread(threadForm, board);
   }
 
-  private Post createReplyDirectly(Thread thread) throws Exception {
+  private PostDto createReplyDirectly(ThreadDto thread) throws Exception {
     return threadFacade.replyToThread(
         PostForm.builder().body("Reply").ip("127.0.0.1").build(), thread);
   }

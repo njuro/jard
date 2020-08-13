@@ -4,13 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.njuro.jard.ban.dto.BanDto;
+import com.github.njuro.jard.ban.dto.BanForm;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserFacade;
-import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
+import com.github.njuro.jard.user.dto.UserForm;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,8 +77,8 @@ class BanIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, Ban.class))
-        .extracting(Ban::getReason)
+    assertThat(getResponse(result, BanDto.class))
+        .extracting(BanDto::getReason)
         .isEqualTo(banForm.getReason());
   }
 
@@ -95,8 +97,8 @@ class BanIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponseCollection(result, List.class, Ban.class))
-        .extracting(Ban::getIp)
+    assertThat(getResponseCollection(result, List.class, BanDto.class))
+        .extracting(BanDto::getIp)
         .containsExactlyInAnyOrder(originalIp, newIp);
   }
 
@@ -107,7 +109,7 @@ class BanIntegrationTest extends MockRequestTest {
 
     assertThat(banFacade.resolveBan(ban.getId()))
         .isNotNull()
-        .extracting(Ban::getReason)
+        .extracting(BanDto::getReason)
         .isEqualTo(banForm.getReason());
 
     String newReason = "Spam";
@@ -121,7 +123,7 @@ class BanIntegrationTest extends MockRequestTest {
 
     assertThat(banFacade.resolveBan(ban.getId()))
         .isNotNull()
-        .extracting(Ban::getReason)
+        .extracting(BanDto::getReason)
         .isEqualTo(newReason);
   }
 
@@ -132,7 +134,7 @@ class BanIntegrationTest extends MockRequestTest {
 
     assertThat(banFacade.resolveBan(ban.getId()))
         .isNotNull()
-        .extracting(Ban::getStatus)
+        .extracting(BanDto::getStatus)
         .isEqualTo(BanStatus.ACTIVE);
 
     var unbanForm = UnbanForm.builder().ip(ban.getIp()).reason("OK").build();
@@ -145,7 +147,7 @@ class BanIntegrationTest extends MockRequestTest {
 
     assertThat(banFacade.resolveBan(ban.getId()))
         .isNotNull()
-        .extracting(Ban::getStatus)
+        .extracting(BanDto::getStatus)
         .isEqualTo(BanStatus.UNBANNED);
   }
 }

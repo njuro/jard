@@ -3,7 +3,6 @@ package com.github.njuro.jard.attachment;
 import static com.github.njuro.jard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION;
 import static org.apache.commons.io.FilenameUtils.EXTENSION_SEPARATOR_STR;
 
-import com.github.njuro.jard.attachment.embedded.EmbedData;
 import com.github.njuro.jard.attachment.helpers.AttachmentImageUtils;
 import com.github.njuro.jard.attachment.helpers.AttachmentMetadataUtils;
 import com.github.njuro.jard.attachment.storage.RemoteStorageService;
@@ -52,8 +51,8 @@ public class AttachmentService {
    * @throws NullPointerException if one of the parameters is {@code null}
    */
   public Attachment saveAttachment(Attachment attachment, MultipartFile source) throws IOException {
-    Objects.requireNonNull(attachment, "Attachment cannot be null");
-    Objects.requireNonNull(source, "Source file cannot be null");
+    Objects.requireNonNull(attachment);
+    Objects.requireNonNull(source);
 
     //noinspection ResultOfMethodCallIgnored
     attachment.getFile().getParentFile().mkdirs();
@@ -116,10 +115,43 @@ public class AttachmentService {
    * @throws NullPointerException if attachment is {@code null}
    */
   public Attachment saveEmbeddedAttachment(Attachment attachment) {
-    Objects.requireNonNull(attachment, "Attachment cannot be null");
+    Objects.requireNonNull(attachment);
 
     attachment.getEmbedData().setAttachment(attachment);
+
     return attachmentRepository.save(attachment);
+  }
+
+  /**
+   * Deletes given attachment.
+   *
+   * @throws IOException if deleting from local filesystem fails
+   * @throws IllegalArgumentException if deleting from remote server fails
+   * @throws NullPointerException if attachment is {@code null}
+   */
+  public void deleteAttachment(Attachment attachment) throws IOException {
+    Objects.requireNonNull(attachment);
+
+    if (attachment.getCategory() != AttachmentCategory.EMBED) {
+      deleteAttachmentFile(attachment);
+    }
+
+    attachmentRepository.delete(attachment);
+  }
+
+  /**
+   * Deletes list of given attachments.
+   *
+   * @param attachments list of attachments to delete
+   * @throws IOException if deleting from local filesystem fails
+   * @throws IllegalArgumentException if deleting from remote server fails
+   * @throws NullPointerException if attachment list is {@code null}
+   */
+  public void deleteAttachments(List<Attachment> attachments) throws IOException {
+    Objects.requireNonNull(attachments);
+    for (Attachment attachment : attachments) {
+      deleteAttachment(attachment);
+    }
   }
 
   /**
@@ -128,11 +160,8 @@ public class AttachmentService {
    * @param attachment attachment, which file to delete
    * @throws IOException if deleting from local filesystem fails
    * @throws IllegalArgumentException if deleting from remote server fails
-   * @throws NullPointerException if attachment is {@code null}
    */
-  public void deleteAttachmentFile(Attachment attachment) throws IOException {
-    Objects.requireNonNull(attachment, "Attachment cannot be null");
-
+  private void deleteAttachmentFile(Attachment attachment) throws IOException {
     if (remoteStorageService != null) {
       remoteStorageService.deleteFile(attachment.getFolder(), attachment.getFilename());
 
@@ -145,21 +174,6 @@ public class AttachmentService {
     Files.deleteIfExists(attachment.getFile().toPath());
     if (attachment.getThumbnailFile() != null) {
       Files.deleteIfExists(attachment.getThumbnailFile().toPath());
-    }
-  }
-
-  /**
-   * Deletes files of given attachments.
-   *
-   * @param attachments list of attachments which files to delete
-   * @throws IOException if deleting from local filesystem fails
-   * @throws IllegalArgumentException if deleting from remote server fails
-   * @throws NullPointerException if attachment list is {@code null}
-   */
-  public void deleteAttachmentFiles(List<Attachment> attachments) throws IOException {
-    Objects.requireNonNull(attachments, "Attachment list cannot be null");
-    for (Attachment attachment : attachments) {
-      deleteAttachmentFile(attachment);
     }
   }
 }

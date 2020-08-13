@@ -3,13 +3,13 @@ package com.github.njuro.jard.common;
 import static com.github.njuro.jard.common.InputConstraints.*;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
-import com.github.njuro.jard.board.Board;
-import com.github.njuro.jard.board.BoardForm;
-import com.github.njuro.jard.board.BoardSettingsForm;
-import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.post.PostForm;
-import com.github.njuro.jard.thread.Thread;
-import com.github.njuro.jard.thread.ThreadForm;
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.board.dto.BoardForm;
+import com.github.njuro.jard.board.dto.BoardSettingsDto;
+import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.post.dto.PostForm;
+import com.github.njuro.jard.thread.dto.ThreadDto;
+import com.github.njuro.jard.thread.dto.ThreadForm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ public class EntityUtils {
         .label(randomString(MAX_BOARD_LABEL_LENGTH))
         .name(randomString(MAX_BOARD_NAME_LENGTH))
         .boardSettingsForm(
-            BoardSettingsForm.builder()
+            BoardSettingsDto.builder()
                 .attachmentCategories(
                     Collections.singleton(randomEnum(AttachmentCategory.values())))
                 .nsfw(randomBoolean())
@@ -55,9 +55,9 @@ public class EntityUtils {
         .build();
   }
 
-  public static Board randomBoard(int numberOfThreads) {
-    Board board = randomBoardForm().toBoard();
-    List<Thread> threads = new ArrayList<>();
+  public static BoardDto randomBoard(int numberOfThreads) {
+    BoardDto board = randomBoardForm().toDto();
+    List<ThreadDto> threads = new ArrayList<>();
     for (int i = 0; i < numberOfThreads; i++) {
       threads.add(randomThread(0));
     }
@@ -66,10 +66,10 @@ public class EntityUtils {
     return board;
   }
 
-  public static Thread randomThread(int numberOfReplies) {
-    Thread thread = randomThreadForm().toThread();
+  public static ThreadDto randomThread(int numberOfReplies) {
+    ThreadDto thread = randomThreadForm().toDto();
     thread.setOriginalPost(randomPost());
-    List<Post> replies = new ArrayList<>();
+    List<PostDto> replies = new ArrayList<>();
     for (int i = 0; i < numberOfReplies; i++) {
       replies.add(randomPost());
     }
@@ -78,8 +78,8 @@ public class EntityUtils {
     return thread;
   }
 
-  public static Post randomPost() {
-    return randomPostForm().toPost();
+  public static PostDto randomPost() {
+    return randomPostForm().toDto();
   }
 
   private static String randomString(int max) {
