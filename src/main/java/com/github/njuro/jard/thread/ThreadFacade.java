@@ -1,37 +1,42 @@
 package com.github.njuro.jard.thread;
 
-import com.github.njuro.jard.ban.BanService;
+import com.github.njuro.jard.ban.BanFacade;
+import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
-import com.github.njuro.jard.post.*;
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.post.HashGenerationUtils;
+import com.github.njuro.jard.post.Post;
+import com.github.njuro.jard.post.PostFacade;
+import com.github.njuro.jard.post.PostService;
+import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.post.dto.PostForm;
+import com.github.njuro.jard.thread.dto.ThreadDto;
+import com.github.njuro.jard.thread.dto.ThreadForm;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class ThreadFacade {
-
-  private final ThreadService threadService;
-  private final PostService postService;
-  private final BanService banService;
+public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
 
   private final PostFacade postFacade;
+  private final BanFacade banFacade;
+
+  private final ThreadService threadService;
 
   @Autowired
-  public ThreadFacade(
-      ThreadService threadService,
-      PostService postService,
-      BanService banService,
-      PostFacade postFacade) {
+  public ThreadFacade(ThreadService threadService, PostFacade postFacade, BanFacade banFacade) {
     this.threadService = threadService;
-    this.postService = postService;
-    this.banService = banService;
     this.postFacade = postFacade;
+    this.banFacade = banFacade;
   }
 
   /**
@@ -43,33 +48,35 @@ public class ThreadFacade {
    * @return created thread
    * @throws FormValidationException if poster IP is banned
    */
-  public Thread createThread(@NotNull ThreadForm threadForm, Board board) {
-    if (banService.hasActiveBan(threadForm.getPostForm().getIp())) {
+  public ThreadDto createThread(@NotNull ThreadForm threadForm, BoardDto board) {
+    if (banFacade.hasActiveBan(threadForm.getPostForm().getIp())) {
       throw new FormValidationException("Your IP address is banned");
     }
 
-    Thread thread = threadForm.toThread();
+    ThreadDto thread = threadForm.toDto();
     thread.setBoard(board);
 
-    Post originalPost = postFacade.createPost(threadForm.getPostForm(), thread);
+    PostDto originalPost = postFacade.createPost(threadForm.getPostForm(), thread);
     thread.setOriginalPost(originalPost);
     thread.setLastReplyAt(OffsetDateTime.now());
     thread.setLastBumpAt(OffsetDateTime.now());
 
     originalPost.setSage(false); // original post cannot be sage
-    if (threadService.getNumberOfThreadsOnBoard(board) >= board.getSettings().getThreadLimit()) {
+    if (threadService.getNumberOfThreadsOnBoard(board.getId())
+        >= board.getSettings().getThreadLimit()) {
       try {
-        threadService.deleteStalestThread(board);
+        threadService.deleteStalestThread(board.getId());
       } catch (IOException ex) {
         log.error("Failed to delete stalest thread", ex);
       }
     }
 
-    thread = threadService.saveThread(thread);
+    thread = toDto(threadService.saveThread(toEntity(thread)));
+    originalPost = thread.getOriginalPost();
     if (board.getSettings().isPosterThreadIds()) {
       originalPost.setPosterThreadId(
           HashGenerationUtils.generatePosterThreadId(originalPost.getIp(), thread.getId()));
-      postService.updatePost(originalPost);
+      postFacade.updatePost(originalPost);
     }
 
     return thread;
@@ -84,8 +91,8 @@ public class ThreadFacade {
    * @return created reply
    * @throws FormValidationException if poster IP is banned or thread is locked
    */
-  public Post replyToThread(@NotNull PostForm postForm, Thread thread) {
-    if (banService.hasActiveBan(postForm.getIp())) {
+  public PostDto replyToThread(@NotNull PostForm postForm, ThreadDto thread) {
+    if (banFacade.hasActiveBan(postForm.getIp())) {
       throw new FormValidationException("Your IP address is banned");
       // TODO redirect to ban status page
     }
@@ -94,26 +101,25 @@ public class ThreadFacade {
       throw new FormValidationException("Thread is locked");
     }
 
-    Post post = postFacade.createPost(postForm, thread);
+    PostDto post = postFacade.createPost(postForm, thread);
     if (thread.getBoard().getSettings().isPosterThreadIds()) {
       post.setPosterThreadId(
           HashGenerationUtils.generatePosterThreadId(post.getIp(), thread.getId()));
     }
-    post = postService.savePost(post);
-    threadService.updateLastReplyTimestamp(thread);
 
+    updateLastReplyTimestamp(thread);
     if (!post.isSage()
-        && postService.getNumberOfPostsInThread(thread)
+        && postFacade.getNumberOfPostsInThread(thread)
             <= thread.getBoard().getSettings().getBumpLimit()) {
-      threadService.updateLastBumpTimestamp(thread);
+      updateLastBumpTimestamp(thread);
     }
 
-    return post;
+    return postFacade.savePost(post);
   }
 
-  /** @see ThreadService#resolveThread(String, Long) */
-  public Thread resolveThread(String boardLabel, Long threadNumber) {
-    return threadService.resolveThread(boardLabel, threadNumber);
+  /** {@link ThreadService#resolveThread(String, Long)} */
+  public ThreadDto resolveThread(String boardLabel, Long threadNumber) {
+    return toDto(threadService.resolveThread(boardLabel, threadNumber));
   }
 
   /**
@@ -122,33 +128,65 @@ public class ThreadFacade {
    * @param thread to get replies to
    * @return thread with its replies set
    */
-  public Thread getThread(Thread thread) {
-    List<Post> replies = postService.getAllRepliesForThread(thread);
+  public ThreadDto getThread(ThreadDto thread) {
+    List<PostDto> replies = postFacade.getAllRepliesForThread(thread);
     thread.setReplies(replies);
     return thread;
   }
 
-  /** @see PostService#getNewRepliesForThreadSince(Thread, Long) */
-  public List<Post> getNewReplies(Thread thread, Long lastPostNumber) {
-    return postService.getNewRepliesForThreadSince(thread, lastPostNumber);
+  /** {@link ThreadService#getAllThreadsFromBoard(UUID) } */
+  public List<ThreadDto> getAllThreadsFromBoard(BoardDto board) {
+    return toDtoList(threadService.getAllThreadsFromBoard(board.getId()));
+  }
+
+  /** {@link ThreadService#getThreadsFromBoard(UUID, Pageable)} */
+  public List<ThreadDto> getThreadsFromBoard(BoardDto board, Pageable pagination) {
+    return toDtoList(threadService.getThreadsFromBoard(board.getId(), pagination));
+  }
+
+  /** {@link PostService#getNewRepliesForThreadSince(UUID, Long)} */
+  public List<PostDto> getNewReplies(ThreadDto thread, Long lastPostNumber) {
+    return postFacade.getNewRepliesForThreadSince(thread, lastPostNumber);
   }
 
   /**
-   * @param thread thread to toggle stickied status on
-   * @return updated thread
+   * Updates time of last reply to thread to current timestamp.
+   *
+   * @param thread thread to update
    */
-  public Thread toggleStickyOnThread(Thread thread) {
+  public void updateLastReplyTimestamp(ThreadDto thread) {
+    thread.setLastReplyAt(OffsetDateTime.now());
+    threadService.updateThread(toEntity(thread));
+  }
+
+  /**
+   * Updates time of last bump to thread to current timestamp.
+   *
+   * @param thread thread to update
+   */
+  public void updateLastBumpTimestamp(ThreadDto thread) {
+    thread.setLastBumpAt(OffsetDateTime.now());
+    threadService.updateThread(toEntity(thread));
+  }
+
+  /**
+   * Toggles stickied status on thread.
+   *
+   * @param thread thread to update
+   */
+  public void toggleStickyOnThread(ThreadDto thread) {
     thread.toggleSticky();
-    return threadService.updateThread(thread);
+    threadService.updateThread(toEntity(thread));
   }
 
   /**
-   * @param thread thread to toggle locked status on
-   * @return updated thread
+   * Toggles locked status on thread.
+   *
+   * @param thread thread to update
    */
-  public Thread toggleLockOnThread(Thread thread) {
+  public void toggleLockOnThread(ThreadDto thread) {
     thread.toggleLock();
-    return threadService.updateThread(thread);
+    threadService.updateThread(toEntity(thread));
   }
 
   /**
@@ -160,13 +198,13 @@ public class ThreadFacade {
    * @param post post to delete
    * @throws IOException if deletion of one of the attachments' file fails
    */
-  public void deletePost(Thread thread, Post post) throws IOException {
+  public void deletePost(ThreadDto thread, PostDto post) throws IOException {
     if (thread.getOriginalPost().equals(post)) {
       // delete whole thread
-      threadService.deleteThread(thread);
+      threadService.deleteThread(toEntity(thread));
     } else {
       // delete post
-      postService.deletePost(post);
+      postFacade.deletePost(post);
     }
   }
 }

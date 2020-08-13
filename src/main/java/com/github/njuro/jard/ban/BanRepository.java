@@ -1,15 +1,14 @@
 package com.github.njuro.jard.ban;
 
+import com.github.njuro.jard.base.BaseRepository;
 import com.github.njuro.jard.user.User;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BanRepository extends JpaRepository<Ban, UUID> {
+public interface BanRepository extends BaseRepository<Ban> {
 
   List<Ban> findByIp(String ip);
 

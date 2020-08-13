@@ -1,28 +1,14 @@
 package com.github.njuro.jard.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.njuro.jard.base.BaseEntity;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -30,21 +16,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
   private static final long serialVersionUID = -6709426435122012297L;
-
-  /** Unique identifier of this user. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(updatable = false)
-  @JsonIgnore
-  private UUID id;
 
   /** Unique username of this user. */
   @Basic
@@ -56,7 +35,6 @@ public class User implements UserDetails {
   /** Password of this user. */
   @Basic
   @Column(nullable = false)
-  @JsonIgnore
   private String password;
 
   /** Unique e-mail address of this user. */
@@ -84,7 +62,8 @@ public class User implements UserDetails {
    * @see UserAuthority
    */
   @SuppressWarnings("JpaDataSourceORMInspection")
-  @ElementCollection(fetch = FetchType.EAGER)
+  @ElementCollection(fetch = FetchType.LAZY)
+  @Fetch(FetchMode.JOIN)
   @Column(name = "authority")
   @Enumerated(value = EnumType.STRING)
   private Set<UserAuthority> authorities;

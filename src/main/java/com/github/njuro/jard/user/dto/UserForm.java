@@ -1,8 +1,10 @@
-package com.github.njuro.jard.user;
+package com.github.njuro.jard.user.dto;
 
 import static com.github.njuro.jard.common.Constants.IP_PATTERN;
 import static com.github.njuro.jard.common.InputConstraints.*;
 
+import com.github.njuro.jard.user.User;
+import com.github.njuro.jard.user.UserRole;
 import javax.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -13,29 +15,29 @@ import lombok.Data;
 @SuppressWarnings("JavadocReference")
 public class UserForm {
 
-  /** @see User#username */
+  /** {@link User#username} */
   @Size(
       min = MIN_USERNAME_LENGTH,
       max = MAX_USERNAME_LENGTH,
       message = "{validation.user.username.length}")
   private String username;
 
-  /** @see User#password */
+  /** {@link User#password} */
   @Size(min = MIN_PASSWORD_LENGTH, message = "{validation.user.password.length}")
   private String password;
 
-  /** @see User#password */
+  /** {@link User#password} */
   private String passwordRepeated;
 
-  /** @see User#email */
+  /** {@link User#email} */
   @Email(message = "{validation.user.email.invalid}")
   private String email;
 
-  /** @see User#registrationIp */
+  /** {@link User#registrationIp} */
   @Pattern(regexp = IP_PATTERN)
   private String registrationIp;
 
-  /** @see User#role */
+  /** {@link User#role} */
   @NotNull(message = "{validation.user.role.null}")
   private UserRole role;
 

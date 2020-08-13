@@ -1,8 +1,9 @@
-package com.github.njuro.jard.board;
+package com.github.njuro.jard.board.dto;
 
 import static com.github.njuro.jard.common.InputConstraints.MAX_BOARD_LABEL_LENGTH;
 import static com.github.njuro.jard.common.InputConstraints.MAX_BOARD_NAME_LENGTH;
 
+import com.github.njuro.jard.board.Board;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,25 +17,21 @@ import lombok.Data;
 @SuppressWarnings("JavadocReference")
 public class BoardForm {
 
-  /** @see Board#label */
+  /** {@link Board#label} */
   @NotBlank(message = "{validation.board.label.blank}")
   @Size(max = MAX_BOARD_LABEL_LENGTH, message = "{validation.board.label.length}")
   private String label;
 
-  /** @see Board#name */
+  /** {@link Board#name} */
   @NotBlank(message = "{validation.board.name.blank}")
   @Size(max = MAX_BOARD_NAME_LENGTH, message = "{validation.board.name.length}")
   private String name;
 
-  /** @see BoardSettingsForm */
-  @Valid @NotNull private BoardSettingsForm boardSettingsForm;
+  /** {@link BoardSettingsDto } */
+  @Valid @NotNull private BoardSettingsDto boardSettingsForm;
 
-  /** @return {@link Board} created from values of this form. */
-  public Board toBoard() {
-    return Board.builder()
-        .label(label)
-        .name(name)
-        .settings(boardSettingsForm.toBoardSettings())
-        .build();
+  /** @return {@link BoardDto} created from values of this form */
+  public BoardDto toDto() {
+    return BoardDto.builder().label(label).name(name).settings(boardSettingsForm).build();
   }
 }

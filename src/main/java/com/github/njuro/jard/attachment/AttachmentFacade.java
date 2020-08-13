@@ -1,9 +1,12 @@
 package com.github.njuro.jard.attachment;
 
 import ac.simons.oembed.OembedException;
+import com.github.njuro.jard.attachment.dto.AttachmentDto;
 import com.github.njuro.jard.attachment.embedded.EmbedService;
+import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardFacade;
+import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,9 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Slf4j
-public class AttachmentFacade {
+public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
 
   private final BoardFacade boardFacade;
+
   private final AttachmentService attachmentService;
   private final EmbedService embedService;
   private final Tika mimeTypeDetector;
@@ -43,7 +47,7 @@ public class AttachmentFacade {
    * @throws FormValidationException if MIME type of uploaded file is not supported on given board
    *     or saving of attachment fails
    */
-  public Attachment createAttachment(MultipartFile file, Board board) {
+  public AttachmentDto createAttachment(MultipartFile file, BoardDto board) {
     String mimeType = detectMimeType(file);
     if (!boardFacade.isMimeTypeSupported(board, mimeType)) {
       throw new FormValidationException("Uploaded file mime type not supported on this board");
@@ -60,7 +64,7 @@ public class AttachmentFacade {
    * @return created {@link Attachment}
    * @throws FormValidationException if saving of attachment fails
    */
-  public Attachment createAttachment(MultipartFile file, Path folder) {
+  public AttachmentDto createAttachment(MultipartFile file, Path folder) {
     return createAttachment(file, detectMimeType(file), folder);
   }
 
@@ -73,7 +77,7 @@ public class AttachmentFacade {
    * @return created {@link Attachment}
    * @throws FormValidationException if saving of attachment fails or filename has no extension
    */
-  public Attachment createAttachment(MultipartFile file, String mimeType, Path folder) {
+  public AttachmentDto createAttachment(MultipartFile file, String mimeType, Path folder) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     if (ext == null || ext.isEmpty()) {
       throw new FormValidationException("Name of uploaded file must have an extension");
@@ -90,7 +94,7 @@ public class AttachmentFacade {
     attachment.getMetadata().setMimeType(mimeType);
 
     try {
-      return attachmentService.saveAttachment(attachment, file);
+      return toDto(attachmentService.saveAttachment(attachment, file));
     } catch (IOException ex) {
       log.error("Saving of attachment failed", ex);
       throw new FormValidationException("Saving of attachment failed");
@@ -120,7 +124,7 @@ public class AttachmentFacade {
    * @return created {@link Attachment}
    * @throws FormValidationException if embedded attachments are not allowed on given board
    */
-  public Attachment createEmbeddedAttachment(String embedUrl, Board board) {
+  public AttachmentDto createEmbeddedAttachment(String embedUrl, BoardDto board) {
     if (!board.getSettings().getAttachmentCategories().contains(AttachmentCategory.EMBED)) {
       throw new FormValidationException("Embedded attachments are not allowed for this board");
     }
@@ -133,6 +137,6 @@ public class AttachmentFacade {
       throw new FormValidationException("Processing of embedded attachment failed");
     }
 
-    return attachmentService.saveEmbeddedAttachment(attachment);
+    return toDto(attachmentService.saveEmbeddedAttachment(attachment));
   }
 }

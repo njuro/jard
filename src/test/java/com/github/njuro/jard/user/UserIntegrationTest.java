@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
+import com.github.njuro.jard.user.dto.UserDto;
+import com.github.njuro.jard.user.dto.UserForm;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,8 +64,8 @@ class UserIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponseCollection(result, List.class, User.class))
-        .extracting(User::getUsername)
+    assertThat(getResponseCollection(result, List.class, UserDto.class))
+        .extracting(UserDto::getUsername)
         .containsExactlyInAnyOrder(user1.getUsername(), user2.getUsername());
   }
 
@@ -77,8 +79,8 @@ class UserIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, User.class))
-        .extracting(User::getUsername)
+    assertThat(getResponse(result, UserDto.class))
+        .extracting(UserDto::getUsername)
         .isEqualTo(userForm.getUsername());
   }
 

@@ -2,38 +2,29 @@ package com.github.njuro.jard.board;
 
 import static com.github.njuro.jard.common.Constants.MAX_THREADS_PER_PAGE;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.thread.Thread;
-import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
 import javax.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
 
 /** Entity representing a board (usually with a set topic) which can contain threads */
 @Entity
 @Table(name = "boards")
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
-public class Board implements Serializable {
+public class Board extends BaseEntity {
 
   private static final long serialVersionUID = -5779444327889471582L;
-
-  /** Unique identifier of this board. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(updatable = false)
-  @JsonIgnore
-  private UUID id;
 
   /** Short public identifier of this board - must be unique. Example: {@code fit, pol...} */
   @Column(unique = true, nullable = false)
@@ -56,7 +47,6 @@ public class Board implements Serializable {
   @SuppressWarnings("JavadocReference")
   @Basic
   @Column(nullable = false)
-  @JsonIgnore
   private Long postCounter;
 
   /**
@@ -64,7 +54,8 @@ public class Board implements Serializable {
    *
    * @see BoardSettings
    */
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "board", optional = false)
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "board", fetch = FetchType.LAZY, optional = false)
+  @Fetch(FetchMode.JOIN)
   @Builder.Default
   private BoardSettings settings = new BoardSettings();
 
@@ -77,13 +68,4 @@ public class Board implements Serializable {
   private void setCreatedAt() {
     createdAt = OffsetDateTime.now();
   }
-
-  /**
-   * (Sub)collection of active threads on this board. Fetched by different services when needed.
-   *
-   * @see Thread
-   */
-  @Transient
-  @JsonIgnoreProperties("board")
-  private List<Thread> threads;
 }

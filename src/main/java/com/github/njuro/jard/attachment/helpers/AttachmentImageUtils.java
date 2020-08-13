@@ -43,8 +43,8 @@ public class AttachmentImageUtils {
    * @throws IllegalArgumentException if thumbnail creation failed
    */
   public RenderedImage createThumbnail(Attachment attachment) {
-    Objects.requireNonNull(attachment, "Attachment cannot be null");
-    Objects.requireNonNull(attachment.getCategory(), "Attachment category cannot be null");
+    Objects.requireNonNull(attachment);
+    Objects.requireNonNull(attachment.getCategory());
 
     if (!attachment.getCategory().hasThumbnail()) {
       throw new IllegalArgumentException(

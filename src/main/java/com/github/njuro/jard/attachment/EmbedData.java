@@ -1,18 +1,9 @@
-package com.github.njuro.jard.attachment.embedded;
+package com.github.njuro.jard.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler;
 import java.io.Serializable;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,13 +21,12 @@ public class EmbedData implements Serializable {
   private static final long serialVersionUID = -6639106432940190340L;
 
   /** Identifier of these embed data. Equals to primary key of owning {@link #attachment}. */
-  @Id @JsonIgnore private UUID attachmentId;
+  @Id private UUID attachmentId;
 
   /** {@link Attachment} these embed data belong to. */
   @OneToOne
   @JoinColumn(name = "attachment_id")
   @MapsId
-  @JsonIgnore
   private Attachment attachment;
 
   /** URL to content to be embedded. */
@@ -47,7 +37,7 @@ public class EmbedData implements Serializable {
   /** (Optional) URL to thumbnail for this content on provider's server. */
   @Basic private String thumbnailUrl;
 
-  /** @see EmbeddedAttachmentHandler#getProviderName() */
+  /** {@link EmbeddedAttachmentHandler#getProviderName()} */
   @Basic
   @Column(nullable = false)
   private String providerName;

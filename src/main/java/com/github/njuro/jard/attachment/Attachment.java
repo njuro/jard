@@ -1,18 +1,15 @@
 package com.github.njuro.jard.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.github.njuro.jard.attachment.AttachmentCategory.AttachmentCategorySerializer;
-import com.github.njuro.jard.attachment.embedded.EmbedData;
+import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
 import java.io.File;
-import java.io.Serializable;
 import java.nio.file.Paths;
-import java.util.UUID;
 import javax.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /** Entity representing an attachment to {@link Post}. */
 @Entity
@@ -20,19 +17,12 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@SuperBuilder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
-public class Attachment implements Serializable {
+public class Attachment extends BaseEntity {
 
   private static final long serialVersionUID = -751675348099883626L;
-
-  /** Unique identifier of this attachment. */
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(updatable = false)
-  @JsonIgnore
-  private UUID id;
 
   /**
    * Category this attachment belongs to.
@@ -40,7 +30,6 @@ public class Attachment implements Serializable {
    * @see AttachmentCategory
    */
   @Enumerated(EnumType.STRING)
-  @JsonSerialize(using = AttachmentCategorySerializer.class)
   @ToString.Include
   private AttachmentCategory category;
 
@@ -67,7 +56,6 @@ public class Attachment implements Serializable {
 
   /** (Optional) name of stored thumbnail for this attachment's file. */
   @Column(unique = true)
-  @EqualsAndHashCode.Include
   private String thumbnailFilename;
 
   /** (Optional) shareable url to this attachment's file on remote storage server. */
@@ -81,7 +69,8 @@ public class Attachment implements Serializable {
    *
    * @see AttachmentMetadata
    */
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment")
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment", fetch = FetchType.LAZY)
+  @Fetch(FetchMode.JOIN)
   private AttachmentMetadata metadata;
 
   /**
@@ -89,7 +78,8 @@ public class Attachment implements Serializable {
    *
    * @see EmbedData
    */
-  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment")
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "attachment", fetch = FetchType.LAZY)
+  @Fetch(FetchMode.JOIN)
   private EmbedData embedData;
 
   /**
@@ -122,7 +112,6 @@ public class Attachment implements Serializable {
    * @return parent folder(s) thumbnail for this attachment's file is stored in. If thumbnail does
    *     not exist, returns {@code null}.
    */
-  @JsonProperty("thumbnailFolder")
   public String getThumbnailFolder() {
     if (thumbnailFilename == null) {
       return null;

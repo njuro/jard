@@ -1,16 +1,8 @@
 package com.github.njuro.jard.attachment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.UUID;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,13 +20,12 @@ public class AttachmentMetadata implements Serializable {
   private static final long serialVersionUID = -8455977079986712310L;
 
   /** Identifier of these metadata. Equals to primary key of owning {@link #attachment}. */
-  @Id @JsonIgnore private UUID attachmentId;
+  @Id private UUID attachmentId;
 
   /** {@link Attachment} these metadata belong to. */
   @OneToOne
   @JoinColumn(name = "attachment_id")
   @MapsId
-  @JsonIgnore
   private Attachment attachment;
 
   /** Standard MIME type of this attachment's file, e.g. {@code image/jpeg}. */

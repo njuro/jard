@@ -1,6 +1,7 @@
 package com.github.njuro.jard.thread;
 
 import com.github.njuro.jard.common.Mappings;
+import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -21,7 +22,7 @@ public class ThreadResolver implements PathVariableArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterType().equals(Thread.class);
+    return parameter.getParameterType().equals(ThreadDto.class);
   }
 
   @Override

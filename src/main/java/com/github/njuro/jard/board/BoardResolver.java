@@ -1,5 +1,6 @@
 package com.github.njuro.jard.board;
 
+import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-/** Resolver for mapping board label from path variables to respective {@link Board} object */
+/** Resolver for mapping board label from path variables to respective {@link BoardDto} object */
 @Component
 @RequiredArgsConstructor
 public class BoardResolver implements PathVariableArgumentResolver {
@@ -18,7 +19,7 @@ public class BoardResolver implements PathVariableArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.getParameterType().equals(Board.class);
+    return parameter.getParameterType().equals(BoardDto.class);
   }
 
   @Override

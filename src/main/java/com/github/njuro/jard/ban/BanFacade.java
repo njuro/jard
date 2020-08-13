@@ -1,8 +1,11 @@
 package com.github.njuro.jard.ban;
 
+import com.github.njuro.jard.ban.dto.BanDto;
+import com.github.njuro.jard.ban.dto.BanForm;
+import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.common.Constants;
-import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserFacade;
+import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
@@ -13,9 +16,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BanFacade {
+public class BanFacade extends BaseFacade<Ban, BanDto> {
 
   private final UserFacade userFacade;
+
   private final BanService banService;
 
   @Autowired
@@ -32,8 +36,8 @@ public class BanFacade {
    * @throws FormValidationException if no user is logged in or there is already active ban on given
    *     IP
    */
-  public Ban createBan(BanForm banForm) {
-    User loggedUser = userFacade.getCurrentUser();
+  public BanDto createBan(BanForm banForm) {
+    UserDto loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
       throw new FormValidationException("No user is logged in");
     }
@@ -42,7 +46,7 @@ public class BanFacade {
       throw new FormValidationException("There is already active ban on this IP");
     }
 
-    Ban ban = banForm.toBan();
+    BanDto ban = banForm.toDto();
     ban.setBannedBy(loggedUser);
     ban.setValidFrom(OffsetDateTime.now());
 
@@ -50,24 +54,29 @@ public class BanFacade {
       ban.setValidTo(null);
     }
 
-    return banService.saveBan(ban);
+    return toDto(banService.saveBan(toEntity(ban)));
   }
 
-  /** @see BanService#getActiveBan(String) */
-  public Ban getActiveBan(String ip) {
-    return banService.getActiveBan(ip);
+  /** {@link BanService#getActiveBan(String)} */
+  public BanDto getActiveBan(String ip) {
+    return toDto(banService.getActiveBan(ip));
+  }
+
+  /** {@link BanService#hasActiveBan(String)} */
+  public boolean hasActiveBan(String ip) {
+    return banService.hasActiveBan(ip);
   }
 
   /** @return all bans sorted by most to least recent */
-  public List<Ban> getAllBans() {
+  public List<BanDto> getAllBans() {
     List<Ban> bans = banService.getAllBans();
     bans.sort(Comparator.comparing(Ban::getValidFrom).reversed());
-    return bans;
+    return toDtoList(bans);
   }
 
-  /** @see BanService#resolveBan(UUID) */
-  public Ban resolveBan(UUID id) {
-    return banService.resolveBan(id);
+  /** {@link BanService#resolveBan(UUID)} */
+  public BanDto resolveBan(UUID id) {
+    return toDto(banService.resolveBan(id));
   }
 
   /**
@@ -77,11 +86,11 @@ public class BanFacade {
    * @param banForm form with new values
    * @return updated ban
    */
-  public Ban editBan(Ban oldBan, BanForm banForm) {
+  public BanDto editBan(BanDto oldBan, BanForm banForm) {
     oldBan.setReason(banForm.getReason());
     oldBan.setValidTo(banForm.getValidTo());
 
-    return banService.saveBan(oldBan);
+    return toDto(banService.saveBan(toEntity(oldBan)));
   }
 
   /**
@@ -92,8 +101,8 @@ public class BanFacade {
    * @return invalidated ban
    * @throws FormValidationException if no user is logged in or there is no active ban on given IP
    */
-  public Ban unban(Ban ban, UnbanForm unbanForm) {
-    User loggedUser = userFacade.getCurrentUser();
+  public BanDto unban(BanDto ban, UnbanForm unbanForm) {
+    UserDto loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
       throw new FormValidationException("No user is logged in!");
     }
@@ -106,7 +115,7 @@ public class BanFacade {
     ban.setUnbanReason(unbanForm.getReason());
     ban.setStatus(BanStatus.UNBANNED);
 
-    return banService.saveBan(ban);
+    return toDto(banService.saveBan(toEntity(ban)));
   }
 
   /**

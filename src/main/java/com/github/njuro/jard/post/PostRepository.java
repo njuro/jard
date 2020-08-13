@@ -1,13 +1,13 @@
 package com.github.njuro.jard.post;
 
+import com.github.njuro.jard.base.BaseRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, UUID> {
+public interface PostRepository extends BaseRepository<Post> {
 
   Optional<Post> findByThreadBoardLabelAndPostNumber(String label, Long postNumber);
 

@@ -1,5 +1,8 @@
 package com.github.njuro.jard.user;
 
+import com.github.njuro.jard.base.BaseFacade;
+import com.github.njuro.jard.user.dto.UserDto;
+import com.github.njuro.jard.user.dto.UserForm;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -9,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class UserFacade implements UserDetailsService {
+@Component
+public class UserFacade extends BaseFacade<User, UserDto> implements UserDetailsService {
 
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
@@ -31,7 +34,7 @@ public class UserFacade implements UserDetailsService {
    * @return created user
    * @throws FormValidationException if user with such name or e-mail already exists
    */
-  public User createUser(@NotNull UserForm userForm) {
+  public UserDto createUser(@NotNull UserForm userForm) {
     if (userService.doesUserExists(userForm.getUsername())) {
       throw new FormValidationException("User with this name already exists");
     }
@@ -43,17 +46,17 @@ public class UserFacade implements UserDetailsService {
     User user = userForm.toUser();
     user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-    return userService.saveUser(user);
+    return toDto(userService.saveUser(user));
   }
 
-  /** @see UserService#resolveUser(String) */
-  public User resolveUser(String username) {
-    return userService.resolveUser(username);
+  /** {@link UserService#resolveUser(String)} */
+  public UserDto resolveUser(String username) {
+    return toDto(userService.resolveUser(username));
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) {
-    User user = resolveUser(username);
+    User user = userService.resolveUser(username);
     if (user == null) {
       throw new UsernameNotFoundException("User " + username + " was not found");
     }
@@ -61,17 +64,17 @@ public class UserFacade implements UserDetailsService {
     return user;
   }
 
-  /** @see UserService#getAllUsers() */
-  public List<User> getAllUsers() {
-    return userService.getAllUsers();
+  /** {@link UserService#getAllUsers()} */
+  public List<UserDto> getAllUsers() {
+    return toDtoList(userService.getAllUsers());
   }
 
-  /** @see UserService#getCurrentUser() */
-  public User getCurrentUser() {
-    return userService.getCurrentUser();
+  /** {@link UserService#getCurrentUser()} */
+  public UserDto getCurrentUser() {
+    return toDto(userService.getCurrentUser());
   }
 
-  /** @see UserService#hasCurrentUserAuthority(UserAuthority) */
+  /** {@link UserService#hasCurrentUserAuthority(UserAuthority)} */
   public boolean hasCurrentUserAuthority(UserAuthority authority) {
     return userService.hasCurrentUserAuthority(authority);
   }
@@ -83,24 +86,25 @@ public class UserFacade implements UserDetailsService {
    * @param updatedUser form with new values
    * @return edited user
    */
-  public User editUser(User oldUser, UserForm updatedUser) {
-    oldUser.setEmail(updatedUser.getEmail());
-    oldUser.setRole(updatedUser.getRole());
-    oldUser.setAuthorities(updatedUser.getRole().getDefaultAuthorites());
+  public UserDto editUser(UserDto oldUser, UserForm updatedUser) {
+    User oldUserEntity = toEntity(oldUser);
+    oldUserEntity.setEmail(updatedUser.getEmail());
+    oldUserEntity.setRole(updatedUser.getRole());
+    oldUserEntity.setAuthorities(updatedUser.getRole().getDefaultAuthorites());
     if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
       if (updatedUser.isPasswordMatching()) {
-        oldUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        oldUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
       } else {
         // TODO automatic validation / no hardcoded message
         throw new FormValidationException("Passwords do not match");
       }
     }
 
-    return userService.saveUser(oldUser);
+    return toDto(userService.saveUser(oldUserEntity));
   }
 
-  /** @see UserService#deleteUser(User) */
-  public void deleteUser(User user) {
-    userService.deleteUser(user);
+  /** {@link UserService#deleteUser(User)} */
+  public void deleteUser(UserDto user) {
+    userService.deleteUser(toEntity(user));
   }
 }

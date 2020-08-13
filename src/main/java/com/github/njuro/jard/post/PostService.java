@@ -1,16 +1,14 @@
 package com.github.njuro.jard.post;
 
-import com.github.njuro.jard.attachment.Attachment;
-import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.AttachmentService;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardService;
 import com.github.njuro.jard.post.decorators.PostDecorator;
-import com.github.njuro.jard.thread.Thread;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,8 +48,8 @@ public class PostService {
    * @see #decoratePost(Post)
    */
   public Post savePost(Post post) {
-    Objects.requireNonNull(post, "Post cannot be null");
-    Objects.requireNonNull(post.getThread(), "Post must have set thread");
+    Objects.requireNonNull(post);
+    Objects.requireNonNull(post.getThread());
 
     Board board = post.getThread().getBoard();
     post.setPostNumber(boardService.registerNewPost(board));
@@ -80,31 +78,34 @@ public class PostService {
   /**
    * Retrieves all posts belonging to given thread (excluding thread's original post).
    *
-   * @param thread thread to get replies for - cannot be null
+   * @param threadId ID of thread to get replies for - cannot be null
+   * @param originalPostId ID of original post of the thread
    * @return thread replies ordered by their creation date from least to most recent
-   * @throws NullPointerException if thread is null
+   * @throws NullPointerException if thread ID is {@code null} or thread's original post ID is
+   *     {@code null}
    */
-  public List<Post> getAllRepliesForThread(Thread thread) {
-    Objects.requireNonNull(thread, "Thread cannot be null");
+  public List<Post> getAllRepliesForThread(UUID threadId, UUID originalPostId) {
+    Objects.requireNonNull(threadId);
+    Objects.requireNonNull(originalPostId);
 
-    return postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(
-        thread.getId(), thread.getOriginalPost().getId());
+    return postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(threadId, originalPostId);
   }
 
   /**
    * Retrieves up to 5 most recent posts from given thread (excluding thread's original post).
    *
-   * @param thread thread to get replies for - cannot be null
+   * @param threadId ID of thread to get replies for
+   * @param originalPostId ID of original post of the thread
    * @return most recent replies to thread ordered by their creation date from least to most recent
-   * @throws NullPointerException if thread is null or thread's original post is null
+   * @throws NullPointerException if thread ID is {@code null} or thread's original post ID is
+   *     {@code null}
    */
-  public List<Post> getLatestRepliesForThread(Thread thread) {
-    Objects.requireNonNull(thread, "Thread cannot be null");
-    Objects.requireNonNull(thread.getOriginalPost(), "Thread's original post cannot be null");
+  public List<Post> getLatestRepliesForThread(UUID threadId, UUID originalPostId) {
+    Objects.requireNonNull(threadId);
+    Objects.requireNonNull(originalPostId);
 
     List<Post> posts =
-        postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(
-            thread.getId(), thread.getOriginalPost().getId());
+        postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(threadId, originalPostId);
     Collections.reverse(posts);
     return posts;
   }
@@ -112,28 +113,29 @@ public class PostService {
   /**
    * Counts number of posts in given thread.
    *
-   * @param thread thread to count posts in - cannot be null
+   * @param threadId ID of thread to count posts in - cannot be null
    * @return total number of posts in thread (including original post)
-   * @throws NullPointerException if thread is {@code null}
+   * @throws NullPointerException if thread ID is {@code null}
    */
-  public int getNumberOfPostsInThread(Thread thread) {
-    Objects.requireNonNull(thread, "Thread cannot be null");
+  public int getNumberOfPostsInThread(UUID threadId) {
+    Objects.requireNonNull(threadId);
 
-    return postRepository.countByThreadId(thread.getId()).intValue();
+    return postRepository.countByThreadId(threadId).intValue();
   }
 
   /**
    * Retrieves all replies of thread created after given post.
    *
+   * @param threadId ID of thread to get new replies for
    * @param lastPostNumber number of post after which we look for new replies
    * @return all new replies sorted by creation date from least to most recent
-   * @throws NullPointerException if thread is null
+   * @throws NullPointerException if thread ID is {@code null}
    */
-  public List<Post> getNewRepliesForThreadSince(Thread thread, Long lastPostNumber) {
-    Objects.requireNonNull(thread, "Thread cannot be null");
+  public List<Post> getNewRepliesForThreadSince(UUID threadId, Long lastPostNumber) {
+    Objects.requireNonNull(threadId);
 
     return postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(
-        thread.getId(), lastPostNumber);
+        threadId, lastPostNumber);
   }
 
   /**
@@ -144,7 +146,7 @@ public class PostService {
    * @throws NullPointerException if post is {@code null}
    */
   private void decoratePost(Post post) {
-    Objects.requireNonNull(post, "Post cannot be null");
+    Objects.requireNonNull(post);
 
     post.setBody(HtmlUtils.htmlEscape(post.getBody()).replace("&gt;", ">"));
 
@@ -173,11 +175,10 @@ public class PostService {
    * @throws IOException if deletion of attachment file fails
    */
   public void deletePost(Post post) throws IOException {
-    Objects.requireNonNull(post, "Post cannot be null");
+    Objects.requireNonNull(post);
 
-    var attachment = post.getAttachment();
-    if (attachment != null && attachment.getCategory() != AttachmentCategory.EMBED) {
-      attachmentService.deleteAttachmentFile(attachment);
+    if (post.getAttachment() != null) {
+      attachmentService.deleteAttachment(post.getAttachment());
     }
 
     postRepository.delete(post);
@@ -191,18 +192,15 @@ public class PostService {
    * @throws IOException if deletion of attachment file fails
    */
   public void deletePosts(List<Post> posts) throws IOException {
-    Objects.requireNonNull(posts, "Post list cannot be null");
+    Objects.requireNonNull(posts);
 
-    List<Attachment> attachments =
+    var attachments =
         posts.stream()
-            .filter(
-                post ->
-                    post.getAttachment() != null
-                        && post.getAttachment().getCategory() != AttachmentCategory.EMBED)
+            .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
             .collect(Collectors.toList());
+    attachmentService.deleteAttachments(attachments);
 
-    attachmentService.deleteAttachmentFiles(attachments);
     postRepository.deleteAll(posts);
   }
 }

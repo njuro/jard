@@ -1,11 +1,10 @@
 package com.github.njuro.jard.thread;
 
-import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.post.PostService;
 import java.io.IOException;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,31 +52,30 @@ public class ThreadService {
   /**
    * Retrieves all threads from given board.
    *
-   * @param board board to get threads from
+   * @param boardId ID of board to get threads from
    * @return all threads from given board, ordered by stickied status and last bump timestamp
    */
-  public List<Thread> getAllThreadsFromBoard(Board board) {
-    return getThreadsFromBoard(board, Pageable.unpaged());
+  public List<Thread> getAllThreadsFromBoard(UUID boardId) {
+    return getThreadsFromBoard(boardId, Pageable.unpaged());
   }
 
   /**
    * Retrieves (sub)collection of threads from given board.
    *
-   * @param board board to get threads from
+   * @param boardId ID of board to get threads from
    * @param pageRequest parameter specifying paging (requested page number and size of each page)
    * @return threads from given board, ordered by stickied status and last bump timestamp
    */
-  public List<Thread> getThreadsFromBoard(Board board, Pageable pageRequest) {
-    return threadRepository.findByBoardIdOrderByStickiedDescLastBumpAtDesc(
-        board.getId(), pageRequest);
+  public List<Thread> getThreadsFromBoard(UUID boardId, Pageable pageRequest) {
+    return threadRepository.findByBoardIdOrderByStickiedDescLastBumpAtDesc(boardId, pageRequest);
   }
 
   /**
-   * @param board to get threads from
+   * @param boardId ID of board to get threads from
    * @return number of active threads on given board
    */
-  public int getNumberOfThreadsOnBoard(Board board) {
-    return threadRepository.countByBoardId(board.getId()).intValue();
+  public int getNumberOfThreadsOnBoard(UUID boardId) {
+    return threadRepository.countByBoardId(boardId).intValue();
   }
 
   /**
@@ -91,40 +89,18 @@ public class ThreadService {
   }
 
   /**
-   * Updates time of last reply to thread to current timestamp.
-   *
-   * @param thread thread to update
-   * @return updated thread
-   */
-  public Thread updateLastReplyTimestamp(Thread thread) {
-    thread.setLastReplyAt(OffsetDateTime.now());
-    return threadRepository.save(thread);
-  }
-
-  /**
-   * Updates time of last bump to thread to current timestamp.
-   *
-   * @param thread thread to update
-   * @return updated thread
-   */
-  public Thread updateLastBumpTimestamp(Thread thread) {
-    thread.setLastBumpAt(OffsetDateTime.now());
-    return threadRepository.save(thread);
-  }
-
-  /**
    * Deletes the stalest thread from given board. Stalest in this case means the thread with least
    * recent time of last bump (stickied threads are excluded).
    *
    * <p>What constitutes deleting thread is explained in * documentation of {@link
    * #deleteThread(Thread)}.
    *
-   * @param board board to delete the thread from
+   * @param boardId ID of board to delete the thread from
    * @throws IOException if deletion of one of the attachments' file fails
    */
-  public void deleteStalestThread(Board board) throws IOException {
+  public void deleteStalestThread(UUID boardId) throws IOException {
     Optional<Thread> stalest =
-        threadRepository.findTopByBoardIdAndStickiedFalseOrderByLastBumpAtAsc(board.getId());
+        threadRepository.findTopByBoardIdAndStickiedFalseOrderByLastBumpAtAsc(boardId);
     if (stalest.isPresent()) {
       deleteThread(stalest.get());
     }
@@ -137,7 +113,8 @@ public class ThreadService {
    * @throws IOException if deletion of one of the attachments' file fails
    */
   public void deleteThread(Thread thread) throws IOException {
-    postService.deletePosts(postService.getAllRepliesForThread(thread));
+    postService.deletePosts(
+        postService.getAllRepliesForThread(thread.getId(), thread.getOriginalPost().getId()));
     postService.deletePost(thread.getOriginalPost());
     threadRepository.delete(thread);
   }

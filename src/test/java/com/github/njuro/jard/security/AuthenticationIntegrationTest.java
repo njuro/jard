@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.config.security.JsonUsernamePasswordAuthenticationFilter;
-import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserFacade;
-import com.github.njuro.jard.user.UserForm;
 import com.github.njuro.jard.user.UserRole;
+import com.github.njuro.jard.user.dto.UserDto;
+import com.github.njuro.jard.user.dto.UserForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ class AuthenticationIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, User.class))
-        .extracting(User::getUsername)
+    assertThat(getResponse(result, UserDto.class))
+        .extracting(UserDto::getUsername)
         .isEqualTo(userForm.getUsername());
   }
 

@@ -7,6 +7,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
+import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.board.dto.BoardForm;
+import com.github.njuro.jard.board.dto.BoardSettingsDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
@@ -38,7 +41,7 @@ class BoardIntegrationTest extends MockRequestTest {
             .name("Random")
             .label("r")
             .boardSettingsForm(
-                BoardSettingsForm.builder()
+                BoardSettingsDto.builder()
                     .bumpLimit(MAX_BUMP_LIMIT)
                     .threadLimit(MAX_THREAD_LIMIT)
                     .attachmentCategories(Sets.newLinkedHashSet(AttachmentCategory.values()))
@@ -82,7 +85,7 @@ class BoardIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponseCollection(result, List.class, Board.class))
+    assertThat(getResponseCollection(result, List.class, BoardDto.class))
         .containsExactlyInAnyOrderElementsOf(boardFacade.getAllBoards());
   }
 
@@ -98,8 +101,8 @@ class BoardIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, Board.class))
-        .extracting(Board::getLabel)
+    assertThat(getResponse(result, BoardDto.class))
+        .extracting(BoardDto::getLabel)
         .isEqualTo(boardForm.getLabel());
   }
 
@@ -116,8 +119,8 @@ class BoardIntegrationTest extends MockRequestTest {
             .andExpect(nonEmptyBody())
             .andReturn();
 
-    assertThat(getResponse(result, Board.class))
-        .extracting(Board::getLabel)
+    assertThat(getResponse(result, BoardDto.class))
+        .extracting(BoardDto::getLabel)
         .isEqualTo(boardForm.getLabel());
   }
 
@@ -128,7 +131,7 @@ class BoardIntegrationTest extends MockRequestTest {
 
     assertThat(boardFacade.resolveBoard(boardForm.getLabel()))
         .isNotNull()
-        .extracting(Board::getName)
+        .extracting(BoardDto::getName)
         .isEqualTo(boardForm.getName());
 
     String newName = "Technology";
@@ -141,7 +144,7 @@ class BoardIntegrationTest extends MockRequestTest {
 
     assertThat(boardFacade.resolveBoard(boardForm.getLabel()))
         .isNotNull()
-        .extracting(Board::getName)
+        .extracting(BoardDto::getName)
         .isEqualTo(newName);
   }
 
