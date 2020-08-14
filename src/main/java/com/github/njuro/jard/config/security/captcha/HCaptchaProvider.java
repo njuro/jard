@@ -31,7 +31,7 @@ public class HCaptchaProvider implements CaptchaProvider {
   private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
   private static final URI VERIFY_URL = URI.create("https://hcaptcha.com/siteverify");
 
-  @Value("${app.hcaptcha.secret}")
+  @Value("${app.hcaptcha.secret:0x0000000000000000000000000000000000000000}")
   private String hCaptchaSecret;
 
   private final ObjectMapper objectMapper;
