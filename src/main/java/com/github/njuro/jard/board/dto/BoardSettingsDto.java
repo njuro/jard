@@ -55,4 +55,7 @@ public class BoardSettingsDto implements Serializable {
 
   /** {@link BoardSettings#posterThreadIds} */
   private boolean posterThreadIds;
+
+  /** {@link BoardSettings#captchaEnabled */
+  private boolean captchaEnabled;
 }

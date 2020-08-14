@@ -4,6 +4,8 @@ import com.github.njuro.jard.ban.BanFacade;
 import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.dto.BoardDto;
+import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationResult;
 import com.github.njuro.jard.post.HashGenerationUtils;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.PostFacade;
@@ -32,11 +34,18 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
 
   private final ThreadService threadService;
 
+  private final CaptchaProvider captchaProvider;
+
   @Autowired
-  public ThreadFacade(ThreadService threadService, PostFacade postFacade, BanFacade banFacade) {
+  public ThreadFacade(
+      ThreadService threadService,
+      PostFacade postFacade,
+      BanFacade banFacade,
+      CaptchaProvider captchaProvider) {
     this.threadService = threadService;
     this.postFacade = postFacade;
     this.banFacade = banFacade;
+    this.captchaProvider = captchaProvider;
   }
 
   /**
@@ -55,6 +64,10 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
 
     ThreadDto thread = threadForm.toDto();
     thread.setBoard(board);
+
+    if (board.getSettings().isCaptchaEnabled()) {
+      verifyCaptcha(threadForm.getPostForm().getCaptchaToken());
+    }
 
     PostDto originalPost = postFacade.createPost(threadForm.getPostForm(), thread);
     thread.setOriginalPost(originalPost);
@@ -99,6 +112,10 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
 
     if (thread.isLocked()) {
       throw new FormValidationException("Thread is locked");
+    }
+
+    if (thread.getBoard().getSettings().isCaptchaEnabled()) {
+      verifyCaptcha(postForm.getCaptchaToken());
     }
 
     PostDto post = postFacade.createPost(postForm, thread);
@@ -205,6 +222,22 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
     } else {
       // delete post
       postFacade.deletePost(post);
+    }
+  }
+
+  /**
+   * Verifies CAPTCHA response token.
+   *
+   * @param captchaToken CAPTCHA response token to verify
+   * @throws FormValidationException if verification of token failed
+   */
+  private void verifyCaptcha(String captchaToken) {
+    CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
+    if (!result.isVerified()) {
+      log.warn(
+          String.format(
+              "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
+      throw new FormValidationException("Failed to verify captcha");
     }
   }
 }

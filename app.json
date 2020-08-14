@@ -28,6 +28,10 @@
       "description": "Secret for authentication between Spring Boot Admin server and client instances",
       "generator": "secret"
     },
+    "HCAPTCHA_SECRET": {
+      "description": "Secret for hCaptcha server (optional, can be enabled on boards)",
+      "required": false
+    },
     "ROOT_ENABLED": {
       "description": "Whether the root user should be created when there are no users in database",
       "value": "true"

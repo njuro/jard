@@ -64,6 +64,11 @@
       "name": "app.sba.secret",
       "type": "java.lang.String",
       "description": "Secret key for registering app in Spring Boot Admin."
+    },
+    {
+      "name": "app.hcaptcha.secret",
+      "type": "java.lang.String",
+      "description": "Secret key for hCaptcha."
     }
   ]
 }

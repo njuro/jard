@@ -1,6 +1,7 @@
 package com.github.njuro.jard.board;
 
 import com.github.njuro.jard.attachment.AttachmentCategory;
+import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,4 +77,11 @@ public class BoardSettings implements Serializable {
    * If true, each unique IP address in thread will have assigned and displayed random string ID.
    */
   @Basic private boolean posterThreadIds;
+
+  /**
+   * If true, anonymous posters will have to solve CAPTCHA before posting.
+   *
+   * @see CaptchaProvider
+   */
+  @Basic private boolean captchaEnabled;
 }

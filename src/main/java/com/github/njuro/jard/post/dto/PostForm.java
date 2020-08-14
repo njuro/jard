@@ -3,6 +3,7 @@ package com.github.njuro.jard.post.dto;
 import static com.github.njuro.jard.common.Constants.IP_PATTERN;
 import static com.github.njuro.jard.common.InputConstraints.*;
 
+import com.github.njuro.jard.board.BoardSettings;
 import com.github.njuro.jard.common.InputConstraints;
 import com.github.njuro.jard.post.HashGenerationUtils;
 import com.github.njuro.jard.post.Post;
@@ -19,6 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @Builder
 public class PostForm {
+
+  /**
+   * Response token from CAPTCHA server (if enabled).
+   *
+   * @see BoardSettings#captchaEnabled
+   */
+  private String captchaToken;
 
   /** {@link Post#name} */
   @Size(max = MAX_NAME_LENGTH, message = "{validation.post.name.length}")
