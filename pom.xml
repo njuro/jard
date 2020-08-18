@@ -184,6 +184,13 @@
             <artifactId>flyway-core</artifactId> <!-- Database migrations -->
             <version>${flyway.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId> <!-- Metamodel of JPA entities -->
+            <version>${hibernate.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!-- CACHING AND RATE-LIMITING -->
         <dependency>
@@ -319,6 +326,11 @@
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
                             <version>${spring-boot.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${hibernate.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

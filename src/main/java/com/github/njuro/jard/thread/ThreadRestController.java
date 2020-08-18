@@ -3,7 +3,6 @@ package com.github.njuro.jard.thread;
 import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
-import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.dto.ThreadDto;
@@ -54,7 +53,7 @@ public class ThreadRestController {
   }
 
   @PutMapping(Mappings.PATH_VARIABLE_THREAD)
-  @FieldFilterSetting(className = Post.class, fields = "thread")
+  @FieldFilterSetting(className = PostDto.class, fields = "thread")
   public PostDto replyToThread(
       ThreadDto thread,
       @RequestPart PostForm postForm,
@@ -68,14 +67,14 @@ public class ThreadRestController {
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)
-  @FieldFilterSetting(className = Post.class, fields = "thread")
+  @FieldFilterSetting(className = PostDto.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
   public ThreadDto getThread(ThreadDto thread) {
     return threadFacade.getThread(thread);
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD + "/new-replies")
-  @FieldFilterSetting(className = Post.class, fields = "thread")
+  @FieldFilterSetting(className = PostDto.class, fields = "thread")
   @DynamicFilter(SensitiveDataFilter.class)
   public List<PostDto> getNewReplies(
       ThreadDto thread, @RequestParam(name = "lastPost") Long lastPostNumber) {

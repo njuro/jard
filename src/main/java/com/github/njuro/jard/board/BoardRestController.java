@@ -7,7 +7,7 @@ import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.board.dto.BoardForm;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
-import com.github.njuro.jard.thread.Thread;
+import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.utils.SensitiveDataFilter;
 import com.jfilter.filter.DynamicFilter;
@@ -53,7 +53,7 @@ public class BoardRestController {
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD)
-  @FieldFilterSetting(className = Thread.class, fields = "board")
+  @FieldFilterSetting(className = ThreadDto.class, fields = "board")
   @DynamicFilter(SensitiveDataFilter.class)
   public BoardDto getBoard(
       BoardDto board, @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
@@ -61,7 +61,7 @@ public class BoardRestController {
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_BOARD + "/catalog")
-  @FieldFilterSetting(className = Thread.class, fields = "board")
+  @FieldFilterSetting(className = ThreadDto.class, fields = "board")
   @DynamicFilter(SensitiveDataFilter.class)
   public BoardDto getBoardCatalog(BoardDto board) {
     return boardFacade.getBoardCatalog(board);

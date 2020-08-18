@@ -1,6 +1,7 @@
 package com.github.njuro.jard.utils;
 
 import com.comparator.Comparator;
+import com.github.njuro.jard.post.Post_;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserFacade;
@@ -23,6 +24,6 @@ public class SensitiveDataFilter implements DynamicFilterEvent {
     // only authenticated users with VIEW_IP authority can view posters IP addresses
     comparator.compare(
         request -> !userFacade.hasCurrentUserAuthority(UserAuthority.VIEW_IP),
-        result -> FilterFields.getFieldsBy(PostDto.class, Collections.singletonList("ip")));
+        result -> FilterFields.getFieldsBy(PostDto.class, Collections.singletonList(Post_.IP)));
   }
 }
