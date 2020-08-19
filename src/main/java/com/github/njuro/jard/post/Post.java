@@ -10,11 +10,21 @@ import java.time.OffsetDateTime;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Parameter;
 
 /** Entity representing a post in thread. */
 @Entity
+@Indexed
 @Table(name = "posts")
 @Data
 @SuperBuilder
@@ -35,10 +45,10 @@ public class Post extends BaseEntity {
   private Long postNumber;
 
   /** (Optional) name of the poster. */
-  @Basic @ToString.Include private String name;
+  @Basic @ToString.Include @Field private String name;
 
   /** (Optional) hashed password of the poster. Used to prove identity across different post. */
-  @Basic private String tripcode;
+  @Basic @Field private String tripcode;
 
   /**
    * (Optional) logged in user can decide to show his/her role in his/her post (for example as proof
@@ -50,6 +60,20 @@ public class Post extends BaseEntity {
   /** Body of the post. */
   @Basic
   @Column(columnDefinition = "TEXT")
+  @AnalyzerDef(
+      name = "postAnalyzer",
+      charFilters = @CharFilterDef(factory = HTMLStripCharFilterFactory.class),
+      tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+      filters = {
+        @TokenFilterDef(factory = StandardFilterFactory.class),
+        @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
+        @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+        @TokenFilterDef(factory = StopFilterFactory.class),
+        @TokenFilterDef(
+            factory = SnowballPorterFilterFactory.class,
+            params = @Parameter(name = "language", value = "English"))
+      })
+  @Field(analyzer = @Analyzer(definition = "postAnalyzer"))
   private String body;
 
   /** Date and time when this post was created. */

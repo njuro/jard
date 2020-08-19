@@ -54,6 +54,8 @@
         <ehcache-legacy.version>2.10.6</ehcache-legacy.version>
         <bucket4j-spring.version>0.2.0</bucket4j-spring.version>
         <spring-boot-admin.version>2.2.4</spring-boot-admin.version>
+        <hibernate-search.version>5.11.5.Final</hibernate-search.version>
+        <lucene.version>5.5.5</lucene.version>
         <skipGitHooks>false</skipGitHooks>
     </properties>
 
@@ -189,6 +191,16 @@
             <artifactId>hibernate-jpamodelgen</artifactId> <!-- Metamodel of JPA entities -->
             <version>${hibernate.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-orm</artifactId> <!-- Fulltext search -->
+            <version>${hibernate-search.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+            <version>${lucene.version}</version>
         </dependency>
 
 

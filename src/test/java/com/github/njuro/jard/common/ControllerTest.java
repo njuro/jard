@@ -4,6 +4,7 @@ import com.github.njuro.jard.ban.BanFacade;
 import com.github.njuro.jard.board.BoardFacade;
 import com.github.njuro.jard.config.security.jwt.JwtAuthenticationFilter;
 import com.github.njuro.jard.post.PostFacade;
+import com.github.njuro.jard.search.SearchFacade;
 import com.github.njuro.jard.thread.ThreadFacade;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.utils.HttpUtils;
@@ -33,6 +34,7 @@ import org.springframework.security.test.context.support.WithMockUser;
   @MockBean(UserFacade.class),
   @MockBean(ThreadFacade.class),
   @MockBean(PostFacade.class),
-  @MockBean(BanFacade.class)
+  @MockBean(BanFacade.class),
+  @MockBean(SearchFacade.class)
 }) // needed for importing of custom argument resolvers
 public abstract class ControllerTest extends MockRequestTest {}
