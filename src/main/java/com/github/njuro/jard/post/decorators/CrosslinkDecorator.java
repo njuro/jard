@@ -1,12 +1,6 @@
 package com.github.njuro.jard.post.decorators;
 
-import static com.github.njuro.jard.common.Constants.CROSSLINK_CLASS_INVALID;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_CLASS_VALID;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_DIFF_THREAD;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_END;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_OP;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_PATTERN;
-import static com.github.njuro.jard.common.Constants.CROSSLINK_START;
+import static com.github.njuro.jard.common.Constants.*;
 
 import com.github.njuro.jard.board.BoardNotFoundException;
 import com.github.njuro.jard.board.BoardService;
@@ -39,7 +33,7 @@ public class CrosslinkDecorator implements PostDecorator {
   @Override
   public void decorate(Post post) {
     Matcher matcher = CROSSLINK_PATTERN.matcher(post.getBody());
-    StringBuffer sb = new StringBuffer(post.getBody().length());
+    StringBuilder sb = new StringBuilder(post.getBody().length());
 
     while (matcher.find()) {
       String boardLabel =

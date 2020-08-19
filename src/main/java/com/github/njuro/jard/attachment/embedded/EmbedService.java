@@ -120,7 +120,7 @@ public class EmbedService {
      */
     private String removePercentageDimensions(String response) {
       var matcher = PERCENTAGE_DIMENSION_PATTERN.matcher(response);
-      var sb = new StringBuffer();
+      var sb = new StringBuilder();
       while (matcher.find()) {
         matcher.appendReplacement(
             sb, matcher.group(0).replaceFirst(Pattern.quote(matcher.group(1)), "0"));
