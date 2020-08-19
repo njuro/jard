@@ -31,7 +31,19 @@ public class SearchFacade {
   }
 
   public List<PostDto> searchPosts(String query) {
-    return postMapper.toDtoList(
-        searchService.search(query, Post.class, Post_.BODY, Post_.NAME, Post_.TRIPCODE));
+    SearchResults<Post> searchResults =
+        searchService.search(query, Post.class, Post_.BODY, Post_.NAME, Post_.TRIPCODE);
+
+    List<PostDto> posts = postMapper.toDtoList(searchResults.getResults());
+    posts.forEach(
+        post ->
+            post.setBody(
+                searchService.getHighlightedSearchResult(
+                    searchResults.getHighlighter(),
+                    searchResults.getAnalyzer(),
+                    Post_.BODY,
+                    post.getBody())));
+
+    return posts;
   }
 }

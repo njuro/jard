@@ -115,6 +115,13 @@ public class Constants {
   /** Tag to put at the end of hyperlink. */
   public static final String HYPERLINK_END = "</a>";
 
+  /** Tag to put at the beginning of matched search result. */
+  public static final String SEARCH_RESULT_HIGHLIGHT_START =
+      "<span class=\"search-result-highlight\">";
+
+  /** Tag to put at the end of matched search result. */
+  public static final String SEARCH_RESULT_HIGHLIGHT_END = "</span>";
+
   /**
    * How often should system check for expired bans.
    *
