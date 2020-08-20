@@ -26,7 +26,7 @@ Code-wise is jard written "from scratch" and is not a fork of any existing image
  3. I wanted to try and learn new concepts, technologies, approaches and try to create and maintain my very own project bigger than regular TicTacToe / FizzBuzz app. This is actually the biggest motivation factor of them all and the only one I am sure is true, because it already gave me much.
 
 ### What technologies is jard built with?
-The backend is written in `Java 11`, with `Spring Boot 2.x` framework (powered by `Spring 5.x`), using `PostgreSQL` as relational database (tests use in-memory `H2` database) and `Hibernate` as ORM. Files uploaded by users are stored in `Amazon S3` bucket.  Authentication is handled with JWT cookies (using `jjwt` library). Backend exposes REST API with protected endpoints. Several other libraries are used for different functionality, as described in *pom.xml* file.
+The backend is written in `Java 11`, with `Spring Boot 2.x` framework (powered by `Spring 5.x`), using `PostgreSQL` as relational database (tests use in-memory `H2` database) and `Hibernate` as ORM. Files uploaded by users are stored in `Amazon S3` bucket.  Authentication is handled with JWT cookies (using `jjwt` library). Backend exposes REST API with protected endpoints. Full-text search is provided by `Hibernate Search` which makes use of `Apache Lucene`. CAPTCHA protection by `hCaptcha`. Several other libraries are used for different functionality, as described in *pom.xml* file.
 
 `Travis CI` is enabled for the project and master branch is regulary deployed to `Heroku`.
 For frontend technologies see [jard-client](https://github.com/njuro/jard-client).  
@@ -56,6 +56,7 @@ From **user** perspective:
 - [x] Both manual and auto updating of opened threads
 - [x] (Optional) posts with country flag based on poster IP
 - [x] (Optional) unique poster ID per thread per IP
+- [x] (Optional) required CAPTCHA before posting
 
 From **admin** perspective:
 
@@ -67,6 +68,7 @@ From **admin** perspective:
 - [x] Locking of threads
 - [x] Stickying of threads
 - [x] Deleting of posts and threads
+- [x] Fulltext search across all posts
 
 ### Planned
 
@@ -77,7 +79,6 @@ From **admin** perspective:
 - [ ] Allow users to delete own posts
 - [ ] Password reset system
 - [ ] Custom user themes
-- [ ] Fulltext search across all posts
 - [ ] User-managed boards
 - [ ] Real-time posting
 - [ ] Many more...

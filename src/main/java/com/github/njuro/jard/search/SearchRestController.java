@@ -3,8 +3,8 @@ package com.github.njuro.jard.search;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.search.dto.SearchResultsDto;
 import com.github.njuro.jard.user.UserAuthority;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +24,18 @@ public class SearchRestController {
     this.searchFacade = searchFacade;
   }
 
-  @GetMapping("/create-indexes")
+  @GetMapping("/rebuild-indexes")
   @HasAuthorities(UserAuthority.ACTUATOR_ACCESS)
-  public ResponseEntity<String> createIndexes() {
-    boolean result = searchFacade.createIndexes();
+  public ResponseEntity<String> rebuildIndexes() {
+    boolean result = searchFacade.rebuildIndexes();
     return result
-        ? ResponseEntity.ok("Indexes created")
-        : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Creating indexes failed");
+        ? ResponseEntity.ok("Search indexes rebuilt")
+        : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("Rebuilding serach indexes failed");
   }
 
   @GetMapping
-  public List<PostDto> searchPosts(@RequestParam(name = "query") String query) {
+  public SearchResultsDto<PostDto> searchPosts(@RequestParam(name = "query") String query) {
     return searchFacade.searchPosts(query);
   }
 }

@@ -4,6 +4,7 @@ import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.PostMapper;
 import com.github.njuro.jard.post.Post_;
 import com.github.njuro.jard.post.dto.PostDto;
+import com.github.njuro.jard.search.dto.SearchResultsDto;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,14 @@ public class SearchFacade {
     this.postMapper = postMapper;
   }
 
-  public boolean createIndexes() {
+  /**
+   * Rebuilds search indexes.
+   *
+   * @return true if rebuilding was finished successfully, false otherwise.
+   */
+  public boolean rebuildIndexes() {
     try {
-      searchService.createIndexes();
+      searchService.rebuildIndexes();
       return true;
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -30,11 +36,19 @@ public class SearchFacade {
     }
   }
 
-  public List<PostDto> searchPosts(String query) {
+  /**
+   * Searches across all posts.
+   *
+   * @param query user query to search by
+   * @return list of matched posts for given query with highlighted matches, ordered by relevance
+   *     (top 50 results)
+   * @see SearchResultsDto
+   */
+  public SearchResultsDto<PostDto> searchPosts(String query) {
     SearchResults<Post> searchResults =
         searchService.search(query, Post.class, Post_.BODY, Post_.NAME, Post_.TRIPCODE);
 
-    List<PostDto> posts = postMapper.toDtoList(searchResults.getResults());
+    List<PostDto> posts = postMapper.toDtoList(searchResults.getResultList());
     posts.forEach(
         post ->
             post.setBody(
@@ -44,6 +58,10 @@ public class SearchFacade {
                     Post_.BODY,
                     post.getBody())));
 
-    return posts;
+    return SearchResultsDto.<PostDto>builder()
+        .resultList(posts)
+        .resultsCount(posts.size())
+        .totalResultsCount(searchResults.getTotalResultsCount())
+        .build();
   }
 }
