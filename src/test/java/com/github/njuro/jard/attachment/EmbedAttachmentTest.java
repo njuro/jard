@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.njuro.jard.attachment.embedded.EmbedService;
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ class EmbedAttachmentTest {
   }
 
   @Test
+  @Disabled("Spotify oEmbed is down")
   void testSpotify() {
     testEmbed(
         "https://open.spotify.com/album/0YvYmLBFFwYxgI4U9KKgUm?highlight=spotify:track:2qToAcex0ruZfbEbAy9OhW");
