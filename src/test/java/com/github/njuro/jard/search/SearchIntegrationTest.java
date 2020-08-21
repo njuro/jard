@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest
 @UseMockDatabase
@@ -24,6 +25,7 @@ class SearchIntegrationTest extends MockRequestTest {
   private static final String API_ROOT = Mappings.API_ROOT_SEARCH;
 
   @Test
+  @DirtiesContext
   void testSearchPosts() throws Exception {
     searchFacade.rebuildIndexes();
 
