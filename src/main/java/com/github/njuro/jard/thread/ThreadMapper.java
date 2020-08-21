@@ -23,6 +23,7 @@ public interface ThreadMapper extends BaseMapper<Thread, ThreadDto> {
 
   @Override
   @Mapping(target = "originalPost.thread", ignore = true)
+  @Mapping(target = "originalPost.originalPost", ignore = true)
   ThreadDto toDto(Thread thread);
 
   @Override
@@ -40,6 +41,7 @@ public interface ThreadMapper extends BaseMapper<Thread, ThreadDto> {
   default ThreadDto setOriginalPostThread(@MappingTarget ThreadDtoBuilder<?, ?> threadBuilder) {
     var thread = threadBuilder.build();
     thread.getOriginalPost().setThread(thread);
+    thread.getOriginalPost().setOriginalPost(true);
     return thread;
   }
 
