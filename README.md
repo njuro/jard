@@ -53,6 +53,7 @@ From **user** perspective:
 - [x] Crosslinking to different posts/threads/boards (e.g. >>>/g/123#4)
 - [x] Quoting post by selecting content and clicking on its number
 - [x] Highlighting own posts and replies to them (`(You)`)
+- [x] Deleting own post within time limit
 - [x] Both manual and auto updating of opened threads
 - [x] (Optional) posts with country flag based on poster IP
 - [x] (Optional) unique poster ID per thread per IP
@@ -76,7 +77,6 @@ From **admin** perspective:
 - [ ]  Allow to define user roles with custom set of permissions
 - [ ]  Warning instead of ban
 - [ ]  Post report system
-- [ ] Allow users to delete own posts
 - [ ] Password reset system
 - [ ] Custom user themes
 - [ ] User-managed boards

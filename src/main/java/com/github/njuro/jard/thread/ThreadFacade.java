@@ -216,7 +216,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    * @throws IOException if deletion of one of the attachments' file fails
    */
   public void deletePost(ThreadDto thread, PostDto post) throws IOException {
-    if (thread.getOriginalPost().equals(post)) {
+    if (post.isOriginalPost()) {
       // delete whole thread
       threadService.deleteThread(toEntity(thread));
     } else {

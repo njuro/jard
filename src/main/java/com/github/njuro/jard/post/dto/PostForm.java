@@ -44,7 +44,11 @@ public class PostForm {
   @Pattern(regexp = IP_PATTERN, message = "{validation.ban.ip.pattern}")
   private String ip;
 
+  /** {@link Post#sage} */
   private boolean sage;
+
+  /** {@link Post#deletionCode} */
+  private String deletionCode;
 
   private boolean capcode;
 
@@ -78,6 +82,7 @@ public class PostForm {
         .body(body)
         .ip(ip)
         .sage(sage)
+        .deletionCode(deletionCode)
         .build();
   }
 }

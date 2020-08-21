@@ -109,6 +109,9 @@ public class Post extends BaseEntity {
   /** Sage means the post will not bump the thread. Applies only to replies (not original posts). */
   @Basic private boolean sage;
 
+  /** Secret code set by poster which enables him to delete his own post afterwards. */
+  @Basic private String deletionCode;
+
   /** {@link Thread} this post belongs to. */
   @ManyToOne(fetch = FetchType.LAZY)
   @Fetch(FetchMode.JOIN)
@@ -124,5 +127,10 @@ public class Post extends BaseEntity {
   @PrePersist
   private void setCreatedAt() {
     createdAt = OffsetDateTime.now();
+  }
+
+  /** @return true if this post is original post in its {@link Thread}, false otherwise */
+  public boolean isOriginalPost() {
+    return equals(thread.getOriginalPost());
   }
 }

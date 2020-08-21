@@ -1,5 +1,6 @@
 package com.github.njuro.jard.post.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.njuro.jard.attachment.dto.AttachmentDto;
 import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.post.Post;
@@ -54,9 +55,15 @@ public class PostDto extends BaseDto {
   /** {@link Post#sage } */
   private boolean sage;
 
+  /** {@link Post#deletionCode} */
+  @JsonIgnore private String deletionCode;
+
   /** {@link Post#thread } */
   @EqualsAndHashCode.Include private ThreadDto thread;
 
   /** {@link Post#attachment } */
   private AttachmentDto attachment;
+
+  /** {@link Post#isOriginalPost()} */
+  private boolean originalPost;
 }

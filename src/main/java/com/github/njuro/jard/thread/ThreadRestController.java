@@ -3,6 +3,8 @@ package com.github.njuro.jard.thread;
 import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
+import com.github.njuro.jard.post.PostFacade;
+import com.github.njuro.jard.post.dto.DeleteOwnPostDto;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.dto.ThreadDto;
@@ -28,13 +30,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class ThreadRestController {
 
   private final ThreadFacade threadFacade;
+  private final PostFacade postFacade;
   private final RequestValidator requestValidator;
   private final HttpUtils httpUtils;
 
   @Autowired
   public ThreadRestController(
-      ThreadFacade threadFacade, RequestValidator requestValidator, HttpUtils httpUtils) {
+      ThreadFacade threadFacade,
+      PostFacade postFacade,
+      RequestValidator requestValidator,
+      HttpUtils httpUtils) {
     this.threadFacade = threadFacade;
+    this.postFacade = postFacade;
     this.requestValidator = requestValidator;
     this.httpUtils = httpUtils;
   }
@@ -100,6 +107,18 @@ public class ThreadRestController {
   public ResponseEntity<Object> deletePost(ThreadDto thread, PostDto post) {
     try {
       threadFacade.deletePost(thread, post);
+      return ResponseEntity.ok().build();
+    } catch (IOException ex) {
+      log.error("Deleting post failed", ex);
+      return ResponseEntity.badRequest().body("Deleting post failed");
+    }
+  }
+
+  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST + "/delete-own")
+  public ResponseEntity<Object> deleteOwnPost(
+      PostDto post, @RequestBody DeleteOwnPostDto deleteRequest) {
+    try {
+      postFacade.deleteOwnPost(post, deleteRequest.getDeletionCode());
       return ResponseEntity.ok().build();
     } catch (IOException ex) {
       log.error("Deleting post failed", ex);

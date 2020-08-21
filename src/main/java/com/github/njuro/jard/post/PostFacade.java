@@ -4,6 +4,7 @@ import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.AttachmentFacade;
 import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
+import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.Thread;
@@ -14,6 +15,8 @@ import com.github.njuro.jard.utils.validation.FormValidationException;
 import com.github.tornaia.geoip.GeoIP;
 import com.github.tornaia.geoip.GeoIPProvider;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -119,6 +122,38 @@ public class PostFacade extends BaseFacade<Post, PostDto> {
   /** {@link PostService#updatePost(Post)} */
   public PostDto updatePost(PostDto post) {
     return toDto(postService.updatePost(toEntity(post)));
+  }
+
+  /**
+   * Deletes own post.
+   *
+   * @param post post to delete
+   * @param deletionCode deletion code for given post
+   * @throws FormValidationException if post does not have deletion code set, post its original post
+   *     in its thread, or the deletion code from the request does not match
+   * @throws IOException if deletion of post attachment fails
+   */
+  public void deleteOwnPost(PostDto post, String deletionCode) throws IOException {
+    if (post.getDeletionCode() == null || post.getDeletionCode().isBlank()) {
+      throw new FormValidationException("Post does not have deletion code and cannot be deleted");
+    }
+
+    if (post.isOriginalPost()) {
+      throw new FormValidationException("Original (first) post in thread cannot be deleted");
+    }
+
+    if (Duration.between(post.getCreatedAt(), OffsetDateTime.now()).toMinutes()
+        > Constants.OWN_POST_DELETION_TIME_LIMIT) {
+      throw new FormValidationException(
+          String.format(
+              "Cannot delete post older than %d minutes", Constants.OWN_POST_DELETION_TIME_LIMIT));
+    }
+
+    if (!post.getDeletionCode().equals(deletionCode)) {
+      throw new FormValidationException("Invalid deletion code");
+    }
+
+    deletePost(post);
   }
 
   /** {@link PostService#deletePost(Post)} */
