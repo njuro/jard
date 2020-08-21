@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -146,9 +147,14 @@ public abstract class MockRequestTest {
         typeClass);
   }
 
-  @SneakyThrows(UnsupportedEncodingException.class)
   protected <T> T getResponse(MvcResult result, Class<T> resultClass) {
-    return fromJson(result.getResponse().getContentAsString(StandardCharsets.UTF_8), resultClass);
+    return getResponse(result, resultClass, null);
+  }
+
+  @SneakyThrows(UnsupportedEncodingException.class)
+  protected <T> T getResponse(MvcResult result, Class<T> resultClass, Class<?> typeClass) {
+    return fromJson(
+        result.getResponse().getContentAsString(StandardCharsets.UTF_8), resultClass, typeClass);
   }
 
   protected String toJson(Object body) {
@@ -159,8 +165,13 @@ public abstract class MockRequestTest {
     }
   }
 
-  protected <T> T fromJson(String json, Class<T> resultClass) {
+  protected <T> T fromJson(String json, Class<T> resultClass, Class<?> typeClass) {
     try {
+      if (typeClass != null) {
+        JavaType type =
+            objectMapper.getTypeFactory().constructParametricType(resultClass, typeClass);
+        return objectMapper.readValue(json, type);
+      }
       return objectMapper.readValue(json, resultClass);
     } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);

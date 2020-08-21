@@ -40,7 +40,7 @@ public class EntityUtils {
   public static ThreadForm randomThreadForm() {
     return ThreadForm.builder()
         .subject(randomString(MAX_SUBJECT_LENGTH))
-        .locked(randomBoolean())
+        .locked(false)
         .stickied(randomBoolean())
         .postForm(randomPostForm())
         .build();
