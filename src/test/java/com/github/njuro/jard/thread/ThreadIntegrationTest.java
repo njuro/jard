@@ -14,6 +14,7 @@ import com.github.njuro.jard.common.MockRequestTest;
 import com.github.njuro.jard.common.WithMockUserAuthorities;
 import com.github.njuro.jard.post.PostFacade;
 import com.github.njuro.jard.post.PostNotFoundException;
+import com.github.njuro.jard.post.dto.DeleteOwnPostDto;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.dto.ThreadDto;
@@ -229,6 +230,32 @@ class ThreadIntegrationTest extends MockRequestTest {
     assertThat(threadFacade.getThread(thread).getReplies()).isEmpty();
   }
 
+  @Test
+  void testDeleteOwnPost() throws Exception {
+    var thread = createThreadDirectly();
+    var reply = createReplyDirectly(thread);
+
+    assertThat(postFacade.resolvePost(board.getLabel(), reply.getPostNumber())).isNotNull();
+    assertThat(threadFacade.getThread(thread).getReplies()).hasSize(1);
+
+    performMockRequest(
+            HttpMethod.DELETE,
+            buildUri(
+                API_ROOT
+                    + Mappings.PATH_VARIABLE_THREAD
+                    + "/"
+                    + Mappings.PATH_VARIABLE_POST
+                    + "/delete-own",
+                thread.getThreadNumber(),
+                reply.getPostNumber()),
+            new DeleteOwnPostDto(reply.getDeletionCode()))
+        .andExpect(status().isOk());
+
+    assertThatThrownBy(() -> postFacade.resolvePost(board.getLabel(), reply.getPostNumber()))
+        .isInstanceOf(PostNotFoundException.class);
+    assertThat(threadFacade.getThread(thread).getReplies()).isEmpty();
+  }
+
   @Override
   protected URI buildUri(String url, Object... pathVariables) {
     return super.buildUri(url, ArrayUtils.addFirst(pathVariables, board.getLabel()));
@@ -241,8 +268,9 @@ class ThreadIntegrationTest extends MockRequestTest {
     return threadFacade.createThread(threadForm, board);
   }
 
-  private PostDto createReplyDirectly(ThreadDto thread) throws Exception {
+  private PostDto createReplyDirectly(ThreadDto thread) {
     return threadFacade.replyToThread(
-        PostForm.builder().body("Reply").ip("127.0.0.1").build(), thread);
+        PostForm.builder().body("Reply").ip("127.0.0.1").deletionCode("secretcode").build(),
+        thread);
   }
 }
