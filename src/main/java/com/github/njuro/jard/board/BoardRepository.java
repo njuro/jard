@@ -15,7 +15,7 @@ public interface BoardRepository extends BaseRepository<Board> {
   @Query("select b.postCounter from Board b where b.label = :label")
   Long getPostCounter(@Param("label") String label);
 
-  @Modifying
+  @Modifying(flushAutomatically = true, clearAutomatically = true)
   @Query("update Board set postCounter = postCounter + 1 where label = :label")
   void increasePostNumber(@Param("label") String label);
 }

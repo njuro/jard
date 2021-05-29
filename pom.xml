@@ -61,11 +61,20 @@
         <kotest-assertions.version>4.6.0</kotest-assertions.version>
         <mockk.version>1.11.0</mockk.version>
         <zonky-embedded.version>2.0.0</zonky-embedded.version>
+        <flyway-spring-test.version>7.0.0</flyway-spring-test.version>
         <skipGitHooks>false</skipGitHooks>
     </properties>
 
     <dependencies>
         <!-- CORE -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -234,18 +243,8 @@
         <!-- TESTING -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit</artifactId>
+            <artifactId>kotlin-test-junit5</artifactId>
             <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-kotlin</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -294,23 +293,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId> <!-- In-memory database -->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.database-rider</groupId>
-            <artifactId>rider-spring</artifactId> <!-- Populating database from files -->
-            <version>${rider-spring.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
             <version>${mockk.version}</version>
@@ -322,6 +304,13 @@
             <version>${zonky-embedded.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb.flyway-test-extensions</groupId>
+            <artifactId>flyway-spring-test</artifactId>
+            <version>${flyway-spring-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
