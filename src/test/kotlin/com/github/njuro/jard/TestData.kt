@@ -8,7 +8,6 @@ import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.thread.Thread
 import com.github.njuro.jard.user.UserRole
 import java.time.OffsetDateTime
-import java.util.*
 
 fun board(
     label: String,
@@ -18,7 +17,6 @@ fun board(
     postCounter: Long = 1L,
     settings: BoardSettings = boardSettings()
 ): Board = Board.builder()
-    .id(UUID.randomUUID())
     .label(label)
     .name(name)
     .createdAt(createdAt)

@@ -19,7 +19,7 @@ internal class BoardRepositoryTest {
     @Test
     fun `find board by label`() {
         val expectedBoard = board(label = "fit")
-        saveBoard(expectedBoard)
+        boardRepository.save(expectedBoard)
 
         val actualBoard = boardRepository.findByLabel(expectedBoard.label)
         actualBoard.shouldBePresent { it.label shouldBe expectedBoard.label }
@@ -33,7 +33,7 @@ internal class BoardRepositoryTest {
     @Test
     fun `retrieve post counter of board`() {
         val board = board(label = "r", postCounter = 10)
-        saveBoard(board)
+        boardRepository.save(board)
 
         boardRepository.getPostCounter(board.label) shouldBe board.postCounter
     }
@@ -41,15 +41,9 @@ internal class BoardRepositoryTest {
     @Test
     fun `increase post counter of board`() {
         val board = board(label = "sp", postCounter = 15)
-        saveBoard(board)
+        boardRepository.save(board)
 
         boardRepository.increasePostNumber(board.label)
         boardRepository.findByLabel(board.label).shouldBePresent { it.postCounter shouldBe board.postCounter + 1 }
     }
-
-    private fun saveBoard(board: Board) {
-        boardRepository.save(board)
-    }
-
-
 }

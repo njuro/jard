@@ -63,9 +63,11 @@ public class Board extends BaseEntity {
   @Column(nullable = false)
   private OffsetDateTime createdAt;
 
-  /** Before inserting to database, set creation date to current date and time. */
+  /** Before inserting to database, set creation date to current date and time if it is null. */
   @PrePersist
   private void setCreatedAt() {
-    createdAt = OffsetDateTime.now();
+    if (createdAt == null) {
+      createdAt = OffsetDateTime.now();
+    }
   }
 }

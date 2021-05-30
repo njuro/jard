@@ -40,7 +40,7 @@ public class BoardService {
 
   /** @return all active boards sorted from least to most recent. */
   public List<Board> getAllBoards() {
-    return new ArrayList<>(boardRepository.findAll(Sort.by("createdAt").ascending()));
+    return new ArrayList<>(boardRepository.findAll(Sort.by(Board_.CREATED_AT).ascending()));
   }
 
   /**
