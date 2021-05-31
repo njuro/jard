@@ -4,6 +4,8 @@ import com.github.njuro.jard.attachment.Attachment
 import com.github.njuro.jard.attachment.AttachmentCategory
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardSettings
+import com.github.njuro.jard.board.dto.BoardForm
+import com.github.njuro.jard.board.dto.BoardSettingsDto
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.thread.Thread
 import com.github.njuro.jard.user.UserRole
@@ -63,10 +65,10 @@ fun thread(
     .locked(locked)
     .stickied(stickied)
     .subject(subject)
-    .originalPost(post())
-    .build().also { it.originalPost.thread = it }
+    .build().also { it.originalPost = post(it) }
 
 fun post(
+    thread: Thread,
     attachment: Attachment? = null,
     body: String? = null,
     capcode: UserRole? = null,
@@ -81,6 +83,7 @@ fun post(
     createdAt: OffsetDateTime = OffsetDateTime.now(),
     posterThreadId: String? = null
 ): Post = Post.builder()
+    .thread(thread)
     .attachment(attachment)
     .body(body)
     .capcode(capcode)
@@ -94,4 +97,22 @@ fun post(
     .sage(sage)
     .createdAt(createdAt)
     .posterThreadId(posterThreadId)
+    .build()
+
+fun Board.toForm(): BoardForm = BoardForm.builder()
+    .label(label)
+    .name(name)
+    .boardSettingsForm(settings.toForm())
+    .build()
+
+fun BoardSettings.toForm(): BoardSettingsDto = BoardSettingsDto.builder()
+    .attachmentCategories(attachmentCategories)
+    .bumpLimit(bumpLimit)
+    .captchaEnabled(isCaptchaEnabled)
+    .countryFlags(isCountryFlags)
+    .defaultPosterName(defaultPosterName)
+    .forceDefaultPosterName(isForceDefaultPosterName)
+    .nsfw(isNsfw)
+    .posterThreadIds(isPosterThreadIds)
+    .threadLimit(threadLimit)
     .build()

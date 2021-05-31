@@ -44,6 +44,7 @@
         <offline-geoip.version>0.1.12</offline-geoip.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <lombok.version>1.18.20</lombok.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
         <junit-platform.version>1.7.2</junit-platform.version>
@@ -60,6 +61,7 @@
         <lucene.version>5.5.5</lucene.version>
         <kotest-assertions.version>4.6.0</kotest-assertions.version>
         <mockk.version>1.11.0</mockk.version>
+        <springmockk.version>3.0.1</springmockk.version>
         <zonky-embedded.version>2.0.0</zonky-embedded.version>
         <flyway-spring-test.version>7.0.0</flyway-spring-test.version>
         <skipGitHooks>false</skipGitHooks>
@@ -213,7 +215,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-highlighter</artifactId>
+            <artifactId>lucene-highlighter</artifactId> <!-- Highlighting of search results -->
             <version>${lucene.version}</version>
         </dependency>
 
@@ -296,6 +298,12 @@
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
             <version>${mockk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ninja-squad</groupId>
+            <artifactId>springmockk</artifactId>
+            <version>${springmockk.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -482,6 +490,11 @@
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
+                        <dependency>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
+                        </dependency>
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
