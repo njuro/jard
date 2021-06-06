@@ -10,9 +10,9 @@ import com.github.njuro.jard.thread.Thread
 import com.github.njuro.jard.thread.ThreadMapper
 import com.github.njuro.jard.thread.dto.ThreadDto
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import org.springframework.boot.test.context.SpringBootTest
 
-@Component
+@SpringBootTest
 internal abstract class MapperTest {
 
     @Autowired

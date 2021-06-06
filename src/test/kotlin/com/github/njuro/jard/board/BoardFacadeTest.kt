@@ -15,11 +15,9 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 
-@SpringBootTest
 @UseMockDatabase
 internal class BoardFacadeTest : MapperTest() {
 
