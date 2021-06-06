@@ -70,8 +70,12 @@ public class Thread extends BaseEntity {
   /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   private void setCreatedAt() {
-    createdAt = OffsetDateTime.now();
-    setLastReplyAt(OffsetDateTime.now());
+    if (createdAt == null) {
+      createdAt = OffsetDateTime.now();
+    }
+    if (lastReplyAt == null) {
+      setLastReplyAt(OffsetDateTime.now());
+    }
   }
 
   /** Returns thread number, which is post number of its original post. */
