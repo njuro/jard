@@ -15,7 +15,6 @@ import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
-import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -58,7 +57,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
         @Test
         fun `don't create invalid board`() {
-            val boardForm = board(label = "r", name = RandomStringUtils.random(MAX_BOARD_NAME_LENGTH + 1)).toForm()
+            val boardForm = board(label = "r", name = randomString(MAX_BOARD_NAME_LENGTH + 1)).toForm()
 
             createBoard(boardForm).andExpect { status { isBadRequest() } }
             boardRepository.findByLabel(boardForm.label).shouldBeEmpty()
@@ -153,7 +152,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
             boardRepository.save(board)
 
             editBoard(
-                board(label = board.label, name = RandomStringUtils.random(MAX_BOARD_NAME_LENGTH + 1))
+                board(label = board.label, name = randomString(MAX_BOARD_NAME_LENGTH + 1))
                     .toForm()
             ).andExpect { status { isBadRequest() } }
             boardRepository.findByLabel(board.label).shouldBePresent { it.name shouldBe board.name }

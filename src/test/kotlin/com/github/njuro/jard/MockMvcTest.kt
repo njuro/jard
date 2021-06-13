@@ -14,8 +14,6 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.web.servlet.*
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 import javax.annotation.PostConstruct
 
 @AutoConfigureMockMvc
@@ -66,26 +64,6 @@ internal abstract class MockMvcTest : MapperTest() {
         )
     }
 
-    protected fun multipartFile(name: String, filename: String): MockMultipartFile {
-        val path = Paths.get("src", "test", "resources", "attachments").resolve(filename)
-        return MockMultipartFile(
-            name,
-            filename,
-            Files.probeContentType(path),
-            Files.readAllBytes(path)
-        )
-    }
-
-
-    protected fun multipartFile(name: String, size: Int): MockMultipartFile {
-        return MockMultipartFile(
-            name,
-            "filename",
-            null,
-            ByteArray(size)
-        )
-    }
-
     protected fun ResultActionsDsl.andExpectValidationError(field: String, message: String? = null) {
         andExpect {
             status { isBadRequest() }
@@ -101,7 +79,6 @@ internal abstract class MockMvcTest : MapperTest() {
     }
 
     protected final inline fun <reified T> ResultActionsDsl.andReturnConverted(): T {
-        this.andExpect { status { isOk() } }
         val result = this.andReturn()
         return convertResult(result)
     }

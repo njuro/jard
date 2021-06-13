@@ -27,7 +27,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.slot
-import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -117,7 +116,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             createThread(
                 thread(
                     board,
-                    subject = RandomStringUtils.random(MAX_SUBJECT_LENGTH + 1)
+                    subject = randomString(MAX_SUBJECT_LENGTH + 1)
                 ).toForm()
             ).andExpectValidationError("subject")
         }
@@ -177,14 +176,14 @@ internal class ThreadControllerTest : MockMvcTest() {
 
         @Test
         fun `don't create reply with invalid name`() {
-            replyToThread(post(thread, name = RandomStringUtils.random(MAX_NAME_LENGTH + 1)).toForm())
+            replyToThread(post(thread, name = randomString(MAX_NAME_LENGTH + 1)).toForm())
                 .andExpectValidationError("name")
         }
 
         @Test
         fun `don't create reply with invalid password`() {
             replyToThread(post(thread).toForm().apply {
-                password = RandomStringUtils.random(
+                password = randomString(
                     MAX_TRIPCODE_PASSWORD_LENGTH + 1
                 )
             }).andExpectValidationError("password")
@@ -192,7 +191,7 @@ internal class ThreadControllerTest : MockMvcTest() {
 
         @Test
         fun `don't create reply with invalid body`() {
-            replyToThread(post(thread, body = RandomStringUtils.random(MAX_POST_LENGTH + 1)).toForm())
+            replyToThread(post(thread, body = randomString(MAX_POST_LENGTH + 1)).toForm())
                 .andExpectValidationError("body")
         }
 

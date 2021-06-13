@@ -17,7 +17,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.slot
-import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -58,14 +57,14 @@ internal class BoardControllerTest : MockMvcTest() {
         @Test
         fun `don't create board with invalid label`() {
             expectValidationError(board(label = ""), "label")
-            expectValidationError(board(label = RandomStringUtils.random(MAX_BOARD_LABEL_LENGTH + 1)), "label")
+            expectValidationError(board(label = randomString(MAX_BOARD_LABEL_LENGTH + 1)), "label")
         }
 
         @Test
         fun `don't create board with invalid name`() {
             expectValidationError(board(label = "r", name = ""), "name")
             expectValidationError(
-                board(label = "r", name = RandomStringUtils.random(MAX_BOARD_NAME_LENGTH + 1)),
+                board(label = "r", name = randomString(MAX_BOARD_NAME_LENGTH + 1)),
                 "name"
             )
         }
@@ -99,7 +98,7 @@ internal class BoardControllerTest : MockMvcTest() {
             expectValidationError(
                 board(
                     label = "r", settings = boardSettings(
-                        defaultPosterName = RandomStringUtils.random(
+                        defaultPosterName = randomString(
                             MAX_NAME_LENGTH + 1
                         )
                     )
@@ -222,7 +221,7 @@ internal class BoardControllerTest : MockMvcTest() {
 
         @Test
         fun `don't edit board with invalid form`() {
-            val board = board(label = "r", name = RandomStringUtils.random(MAX_BOARD_NAME_LENGTH + 1))
+            val board = board(label = "r", name = randomString(MAX_BOARD_NAME_LENGTH + 1))
             every { boardFacade.resolveBoard(board.label) } returns board.toDto()
             every { boardFacade.editBoard(ofType(BoardDto::class), ofType(BoardForm::class)) } returns board.toDto()
 

@@ -22,7 +22,6 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
-import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -85,7 +84,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `don't create invalid thread`() {
-            val threadForm = thread(board, subject = RandomStringUtils.random(MAX_SUBJECT_LENGTH + 1)).toForm()
+            val threadForm = thread(board, subject = randomString(MAX_SUBJECT_LENGTH + 1)).toForm()
             createThread(threadForm).andExpect { status { isBadRequest() } }
         }
     }
@@ -121,7 +120,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
         @Test
         fun `don't create invalid reply`() {
             val thread = saveThread(thread(board))
-            val postForm = post(thread, name = RandomStringUtils.random(MAX_NAME_LENGTH + 1)).toForm()
+            val postForm = post(thread, name = randomString(MAX_NAME_LENGTH + 1)).toForm()
 
             replyToThread(postForm, thread).andExpect { status { isBadRequest() } }
         }

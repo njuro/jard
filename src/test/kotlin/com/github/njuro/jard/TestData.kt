@@ -11,6 +11,10 @@ import com.github.njuro.jard.post.dto.PostForm
 import com.github.njuro.jard.thread.Thread
 import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.UserRole
+import org.apache.commons.lang3.RandomStringUtils
+import org.springframework.mock.web.MockMultipartFile
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.OffsetDateTime
 
 const val TEST_ATTACHMENT_1 = "test_attachment_1.png"
@@ -141,3 +145,25 @@ fun Post.toForm(): PostForm = PostForm.builder()
     .password(null)
     .sage(isSage)
     .build()
+
+fun randomString(size: Int): String = RandomStringUtils.random(size)
+
+fun multipartFile(name: String, filename: String): MockMultipartFile {
+    val path = Paths.get("src", "test", "resources", "attachments").resolve(filename)
+    return MockMultipartFile(
+        name,
+        filename,
+        Files.probeContentType(path),
+        Files.readAllBytes(path)
+    )
+}
+
+
+fun multipartFile(name: String, size: Int): MockMultipartFile {
+    return MockMultipartFile(
+        name,
+        "filename",
+        null,
+        ByteArray(size)
+    )
+}
