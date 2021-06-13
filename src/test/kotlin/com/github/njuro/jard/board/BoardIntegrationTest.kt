@@ -173,12 +173,6 @@ internal class BoardIntegrationTest : MockMvcTest() {
             deleteBoard(board.label).andExpect { status { isOk() } }
             boardRepository.findByLabel(board.label).shouldBeEmpty()
         }
-
-        @Test
-        @Disabled
-        fun `don't delete non-existing board`() {
-            // TODO
-        }
     }
 
 

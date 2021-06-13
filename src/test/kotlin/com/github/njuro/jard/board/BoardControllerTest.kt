@@ -247,12 +247,6 @@ internal class BoardControllerTest : MockMvcTest() {
         }
 
         @Test
-        @Disabled
-        fun `don't delete non-existing board`() {
-            // TODO
-        }
-
-        @Test
         fun `don't delete board when IO exception is thrown`() {
             val board = board(label = "r")
             every { boardFacade.resolveBoard(board.label) } returns board.toDto()
