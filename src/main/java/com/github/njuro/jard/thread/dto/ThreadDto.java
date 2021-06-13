@@ -60,7 +60,7 @@ public class ThreadDto extends BaseDto {
    * @see PostDto
    */
   @Transient
-  @JsonIgnoreProperties("thread")
+  @JsonIgnoreProperties(value = "thread", allowSetters = true)
   private List<PostDto> replies;
 
   public void toggleLock() {

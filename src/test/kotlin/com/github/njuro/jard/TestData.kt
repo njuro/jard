@@ -13,6 +13,9 @@ import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.UserRole
 import java.time.OffsetDateTime
 
+const val TEST_ATTACHMENT_1 = "test_attachment_1.png"
+const val TEST_ATTACHMENT_2 = "test_attachment_2.png"
+
 fun board(
     label: String,
     name: String = "Board $label",
@@ -123,7 +126,7 @@ fun Thread.toForm(): ThreadForm = ThreadForm.builder()
     .locked(isLocked)
     .stickied(isStickied)
     .subject(subject)
-    .postForm(originalPost.toForm())
+    .postForm(originalPost?.toForm())
     .build()
 
 fun Post.toForm(): PostForm = PostForm.builder()

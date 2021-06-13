@@ -42,6 +42,11 @@ internal abstract class MockMvcTest : MapperTest() {
         with(csrf())
     }
 
+    protected fun MockMultipartHttpServletRequestDsl.setUp() {
+        accept = MediaType.APPLICATION_JSON
+        with(csrf())
+    }
+
 
     protected fun MockHttpServletRequestDsl.body(body: Any) {
         setUp()
@@ -50,6 +55,7 @@ internal abstract class MockMvcTest : MapperTest() {
 
 
     protected fun MockMultipartHttpServletRequestDsl.part(name: String, requestBody: Any) {
+        setUp()
         file(
             MockMultipartFile(
                 name,
@@ -60,15 +66,23 @@ internal abstract class MockMvcTest : MapperTest() {
         )
     }
 
-    protected fun MockMultipartHttpServletRequestDsl.file(name: String, filename: String) {
+    protected fun multipartFile(name: String, filename: String): MockMultipartFile {
         val path = Paths.get("src", "test", "resources", "attachments").resolve(filename)
-        file(
-            MockMultipartFile(
-                name,
-                filename,
-                Files.probeContentType(path),
-                Files.readAllBytes(path)
-            )
+        return MockMultipartFile(
+            name,
+            filename,
+            Files.probeContentType(path),
+            Files.readAllBytes(path)
+        )
+    }
+
+
+    protected fun multipartFile(name: String, size: Int): MockMultipartFile {
+        return MockMultipartFile(
+            name,
+            "filename",
+            null,
+            ByteArray(size)
         )
     }
 
