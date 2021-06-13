@@ -7,7 +7,9 @@ import com.github.njuro.jard.board.BoardSettings
 import com.github.njuro.jard.board.dto.BoardForm
 import com.github.njuro.jard.board.dto.BoardSettingsDto
 import com.github.njuro.jard.post.Post
+import com.github.njuro.jard.post.dto.PostForm
 import com.github.njuro.jard.thread.Thread
+import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.UserRole
 import java.time.OffsetDateTime
 
@@ -115,4 +117,24 @@ fun BoardSettings.toForm(): BoardSettingsDto = BoardSettingsDto.builder()
     .nsfw(isNsfw)
     .posterThreadIds(isPosterThreadIds)
     .threadLimit(threadLimit)
+    .build()
+
+fun Thread.toForm(): ThreadForm = ThreadForm.builder()
+    .locked(isLocked)
+    .stickied(isStickied)
+    .subject(subject)
+    .postForm(originalPost.toForm())
+    .build()
+
+fun Post.toForm(): PostForm = PostForm.builder()
+    .attachment(null)
+    .body(body)
+    .capcode(capcode != null)
+    .deletionCode(deletionCode)
+    .captchaToken(null)
+    .embedUrl(null)
+    .ip(ip)
+    .name(name)
+    .password(null)
+    .sage(isSage)
     .build()
