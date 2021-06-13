@@ -205,6 +205,15 @@ internal class ThreadFacadeTest : MapperTest() {
         }
 
         @Test
+        fun `generate poster id when board has them enabled`() {
+            val board = saveBoard(board(label = "r", settings = boardSettings(posterThreadIds = true)))
+            val thread = saveThread(thread(board))
+            val postForm = post(thread).toForm()
+
+            threadFacade.replyToThread(postForm, thread.toDto()).posterThreadId.shouldNotBeNull()
+        }
+
+        @Test
         fun `don't update last bump time when reply is sage`() {
             val board = saveBoard(board(label = "r"))
             val thread = saveThread(thread(board))
