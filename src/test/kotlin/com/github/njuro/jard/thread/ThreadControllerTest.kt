@@ -14,6 +14,7 @@ import com.github.njuro.jard.thread.dto.ThreadDto
 import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.utils.HttpUtils
+import com.github.njuro.jard.utils.validation.FormValidationException
 import com.github.njuro.jard.utils.validation.ValidationErrors.OBJECT_ERROR
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
@@ -148,10 +149,6 @@ internal class ThreadControllerTest : MockMvcTest() {
                 if (attachment != null) file(attachment)
                 with { it.apply { method = HttpMethod.PUT.name } }
             }
-
-        @BeforeEach
-        fun initMocks() {
-        }
 
         @Test
         fun `create valid reply`() {
@@ -346,6 +343,18 @@ internal class ThreadControllerTest : MockMvcTest() {
 
             deleteOwnPost(post.postNumber).andExpect { status { isOk() } }
             deletionCode.captured shouldBe "abcde"
+        }
+
+        @Test
+        fun `don't delete own post with incorrect deletion code`() {
+            every {
+                postFacade.deleteOwnPost(
+                    ofType(PostDto::class),
+                    ofType(String::class)
+                )
+            } throws FormValidationException("")
+
+            deleteOwnPost(post.postNumber).andExpect { status { isBadRequest() } }
         }
 
         @Test

@@ -309,6 +309,6 @@ internal class ThreadFacadeTest : MapperTest() {
     }
 
     private fun getUpdatedThread(thread: Thread): Optional<Thread> {
-        return threadRepository.findByBoardLabelAndOriginalPostPostNumber(thread.board.label, thread.threadNumber)
+        return threadRepository.findById(thread.id)
     }
 }
