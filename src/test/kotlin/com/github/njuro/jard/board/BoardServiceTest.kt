@@ -1,6 +1,6 @@
 package com.github.njuro.jard.board
 
-import com.github.njuro.jard.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.time.OffsetDateTime
 
 @SpringBootTest
-@UseMockDatabase
+@WithContainerDatabase
 internal class BoardServiceTest {
 
     @Autowired

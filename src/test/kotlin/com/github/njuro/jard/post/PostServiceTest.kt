@@ -1,6 +1,6 @@
 package com.github.njuro.jard.post
 
-import com.github.njuro.jard.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardRepository
@@ -23,7 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class PostServiceTest {
 

@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 import java.util.*
 
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class ThreadFacadeTest : MapperTest() {
 

@@ -1,6 +1,6 @@
 package com.github.njuro.jard.thread
 
-import com.github.njuro.jard.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardRepository
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
 @DataJpaTest
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class ThreadRepositoryTest {
 

@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.put
 import java.io.IOException
 
 
-@UseMockDatabase
+@WithContainerDatabase
 internal class BoardControllerTest : MockMvcTest() {
 
     @SpykBean

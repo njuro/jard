@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
 
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class BoardIntegrationTest : MockMvcTest() {
 

@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 
-@UseMockDatabase
+@WithContainerDatabase
 internal class BoardFacadeTest : MapperTest() {
 
     @Autowired

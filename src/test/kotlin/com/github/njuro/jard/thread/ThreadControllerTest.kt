@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.multipart
 import org.springframework.test.web.servlet.post
 import java.io.IOException
 
-@UseMockDatabase
+@WithContainerDatabase
 internal class ThreadControllerTest : MockMvcTest() {
 
     @MockkBean

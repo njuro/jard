@@ -1,6 +1,6 @@
 package com.github.njuro.jard.board
 
-import com.github.njuro.jard.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 @DataJpaTest
-@UseMockDatabase
+@WithContainerDatabase
 internal class BoardRepositoryTest {
 
     @Autowired

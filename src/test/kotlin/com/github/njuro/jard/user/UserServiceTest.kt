@@ -1,6 +1,6 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.user
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class UserServiceTest {
 

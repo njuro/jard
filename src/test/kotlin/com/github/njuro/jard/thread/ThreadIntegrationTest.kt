@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class ThreadIntegrationTest : MockMvcTest() {
 
