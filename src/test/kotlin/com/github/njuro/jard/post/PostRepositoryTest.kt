@@ -12,6 +12,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -31,11 +32,21 @@ internal class PostRepositoryTest {
     @Autowired
     private lateinit var threadRepository: ThreadRepository
 
+    private lateinit var board: Board
+
+    private lateinit var thread: Thread
+
+    @BeforeEach
+    fun setUp() {
+        board = boardRepository.save(board(label = "r"))
+        thread = threadRepository.save(thread(board).apply {
+            originalPost = postRepository.save(originalPost)
+        })
+    }
+
     @Test
     fun `find by board label and post number`() {
-        val board = saveBoard(board(label = "r"))
-        val thread = saveThread(thread(board))
-        val reply = saveReply(post(thread, postNumber = 2L))
+        val reply = postRepository.save(post(thread, postNumber = 2L))
 
         postRepository.findByThreadBoardLabelAndPostNumber(board.label, reply.postNumber).shouldBePresent {
             it.postNumber shouldBe reply.postNumber
@@ -45,9 +56,7 @@ internal class PostRepositoryTest {
 
     @Test
     fun `find by thread id and post number greater than`() {
-        val board = saveBoard(board(label = "r"))
-        val thread = saveThread(thread(board))
-        (2..4).forEach { saveReply(post(thread, postNumber = it.toLong())) }
+        (2..4).forEach { postRepository.save(post(thread, postNumber = it.toLong())) }
 
         postRepository.findByThreadIdAndPostNumberGreaterThanOrderByCreatedAtAsc(thread.id, 2L).map(Post::getPostNumber)
             .shouldContainExactly(3L, 4L)
@@ -55,9 +64,7 @@ internal class PostRepositoryTest {
 
     @Test
     fun `find by thread id excluding original post`() {
-        val board = saveBoard(board(label = "r"))
-        val thread = saveThread(thread(board))
-        (2L..4L).forEach { saveReply(post(thread, postNumber = it)) }
+        (2L..4L).forEach { postRepository.save(post(thread, postNumber = it)) }
 
         postRepository.findByThreadIdAndIdIsNotOrderByCreatedAtAsc(thread.id, thread.originalPost.id)
             .map(Post::getPostNumber)
@@ -66,9 +73,7 @@ internal class PostRepositoryTest {
 
     @Test
     fun `find 5 latest replies by thread id`() {
-        val board = saveBoard(board(label = "r"))
-        val thread = saveThread(thread(board))
-        (2L..8L).forEach { saveReply(post(thread, postNumber = it)) }
+        (2L..8L).forEach { postRepository.save(post(thread, postNumber = it)) }
 
         postRepository.findTop5ByThreadIdAndIdIsNotOrderByCreatedAtDesc(thread.id, thread.originalPost.id)
             .map(Post::getPostNumber)
@@ -77,25 +82,8 @@ internal class PostRepositoryTest {
 
     @Test
     fun `count number of posts in thread`() {
-        val board = saveBoard(board(label = "r"))
-        val thread = saveThread(thread(board))
-        (2L..5L).forEach { saveReply(post(thread, postNumber = it)) }
+        (2L..5L).forEach { postRepository.save(post(thread, postNumber = it)) }
 
         postRepository.countByThreadId(thread.id) shouldBe 5
     }
-
-
-    private fun saveBoard(board: Board): Board {
-        return boardRepository.save(board)
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
-    }
-
-    private fun saveReply(reply: Post): Post {
-        return postRepository.save(reply)
-    }
-
 }
