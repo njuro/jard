@@ -7,7 +7,6 @@ import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.common.InputConstraints.MAX_NAME_LENGTH
 import com.github.njuro.jard.common.InputConstraints.MAX_SUBJECT_LENGTH
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.common.WithMockUserAuthorities
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.post.dto.DeleteOwnPostDto
@@ -165,7 +164,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
     }
 
     @Test
-    @WithMockUserAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
+    @WithMockJardUser(UserAuthority.TOGGLE_STICKY_THREAD)
     fun `toggle sticky on thread`() {
         val thread = saveThread(thread(board))
 
@@ -179,7 +178,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
     }
 
     @Test
-    @WithMockUserAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
+    @WithMockJardUser(UserAuthority.TOGGLE_LOCK_THREAD)
     fun `toggle lock on thread`() {
         val thread = saveThread(thread(board))
 
@@ -194,7 +193,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
     @Nested
     @DisplayName("delete post")
-    @WithMockUserAuthorities(UserAuthority.DELETE_POST)
+    @WithMockJardUser(UserAuthority.DELETE_POST)
     inner class DeletePost {
         private fun deletePost(postNumber: Long, threadNumber: Long) = mockMvc.delete(
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/${Mappings.PATH_VARIABLE_POST}",

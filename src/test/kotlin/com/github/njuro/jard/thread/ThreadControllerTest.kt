@@ -5,7 +5,6 @@ import com.github.njuro.jard.board.BoardFacade
 import com.github.njuro.jard.board.dto.BoardDto
 import com.github.njuro.jard.common.InputConstraints.*
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.common.WithMockUserAuthorities
 import com.github.njuro.jard.post.PostFacade
 import com.github.njuro.jard.post.dto.DeleteOwnPostDto
 import com.github.njuro.jard.post.dto.PostDto
@@ -276,7 +275,7 @@ internal class ThreadControllerTest : MockMvcTest() {
     }
 
     @Test
-    @WithMockUserAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
+    @WithMockJardUser(UserAuthority.TOGGLE_STICKY_THREAD)
     fun `toggle sticky on thread`() {
         every { threadFacade.toggleStickyOnThread(ofType(ThreadDto::class)) } just Runs
 
@@ -288,7 +287,7 @@ internal class ThreadControllerTest : MockMvcTest() {
     }
 
     @Test
-    @WithMockUserAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
+    @WithMockJardUser(UserAuthority.TOGGLE_LOCK_THREAD)
     fun `toggle lock on thread`() {
         every { threadFacade.toggleLockOnThread(ofType(ThreadDto::class)) } just Runs
 
@@ -301,7 +300,7 @@ internal class ThreadControllerTest : MockMvcTest() {
 
     @Nested
     @DisplayName("delete post")
-    @WithMockUserAuthorities(UserAuthority.DELETE_POST)
+    @WithMockJardUser(UserAuthority.DELETE_POST)
     inner class DeletePost {
         private fun deletePost(postNumber: Long) = mockMvc.delete(
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/${Mappings.PATH_VARIABLE_POST}",

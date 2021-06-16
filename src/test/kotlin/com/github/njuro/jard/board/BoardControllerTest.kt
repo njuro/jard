@@ -7,7 +7,6 @@ import com.github.njuro.jard.board.dto.BoardForm
 import com.github.njuro.jard.common.Constants.MAX_THREADS_PER_PAGE
 import com.github.njuro.jard.common.InputConstraints.*
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.common.WithMockUserAuthorities
 import com.github.njuro.jard.user.UserAuthority
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.matchers.collections.shouldHaveSize
@@ -37,7 +36,7 @@ internal class BoardControllerTest : MockMvcTest() {
 
     @Nested
     @DisplayName("create board")
-    @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+    @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class CreateBoard {
         private fun createBoard(board: Board) =
             mockMvc.put(Mappings.API_ROOT_BOARDS) { body(board.toForm()) }
@@ -109,7 +108,7 @@ internal class BoardControllerTest : MockMvcTest() {
     }
 
     @Test
-    @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+    @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     fun `get attachment categories`() {
         mockMvc.get("${Mappings.API_ROOT_BOARDS}/attachment-categories") { setUp() }.andExpect { status { isOk() } }
             .andReturnConverted<Set<AttachmentCategory.Preview>>().shouldNotBeEmpty()
@@ -198,7 +197,7 @@ internal class BoardControllerTest : MockMvcTest() {
 
     @Nested
     @DisplayName("edit board")
-    @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+    @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class EditBoard {
         private fun editBoard(boardForm: BoardForm) =
             mockMvc.post("${Mappings.API_ROOT_BOARDS}/${boardForm.label}/edit") { setUp(); body(boardForm) }
@@ -232,7 +231,7 @@ internal class BoardControllerTest : MockMvcTest() {
 
     @Nested
     @DisplayName("delete board")
-    @WithMockUserAuthorities(UserAuthority.MANAGE_BOARDS)
+    @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class DeleteBoard {
         private fun deleteBoard(label: String) = mockMvc.delete("${Mappings.API_ROOT_BOARDS}/$label") { setUp() }
 
