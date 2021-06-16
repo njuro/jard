@@ -10,7 +10,10 @@ import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.dto.PostForm
 import com.github.njuro.jard.thread.Thread
 import com.github.njuro.jard.thread.dto.ThreadForm
+import com.github.njuro.jard.user.User
+import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.user.UserRole
+import com.github.njuro.jard.user.dto.UserForm
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mock.web.MockMultipartFile
 import java.nio.file.Files
@@ -108,6 +111,30 @@ fun post(
     .posterThreadId(posterThreadId)
     .build()
 
+fun user(
+    username: String = "User",
+    email: String = "user@gmail.com",
+    password: String = "password",
+    lastLogin: OffsetDateTime = OffsetDateTime.now(),
+    lastLoginIp: String = "127.0.0.1",
+    createdAt: OffsetDateTime = OffsetDateTime.now(),
+    registrationIp: String = "127.0.0.1",
+    authorities: Set<UserAuthority> = emptySet(),
+    role: UserRole = UserRole.USER,
+    enabled: Boolean = true
+) = User.builder()
+    .username(username)
+    .email(email)
+    .password(password)
+    .lastLogin(lastLogin)
+    .lastLoginIp(lastLoginIp)
+    .createdAt(createdAt)
+    .registrationIp(registrationIp)
+    .authorities(authorities)
+    .role(role)
+    .enabled(enabled)
+    .build()
+
 fun Board.toForm(): BoardForm = BoardForm.builder()
     .label(label)
     .name(name)
@@ -144,6 +171,15 @@ fun Post.toForm(): PostForm = PostForm.builder()
     .name(name)
     .password(null)
     .sage(isSage)
+    .build()
+
+fun User.toForm(): UserForm = UserForm.builder()
+    .username(username)
+    .email(email)
+    .password(password)
+    .passwordRepeated(password)
+    .registrationIp(registrationIp)
+    .role(role)
     .build()
 
 fun randomString(size: Int): String = RandomStringUtils.random(size)

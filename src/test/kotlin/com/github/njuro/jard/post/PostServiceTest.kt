@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional
 @SpringBootTest
 @UseMockDatabase
 @Transactional
-class PostServiceTest {
+internal class PostServiceTest {
 
     @Autowired
     private lateinit var postService: PostService
