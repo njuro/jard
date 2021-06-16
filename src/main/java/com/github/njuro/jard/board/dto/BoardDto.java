@@ -41,6 +41,6 @@ public class BoardDto extends BaseDto {
    *
    * @see ThreadDto
    */
-  @JsonIgnoreProperties("board")
+  @JsonIgnoreProperties(value = "board", allowSetters = true)
   private List<ThreadDto> threads;
 }
