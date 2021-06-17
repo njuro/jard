@@ -6,8 +6,10 @@ import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.utils.validation.FormValidationException
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldBePresent
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldNotBeBlank
@@ -77,5 +79,47 @@ internal class UserFacadeTest : MapperTest() {
 
     @Nested
     @DisplayName("edit user")
-    inner class EditUser
+    inner class EditUser {
+        @Test
+        fun `edit user details without password`() {
+            val originalUser = user(
+                username = "Anonymous",
+                role = UserRole.MODERATOR,
+                email = "old@mail.com",
+                authorities = setOf(UserAuthority.MANAGE_BANS)
+            )
+            val updatedUser =
+                originalUser.toForm().apply { username = "John"; role = UserRole.ADMIN; email = "new@mail.com" }
+
+            userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser).should {
+                it.username shouldBe originalUser.username
+                it.email shouldBe updatedUser.email
+                it.role shouldBe updatedUser.role
+                it.authorities.shouldContainExactly(updatedUser.role.defaultAuthorites)
+            }
+        }
+
+        @Test
+        fun `edit user password`() {
+            val originalUser = user(username = "Anonymous")
+            val updatedUser = originalUser.toForm().apply { password = "newPassword"; passwordRepeated = "newPassword" }
+
+            userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser)
+            userRepository.findByUsernameIgnoreCase(originalUser.username).shouldBePresent {
+                it.password.shouldNotBeBlank()
+                it.password shouldNotBe updatedUser.password
+            }
+        }
+
+        @Test
+        fun `don't edit user when password don't match`() {
+            val originalUser = user(username = "Anonymous")
+            val updatedUser =
+                originalUser.toForm().apply { password = "newPassword"; passwordRepeated = "anotherPassword" }
+
+            shouldThrow<FormValidationException> {
+                userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser)
+            }
+        }
+    }
 }
