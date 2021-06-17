@@ -14,7 +14,6 @@ import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.utils.HttpUtils
 import com.github.njuro.jard.utils.validation.FormValidationException
-import com.github.njuro.jard.utils.validation.ValidationErrors.OBJECT_ERROR
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
@@ -122,12 +121,12 @@ internal class ThreadControllerTest : MockMvcTest() {
 
         @Test
         fun `don't create thread without subject and body`() {
-            createThread(thread(board).toForm()).andExpectValidationError(OBJECT_ERROR)
+            createThread(thread(board).toForm()).andExpectValidationError("emptySubjectAndComment")
         }
 
         @Test
         fun `don't create thread without attachment`() {
-            createThread(thread(board).toForm(), attachment = null).andExpectValidationError(OBJECT_ERROR)
+            createThread(thread(board).toForm(), attachment = null).andExpectValidationError("uploadedAttachment")
         }
     }
 
@@ -205,13 +204,13 @@ internal class ThreadControllerTest : MockMvcTest() {
             replyToThread(
                 post(thread).toForm(),
                 attachment = multipartFile("attachment", MAX_ATTACHMENT_SIZE + 1)
-            ).andExpectValidationError(OBJECT_ERROR)
+            ).andExpectValidationError("attachmentTooBig")
         }
 
         @Test
         fun `don't create reply without attachment and body`() {
             replyToThread(post(thread).toForm(), attachment = null)
-                .andExpectValidationError(OBJECT_ERROR)
+                .andExpectValidationError("attachmentOrNonEmptyBody")
         }
 
     }
