@@ -120,7 +120,7 @@ fun user(
     createdAt: OffsetDateTime = OffsetDateTime.now(),
     registrationIp: String = "127.0.0.1",
     authorities: Set<UserAuthority> = emptySet(),
-    role: UserRole = UserRole.USER,
+    role: UserRole? = UserRole.USER,
     enabled: Boolean = true
 ) = User.builder()
     .username(username)
