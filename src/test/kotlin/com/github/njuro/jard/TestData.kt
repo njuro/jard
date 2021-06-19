@@ -140,7 +140,7 @@ fun user(
     .build()
 
 fun ban(
-    ip: String = "127.0.01",
+    ip: String = "127.0.0.1",
     status: BanStatus = BanStatus.ACTIVE,
     reason: String = "Spam",
     bannedBy: User? = null,

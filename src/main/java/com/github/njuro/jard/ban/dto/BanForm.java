@@ -1,5 +1,7 @@
 package com.github.njuro.jard.ban.dto;
 
+import static com.github.njuro.jard.common.InputConstraints.MAX_BAN_REASON_LENGTH;
+
 import com.github.njuro.jard.ban.Ban;
 import com.github.njuro.jard.ban.BanStatus;
 import com.github.njuro.jard.common.Constants;
@@ -23,7 +25,7 @@ public class BanForm {
   private String ip;
 
   /** {@link Ban#reason} */
-  @Size(max = 1000, message = "{validation.ban.reason.max}")
+  @Size(max = MAX_BAN_REASON_LENGTH, message = "{validation.ban.reason.max}")
   private String reason;
 
   /** {@link Ban#validTo} */

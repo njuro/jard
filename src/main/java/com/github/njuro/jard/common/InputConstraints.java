@@ -48,6 +48,9 @@ public final class InputConstraints {
   /** Min length of {@link User#password} (in characters). */
   public static final int MIN_PASSWORD_LENGTH = 8;
 
+  /** Max length of {@link com.github.njuro.jard.ban.Ban#reason} (in characters). */
+  public static final int MAX_BAN_REASON_LENGTH = 8;
+
   /**
    * Since Jackson cannot serialize static fields we have to copy all the constants into non-static
    * singleton class.
@@ -70,5 +73,6 @@ public final class InputConstraints {
     public final int MIN_USERNAME_LENGTH = InputConstraints.MIN_USERNAME_LENGTH;
     public final int MAX_USERNAME_LENGTH = InputConstraints.MAX_USERNAME_LENGTH;
     public final int MIN_PASSWORD_LENGTH = InputConstraints.MIN_PASSWORD_LENGTH;
+    public final int MAX_BAN_REASON_LENGTH = InputConstraints.MAX_BAN_REASON_LENGTH;
   }
 }

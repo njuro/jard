@@ -1,8 +1,11 @@
 package com.github.njuro.jard.ban;
 
+import static com.github.njuro.jard.common.InputConstraints.MAX_BAN_REASON_LENGTH;
+
 import com.github.njuro.jard.common.Constants;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,5 +21,6 @@ public class UnbanForm {
   private String ip;
 
   /** {@link Ban#unbanReason} */
+  @Size(max = MAX_BAN_REASON_LENGTH, message = "{validation.ban.reason.max}")
   private String reason;
 }
