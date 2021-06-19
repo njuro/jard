@@ -1,5 +1,8 @@
 package com.github.njuro.jard
 
+import com.github.njuro.jard.ban.Ban
+import com.github.njuro.jard.ban.BanMapper
+import com.github.njuro.jard.ban.dto.BanDto
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardMapper
 import com.github.njuro.jard.board.dto.BoardDto
@@ -30,6 +33,9 @@ internal abstract class MapperTest {
     @Autowired
     protected lateinit var userMapper: UserMapper
 
+    @Autowired
+    protected lateinit var banMapper: BanMapper
+
     fun Board.toDto(): BoardDto = boardMapper.toDto(this)
 
     fun Thread.toDto(): ThreadDto = threadMapper.toDto(this)
@@ -37,5 +43,7 @@ internal abstract class MapperTest {
     fun Post.toDto(): PostDto = postMapper.toDto(this)
 
     fun User.toDto(): UserDto = userMapper.toDto(this)
+
+    fun Ban.toDto(): BanDto = banMapper.toDto(this)
 
 }

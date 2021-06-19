@@ -4,6 +4,7 @@ import com.github.njuro.jard.attachment.Attachment
 import com.github.njuro.jard.attachment.AttachmentCategory
 import com.github.njuro.jard.ban.Ban
 import com.github.njuro.jard.ban.BanStatus
+import com.github.njuro.jard.ban.UnbanForm
 import com.github.njuro.jard.ban.dto.BanForm
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardSettings
@@ -210,6 +211,11 @@ fun Ban.toForm(): BanForm = BanForm.builder()
     .reason(reason)
     .validTo(validTo)
     .warning(status == BanStatus.WARNING)
+    .build()
+
+fun Ban.toUnbanForm(unbanReason: String = "Unban"): UnbanForm = UnbanForm.builder()
+    .ip(ip)
+    .reason(unbanReason)
     .build()
 
 fun randomString(size: Int): String = RandomStringUtils.random(size)
