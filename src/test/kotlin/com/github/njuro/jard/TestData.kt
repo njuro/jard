@@ -2,6 +2,8 @@ package com.github.njuro.jard
 
 import com.github.njuro.jard.attachment.Attachment
 import com.github.njuro.jard.attachment.AttachmentCategory
+import com.github.njuro.jard.attachment.AttachmentMetadata
+import com.github.njuro.jard.attachment.EmbedData
 import com.github.njuro.jard.ban.Ban
 import com.github.njuro.jard.ban.BanStatus
 import com.github.njuro.jard.ban.UnbanForm
@@ -113,6 +115,69 @@ fun post(
     .sage(sage)
     .createdAt(createdAt)
     .posterThreadId(posterThreadId)
+    .build()
+
+fun attachment(
+    category: AttachmentCategory = AttachmentCategory.IMAGE,
+    folder: String = "src/test/resources/attachments",
+    originalFilename: String = TEST_ATTACHMENT_1,
+    filename: String = TEST_ATTACHMENT_1,
+    thumbnailFilename: String? = null,
+    remoteStorageUrl: String? = null,
+    remoteStorageThumbnailUrl: String? = null,
+    metadata: AttachmentMetadata? = metadata(),
+    embedData: EmbedData? = null
+): Attachment = Attachment.builder()
+    .category(category)
+    .folder(folder)
+    .originalFilename(originalFilename)
+    .filename(filename)
+    .thumbnailFilename(thumbnailFilename)
+    .remoteStorageUrl(remoteStorageUrl)
+    .remoteStorageThumbnailUrl(remoteStorageThumbnailUrl)
+    .metadata(metadata)
+    .embedData(embedData)
+    .build().also {
+        if (it.metadata != null) {
+            it.metadata.attachment = it
+        }
+        if (it.embedData != null) {
+            it.embedData.attachment = it
+        }
+    }
+
+fun metadata(
+    mimeType: String = "image/jpeg",
+    width: Int = 0,
+    height: Int = 0,
+    thumbnailWidth: Int = 0,
+    thumbnailHeight: Int = 0,
+    fileSize: String = "2.5 MB",
+    duration: String? = null,
+    checksum: String = "9e107d9d372bb6826bd81d3542a419d6"
+): AttachmentMetadata = AttachmentMetadata.builder()
+    .mimeType(mimeType)
+    .width(width)
+    .height(height)
+    .thumbnailWidth(thumbnailWidth)
+    .thumbnailHeight(thumbnailHeight)
+    .fileSize(fileSize)
+    .duration(duration)
+    .checksum(checksum)
+    .build()
+
+fun embedData(
+    embedUrl: String? = null,
+    thumbnailUrl: String? = null,
+    providerName: String? = null,
+    uploaderName: String? = null,
+    renderedHtml: String? = null
+): EmbedData = EmbedData.builder()
+    .embedUrl(embedUrl)
+    .thumbnailUrl(thumbnailUrl)
+    .providerName(providerName)
+    .uploaderName(uploaderName)
+    .renderedHtml(renderedHtml)
     .build()
 
 fun user(

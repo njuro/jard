@@ -1,5 +1,8 @@
 package com.github.njuro.jard
 
+import com.github.njuro.jard.attachment.Attachment
+import com.github.njuro.jard.attachment.AttachmentMapper
+import com.github.njuro.jard.attachment.dto.AttachmentDto
 import com.github.njuro.jard.ban.Ban
 import com.github.njuro.jard.ban.BanMapper
 import com.github.njuro.jard.ban.dto.BanDto
@@ -31,6 +34,9 @@ internal abstract class MapperTest {
     protected lateinit var postMapper: PostMapper
 
     @Autowired
+    protected lateinit var attachmentMapper: AttachmentMapper
+
+    @Autowired
     protected lateinit var userMapper: UserMapper
 
     @Autowired
@@ -42,6 +48,8 @@ internal abstract class MapperTest {
 
     fun Post.toDto(): PostDto = postMapper.toDto(this)
 
+    fun Attachment.toDto(): AttachmentDto = attachmentMapper.toDto(this)
+    
     fun User.toDto(): UserDto = userMapper.toDto(this)
 
     fun Ban.toDto(): BanDto = banMapper.toDto(this)
