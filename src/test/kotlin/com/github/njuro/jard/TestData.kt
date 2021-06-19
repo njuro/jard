@@ -2,6 +2,9 @@ package com.github.njuro.jard
 
 import com.github.njuro.jard.attachment.Attachment
 import com.github.njuro.jard.attachment.AttachmentCategory
+import com.github.njuro.jard.ban.Ban
+import com.github.njuro.jard.ban.BanStatus
+import com.github.njuro.jard.ban.dto.BanForm
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardSettings
 import com.github.njuro.jard.board.dto.BoardForm
@@ -122,7 +125,7 @@ fun user(
     authorities: Set<UserAuthority> = emptySet(),
     role: UserRole? = UserRole.USER,
     enabled: Boolean = true
-) = User.builder()
+): User = User.builder()
     .username(username)
     .email(email)
     .password(password)
@@ -133,6 +136,26 @@ fun user(
     .authorities(authorities)
     .role(role)
     .enabled(enabled)
+    .build()
+
+fun ban(
+    ip: String = "127.0.01",
+    status: BanStatus = BanStatus.ACTIVE,
+    reason: String = "Spam",
+    bannedBy: User? = null,
+    unbannedBy: User? = null,
+    unbanReason: String? = null,
+    validFrom: OffsetDateTime = OffsetDateTime.now(),
+    validTo: OffsetDateTime? = null
+): Ban = Ban.builder()
+    .ip(ip)
+    .status(status)
+    .reason(reason)
+    .bannedBy(bannedBy)
+    .unbannedBy(unbannedBy)
+    .unbanReason(unbanReason)
+    .validFrom(validFrom)
+    .validTo(validTo)
     .build()
 
 fun Board.toForm(): BoardForm = BoardForm.builder()
@@ -180,6 +203,13 @@ fun User.toForm(): UserForm = UserForm.builder()
     .passwordRepeated(password)
     .registrationIp(registrationIp)
     .role(role)
+    .build()
+
+fun Ban.toForm(): BanForm = BanForm.builder()
+    .ip(ip)
+    .reason(reason)
+    .validTo(validTo)
+    .warning(status == BanStatus.WARNING)
     .build()
 
 fun randomString(size: Int): String = RandomStringUtils.random(size)
