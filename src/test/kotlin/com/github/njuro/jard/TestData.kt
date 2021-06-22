@@ -12,6 +12,7 @@ import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardSettings
 import com.github.njuro.jard.board.dto.BoardForm
 import com.github.njuro.jard.board.dto.BoardSettingsDto
+import com.github.njuro.jard.common.Constants
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.dto.PostForm
 import com.github.njuro.jard.thread.Thread
@@ -26,8 +27,9 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.OffsetDateTime
 
-const val TEST_ATTACHMENT_1 = "test_attachment_1.png"
-const val TEST_ATTACHMENT_2 = "test_attachment_2.png"
+const val TEST_ATTACHMENT_PNG = "test_attachment.png"
+const val TEST_ATTACHMENT_AVI = "test_attachment.avi"
+const val TEST_ATTACHMENT_DOCX = "test_attachment.docx"
 
 fun board(
     label: String,
@@ -120,8 +122,8 @@ fun post(
 fun attachment(
     category: AttachmentCategory = AttachmentCategory.IMAGE,
     folder: String = "src/test/resources/attachments",
-    originalFilename: String = TEST_ATTACHMENT_1,
-    filename: String = TEST_ATTACHMENT_1,
+    originalFilename: String = TEST_ATTACHMENT_PNG,
+    filename: String = TEST_ATTACHMENT_PNG,
     thumbnailFilename: String? = null,
     remoteStorageUrl: String? = null,
     remoteStorageThumbnailUrl: String? = null,
@@ -304,3 +306,5 @@ fun multipartFile(name: String, size: Int): MockMultipartFile {
         ByteArray(size)
     )
 }
+
+fun attachmentPath(first: String, vararg more: String) = Constants.USER_CONTENT_PATH.resolve(Paths.get(first, *more))

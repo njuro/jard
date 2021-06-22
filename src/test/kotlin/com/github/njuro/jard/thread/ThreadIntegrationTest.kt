@@ -66,7 +66,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
     inner class CreateThread {
         private fun createThread(
             threadForm: ThreadForm,
-            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_1)
+            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_PNG)
         ) =
             mockMvc.multipart(Mappings.API_ROOT_THREADS, board.label) {
                 part("threadForm", threadForm)
@@ -94,7 +94,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
         private fun replyToThread(
             postForm: PostForm,
             thread: Thread,
-            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_1)
+            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_PNG)
         ) =
             mockMvc.multipart(
                 "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}",

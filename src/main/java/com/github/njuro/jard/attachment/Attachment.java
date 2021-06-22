@@ -117,6 +117,6 @@ public class Attachment extends BaseEntity {
       return null;
     }
 
-    return Paths.get(folder, "thumbs").toString();
+    return Paths.get(folder, Constants.THUMBNAIL_FOLDER_NAME).toString();
   }
 }

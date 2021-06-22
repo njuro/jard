@@ -26,6 +26,9 @@ public class Constants {
   public static final Path USER_CONTENT_PATH =
       Paths.get(System.getProperty("user.home"), "jard-usercontent");
 
+  /** Name of folder where attachment thumbnails are stored */
+  public static final String THUMBNAIL_FOLDER_NAME = "thumbs";
+
   /** Default file extension for thumbnails of non-image files (video, pdf...). */
   public static final String DEFAULT_THUMBNAIL_EXTENSION = "png";
 

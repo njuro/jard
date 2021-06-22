@@ -70,7 +70,7 @@ internal class ThreadControllerTest : MockMvcTest() {
     inner class CreateThread {
         private fun createThread(
             threadForm: ThreadForm,
-            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_1)
+            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_PNG)
         ) =
             mockMvc.multipart(Mappings.API_ROOT_THREADS, board.label) {
                 part("threadForm", threadForm)
@@ -88,7 +88,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             response.threadNumber shouldBe thread.threadNumber
             threadForm.captured.should {
                 it.postForm.ip shouldStartWith "0"
-                it.postForm.attachment.originalFilename shouldBe TEST_ATTACHMENT_1
+                it.postForm.attachment.originalFilename shouldBe TEST_ATTACHMENT_PNG
             }
         }
 
@@ -135,7 +135,7 @@ internal class ThreadControllerTest : MockMvcTest() {
     inner class ReplyToThread {
         private fun replyToThread(
             postForm: PostForm,
-            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_1)
+            attachment: MockMultipartFile? = multipartFile("attachment", TEST_ATTACHMENT_PNG)
         ) =
             mockMvc.multipart(
                 "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}",
@@ -160,7 +160,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             response.postNumber shouldBe post.postNumber
             postForm.captured.should {
                 it.ip shouldStartWith "0"
-                it.attachment.originalFilename shouldBe TEST_ATTACHMENT_1
+                it.attachment.originalFilename shouldBe TEST_ATTACHMENT_PNG
             }
         }
 
