@@ -287,11 +287,11 @@ fun Ban.toUnbanForm(unbanReason: String = "Unban"): UnbanForm = UnbanForm.builde
 
 fun randomString(size: Int): String = RandomStringUtils.random(size)
 
-fun multipartFile(name: String, filename: String): MockMultipartFile {
+fun multipartFile(name: String, filename: String, originalFilename: String = filename): MockMultipartFile {
     val path = Paths.get("src", "test", "resources", "attachments").resolve(filename)
     return MockMultipartFile(
         name,
-        filename,
+        originalFilename,
         Files.probeContentType(path),
         Files.readAllBytes(path)
     )

@@ -77,7 +77,7 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
    * @return created {@link Attachment}
    * @throws FormValidationException if saving of attachment fails or filename has no extension
    */
-  public AttachmentDto createAttachment(MultipartFile file, String mimeType, Path folder) {
+  private AttachmentDto createAttachment(MultipartFile file, String mimeType, Path folder) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     if (ext == null || ext.isEmpty()) {
       throw new FormValidationException("Name of uploaded file must have an extension");
