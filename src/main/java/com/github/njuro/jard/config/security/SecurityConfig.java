@@ -124,6 +124,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .requestMatchers(EndpointRequest.toAnyEndpoint())
         .hasAuthority(UserAuthority.ACTUATOR_ACCESS.name())
+        .antMatchers(Mappings.API_ROOT + "/secured")
+        .authenticated()
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

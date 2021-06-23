@@ -13,6 +13,7 @@ import com.github.njuro.jard.board.BoardSettings
 import com.github.njuro.jard.board.dto.BoardForm
 import com.github.njuro.jard.board.dto.BoardSettingsDto
 import com.github.njuro.jard.common.Constants
+import com.github.njuro.jard.config.security.JsonUsernamePasswordAuthenticationFilter
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.dto.PostForm
 import com.github.njuro.jard.thread.Thread
@@ -24,6 +25,7 @@ import com.github.njuro.jard.user.dto.UserForm
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mock.web.MockMultipartFile
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.OffsetDateTime
 
@@ -226,6 +228,17 @@ fun ban(
     .validTo(validTo)
     .build()
 
+fun loginRequest(
+    username: String,
+    password: String,
+    rememberMe: Boolean = false
+): JsonUsernamePasswordAuthenticationFilter.LoginRequest =
+    JsonUsernamePasswordAuthenticationFilter.LoginRequest.builder()
+        .username(username)
+        .password(password)
+        .rememberMe(rememberMe)
+        .build()
+
 fun Board.toForm(): BoardForm = BoardForm.builder()
     .label(label)
     .name(name)
@@ -307,4 +320,5 @@ fun multipartFile(name: String, size: Int): MockMultipartFile {
     )
 }
 
-fun attachmentPath(first: String, vararg more: String) = Constants.USER_CONTENT_PATH.resolve(Paths.get(first, *more))
+fun attachmentPath(first: String, vararg more: String): Path =
+    Constants.USER_CONTENT_PATH.resolve(Paths.get(first, *more))

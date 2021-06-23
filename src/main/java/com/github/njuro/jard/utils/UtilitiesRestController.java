@@ -19,4 +19,10 @@ public class UtilitiesRestController {
   public InputConstraints.Values getInputConstraints() {
     return InputConstraints.Values.INSTANCE;
   }
+
+  @GetMapping(Mappings.API_ROOT + "/secured")
+  public ResponseEntity<Object> securedEndpoint() {
+    // for testing purposes
+    return ResponseEntity.ok().build();
+  }
 }
