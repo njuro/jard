@@ -3,8 +3,6 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 jobs:
   build:
-    branches:
-      only: master
     docker:
       - image: cimg/openjdk:11.0.10-browsers
     steps:
@@ -29,9 +27,7 @@ workflows:
   default:
     jobs:
       - build:
+          context: jard
           filters:
             branches:
-              only:
-                -master
-
-          context: jard
+              only: master
