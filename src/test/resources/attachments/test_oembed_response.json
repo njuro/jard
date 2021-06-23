@@ -1,0 +1,15 @@
+{
+  "title": "mock-title",
+  "author_name": "mock-uploader",
+  "author_url": "https://mock-service.com/",
+  "type": "video",
+  "height": 150,
+  "width": "60%",
+  "version": "1.0",
+  "provider_name": "mock-embedded-attachment-handler",
+  "provider_url": "https://mock-service.com/",
+  "thumbnail_height": 100,
+  "thumbnail_width": 100,
+  "thumbnail_url": "mock-thumbnail-url",
+  "html": "<b>mock-data</b>"
+}

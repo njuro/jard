@@ -65,6 +65,7 @@
         <springmockk.version>3.0.1</springmockk.version>
         <zonky-embedded.version>2.0.1</zonky-embedded.version>
         <flyway-spring-test.version>7.0.0</flyway-spring-test.version>
+        <mockwebserver.version>4.9.1</mockwebserver.version>
         <skipGitHooks>false</skipGitHooks>
     </properties>
 
@@ -338,7 +339,23 @@
             <version>${flyway-spring-test.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>${mockwebserver.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.squareup.okhttp3</groupId>
+                    <artifactId>okhttp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${mockwebserver.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
