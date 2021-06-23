@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.2
 jobs:
   build:
     machine:
@@ -12,7 +10,6 @@ jobs:
       - run:
           name: Maven build and test
           command: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar spring-boot:build-image -Dsonar.projectKey=njuro_jard -Dsonar.organization=jard -Dsonar.host.url=https://sonarcloud.io
-      - sonarcloud/scan
       - run:
           name: Remove jard files from cache
           command: rm -rf ~/.m2/repository/com/github/njuro
