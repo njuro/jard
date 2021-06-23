@@ -1,6 +1,6 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.database.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.user
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.transaction.annotation.Transactional
 
 @DataJpaTest
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class UserRepositoryTest {
 

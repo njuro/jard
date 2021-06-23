@@ -1,7 +1,7 @@
 package com.github.njuro.jard.user
 
 import com.github.njuro.jard.MapperTest
-import com.github.njuro.jard.database.UseMockDatabase
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.utils.validation.FormValidationException
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-@UseMockDatabase
+@WithContainerDatabase
 @Transactional
 internal class UserFacadeTest : MapperTest() {
 
