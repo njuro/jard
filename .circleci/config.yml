@@ -3,12 +3,10 @@ orbs:
   sonarcloud: sonarsource/sonarcloud@1.0.2
 jobs:
   build:
-    docker:
-      - image: cimg/openjdk:11.0.10-browsers
+    machine:
+      image: ubuntu-2004:202104-01
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.6
       - restore_cache:
           key: jard
       - run:
