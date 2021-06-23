@@ -33,13 +33,13 @@
         <spring-boot-configuration-processor.version>2.5.0</spring-boot-configuration-processor.version>
         <jjwt.version>0.9.1</jjwt.version>
         <postgresql.version>42.2.20</postgresql.version>
-        <aws-sdk-s3.version>1.11.1029</aws-sdk-s3.version>
-        <tika.version>1.26</tika.version>
+        <aws-sdk-s3.version>1.12.10</aws-sdk-s3.version>
+        <tika.version>2.0.0-BETA</tika.version>
         <thumbnailator.version>0.4.14</thumbnailator.version>
         <humble-video.version>0.3.0</humble-video.version>
-        <pdfbox.version>2.0.23</pdfbox.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <oembed.version>0.8.1</oembed.version>
-        <commons-io.version>2.9.0</commons-io.version>
+        <commons-io.version>2.10.0</commons-io.version>
         <jfilter.version>1.0.18</jfilter.version>
         <offline-geoip.version>0.1.12</offline-geoip.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -63,7 +63,7 @@
         <kotest-assertions.version>4.6.0</kotest-assertions.version>
         <mockk.version>1.11.0</mockk.version>
         <springmockk.version>3.0.1</springmockk.version>
-        <zonky-embedded.version>2.0.0</zonky-embedded.version>
+        <zonky-embedded.version>2.0.1</zonky-embedded.version>
         <flyway-spring-test.version>7.0.0</flyway-spring-test.version>
         <skipGitHooks>false</skipGitHooks>
     </properties>
