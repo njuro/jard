@@ -37,7 +37,7 @@
         <tika.version>1.26</tika.version>
         <thumbnailator.version>0.4.14</thumbnailator.version>
         <humble-video.version>0.3.0</humble-video.version>
-        <pdfbox.version>2.0.23</pdfbox.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <oembed.version>0.8.1</oembed.version>
         <commons-io.version>2.9.0</commons-io.version>
         <jfilter.version>1.0.18</jfilter.version>
