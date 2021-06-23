@@ -95,5 +95,5 @@
       "url": "heroku/java"
     }
   ],
-  "stack": "heroku-18"
+  "stack": "heroku-20"
 }
