@@ -11,7 +11,7 @@ jobs:
           key: jard
       - run:
           name: Maven build and test
-          command: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar spring-boot:build-image -Dsonar.projectKey=njuro_jard
+          command: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar spring-boot:build-image -Dsonar.projectKey=njuro_jard -Dsonar.host.url=https://sonarcloud.io 
       - sonarcloud/scan
       - run:
           name: Remove jard files from cache
