@@ -7,6 +7,8 @@ jobs:
       - image: cimg/openjdk:11.0.10-browsers
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.6
       - restore_cache:
           key: jard
       - run:
