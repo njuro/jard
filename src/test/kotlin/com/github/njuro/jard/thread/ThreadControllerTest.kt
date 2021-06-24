@@ -48,17 +48,14 @@ internal class ThreadControllerTest : MockMvcTest() {
 
     @MockkBean
     private lateinit var postFacade: PostFacade
-
-    @MockkBean
-    private lateinit var httpUtils: HttpUtils
-
+    
     private val board = board(label = "r")
     private val thread = thread(board)
     private val post = post(thread)
 
     @BeforeEach
     fun initMocks() {
-        every { httpUtils.getClientIp(any()) } returns "0.0.0.0"
+        every { HttpUtils.getClientIp(any()) } returns "0.0.0.0"
         every { boardFacade.resolveBoard(board.label) } returns board.toDto()
         every { threadFacade.resolveThread(board.label, thread.threadNumber) } returns thread.toDto()
         every { postFacade.resolvePost(board.label, post.postNumber) } returns post.toDto()
@@ -195,7 +192,7 @@ internal class ThreadControllerTest : MockMvcTest() {
 
         @Test
         fun `don't create reply with invalid ip`() {
-            every { httpUtils.getClientIp(any()) } returns "a.b.c.d"
+            every { HttpUtils.getClientIp(any()) } returns "a.b.c.d"
             replyToThread(post(thread).toForm()).andExpectValidationError("ip")
         }
 

@@ -43,7 +43,7 @@ public class HttpUtils {
    * @param request HTTP request to get IP from
    * @return retrieved client IP address or {@code null} if none was retrieved
    */
-  public String getClientIp(HttpServletRequest request) {
+  public static String getClientIp(HttpServletRequest request) {
     if (request == null) {
       return null;
     }
