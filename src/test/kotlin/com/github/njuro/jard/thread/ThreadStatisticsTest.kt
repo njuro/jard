@@ -37,27 +37,23 @@ internal class ThreadStatisticsTest {
     private lateinit var entityManager: EntityManager
 
     @Test
-    @Suppress("UNUSED_VARIABLE")
     fun `extract thread statistics`() {
         val board = saveBoard(board(label = "r"))
         val thread = saveThread(thread(board))
-        val attachment1 = attachment(filename = "attachment1.jpg", metadata = metadata(mimeType = "image/jpg"))
-        val attachment2 = attachment(filename = "attachment2.jpg", metadata = metadata(mimeType = "image/jpg"))
-        val attachment3 = attachment(filename = "attachment3.jpg", metadata = metadata(mimeType = "image/jpg"))
-        val attachment4 = attachment(filename = "attachment4.jpg", metadata = metadata(mimeType = "image/jpg"))
-        val reply1 = saveReply(post(thread, ip = "127.0.0.1", postNumber = 2L))
-        val reply2 = saveReply(post(thread, ip = "127.0.0.2", postNumber = 3L, attachment = attachment1))
-        val reply3 = saveReply(post(thread, ip = "127.0.0.2", postNumber = 4L))
-        val reply4 = saveReply(post(thread, ip = "127.0.0.1", postNumber = 5L, attachment = attachment2))
-        val reply5 = saveReply(post(thread, ip = "127.0.0.3", postNumber = 6L, attachment = attachment3))
-        val reply6 = saveReply(post(thread, ip = "127.0.0.1", postNumber = 7L, attachment = attachment4))
+        saveReply(post(thread, ip = "127.0.0.1", postNumber = 2L))
+        saveReply(post(thread, ip = "127.0.0.2", postNumber = 3L, attachment = attachment(filename = "1.jpg")))
+        saveReply(post(thread, ip = "127.0.0.2", postNumber = 4L))
+        saveReply(post(thread, ip = "127.0.0.1", postNumber = 5L, attachment = attachment(filename = "2.jpg")))
+        saveReply(post(thread, ip = "127.0.0.3", postNumber = 6L, attachment = attachment(filename = "3.jpg")))
+        saveReply(post(thread, ip = "127.0.0.1", postNumber = 7L, attachment = attachment(filename = "4.jpg")))
+        saveReply(post(thread, ip = "127.0.0.1", postNumber = 8L, attachment = attachment(filename = "5.jpg")))
         entityManager.flush()
         entityManager.clear()
 
         threadRepository.findById(thread.id).shouldBePresent().statistics.should {
-            it.replyCount shouldBe 6
-            it.posterCount shouldBe 3
-            it.attachmentCount shouldBe 4
+            it.replyCount shouldBe 7
+            it.posterCount shouldBe 4
+            it.attachmentCount shouldBe 5
         }
     }
 

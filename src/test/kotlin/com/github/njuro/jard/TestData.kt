@@ -43,7 +43,7 @@ const val TEST_OEMBED_RESPONSE = "test_oembed_response.json"
 
 fun board(
     label: String,
-    name: String = "Board $label",
+    name: String = label,
     createdAt: OffsetDateTime = OffsetDateTime.now(),
     pageCount: Int = 1,
     postCounter: Long = 1L,
@@ -103,11 +103,11 @@ fun post(
     body: String? = null,
     capcode: UserRole? = null,
     name: String? = null,
-    ip: String = "127.0.0.1",
+    ip: String = "",
     countryCode: String? = null,
     countryName: String? = null,
     postNumber: Long = 1L,
-    deletionCode: String = "ABCDEF",
+    deletionCode: String = "",
     tripcode: String? = null,
     sage: Boolean = false,
     createdAt: OffsetDateTime = OffsetDateTime.now(),
@@ -131,9 +131,9 @@ fun post(
 
 fun attachment(
     category: AttachmentCategory = AttachmentCategory.IMAGE,
-    folder: String = "src/test/resources/attachments",
-    originalFilename: String = TEST_ATTACHMENT_PNG,
-    filename: String = TEST_ATTACHMENT_PNG,
+    folder: String = "",
+    originalFilename: String = "",
+    filename: String = "",
     thumbnailFilename: String? = null,
     remoteStorageUrl: String? = null,
     remoteStorageThumbnailUrl: String? = null,
@@ -159,14 +159,14 @@ fun attachment(
     }
 
 fun metadata(
-    mimeType: String? = null,
+    mimeType: String = "",
     width: Int = 0,
     height: Int = 0,
     thumbnailWidth: Int = 0,
     thumbnailHeight: Int = 0,
-    fileSize: String = "0 B",
+    fileSize: String = "",
     duration: String? = null,
-    checksum: String = "xxxxxx"
+    checksum: String = ""
 ): AttachmentMetadata = AttachmentMetadata.builder()
     .mimeType(mimeType)
     .width(width)
@@ -193,11 +193,11 @@ fun embedData(
     .build()
 
 fun user(
-    username: String = "User",
-    email: String = "user@gmail.com",
-    password: String = "password",
+    username: String = "user",
+    email: String = "",
+    password: String = "verysecurepassword",
     lastLogin: OffsetDateTime = OffsetDateTime.now(),
-    lastLoginIp: String = "127.0.0.1",
+    lastLoginIp: String = "",
     createdAt: OffsetDateTime = OffsetDateTime.now(),
     registrationIp: String = "127.0.0.1",
     authorities: Set<UserAuthority> = emptySet(),
@@ -219,7 +219,7 @@ fun user(
 fun ban(
     ip: String = "127.0.0.1",
     status: BanStatus = BanStatus.ACTIVE,
-    reason: String = "Spam",
+    reason: String = "",
     bannedBy: User? = null,
     unbannedBy: User? = null,
     unbanReason: String? = null,
@@ -301,7 +301,7 @@ fun Ban.toForm(): BanForm = BanForm.builder()
     .warning(status == BanStatus.WARNING)
     .build()
 
-fun Ban.toUnbanForm(unbanReason: String = "Unban"): UnbanForm = UnbanForm.builder()
+fun Ban.toUnbanForm(unbanReason: String = ""): UnbanForm = UnbanForm.builder()
     .ip(ip)
     .reason(unbanReason)
     .build()

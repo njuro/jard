@@ -47,7 +47,7 @@ internal class AuthenticationIntegrationTest : MockMvcTest() {
         @Test
         fun `valid login`() {
             val baseDate = OffsetDateTime.now()
-            val user = userFacade.createUser(user("user", "password").toForm())
+            val user = userFacade.createUser(user(username = "user", password = "password").toForm())
 
             login(loginRequest(user.username, "password"), ip = "127.0.0.2").andExpect {
                 status { isOk() }
@@ -68,7 +68,7 @@ internal class AuthenticationIntegrationTest : MockMvcTest() {
 
         @Test
         fun `valid login with remember me option`() {
-            val user = userFacade.createUser(user("user", "password").toForm())
+            val user = userFacade.createUser(user(username = "user", password = "password").toForm())
 
             login(loginRequest(user.username, "password", rememberMe = true)).andExpect {
                 status { isOk() }
@@ -78,7 +78,7 @@ internal class AuthenticationIntegrationTest : MockMvcTest() {
 
         @Test
         fun `invalid login`() {
-            val user = userFacade.createUser(user("user", "password").toForm())
+            val user = userFacade.createUser(user(username = "user", password = "password").toForm())
 
             login(loginRequest(user.username, "something")).andExpect {
                 status { isUnauthorized() }
