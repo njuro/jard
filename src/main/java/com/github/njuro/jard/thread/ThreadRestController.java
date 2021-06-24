@@ -53,7 +53,7 @@ public class ThreadRestController {
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
     threadForm.getPostForm().setAttachment(attachment);
-    threadForm.getPostForm().setIp(httpUtils.getClientIp(request));
+    threadForm.getPostForm().setIp(HttpUtils.getClientIp(request));
     requestValidator.validate(threadForm);
 
     return threadFacade.createThread(threadForm, board);
@@ -67,7 +67,7 @@ public class ThreadRestController {
       @RequestPart(required = false) MultipartFile attachment,
       HttpServletRequest request) {
     postForm.setAttachment(attachment);
-    postForm.setIp(httpUtils.getClientIp(request));
+    postForm.setIp(HttpUtils.getClientIp(request));
     requestValidator.validate(postForm);
 
     return threadFacade.replyToThread(postForm, thread);

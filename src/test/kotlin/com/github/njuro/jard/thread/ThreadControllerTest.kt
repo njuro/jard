@@ -21,14 +21,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.slot
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import io.mockk.*
+import org.junit.jupiter.api.*
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.delete
@@ -48,17 +42,23 @@ internal class ThreadControllerTest : MockMvcTest() {
 
     @MockkBean
     private lateinit var postFacade: PostFacade
-    
+
     private val board = board(label = "r")
     private val thread = thread(board)
     private val post = post(thread)
 
     @BeforeEach
     fun initMocks() {
+        mockkStatic(HttpUtils::class)
         every { HttpUtils.getClientIp(any()) } returns "0.0.0.0"
         every { boardFacade.resolveBoard(board.label) } returns board.toDto()
         every { threadFacade.resolveThread(board.label, thread.threadNumber) } returns thread.toDto()
         every { postFacade.resolvePost(board.label, post.postNumber) } returns post.toDto()
+    }
+
+    @AfterEach
+    fun clearMocks() {
+        unmockkStatic(HttpUtils::class)
     }
 
 
