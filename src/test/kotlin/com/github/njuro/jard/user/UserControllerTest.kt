@@ -109,18 +109,32 @@ internal class UserControllerTest : MockMvcTest() {
         response.role shouldBe UserRole.ADMIN
     }
 
-    @Test
+    @Nested
+    @DisplayName("edit user")
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
-    fun `edit user`() {
-        val user = user(username = "Anonymous")
-        every { userFacade.resolveUser(user.username) } returns user.toDto()
-        every { userFacade.editUser(ofType(UserDto::class), ofType(UserForm::class)) } returns user.toDto()
+    inner class EditUser {
+        private fun editUser(username: String, editForm: UserForm) =
+            mockMvc.put("${Mappings.API_ROOT_USERS}/$username") { body(editForm) }
 
-        val response = mockMvc.put("${Mappings.API_ROOT_USERS}/${user.username}") { body(user.toForm()) }
-            .andExpect { status { isOk() } }
-            .andReturnConverted<UserDto>()
-        response.username shouldBe user.username
+        @Test
+        fun `edit user`() {
+            val user = user(username = "Anonymous")
+            every { userFacade.resolveUser(user.username) } returns user.toDto()
+            every { userFacade.editUser(ofType(UserDto::class), ofType(UserForm::class)) } returns user.toDto()
+
+            val response = editUser(user.username, user.toForm())
+                .andExpect { status { isOk() } }
+                .andReturnConverted<UserDto>()
+            response.username shouldBe user.username
+        }
+
+        @Test
+        fun `don't edit non-existing user`() {
+            every { userFacade.resolveUser(ofType(String::class)) } throws UserNotFoundException()
+            editUser("xxx", user().toForm()).andExpect { status { isNotFound() } }
+        }
     }
+
 
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)

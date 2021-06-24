@@ -97,6 +97,13 @@ internal class BanControllerTest : MockMvcTest() {
         }
 
         @Test
+        fun `don't edit non-existing ban`() {
+            every { banFacade.resolveBan(ofType(UUID::class)) } throws BanNotFoundException()
+
+            editBan(ban().toForm()).andExpect { status { isNotFound() } }
+        }
+
+        @Test
         fun `don't edit invalid ban`() {
             editBan(ban().toForm().apply { ip = null }).andExpect { status { isBadRequest() } }
         }
@@ -121,6 +128,14 @@ internal class BanControllerTest : MockMvcTest() {
 
             unban(ban.toUnbanForm()).andExpect { status { isOk() } }.andReturnConverted<BanDto>().shouldNotBeNull()
         }
+
+        @Test
+        fun `non-existing ban`() {
+            every { banFacade.resolveBan(ofType(UUID::class)) } throws BanNotFoundException()
+
+            unban(ban().toUnbanForm()).andExpect { status { isNotFound() } }
+        }
+
 
         @Test
         fun `unban with invalid ip`() {

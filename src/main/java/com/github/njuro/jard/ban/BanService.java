@@ -72,6 +72,6 @@ public class BanService {
    * @return resolved ban or {@code null} if such ban was not found
    */
   public Ban resolveBan(UUID id) {
-    return banRepository.findById(id).orElse(null);
+    return banRepository.findById(id).orElseThrow(BanNotFoundException::new);
   }
 }

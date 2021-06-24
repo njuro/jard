@@ -16,7 +16,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.slot
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -213,9 +212,11 @@ internal class BoardControllerTest : MockMvcTest() {
         }
 
         @Test
-        @Disabled
         fun `don't edit non-existing board`() {
-            // TODO
+            val board = board(label = "r")
+            every { boardFacade.resolveBoard(board.label) } throws BoardNotFoundException()
+
+            editBoard(board.toForm()).andExpect { status { isNotFound() } }
         }
 
         @Test

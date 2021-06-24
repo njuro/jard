@@ -14,7 +14,6 @@ import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -140,9 +139,8 @@ internal class BoardIntegrationTest : MockMvcTest() {
         }
 
         @Test
-        @Disabled
         fun `don't edit non-existing board`() {
-            // TODO
+            editBoard(board(label = "r", name = "random").toForm()).andExpect { status { isNotFound() } }
         }
 
         @Test

@@ -89,6 +89,11 @@ internal class BanIntegrationTest : MockMvcTest() {
         }
 
         @Test
+        fun `don't edit non-existing ban`() {
+            editBan(UUID.randomUUID(), ban().toForm()).andExpect { status { isNotFound() } }
+        }
+
+        @Test
         fun `don't edit invalid ban`() {
             val ban = banRepository.save(ban())
             val editForm = ban.toForm().apply { validTo = OffsetDateTime.now().minusDays(1) }
@@ -112,6 +117,11 @@ internal class BanIntegrationTest : MockMvcTest() {
             unban(ban.id, ban.toUnbanForm(unbanReason = "OK")).andExpect { status { isOk() } }
                 .andReturnConverted<BanDto>().shouldNotBeNull()
             banRepository.findById(ban.id).shouldBePresent { it.status shouldBe BanStatus.UNBANNED }
+        }
+
+        @Test
+        fun `non-existing ban`() {
+            unban(UUID.randomUUID(), ban().toUnbanForm()).andExpect { status { isNotFound() } }
         }
 
         @Test

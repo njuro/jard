@@ -70,16 +70,26 @@ internal class UserIntegrationTest : MockMvcTest() {
         }
     }
 
-    @Test
+    @Nested
+    @DisplayName("edit user")
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
-    fun `edit user`() {
-        val user = userRepository.save(user(role = UserRole.MODERATOR))
+    inner class EditUser {
+        private fun editUser(username: String, editForm: UserForm) =
+            mockMvc.put("${Mappings.API_ROOT_USERS}/$username") { body(editForm) }
 
-        mockMvc.put("${Mappings.API_ROOT_USERS}/${user.username}") {
-            body(user.toForm().apply { role = UserRole.ADMIN })
-        }.andExpect { status { isOk() } }
-            .andReturnConverted<UserDto>().role shouldBe UserRole.ADMIN
+        fun `edit user`() {
+            val user = userRepository.save(user(role = UserRole.MODERATOR))
+
+            editUser(user.username, user.toForm().apply { role = UserRole.ADMIN }).andExpect { status { isOk() } }
+                .andReturnConverted<UserDto>().role shouldBe UserRole.ADMIN
+        }
+        
+        @Test
+        fun `don't edit non-existing user`() {
+            editUser("xxx", user().toForm()).andExpect { status { isNotFound() } }
+        }
     }
+
 
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
