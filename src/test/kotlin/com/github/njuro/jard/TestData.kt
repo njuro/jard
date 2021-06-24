@@ -164,9 +164,9 @@ fun metadata(
     height: Int = 0,
     thumbnailWidth: Int = 0,
     thumbnailHeight: Int = 0,
-    fileSize: String? = null,
+    fileSize: String = "0 B",
     duration: String? = null,
-    checksum: String? = null
+    checksum: String = "xxxxxx"
 ): AttachmentMetadata = AttachmentMetadata.builder()
     .mimeType(mimeType)
     .width(width)

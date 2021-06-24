@@ -10,7 +10,7 @@ import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class HashGenerationUtilsTest {
+internal class HashGenerationUtilsTest {
 
     @Test
     fun `generate tripcode`() {
