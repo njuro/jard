@@ -10,6 +10,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,10 @@ public class UserRestController {
 
   @PutMapping
   @HasAuthorities(UserAuthority.MANAGE_USERS)
-  public UserDto createUser(@RequestBody @Valid UserForm userForm, HttpServletRequest request) {
+  public ResponseEntity<UserDto> createUser(
+      @RequestBody @Valid UserForm userForm, HttpServletRequest request) {
     userForm.setRegistrationIp(request.getRemoteAddr());
-    return userFacade.createUser(userForm);
+    return ResponseEntity.status(HttpStatus.CREATED).body(userFacade.createUser(userForm));
   }
 
   @GetMapping

@@ -49,7 +49,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
         fun `create valid board`() {
             val boardForm = board(label = "r").toForm()
 
-            val response = createBoard(boardForm).andExpect { status { isOk() } }.andReturnConverted<BoardDto>()
+            val response = createBoard(boardForm).andExpect { status { isCreated() } }.andReturnConverted<BoardDto>()
             response.label shouldBe boardForm.label
             boardRepository.findByLabel(boardForm.label).shouldBePresent()
         }

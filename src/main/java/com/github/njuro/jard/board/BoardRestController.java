@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,8 @@ public class BoardRestController {
 
   @PutMapping
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
-  public BoardDto createBoard(@RequestBody @Valid BoardForm boardForm) {
-    return boardFacade.createBoard(boardForm);
+  public ResponseEntity<BoardDto> createBoard(@RequestBody @Valid BoardForm boardForm) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(boardFacade.createBoard(boardForm));
   }
 
   @GetMapping("/attachment-categories")

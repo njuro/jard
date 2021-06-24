@@ -77,7 +77,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
         @Test
         fun `create valid thread`() {
             val threadForm = thread(board, subject = "Test subject").toForm()
-            createThread(threadForm).andExpect { status { isOk() } }
+            createThread(threadForm).andExpect { status { isCreated() } }
                 .andReturnConverted<ThreadDto>().threadNumber shouldBe 1L
         }
 
@@ -112,7 +112,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             val thread = saveThread(thread(board))
             val postForm = post(thread).toForm()
 
-            replyToThread(postForm, thread).andExpect { status { isOk() } }
+            replyToThread(postForm, thread).andExpect { status { isCreated() } }
                 .andReturnConverted<PostDto>().postNumber shouldBe 1L
         }
 

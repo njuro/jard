@@ -20,6 +20,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,27 +28,23 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(Mappings.API_ROOT_THREADS)
 @Slf4j
+@SuppressWarnings("MVCPathVariableInspection")
 public class ThreadRestController {
 
   private final ThreadFacade threadFacade;
   private final PostFacade postFacade;
   private final RequestValidator requestValidator;
-  private final HttpUtils httpUtils;
 
   @Autowired
   public ThreadRestController(
-      ThreadFacade threadFacade,
-      PostFacade postFacade,
-      RequestValidator requestValidator,
-      HttpUtils httpUtils) {
+      ThreadFacade threadFacade, PostFacade postFacade, RequestValidator requestValidator) {
     this.threadFacade = threadFacade;
     this.postFacade = postFacade;
     this.requestValidator = requestValidator;
-    this.httpUtils = httpUtils;
   }
 
   @PutMapping
-  public ThreadDto createThread(
+  public ResponseEntity<ThreadDto> createThread(
       BoardDto board,
       @RequestPart ThreadForm threadForm,
       @RequestPart(required = false) MultipartFile attachment,
@@ -56,12 +53,13 @@ public class ThreadRestController {
     threadForm.getPostForm().setIp(HttpUtils.getClientIp(request));
     requestValidator.validate(threadForm);
 
-    return threadFacade.createThread(threadForm, board);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(threadFacade.createThread(threadForm, board));
   }
 
   @PutMapping(Mappings.PATH_VARIABLE_THREAD)
   @FieldFilterSetting(className = PostDto.class, fields = "thread")
-  public PostDto replyToThread(
+  public ResponseEntity<PostDto> replyToThread(
       ThreadDto thread,
       @RequestPart PostForm postForm,
       @RequestPart(required = false) MultipartFile attachment,
@@ -70,7 +68,8 @@ public class ThreadRestController {
     postForm.setIp(HttpUtils.getClientIp(request));
     requestValidator.validate(postForm);
 
-    return threadFacade.replyToThread(postForm, thread);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(threadFacade.replyToThread(postForm, thread));
   }
 
   @GetMapping(Mappings.PATH_VARIABLE_THREAD)

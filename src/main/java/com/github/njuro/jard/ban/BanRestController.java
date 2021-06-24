@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,8 +26,8 @@ public class BanRestController {
 
   @PutMapping
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
-  public BanDto createBan(@RequestBody @Valid BanForm banForm) {
-    return banFacade.createBan(banForm);
+  public ResponseEntity<BanDto> createBan(@RequestBody @Valid BanForm banForm) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(banFacade.createBan(banForm));
   }
 
   @GetMapping("/me")

@@ -81,7 +81,8 @@ internal class ThreadControllerTest : MockMvcTest() {
             val threadForm = slot<ThreadForm>()
             every { threadFacade.createThread(capture(threadForm), ofType(BoardDto::class)) } returns thread.toDto()
 
-            val response = createThread(thread.toForm()).andExpect { status { isOk() } }.andReturnConverted<ThreadDto>()
+            val response =
+                createThread(thread.toForm()).andExpect { status { isCreated() } }.andReturnConverted<ThreadDto>()
             response.threadNumber shouldBe thread.threadNumber
             threadForm.captured.should {
                 it.postForm.ip shouldStartWith "0"
@@ -102,7 +103,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             createThread(
                 thread.toForm().apply { postForm.embedUrl = "some_url" },
                 attachment = null
-            ).andExpect { status { isOk() } }
+            ).andExpect { status { isCreated() } }
                 .andReturnConverted<ThreadDto>().shouldNotBeNull()
         }
 
@@ -151,7 +152,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             every { threadFacade.replyToThread(capture(postForm), ofType(ThreadDto::class)) } returns post.toDto()
 
             val response = replyToThread(post.toForm()).andExpect {
-                status { isOk() }
+                status { isCreated() }
                 jsonPath("$.thread") { doesNotExist() }
             }.andReturnConverted<PostDto>()
             response.postNumber shouldBe post.postNumber
@@ -166,7 +167,8 @@ internal class ThreadControllerTest : MockMvcTest() {
             val post = post(thread, body = "test")
             every { threadFacade.replyToThread(ofType(PostForm::class), ofType(ThreadDto::class)) } returns post.toDto()
 
-            replyToThread(post.toForm()).andExpect { status { isOk() } }.andReturnConverted<PostDto>().shouldNotBeNull()
+            replyToThread(post.toForm()).andExpect { status { isCreated() } }.andReturnConverted<PostDto>()
+                .shouldNotBeNull()
         }
 
         @Test

@@ -41,7 +41,7 @@ internal class UserControllerTest : MockMvcTest() {
             val userForm = slot<UserForm>()
             every { userFacade.createUser(capture(userForm)) } returns user.toDto()
 
-            val response = createUser(user.toForm()).andExpect { status { isOk() } }.andReturnConverted<UserDto>()
+            val response = createUser(user.toForm()).andExpect { status { isCreated() } }.andReturnConverted<UserDto>()
             response.username shouldBe user.username
             userForm.captured.registrationIp shouldBe "1.2.3.4"
         }

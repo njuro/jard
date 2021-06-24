@@ -49,7 +49,7 @@ internal class BoardControllerTest : MockMvcTest() {
             val board = board(label = "r")
             every { boardFacade.createBoard(ofType(BoardForm::class)) } returns board.toDto()
 
-            val response = createBoard(board).andExpect { status { isOk() } }.andReturnConverted<BoardDto>()
+            val response = createBoard(board).andExpect { status { isCreated() } }.andReturnConverted<BoardDto>()
             response shouldBe board.toDto()
         }
 

@@ -39,7 +39,7 @@ internal class BanControllerTest : MockMvcTest() {
             val ban = ban()
             every { banFacade.createBan(ban.toForm()) } returns ban.toDto()
 
-            createBan(ban.toForm()).andExpect { status { isOk() } }.andReturnConverted<BanDto>().shouldNotBeNull()
+            createBan(ban.toForm()).andExpect { status { isCreated() } }.andReturnConverted<BanDto>().shouldNotBeNull()
         }
 
         @Test

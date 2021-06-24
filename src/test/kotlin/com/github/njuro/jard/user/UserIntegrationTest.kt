@@ -34,7 +34,8 @@ internal class UserIntegrationTest : MockMvcTest() {
 
         @Test
         fun `create valid user`() {
-            createUser(user().toForm()).andExpect { status { isOk() } }.andReturnConverted<UserDto>().shouldNotBeNull()
+            createUser(user().toForm()).andExpect { status { isCreated() } }.andReturnConverted<UserDto>()
+                .shouldNotBeNull()
         }
 
         @Test
