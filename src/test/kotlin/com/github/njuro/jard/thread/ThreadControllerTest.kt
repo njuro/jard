@@ -204,7 +204,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             replyToThread(
                 post(thread).toForm(),
                 attachment = multipartFile("attachment", MAX_ATTACHMENT_SIZE + 1)
-            ).andExpectValidationError("attachmentTooBig")
+            ).andExpectValidationError("attachmentTooBig", message = MAX_ATTACHMENT_SIZE.toString())
         }
 
         @Test

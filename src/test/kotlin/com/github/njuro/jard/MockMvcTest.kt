@@ -9,6 +9,7 @@ import com.github.njuro.jard.attachment.AttachmentCategory.AttachmentCategorySer
 import com.github.njuro.jard.utils.validation.ValidationErrors
 import io.kotest.assertions.withClue
 import io.kotest.matchers.maps.shouldContainKey
+import io.kotest.matchers.string.shouldContain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
@@ -66,18 +67,23 @@ internal abstract class MockMvcTest : MapperTest() {
         )
     }
 
-    protected fun ResultActionsDsl.andExpectValidationError(field: String) {
+    protected fun ResultActionsDsl.andExpectValidationError(field: String, message: String? = null) {
         andExpect {
             status { isBadRequest() }
-            match(validationError(field))
+            match(validationError(field, message))
         }
     }
 
-    protected fun validationError(field: String): ResultMatcher {
+    protected fun validationError(field: String, message: String? = null): ResultMatcher {
         return ResultMatcher { result ->
             val errors = convertResult<ValidationErrors>(result).errors
             withClue("There should be error on field \"$field\"") {
                 errors shouldContainKey field
+            }
+            if (message != null) {
+                withClue("Error message should contain $message") {
+                    errors[field] shouldContain message
+                }
             }
         }
     }
