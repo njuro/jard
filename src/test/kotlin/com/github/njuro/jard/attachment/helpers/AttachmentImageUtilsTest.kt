@@ -15,7 +15,9 @@ import java.nio.file.StandardCopyOption
 
 internal class AttachmentImageUtilsTest {
 
-    private val testFolder = attachmentPath(TEST_FOLDER_NAME).toFile()
+    companion object {
+        private val testFolder = attachmentPath(TEST_FOLDER_NAME).toFile()
+    }
 
     @BeforeEach
     fun `create test folder if does not exist`() {

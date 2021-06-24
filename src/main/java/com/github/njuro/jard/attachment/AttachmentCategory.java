@@ -7,11 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -43,6 +39,8 @@ public enum AttachmentCategory {
   AUDIO(
       false,
       new MediaType("audio", "mpeg", extension("mp3")),
+      new MediaType("audio", "mpeg3", extension("mp3")),
+      new MediaType("audio", "x-mpeg-3", extension("mp3")),
       new MediaType("audio", "MPA", extension("mp3")),
       new MediaType("audio", "mpa-robust", extension("mp3")),
       new MediaType("audio", "wav"),

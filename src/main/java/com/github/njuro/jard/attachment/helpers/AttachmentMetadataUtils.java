@@ -69,7 +69,8 @@ public class AttachmentMetadataUtils {
     attachment.setCategory(AttachmentCategory.determineAttachmentCategory(mimeType));
 
     if (attachment.getCategory() == null) {
-      throw new IllegalArgumentException("Unknown type of attachment");
+      throw new IllegalArgumentException(
+          "Unknown type of attachment - mime type is: " + attachment.getMetadata().getMimeType());
     }
   }
 

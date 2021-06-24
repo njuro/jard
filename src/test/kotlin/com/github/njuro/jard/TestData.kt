@@ -38,6 +38,7 @@ const val TEST_ATTACHMENT_AVI = "test_attachment.avi"
 const val TEST_ATTACHMENT_DOCX = "test_attachment.docx"
 const val TEST_ATTACHMENT_PDF = "test_attachment.pdf"
 const val TEST_ATTACHMENT_GIF_CORRUPTED = "test_attachment_corrupted.gif"
+const val TEST_ATTACHMENT_MP3 = "test_attachment.mp3"
 const val TEST_OEMBED_RESPONSE = "test_oembed_response.json"
 
 fun board(
