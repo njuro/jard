@@ -30,7 +30,7 @@ internal class UserIntegrationTest : MockMvcTest() {
     @DisplayName("create user")
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
     inner class CreateUser {
-        private fun createUser(userForm: UserForm) = mockMvc.put(Mappings.API_ROOT_USERS) { body(userForm) }
+        private fun createUser(userForm: UserForm) = mockMvc.post(Mappings.API_ROOT_USERS) { body(userForm) }
 
         @Test
         fun `create valid user`() {
@@ -75,7 +75,7 @@ internal class UserIntegrationTest : MockMvcTest() {
     fun `edit user`() {
         val user = userRepository.save(user(role = UserRole.MODERATOR))
 
-        mockMvc.post("${Mappings.API_ROOT_USERS}/${user.username}/edit") {
+        mockMvc.put("${Mappings.API_ROOT_USERS}/${user.username}") {
             body(user.toForm().apply { role = UserRole.ADMIN })
         }.andExpect { status { isOk() } }
             .andReturnConverted<UserDto>().role shouldBe UserRole.ADMIN

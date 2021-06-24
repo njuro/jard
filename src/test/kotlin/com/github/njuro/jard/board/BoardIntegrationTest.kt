@@ -43,7 +43,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class CreateBoard {
         private fun createBoard(boardForm: BoardForm) =
-            mockMvc.put(Mappings.API_ROOT_BOARDS) { setUp(); body(boardForm) }
+            mockMvc.post(Mappings.API_ROOT_BOARDS) { setUp(); body(boardForm) }
 
         @Test
         fun `create valid board`() {
@@ -125,7 +125,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class EditBoard {
         private fun editBoard(boardForm: BoardForm) =
-            mockMvc.post("${Mappings.API_ROOT_BOARDS}/${boardForm.label}/edit") { setUp(); body(boardForm) }
+            mockMvc.put("${Mappings.API_ROOT_BOARDS}/${boardForm.label}") { setUp(); body(boardForm) }
 
         @Test
         fun `edit valid board`() {

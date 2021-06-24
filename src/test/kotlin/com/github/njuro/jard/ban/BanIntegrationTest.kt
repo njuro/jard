@@ -31,7 +31,7 @@ internal class BanIntegrationTest : MockMvcTest() {
     @DisplayName("create ban")
     @WithMockJardUser(UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP)
     inner class CreateBan {
-        private fun createBan(banForm: BanForm) = mockMvc.put(Mappings.API_ROOT_BANS) { body(banForm) }
+        private fun createBan(banForm: BanForm) = mockMvc.post(Mappings.API_ROOT_BANS) { body(banForm) }
 
         @Test
         fun `create valid ban`() {
@@ -77,7 +77,7 @@ internal class BanIntegrationTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP)
     inner class EditBan {
         private fun editBan(id: UUID, editForm: BanForm) =
-            mockMvc.post("${Mappings.API_ROOT_BANS}/$id/edit") { body(editForm) }
+            mockMvc.put("${Mappings.API_ROOT_BANS}/$id") { body(editForm) }
 
         @Test
         fun `edit valid ban`() {
@@ -102,7 +102,7 @@ internal class BanIntegrationTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP)
     inner class Unban {
         private fun unban(id: UUID, unbanForm: UnbanForm) =
-            mockMvc.post("${Mappings.API_ROOT_BANS}/$id/unban") { body(unbanForm) }
+            mockMvc.put("${Mappings.API_ROOT_BANS}/$id/unban") { body(unbanForm) }
 
 
         @Test

@@ -43,7 +43,7 @@ public class ThreadRestController {
     this.requestValidator = requestValidator;
   }
 
-  @PutMapping
+  @PostMapping
   public ResponseEntity<ThreadDto> createThread(
       BoardDto board,
       @RequestPart ThreadForm threadForm,
@@ -57,7 +57,7 @@ public class ThreadRestController {
         .body(threadFacade.createThread(threadForm, board));
   }
 
-  @PutMapping(Mappings.PATH_VARIABLE_THREAD)
+  @PostMapping(Mappings.PATH_VARIABLE_THREAD)
   @FieldFilterSetting(className = PostDto.class, fields = "thread")
   public ResponseEntity<PostDto> replyToThread(
       ThreadDto thread,
@@ -87,14 +87,14 @@ public class ThreadRestController {
     return threadFacade.getNewReplies(thread, lastPostNumber);
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
+  @PatchMapping(Mappings.PATH_VARIABLE_THREAD + "/sticky")
   @HasAuthorities(UserAuthority.TOGGLE_STICKY_THREAD)
   public ResponseEntity<Object> toggleStickyOnThread(ThreadDto thread) {
     threadFacade.toggleStickyOnThread(thread);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
+  @PatchMapping(Mappings.PATH_VARIABLE_THREAD + "/lock")
   @HasAuthorities(UserAuthority.TOGGLE_LOCK_THREAD)
   public ResponseEntity<Object> toggleLockOnThread(ThreadDto thread) {
     threadFacade.toggleLockOnThread(thread);

@@ -25,7 +25,7 @@ public class UserRestController {
     this.userFacade = userFacade;
   }
 
-  @PutMapping
+  @PostMapping
   @HasAuthorities(UserAuthority.MANAGE_USERS)
   public ResponseEntity<UserDto> createUser(
       @RequestBody @Valid UserForm userForm, HttpServletRequest request) {
@@ -52,7 +52,7 @@ public class UserRestController {
     return userFacade.getCurrentUser();
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_USER + "/edit")
+  @PutMapping(Mappings.PATH_VARIABLE_USER)
   @HasAuthorities(UserAuthority.MANAGE_USERS)
   public UserDto editUser(UserDto oldUser, @RequestBody UserForm userForm) {
     return userFacade.editUser(oldUser, userForm);

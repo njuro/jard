@@ -30,7 +30,7 @@ internal class UserControllerTest : MockMvcTest() {
     @DisplayName("create user")
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
     inner class CreateUser {
-        private fun createUser(userForm: UserForm, ip: String = "1.2.3.4") = mockMvc.put(Mappings.API_ROOT_USERS) {
+        private fun createUser(userForm: UserForm, ip: String = "1.2.3.4") = mockMvc.post(Mappings.API_ROOT_USERS) {
             body(userForm)
             with { it.apply { remoteAddr = ip } }
         }
@@ -116,7 +116,7 @@ internal class UserControllerTest : MockMvcTest() {
         every { userFacade.resolveUser(user.username) } returns user.toDto()
         every { userFacade.editUser(ofType(UserDto::class), ofType(UserForm::class)) } returns user.toDto()
 
-        val response = mockMvc.post("${Mappings.API_ROOT_USERS}/${user.username}/edit") { body(user.toForm()) }
+        val response = mockMvc.put("${Mappings.API_ROOT_USERS}/${user.username}") { body(user.toForm()) }
             .andExpect { status { isOk() } }
             .andReturnConverted<UserDto>()
         response.username shouldBe user.username

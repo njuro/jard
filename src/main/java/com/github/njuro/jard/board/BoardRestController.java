@@ -35,7 +35,7 @@ public class BoardRestController {
     this.boardFacade = boardFacade;
   }
 
-  @PutMapping
+  @PostMapping
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public ResponseEntity<BoardDto> createBoard(@RequestBody @Valid BoardForm boardForm) {
     return ResponseEntity.status(HttpStatus.CREATED).body(boardFacade.createBoard(boardForm));
@@ -68,7 +68,7 @@ public class BoardRestController {
     return boardFacade.getBoardCatalog(board);
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_BOARD + "/edit")
+  @PutMapping(Mappings.PATH_VARIABLE_BOARD)
   @HasAuthorities(UserAuthority.MANAGE_BOARDS)
   public BoardDto editBoard(BoardDto oldBoard, @RequestBody @Valid BoardForm boardForm) {
     return boardFacade.editBoard(oldBoard, boardForm);

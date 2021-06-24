@@ -24,7 +24,7 @@ public class BanRestController {
     this.banFacade = banFacade;
   }
 
-  @PutMapping
+  @PostMapping
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
   public ResponseEntity<BanDto> createBan(@RequestBody @Valid BanForm banForm) {
     return ResponseEntity.status(HttpStatus.CREATED).body(banFacade.createBan(banForm));
@@ -41,13 +41,13 @@ public class BanRestController {
     return banFacade.getAllBans();
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_BAN + "/edit")
+  @PutMapping(Mappings.PATH_VARIABLE_BAN)
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
   public BanDto editBan(BanDto oldBan, @RequestBody @Valid BanForm banForm) {
     return banFacade.editBan(oldBan, banForm);
   }
 
-  @PostMapping(Mappings.PATH_VARIABLE_BAN + "/unban")
+  @PutMapping(Mappings.PATH_VARIABLE_BAN + "/unban")
   @HasAuthorities({UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP})
   public BanDto unban(BanDto ban, @RequestBody @Valid UnbanForm unbanForm) {
     return banFacade.unban(ban, unbanForm);

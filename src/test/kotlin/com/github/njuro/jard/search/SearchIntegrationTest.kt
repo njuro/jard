@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
@@ -44,7 +45,7 @@ internal class SearchIntegrationTest : MockMvcTest() {
     @Test
     @WithMockJardUser(UserAuthority.ACTUATOR_ACCESS)
     fun `rebuild indexes`() {
-        mockMvc.get("${Mappings.API_ROOT_SEARCH}/rebuild-indexes") { setUp() }.andExpect { status { isOk() } }
+        mockMvc.post("${Mappings.API_ROOT_SEARCH}/rebuild-indexes") { setUp() }.andExpect { status { isOk() } }
     }
 
     @Test

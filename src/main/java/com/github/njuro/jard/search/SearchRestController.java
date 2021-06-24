@@ -8,10 +8,7 @@ import com.github.njuro.jard.user.UserAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_SEARCH)
@@ -24,7 +21,7 @@ public class SearchRestController {
     this.searchFacade = searchFacade;
   }
 
-  @GetMapping("/rebuild-indexes")
+  @PostMapping("/rebuild-indexes")
   @HasAuthorities(UserAuthority.ACTUATOR_ACCESS)
   public ResponseEntity<String> rebuildIndexes() {
     boolean result = searchFacade.rebuildIndexes();

@@ -26,12 +26,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.multipart
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.patch
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
@@ -71,7 +70,6 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             mockMvc.multipart(Mappings.API_ROOT_THREADS, board.label) {
                 part("threadForm", threadForm)
                 if (attachment != null) file(attachment)
-                with { it.apply { method = HttpMethod.PUT.name } }
             }
 
         @Test
@@ -103,7 +101,6 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             ) {
                 part("postForm", postForm)
                 if (attachment != null) file(attachment)
-                with { it.apply { method = HttpMethod.PUT.name } }
             }
 
 
@@ -169,7 +166,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
         val thread = saveThread(thread(board))
 
         thread.isStickied.shouldBeFalse()
-        mockMvc.post(
+        mockMvc.patch(
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/sticky",
             board.label,
             thread.threadNumber
@@ -183,7 +180,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
         val thread = saveThread(thread(board))
 
         thread.isLocked.shouldBeFalse()
-        mockMvc.post(
+        mockMvc.patch(
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/lock",
             board.label,
             thread.threadNumber

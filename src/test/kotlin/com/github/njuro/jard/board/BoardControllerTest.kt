@@ -39,7 +39,7 @@ internal class BoardControllerTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class CreateBoard {
         private fun createBoard(board: Board) =
-            mockMvc.put(Mappings.API_ROOT_BOARDS) { body(board.toForm()) }
+            mockMvc.post(Mappings.API_ROOT_BOARDS) { body(board.toForm()) }
 
         private fun expectValidationError(board: Board, field: String) =
             createBoard(board).andExpectValidationError(field)
@@ -200,7 +200,7 @@ internal class BoardControllerTest : MockMvcTest() {
     @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
     inner class EditBoard {
         private fun editBoard(boardForm: BoardForm) =
-            mockMvc.post("${Mappings.API_ROOT_BOARDS}/${boardForm.label}/edit") { setUp(); body(boardForm) }
+            mockMvc.put("${Mappings.API_ROOT_BOARDS}/${boardForm.label}") { setUp(); body(boardForm) }
 
         @Test
         fun `edit existing board`() {
