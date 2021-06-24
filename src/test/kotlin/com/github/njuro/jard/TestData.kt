@@ -29,9 +29,16 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.OffsetDateTime
 
+val TEST_RESOURCES_FOLDER: Path = Paths.get("src", "test", "resources")
+val TEST_ATTACHMENTS_FOLDER: Path = TEST_RESOURCES_FOLDER.resolve("attachments")
+
+const val TEST_FOLDER_NAME = "test"
 const val TEST_ATTACHMENT_PNG = "test_attachment.png"
 const val TEST_ATTACHMENT_AVI = "test_attachment.avi"
 const val TEST_ATTACHMENT_DOCX = "test_attachment.docx"
+const val TEST_ATTACHMENT_PDF = "test_attachment.pdf"
+const val TEST_ATTACHMENT_GIF_CORRUPTED = "test_attachment_corrupted.gif"
+const val TEST_OEMBED_RESPONSE = "test_oembed_response.json"
 
 fun board(
     label: String,
@@ -130,7 +137,7 @@ fun attachment(
     remoteStorageUrl: String? = null,
     remoteStorageThumbnailUrl: String? = null,
     metadata: AttachmentMetadata? = metadata(),
-    embedData: EmbedData? = null
+    embedData: EmbedData? = null,
 ): Attachment = Attachment.builder()
     .category(category)
     .folder(folder)
@@ -151,14 +158,14 @@ fun attachment(
     }
 
 fun metadata(
-    mimeType: String = "image/jpeg",
+    mimeType: String? = null,
     width: Int = 0,
     height: Int = 0,
     thumbnailWidth: Int = 0,
     thumbnailHeight: Int = 0,
-    fileSize: String = "2.5 MB",
+    fileSize: String? = null,
     duration: String? = null,
-    checksum: String = "9e107d9d372bb6826bd81d3542a419d6"
+    checksum: String? = null
 ): AttachmentMetadata = AttachmentMetadata.builder()
     .mimeType(mimeType)
     .width(width)
@@ -301,7 +308,7 @@ fun Ban.toUnbanForm(unbanReason: String = "Unban"): UnbanForm = UnbanForm.builde
 fun randomString(size: Int): String = RandomStringUtils.random(size)
 
 fun multipartFile(name: String, filename: String, originalFilename: String = filename): MockMultipartFile {
-    val path = Paths.get("src", "test", "resources", "attachments").resolve(filename)
+    val path = TEST_ATTACHMENTS_FOLDER.resolve(filename)
     return MockMultipartFile(
         name,
         originalFilename,
@@ -322,3 +329,6 @@ fun multipartFile(name: String, size: Int): MockMultipartFile {
 
 fun attachmentPath(first: String, vararg more: String): Path =
     Constants.USER_CONTENT_PATH.resolve(Paths.get(first, *more))
+
+fun testAttachmentPath(first: String, vararg more: String): Path =
+    TEST_ATTACHMENTS_FOLDER.resolve(Paths.get(first, *more))

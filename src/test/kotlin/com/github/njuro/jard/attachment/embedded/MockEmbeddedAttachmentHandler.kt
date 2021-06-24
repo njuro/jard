@@ -2,12 +2,13 @@ package com.github.njuro.jard.attachment.embedded
 
 import ac.simons.oembed.OembedEndpoint
 import ac.simons.oembed.OembedResponse
+import com.github.njuro.jard.TEST_OEMBED_RESPONSE
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler
+import com.github.njuro.jard.testAttachmentPath
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.nio.file.Files
-import java.nio.file.Paths
 
 
 @Component
@@ -24,8 +25,7 @@ internal class MockEmbeddedAttachmentHandler : EmbeddedAttachmentHandler {
     companion object {
         internal const val PROVIDER_NAME = "mock-embedded-attachment-handler"
         internal const val SUPPORTED_URL = "https://mock-service.com/"
-        internal val RESPONSE =
-            Files.readString(Paths.get("src", "test", "resources", "attachments", "test_oembed_response.json"))
+        internal val RESPONSE = Files.readString(testAttachmentPath(TEST_OEMBED_RESPONSE))
     }
 
     override fun getProviderName() = PROVIDER_NAME

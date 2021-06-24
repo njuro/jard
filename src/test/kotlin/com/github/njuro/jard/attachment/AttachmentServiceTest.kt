@@ -27,10 +27,6 @@ import java.io.File
 @Transactional
 internal class AttachmentServiceTest {
 
-    companion object {
-        const val TEST_FOLDER_NAME = "test"
-    }
-
     @Autowired
     private lateinit var attachmentService: AttachmentService
 
@@ -69,7 +65,12 @@ internal class AttachmentServiceTest {
         fun `save image attachment with thumbnail`() {
             val file = multipartFile("attachment.png", TEST_ATTACHMENT_PNG)
             val attachment =
-                attachment(category = AttachmentCategory.IMAGE, filename = file.name, folder = TEST_FOLDER_NAME)
+                attachment(
+                    category = AttachmentCategory.IMAGE,
+                    filename = file.name,
+                    folder = TEST_FOLDER_NAME,
+                    metadata = metadata(mimeType = "image/png")
+                )
 
             attachmentService.saveAttachment(attachment, file).should {
                 it.metadata.shouldNotBeNull()
@@ -137,7 +138,12 @@ internal class AttachmentServiceTest {
 
         val file = multipartFile("attachment.png", TEST_ATTACHMENT_PNG)
         val attachment =
-            attachment(category = AttachmentCategory.IMAGE, filename = file.name, folder = TEST_FOLDER_NAME)
+            attachment(
+                category = AttachmentCategory.IMAGE,
+                filename = file.name,
+                folder = TEST_FOLDER_NAME,
+                metadata = metadata(mimeType = "image/png")
+            )
         val saved = attachmentService.saveAttachment(attachment, file)
 
 
