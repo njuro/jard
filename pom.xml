@@ -29,10 +29,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <kotlin.version>1.5.10</kotlin.version>
+        <kotlin.version>1.5.20</kotlin.version>
         <spring-boot-configuration-processor.version>2.5.0</spring-boot-configuration-processor.version>
         <jjwt.version>0.9.1</jjwt.version>
         <postgresql.version>42.2.20</postgresql.version>
+        <hibernate.version>5.5.3.Final</hibernate.version>
         <aws-sdk-s3.version>1.12.10</aws-sdk-s3.version>
         <tika.version>2.0.0-BETA</tika.version>
         <thumbnailator.version>0.4.14</thumbnailator.version>
@@ -58,8 +59,8 @@
         <ehcache-legacy.version>2.10.9.2</ehcache-legacy.version>
         <bucket4j-spring.version>0.4.0</bucket4j-spring.version>
         <spring-boot-admin.version>2.4.1</spring-boot-admin.version>
-        <hibernate-search.version>5.11.9.Final</hibernate-search.version>
-        <lucene.version>5.5.5</lucene.version>
+        <hibernate-search.version>6.0.5.Final</hibernate-search.version>
+        <lucene.version>8.7.0</lucene.version>
         <kotest-assertions.version>4.6.0</kotest-assertions.version>
         <mockk.version>1.11.0</mockk.version>
         <springmockk.version>3.0.1</springmockk.version>
@@ -211,8 +212,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search-orm</artifactId> <!-- Fulltext search -->
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-orm</artifactId> <!-- Fulltext search -->
+            <version>${hibernate-search.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-backend-lucene</artifactId>
             <version>${hibernate-search.version}</version>
         </dependency>
         <dependency>
@@ -475,7 +481,7 @@
                     <compilerPlugins>
                         <plugin>spring</plugin>
                     </compilerPlugins>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>11</jvmTarget>
                 </configuration>
                 <dependencies>
                     <dependency>

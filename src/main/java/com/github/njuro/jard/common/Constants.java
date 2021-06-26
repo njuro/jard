@@ -138,4 +138,10 @@ public class Constants {
 
   /** How long after creation can the post be deleted by poster (in minutes). */
   public static final int OWN_POST_DELETION_TIME_LIMIT = 15;
+
+  /** Name of analyser used to search posts. */
+  public static final String POST_ANALYZER = "postAnalyzer";
+
+  /** The highest allowed results count for entity search. */
+  public static final int MAX_SEARCH_RESULTS_COUNT = 50;
 }

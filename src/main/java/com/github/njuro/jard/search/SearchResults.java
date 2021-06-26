@@ -17,14 +17,14 @@ import org.apache.lucene.search.highlight.Highlighter;
 public class SearchResults<T extends BaseEntity> {
 
   /** List of entities matched by given query. */
-  private List<T> resultList;
+  private List<T> entityList;
 
-  /** {@link SearchService#getHighlightedSearchResult(Highlighter, Analyzer, String, String)} */
-  private Highlighter highlighter;
+  /** Total results found for given query (can be higher than size of {@link #entityList}. */
+  private long totalResultsCount;
 
-  /** {@link SearchService#getHighlightedSearchResult(Highlighter, Analyzer, String, String)} */
+  /** Lucene {@link Analyzer} for this search. */
   private Analyzer analyzer;
 
-  /** Total results found for given query (can be higher than size of {@link #resultList}. */
-  private int totalResultsCount;
+  /** Lucene {@link Highlighter} for this search. */
+  private Highlighter highlighter;
 }

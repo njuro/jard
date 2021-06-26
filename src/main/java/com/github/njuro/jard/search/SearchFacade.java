@@ -1,11 +1,13 @@
 package com.github.njuro.jard.search;
 
+import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.post.PostMapper;
 import com.github.njuro.jard.post.Post_;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.search.dto.SearchResultsDto;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,14 +43,22 @@ public class SearchFacade {
    *
    * @param query user query to search by
    * @return list of matched posts for given query with highlighted matches, ordered by relevance
-   *     (top 50 results)
+   *     (top {@link com.github.njuro.jard.common.Constants.MAX_SEARCH_RESULTS_COUNT} results)
    * @see SearchResultsDto
    */
+  @SuppressWarnings("JavadocReference")
   public SearchResultsDto<PostDto> searchPosts(String query) {
-    SearchResults<Post> searchResults =
-        searchService.search(query, Post.class, Post_.BODY, Post_.NAME, Post_.TRIPCODE);
+    var searchSpecification =
+        SearchSpecification.<Post>builder()
+            .entityClass(Post.class)
+            .query(query)
+            .primaryField(Post_.BODY)
+            .additionalFields(Set.of(Post_.NAME, Post_.TRIPCODE))
+            .analyzerName(Constants.POST_ANALYZER)
+            .build();
+    SearchResults<Post> searchResults = searchService.search(searchSpecification);
 
-    List<PostDto> posts = postMapper.toDtoList(searchResults.getResultList());
+    List<PostDto> posts = postMapper.toDtoList(searchResults.getEntityList());
     posts.forEach(
         post ->
             post.setBody(

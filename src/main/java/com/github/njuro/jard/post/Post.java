@@ -4,23 +4,17 @@ import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardSettings;
+import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.user.UserRole;
 import java.time.OffsetDateTime;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory;
-import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.apache.lucene.analysis.core.StopFilterFactory;
-import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
-import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
-import org.apache.lucene.analysis.standard.StandardFilterFactory;
-import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Parameter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 /** Entity representing a post in thread. */
 @Entity
@@ -45,10 +39,10 @@ public class Post extends BaseEntity {
   private Long postNumber;
 
   /** (Optional) name of the poster. */
-  @Basic @ToString.Include @Field private String name;
+  @Basic @ToString.Include @FullTextField private String name;
 
   /** (Optional) hashed password of the poster. Used to prove identity across different post. */
-  @Basic @Field private String tripcode;
+  @Basic @FullTextField private String tripcode;
 
   /**
    * (Optional) logged in user can decide to show his/her role in his/her post (for example as proof
@@ -60,20 +54,7 @@ public class Post extends BaseEntity {
   /** Body of the post. */
   @Basic
   @Column(columnDefinition = "TEXT")
-  @AnalyzerDef(
-      name = "postAnalyzer",
-      charFilters = @CharFilterDef(factory = HTMLStripCharFilterFactory.class),
-      tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-      filters = {
-        @TokenFilterDef(factory = StandardFilterFactory.class),
-        @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
-        @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-        @TokenFilterDef(factory = StopFilterFactory.class),
-        @TokenFilterDef(
-            factory = SnowballPorterFilterFactory.class,
-            params = @Parameter(name = "language", value = "English"))
-      })
-  @Field(analyzer = @Analyzer(definition = "postAnalyzer"))
+  @FullTextField(analyzer = Constants.POST_ANALYZER)
   private String body;
 
   /** Date and time when this post was created. */
