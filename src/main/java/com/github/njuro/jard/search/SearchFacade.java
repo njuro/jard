@@ -18,7 +18,8 @@ public class SearchFacade {
   private final PostMapper postMapper;
 
   @Autowired
-  public SearchFacade(SearchService searchService, PostMapper postMapper) {
+  public SearchFacade(
+      @Autowired(required = false) SearchService searchService, PostMapper postMapper) {
     this.searchService = searchService;
     this.postMapper = postMapper;
   }

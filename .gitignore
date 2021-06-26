@@ -3,6 +3,7 @@ target/
 /src/test/resources/datasets/
 .env
 *.log
+/lucene_index
 
 ### STS ###
 .apt_generated

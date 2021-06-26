@@ -14,11 +14,15 @@ import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@ConditionalOnProperty(
+    value = "spring.jpa.properties.hibernate.search.enabled",
+    havingValue = "true")
 public class SearchService {
 
   private final SearchSession searchSession;
