@@ -24,7 +24,7 @@ import org.springframework.transaction.support.TransactionTemplate
 @SpringBootTest
 @WithContainerDatabase
 @EnableSearch
-class SearchFacadeTest {
+internal class SearchFacadeTest {
 
     @Autowired
     private lateinit var boardRepository: BoardRepository
