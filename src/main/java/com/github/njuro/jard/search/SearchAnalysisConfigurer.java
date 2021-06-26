@@ -10,6 +10,8 @@ import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.search.backend.lucene.analysis.LuceneAnalysisConfigurationContext;
 import org.hibernate.search.backend.lucene.analysis.LuceneAnalysisConfigurer;
 
+/** Configuration of analysers used by Hibernate Search. */
+@SuppressWarnings("unused")
 public class SearchAnalysisConfigurer implements LuceneAnalysisConfigurer {
 
   @Override
