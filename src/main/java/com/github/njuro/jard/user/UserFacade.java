@@ -108,7 +108,8 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Edits password of current user.
    *
    * @param passwordChange object with new password
-   * @throws FormValidationException when no user is logged in
+   * @throws FormValidationException when no user is logged in or given current password is
+   *     incorrect
    */
   public void editCurrentUserPassword(PasswordEditDto passwordChange) {
     var currentUser = userService.getCurrentUser();
