@@ -215,12 +215,9 @@ public class AttachmentImageUtils {
    * @see VideoThumbnailMaker
    */
   private BufferedImage getImageFromPdfAttachment(Attachment attachment) {
-    try {
-      PDDocument document = PDDocument.load(attachment.getFile());
-      PDFRenderer pdfRenderer = new PDFRenderer(document);
-      BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
-      document.close();
-      return bim;
+    try (var document = PDDocument.load(attachment.getFile())) {
+      var pdfRenderer = new PDFRenderer(document);
+      return pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
     } catch (IOException ex) {
       throw new IllegalArgumentException("Reading PDF file failed", ex);
     }
