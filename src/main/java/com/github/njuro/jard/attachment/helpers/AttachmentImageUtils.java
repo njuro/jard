@@ -81,9 +81,7 @@ public class AttachmentImageUtils {
     AttachmentMetadata metadata = attachment.getMetadata();
 
     if (attachment.getCategory() == AttachmentCategory.PDF) {
-      // TODO: For now we assume every PDF is A4 format with portrait orientation.
-      metadata.setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
-      metadata.setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
+      setThumbnailDimensionsForPdf(attachment);
       return;
     }
 
@@ -104,6 +102,26 @@ public class AttachmentImageUtils {
       // thumbnail dimensions are the same as real dimensions
       metadata.setThumbnailHeight(metadata.getHeight());
       metadata.setThumbnailWidth(metadata.getWidth());
+    }
+  }
+
+  /**
+   * Sets thumbnail dimensions for PDF document depending on its orientation (landscape/portrait).
+   *
+   * @param attachment to get document from
+   * @throws IllegalArgumentException when loading document fails.
+   */
+  private void setThumbnailDimensionsForPdf(Attachment attachment) {
+    var image = getImageFromPdfAttachment(attachment);
+    if (image.getWidth() > image.getHeight()) {
+      // PDF is in landscape mode
+      attachment.getMetadata().setThumbnailWidth((int) IMAGE_MAX_THUMB_WIDTH);
+      attachment.getMetadata().setThumbnailHeight((int) (IMAGE_MAX_THUMB_WIDTH / Math.sqrt(2)));
+
+    } else {
+      // PDF is in portrait mode
+      attachment.getMetadata().setThumbnailHeight((int) IMAGE_MAX_THUMB_HEIGHT);
+      attachment.getMetadata().setThumbnailWidth((int) (IMAGE_MAX_THUMB_HEIGHT / Math.sqrt(2)));
     }
   }
 

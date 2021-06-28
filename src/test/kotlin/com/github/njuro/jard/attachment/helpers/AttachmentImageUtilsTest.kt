@@ -10,6 +10,7 @@ import io.kotest.matchers.should
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.awt.image.RenderedImage
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
@@ -44,8 +45,16 @@ internal class AttachmentImageUtilsTest {
         createAndVerifyThumbnail(AttachmentCategory.VIDEO, "video/avi", TEST_ATTACHMENT_AVI)
 
     @Test
-    fun `create thumbnail for pdf attachment`() =
-        createAndVerifyThumbnail(AttachmentCategory.PDF, "application/x-pdf", TEST_ATTACHMENT_PDF)
+    fun `create thumbnail for portrait pdf attachment`() =
+        createAndVerifyThumbnail(AttachmentCategory.PDF, "application/x-pdf", TEST_ATTACHMENT_PDF_PORTRAIT) {
+            it.height shouldBeGreaterThan it.width
+        }
+
+    @Test
+    fun `create thumbnail for landscape pdf attachment`() =
+        createAndVerifyThumbnail(AttachmentCategory.PDF, "application/x-pdf", TEST_ATTACHMENT_PDF_LANDSCAPE) {
+            it.width shouldBeGreaterThan it.height
+        }
 
     @Test
     fun `don't create thumbnail for other categories`() {
@@ -59,7 +68,12 @@ internal class AttachmentImageUtilsTest {
     }
 
 
-    private fun createAndVerifyThumbnail(attachmentCategory: AttachmentCategory, mimeType: String, filename: String) {
+    private fun createAndVerifyThumbnail(
+        attachmentCategory: AttachmentCategory,
+        mimeType: String,
+        filename: String,
+        additionalCheck: ((RenderedImage) -> Unit)? = null
+    ) {
         Files.copy(
             testAttachmentPath(filename),
             attachmentPath(TEST_FOLDER_NAME, filename),
@@ -85,6 +99,7 @@ internal class AttachmentImageUtilsTest {
                 it.width shouldBeLessThan attachment.metadata.width
             }
         }
+        additionalCheck?.invoke(thumbnail)
 
         attachment.metadata.should {
             it.thumbnailHeight shouldBeInRange thumbnail.height - 1..thumbnail.height + 1

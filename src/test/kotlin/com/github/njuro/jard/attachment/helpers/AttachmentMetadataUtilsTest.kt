@@ -69,7 +69,7 @@ internal class AttachmentMetadataUtilsTest {
 
     @Test
     fun `set other metadata`() {
-        val attachment = prepareAttachment(TEST_ATTACHMENT_PDF, "application/pdf")
+        val attachment = prepareAttachment(TEST_ATTACHMENT_PDF_PORTRAIT, "application/pdf")
 
         AttachmentMetadataUtils.setMetadata(attachment)
         attachment.category shouldBe AttachmentCategory.PDF
