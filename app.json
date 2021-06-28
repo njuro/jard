@@ -66,6 +66,26 @@
       "description": "Access key for Amazon Web Services",
       "required": false
     },
+    "SMTP_SERVER_HOST": {
+      "description": "Hostname for SMTP server",
+      "required": false
+    },
+    "SMTP_SERVER_PORT": {
+      "description": "Port for SMTP server",
+      "required": false
+    },
+    "SMTP_SERVER_USERNAME": {
+      "description": "Username for SMTP server authentication",
+      "required": false
+    },
+    "SMTP_SERVER_PASSWORD": {
+      "description": "Password for SMTP server authentication",
+      "required": false
+    },
+    "SMTP_SERVER_SENDER": {
+      "description": "Sender e-mail for mails sent by application",
+      "required": false
+    },
     "MAVEN_CUSTOM_OPTS": {
       "description": "Settings for Maven (Heroku specific - probably don't change)",
       "value": "-DskipTests=true -DskipGitHooks=true"
