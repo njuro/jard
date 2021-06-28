@@ -3,6 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.*
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.user.dto.PasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import com.ninjasquad.springmockk.MockkBean
@@ -15,10 +16,7 @@ import io.mockk.slot
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 
 @WithContainerDatabase
 internal class UserControllerTest : MockMvcTest() {
@@ -132,6 +130,36 @@ internal class UserControllerTest : MockMvcTest() {
         fun `don't edit non-existing user`() {
             every { userFacade.resolveUser(ofType(String::class)) } throws UserNotFoundException()
             editUser("xxx", user().toForm()).andExpect { status { isNotFound() } }
+        }
+    }
+
+    @Nested
+    @DisplayName("edit current user password")
+    @WithMockJardUser(password = "oldPassword")
+    inner class EditUserCurrentUserPassword {
+        private fun editCurrentUserPassword(passwordEdit: PasswordEditDto) =
+            mockMvc.patch("${Mappings.API_ROOT_USERS}/current/password") { body(passwordEdit) }
+
+        @Test
+        fun `edit user password when new password is valid`() {
+            every { userFacade.editCurrentUserPassword(ofType(PasswordEditDto::class)) } just Runs
+
+            editCurrentUserPassword(passwordEdit("oldPassword", "newPassword")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `don't edit user password when new password is not valid`() {
+            every { userFacade.editCurrentUserPassword(ofType(PasswordEditDto::class)) } just Runs
+
+            editCurrentUserPassword(passwordEdit(null, "a")).andExpectValidationError("currentPassword")
+            editCurrentUserPassword(passwordEdit("oldPassword", "a")).andExpectValidationError("newPassword")
+            editCurrentUserPassword(
+                passwordEdit(
+                    "oldPassword",
+                    "newPassword",
+                    newPasswordRepeated = "otherPassword"
+                )
+            ).andExpectValidationError("passwordMatching")
         }
     }
 

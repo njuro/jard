@@ -3,6 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.user.dto.PasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import io.kotest.matchers.collections.shouldHaveSize
@@ -13,10 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.put
+import org.springframework.test.web.servlet.*
 import org.springframework.transaction.annotation.Transactional
 
 @WithContainerDatabase
@@ -88,6 +86,29 @@ internal class UserIntegrationTest : MockMvcTest() {
         @Test
         fun `don't edit non-existing user`() {
             editUser("xxx", user().toForm()).andExpect { status { isNotFound() } }
+        }
+    }
+
+    @Nested
+    @DisplayName("edit current user password")
+    inner class EditUserCurrentUserPassword {
+        private fun editCurrentUserPassword(passwordEdit: PasswordEditDto) =
+            mockMvc.patch("${Mappings.API_ROOT_USERS}/current/password") { body(passwordEdit) }
+
+        @Test
+        @WithMockJardUser(password = "\$2b\$31\$Pr0po9XrlgIzkeUMCeheFOXJiVd/K.ISm0ra4SGAHgpWxY6b4CZaS") // nasty hack
+        fun `edit user password when user is authenticated`() {
+            editCurrentUserPassword(passwordEdit("oldPassword", "newPassword")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `don't edit user password when user is not authenticated`() {
+            editCurrentUserPassword(
+                passwordEdit(
+                    "oldPassword",
+                    "newPassword"
+                )
+            ).andExpect { status { isBadRequest() } }
         }
     }
 

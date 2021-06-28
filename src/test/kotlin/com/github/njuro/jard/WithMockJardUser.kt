@@ -33,13 +33,14 @@ import java.lang.annotation.Inherited
 annotation class WithMockJardUser(
     vararg val value: UserAuthority = [],
     @get:AliasFor("value") val authorities: Array<UserAuthority> = [],
-    val username: String = "user"
+    val username: String = "user",
+    val password: String = "password"
 ) {
     class WithMockJardUserSecurityContext : WithSecurityContextFactory<WithMockJardUser> {
         override fun createSecurityContext(jardUser: WithMockJardUser): SecurityContext {
             val principal = User.builder()
                 .username(jardUser.username)
-                .password("password")
+                .password(jardUser.password)
                 .authorities(jardUser.value.toSet())
                 .build()
             val authentication: Authentication =

@@ -1,11 +1,10 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.MapperTest
-import com.github.njuro.jard.WithContainerDatabase
-import com.github.njuro.jard.toForm
-import com.github.njuro.jard.user
+import com.github.njuro.jard.*
 import com.github.njuro.jard.utils.validation.FormValidationException
+import com.ninjasquad.springmockk.SpykBean
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldBePresent
@@ -13,10 +12,12 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldNotBeBlank
+import io.mockk.every
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.transaction.annotation.Transactional
 
 @WithContainerDatabase
@@ -26,8 +27,14 @@ internal class UserFacadeTest : MapperTest() {
     @Autowired
     private lateinit var userFacade: UserFacade
 
+    @SpykBean
+    private lateinit var userService: UserService
+
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @Nested
     @DisplayName("create user")
@@ -101,13 +108,12 @@ internal class UserFacadeTest : MapperTest() {
 
         @Test
         fun `edit user password`() {
-            val originalUser = user(username = "Anonymous")
+            val originalUser = user(username = "Anonymous", password = "oldPassword")
             val updatedUser = originalUser.toForm().apply { password = "newPassword"; passwordRepeated = "newPassword" }
 
             userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser)
             userRepository.findByUsernameIgnoreCase(originalUser.username).shouldBePresent {
-                it.password.shouldNotBeBlank()
-                it.password shouldNotBe updatedUser.password
+                passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
             }
         }
 
@@ -121,5 +127,40 @@ internal class UserFacadeTest : MapperTest() {
                 userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser)
             }
         }
+    }
+
+    @Nested
+    @DisplayName("edit current user's password")
+    inner class EditCurrentUserPassword {
+
+        @Test
+        fun `edit password if user is authenticated and current password is correct`() {
+            every { userService.currentUser } returns user(password = passwordEncoder.encode("oldPassword"))
+
+            userFacade.editCurrentUserPassword(passwordEdit("oldPassword", "newPassword"))
+            userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
+                passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
+            }
+        }
+
+        @Test
+        fun `don't edit if user is not authenticated`() {
+            every { userService.currentUser } returns null
+
+            shouldThrow<FormValidationException> {
+                userFacade.editCurrentUserPassword(passwordEdit("oldPassword", "newPassword"))
+            }
+        }
+
+        @Test
+        fun `don't edit if current password is incorrect`() {
+            every { userService.currentUser } returns user(password = passwordEncoder.encode("oldPassword"))
+
+            shouldThrow<FormValidationException> {
+                userFacade.editCurrentUserPassword(passwordEdit("wrongPassword", "newPassword"))
+            }
+        }
+
+
     }
 }

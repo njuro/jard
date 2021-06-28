@@ -21,6 +21,7 @@ import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.User
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.user.UserRole
+import com.github.njuro.jard.user.dto.PasswordEditDto
 import com.github.njuro.jard.user.dto.UserForm
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mock.web.MockMultipartFile
@@ -247,6 +248,16 @@ fun loginRequest(
         .password(password)
         .rememberMe(rememberMe)
         .build()
+
+fun passwordEdit(
+    currentPassword: String?,
+    newPassword: String,
+    newPasswordRepeated: String = newPassword
+): PasswordEditDto = PasswordEditDto.builder()
+    .currentPassword(currentPassword)
+    .newPassword(newPassword)
+    .newPasswordRepeated(newPasswordRepeated)
+    .build()
 
 fun Board.toForm(): BoardForm = BoardForm.builder()
     .label(label)
