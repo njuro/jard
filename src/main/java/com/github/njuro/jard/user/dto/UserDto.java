@@ -1,5 +1,6 @@
 package com.github.njuro.jard.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserAuthority;
@@ -21,7 +22,10 @@ public class UserDto extends BaseDto {
   private static final long serialVersionUID = -4790800488577238707L;
 
   /** {@link User#username } */
-  @EqualsAndHashCode.Include @ToString.Include private String username;
+  @JsonView(PublicView.class)
+  @EqualsAndHashCode.Include
+  @ToString.Include
+  private String username;
 
   /** {@link User#email } */
   @ToString.Include private String email;
@@ -30,9 +34,12 @@ public class UserDto extends BaseDto {
   private boolean enabled;
 
   /** {@link User#role } */
-  @ToString.Include private UserRole role;
+  @JsonView(PublicView.class)
+  @ToString.Include
+  private UserRole role;
 
   /** {@link User#authorities } */
+  @JsonView(PublicView.class)
   private Set<UserAuthority> authorities;
 
   /** {@link User#registrationIp } */
@@ -46,4 +53,6 @@ public class UserDto extends BaseDto {
 
   /** {@link User#createdAt } */
   private OffsetDateTime createdAt;
+
+  public interface PublicView {}
 }

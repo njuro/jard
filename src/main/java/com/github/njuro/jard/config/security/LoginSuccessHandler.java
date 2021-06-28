@@ -3,7 +3,9 @@ package com.github.njuro.jard.config.security;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.config.security.jwt.JwtTokenProvider;
 import com.github.njuro.jard.user.User;
+import com.github.njuro.jard.user.UserMapper;
 import com.github.njuro.jard.user.UserService;
+import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.utils.HttpUtils;
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   private final UserService userService;
+  private final UserMapper userMapper;
   private final JwtTokenProvider jwtTokenProvider;
   private final HttpUtils httpUtils;
   private final CookieProcessor cookieProcessor;
@@ -31,10 +34,12 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   @Autowired
   public LoginSuccessHandler(
       UserService userService,
+      UserMapper userMapper,
       JwtTokenProvider jwtTokenProvider,
       HttpUtils httpUtils,
       CookieProcessor cookieProcessor) {
     this.userService = userService;
+    this.userMapper = userMapper;
     this.jwtTokenProvider = jwtTokenProvider;
     this.httpUtils = httpUtils;
     this.cookieProcessor = cookieProcessor;
@@ -62,6 +67,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             : jwtTokenProvider.generateSessionCookie(authentication);
     response.addHeader(HttpHeaders.SET_COOKIE, cookieProcessor.generateHeader(cookie, request));
 
-    httpUtils.writeJsonToResponse(response, userService.getCurrentUser());
+    httpUtils.writeJsonToResponse(
+        response, userMapper.toDto(userService.getCurrentUser()), UserDto.PublicView.class);
   }
 }

@@ -1,5 +1,6 @@
 package com.github.njuro.jard.utils;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -66,11 +67,24 @@ public class HttpUtils {
    * @throws IOException if serializing or writing to response fails
    */
   public void writeJsonToResponse(HttpServletResponse response, Object object) throws IOException {
-    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    response.getWriter().write(objectMapper.writeValueAsString(object));
-    response.getWriter().flush();
+    writeJsonToResponse(response, object, null);
   }
 
+  /**
+   * Serializes given object with given {@link JsonView} and writes is as response body.
+   *
+   * @param response response to HTTP request
+   * @param view {@link JsonView} to use
+   * @param object object to serialize
+   * @throws IOException if serializing or writing to response fails
+   */
+  public void writeJsonToResponse(HttpServletResponse response, Object object, Class<?> view)
+      throws IOException {
+    var objectWriter = (view == null) ? objectMapper.writer() : objectMapper.writerWithView(view);
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.getWriter().write(objectWriter.writeValueAsString(object));
+    response.getWriter().flush();
+  }
   /**
    * Gets origin URL from given url string.
    *
