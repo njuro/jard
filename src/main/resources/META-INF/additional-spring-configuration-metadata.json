@@ -69,6 +69,11 @@
       "name": "app.hcaptcha.secret",
       "type": "java.lang.String",
       "description": "Secret key for hCaptcha."
+    },
+    {
+      "name": "app.mail.sender",
+      "type": "java.lang.String",
+      "description": "Sender e-mail address for system mails (if SMTP server is configured)."
     }
   ]
 }
