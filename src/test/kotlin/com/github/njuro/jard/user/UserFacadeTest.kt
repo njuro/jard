@@ -130,12 +130,63 @@ internal class UserFacadeTest : MapperTest() {
     }
 
     @Nested
+    @DisplayName("edit current user")
+    inner class EditCurrentUser {
+
+        @Test
+        fun `edit email if user is authenticated and new email is not used yet`() {
+            val user = userRepository.save(user(username = "user", email = "old@mail.com"))
+            every { userService.currentUser } returns user
+
+            userFacade.editCurrentUser(userEdit("new@mail.com"))
+            userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
+                it.email shouldBe "new@mail.com"
+            }
+        }
+
+        @Test
+        fun `do nothing if user is authenticated and new email is the same as old`() {
+            val user = userRepository.save(user(username = "user", email = "new@mail.com"))
+            every { userService.currentUser } returns user
+
+            userFacade.editCurrentUser(userEdit("NEW@MAIL.COM"))
+            userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
+                it.email shouldBe "new@mail.com"
+            }
+        }
+
+        @Test
+        fun `don't edit if user is not authenticated`() {
+            every { userService.currentUser } returns null
+
+            shouldThrow<FormValidationException> {
+                userFacade.editCurrentUser(userEdit("new@mail.com"))
+            }
+        }
+
+        @Test
+        fun `don't edit if new email is already in use`() {
+            val user1 = userRepository.save(user(username = "user1", email = "old@mail.com"))
+            val user2 = userRepository.save(user(username = "user2", email = "new@mail.com"))
+            every { userService.currentUser } returns user1
+
+            shouldThrow<FormValidationException> {
+                userFacade.editCurrentUser(userEdit(user2.email))
+            }
+        }
+
+
+    }
+
+    @Nested
     @DisplayName("edit current user's password")
     inner class EditCurrentUserPassword {
 
+
         @Test
         fun `edit password if user is authenticated and current password is correct`() {
-            every { userService.currentUser } returns user(password = passwordEncoder.encode("oldPassword"))
+            val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
+            every { userService.currentUser } returns user
 
             userFacade.editCurrentUserPassword(passwordEdit("oldPassword", "newPassword"))
             userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
@@ -154,7 +205,8 @@ internal class UserFacadeTest : MapperTest() {
 
         @Test
         fun `don't edit if current password is incorrect`() {
-            every { userService.currentUser } returns user(password = passwordEncoder.encode("oldPassword"))
+            val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
+            every { userService.currentUser } returns user
 
             shouldThrow<FormValidationException> {
                 userFacade.editCurrentUserPassword(passwordEdit("wrongPassword", "newPassword"))

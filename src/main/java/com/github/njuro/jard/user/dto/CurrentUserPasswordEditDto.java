@@ -5,11 +5,15 @@ import static com.github.njuro.jard.common.InputConstraints.MIN_PASSWORD_LENGTH;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /** DTO for changing current user's password */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CurrentUserPasswordEditDto {
 

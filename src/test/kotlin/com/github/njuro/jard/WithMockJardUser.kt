@@ -34,12 +34,14 @@ annotation class WithMockJardUser(
     vararg val value: UserAuthority = [],
     @get:AliasFor("value") val authorities: Array<UserAuthority> = [],
     val username: String = "user",
+    val email: String = "email@mail.com",
     val password: String = "password"
 ) {
     class WithMockJardUserSecurityContext : WithSecurityContextFactory<WithMockJardUser> {
         override fun createSecurityContext(jardUser: WithMockJardUser): SecurityContext {
             val principal = User.builder()
                 .username(jardUser.username)
+                .email(jardUser.email)
                 .password(jardUser.password)
                 .authorities(jardUser.value.toSet())
                 .build()

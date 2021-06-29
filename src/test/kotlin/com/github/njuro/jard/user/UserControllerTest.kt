@@ -3,6 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.*
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
@@ -101,7 +102,7 @@ internal class UserControllerTest : MockMvcTest() {
         val response = mockMvc.get("${Mappings.API_ROOT_USERS}/current") { setUp() }.andExpect {
             status { isOk() }
             jsonPath("$.username") { exists() }
-            jsonPath("$.email") { doesNotExist() }
+            jsonPath("$.registrationIp") { doesNotExist() }
         }.andReturnConverted<UserDto>()
         response.username shouldBe "Anonymous"
         response.role shouldBe UserRole.ADMIN
@@ -134,8 +135,28 @@ internal class UserControllerTest : MockMvcTest() {
     }
 
     @Nested
+    @DisplayName("edit current user")
+    inner class EditUserCurrentUser {
+        private fun editCurrentUser(userEdit: CurrentUserEditDto) =
+            mockMvc.patch("${Mappings.API_ROOT_USERS}/current") { body(userEdit) }
+
+        @Test
+        fun `edit user email when new email is valid`() {
+            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } just Runs
+
+            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `don't edit user email when new email is not valid`() {
+            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } just Runs
+
+            editCurrentUser(userEdit("xxx")).andExpect { status { isBadRequest() } }
+        }
+    }
+
+    @Nested
     @DisplayName("edit current user password")
-    @WithMockJardUser(password = "oldPassword")
     inner class EditUserCurrentUserPassword {
         private fun editCurrentUserPassword(passwordEdit: CurrentUserPasswordEditDto) =
             mockMvc.patch("${Mappings.API_ROOT_USERS}/current/password") { body(passwordEdit) }

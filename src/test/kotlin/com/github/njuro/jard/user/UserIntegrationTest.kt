@@ -3,6 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
@@ -86,6 +87,24 @@ internal class UserIntegrationTest : MockMvcTest() {
         @Test
         fun `don't edit non-existing user`() {
             editUser("xxx", user().toForm()).andExpect { status { isNotFound() } }
+        }
+    }
+
+    @Nested
+    @DisplayName("edit current user")
+    inner class EditUserCurrentUser {
+        private fun editCurrentUser(userEdit: CurrentUserEditDto) =
+            mockMvc.patch("${Mappings.API_ROOT_USERS}/current") { body(userEdit) }
+
+        @Test
+        @WithMockJardUser(email = "old@mail.com")
+        fun `edit current user when user is authenticated`() {
+            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `don't edit current user when user is not authenticated`() {
+            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isBadRequest() } }
         }
     }
 

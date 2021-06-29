@@ -2,6 +2,7 @@ package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
+import com.github.njuro.jard.user.dto.CurrentUserEditDto;
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
 import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.user.dto.UserForm;
@@ -57,6 +58,12 @@ public class UserRestController {
   @HasAuthorities(UserAuthority.MANAGE_USERS)
   public UserDto editUser(UserDto oldUser, @RequestBody UserForm userForm) {
     return userFacade.editUser(oldUser, userForm);
+  }
+
+  @PatchMapping("/current")
+  public ResponseEntity<Object> editCurrentUser(@RequestBody @Valid CurrentUserEditDto userChange) {
+    userFacade.editCurrentUser(userChange);
+    return ResponseEntity.ok().build();
   }
 
   @PatchMapping("/current/password")

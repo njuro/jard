@@ -21,6 +21,7 @@ import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.user.User
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.user.UserRole
+import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserForm
 import org.apache.commons.lang3.RandomStringUtils
@@ -248,6 +249,8 @@ fun loginRequest(
         .password(password)
         .rememberMe(rememberMe)
         .build()
+
+fun userEdit(email: String): CurrentUserEditDto = CurrentUserEditDto.builder().email(email).build()
 
 fun passwordEdit(
     currentPassword: String?,

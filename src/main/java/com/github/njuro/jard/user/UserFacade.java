@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseFacade;
+import com.github.njuro.jard.user.dto.CurrentUserEditDto;
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
 import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.user.dto.UserForm;
@@ -102,6 +103,30 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     }
 
     return toDto(userService.saveUser(oldUserEntity));
+  }
+
+  /**
+   * Edits information of current user.
+   *
+   * @param userChange object with updated information.
+   * @throws FormValidationException when no user is logged in or updated email is already in use
+   */
+  public void editCurrentUser(CurrentUserEditDto userChange) {
+    var currentUser = userService.getCurrentUser();
+    if (currentUser == null) {
+      throw new FormValidationException("No user is authenticated");
+    }
+
+    if (userChange.getEmail().equalsIgnoreCase(currentUser.getEmail())) {
+      return;
+    }
+
+    if (userService.doesEmailExists(userChange.getEmail())) {
+      throw new FormValidationException("E-mail already in use by different user");
+    }
+
+    currentUser.setEmail(userChange.getEmail());
+    userService.saveUser(currentUser);
   }
 
   /**
