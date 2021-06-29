@@ -60,7 +60,8 @@ internal class AuthenticationIntegrationTest : MockMvcTest() {
                 jsonPath("$.username") { value("user") }
                 jsonPath("$.role") { exists() }
                 jsonPath("$.authorities") { exists() }
-                jsonPath("$.email") { doesNotExist() }
+                jsonPath("$.email") { exists() }
+                jsonPath("$.registrationIp") { doesNotExist() }
             }.andReturn().response.getHeader(HttpHeaders.SET_COOKIE).shouldContainIgnoringCase("SameSite=Strict")
 
             userFacade.resolveUser(user.username).should {

@@ -28,7 +28,9 @@ public class UserDto extends BaseDto {
   private String username;
 
   /** {@link User#email } */
-  @ToString.Include private String email;
+  @JsonView(PublicView.class)
+  @ToString.Include
+  private String email;
 
   /** {@link User#enabled } */
   private boolean enabled;

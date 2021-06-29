@@ -47,7 +47,7 @@ public class UserRestController {
   @GetMapping("/current")
   @FieldFilterSetting(
       className = UserDto.class,
-      fields = {"username", "role", "authorities"},
+      fields = {"username", "email", "role", "authorities"},
       behaviour = FilterBehaviour.KEEP_FIELDS)
   public UserDto getCurrentUser() {
     return userFacade.getCurrentUser();
