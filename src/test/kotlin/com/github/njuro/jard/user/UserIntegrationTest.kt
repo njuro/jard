@@ -99,7 +99,8 @@ internal class UserIntegrationTest : MockMvcTest() {
         @Test
         @WithMockJardUser(email = "old@mail.com")
         fun `edit current user when user is authenticated`() {
-            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isOk() } }
+            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isOk() } }.andReturnConverted<UserDto>()
+                .shouldNotBeNull()
         }
 
         @Test

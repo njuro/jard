@@ -110,15 +110,16 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    *
    * @param userChange object with updated information.
    * @throws FormValidationException when no user is logged in or updated email is already in use
+   * @return updated user
    */
-  public void editCurrentUser(CurrentUserEditDto userChange) {
+  public UserDto editCurrentUser(CurrentUserEditDto userChange) {
     var currentUser = userService.getCurrentUser();
     if (currentUser == null) {
       throw new FormValidationException("No user is authenticated");
     }
 
     if (userChange.getEmail().equalsIgnoreCase(currentUser.getEmail())) {
-      return;
+      return toDto(currentUser);
     }
 
     if (userService.doesEmailExists(userChange.getEmail())) {
@@ -126,7 +127,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     }
 
     currentUser.setEmail(userChange.getEmail());
-    userService.saveUser(currentUser);
+    return toDto(userService.saveUser(currentUser));
   }
 
   /**

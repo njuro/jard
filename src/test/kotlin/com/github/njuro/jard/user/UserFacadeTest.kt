@@ -138,10 +138,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = "old@mail.com"))
             every { userService.currentUser } returns user
 
-            userFacade.editCurrentUser(userEdit("new@mail.com"))
-            userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
-                it.email shouldBe "new@mail.com"
-            }
+            userFacade.editCurrentUser(userEdit("new@mail.com")).email shouldBe "new@mail.com"
         }
 
         @Test
@@ -149,10 +146,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = "new@mail.com"))
             every { userService.currentUser } returns user
 
-            userFacade.editCurrentUser(userEdit("NEW@MAIL.COM"))
-            userRepository.findByUsernameIgnoreCase("user").shouldBePresent {
-                it.email shouldBe "new@mail.com"
-            }
+            userFacade.editCurrentUser(userEdit("NEW@MAIL.COM")).email shouldBe "new@mail.com"
         }
 
         @Test

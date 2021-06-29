@@ -9,6 +9,7 @@ import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
@@ -142,14 +143,19 @@ internal class UserControllerTest : MockMvcTest() {
 
         @Test
         fun `edit user email when new email is valid`() {
-            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } just Runs
+            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } answers { user(email = firstArg<CurrentUserEditDto>().email).toDto() }
 
-            editCurrentUser(userEdit("new@mail.com")).andExpect { status { isOk() } }
+            editCurrentUser(userEdit("new@mail.com")).andExpect {
+                status { isOk() }
+                jsonPath("$.username") { exists() }
+                jsonPath("$.registrationIp") { doesNotExist() }
+            }.andReturnConverted<UserDto>()
+                .shouldNotBeNull()
         }
 
         @Test
         fun `don't edit user email when new email is not valid`() {
-            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } just Runs
+            every { userFacade.editCurrentUser(ofType(CurrentUserEditDto::class)) } answers { user(email = firstArg<CurrentUserEditDto>().email).toDto() }
 
             editCurrentUser(userEdit("xxx")).andExpect { status { isBadRequest() } }
         }

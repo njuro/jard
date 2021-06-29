@@ -61,9 +61,12 @@ public class UserRestController {
   }
 
   @PatchMapping("/current")
-  public ResponseEntity<Object> editCurrentUser(@RequestBody @Valid CurrentUserEditDto userChange) {
-    userFacade.editCurrentUser(userChange);
-    return ResponseEntity.ok().build();
+  @FieldFilterSetting(
+      className = UserDto.class,
+      fields = {"username", "email", "role", "authorities"},
+      behaviour = FilterBehaviour.KEEP_FIELDS)
+  public UserDto editCurrentUser(@RequestBody @Valid CurrentUserEditDto userChange) {
+    return userFacade.editCurrentUser(userChange);
   }
 
   @PatchMapping("/current/password")
