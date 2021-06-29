@@ -3,7 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.*
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.user.dto.PasswordEditDto
+import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import com.ninjasquad.springmockk.MockkBean
@@ -137,19 +137,19 @@ internal class UserControllerTest : MockMvcTest() {
     @DisplayName("edit current user password")
     @WithMockJardUser(password = "oldPassword")
     inner class EditUserCurrentUserPassword {
-        private fun editCurrentUserPassword(passwordEdit: PasswordEditDto) =
+        private fun editCurrentUserPassword(passwordEdit: CurrentUserPasswordEditDto) =
             mockMvc.patch("${Mappings.API_ROOT_USERS}/current/password") { body(passwordEdit) }
 
         @Test
         fun `edit user password when new password is valid`() {
-            every { userFacade.editCurrentUserPassword(ofType(PasswordEditDto::class)) } just Runs
+            every { userFacade.editCurrentUserPassword(ofType(CurrentUserPasswordEditDto::class)) } just Runs
 
             editCurrentUserPassword(passwordEdit("oldPassword", "newPassword")).andExpect { status { isOk() } }
         }
 
         @Test
         fun `don't edit user password when new password is not valid`() {
-            every { userFacade.editCurrentUserPassword(ofType(PasswordEditDto::class)) } just Runs
+            every { userFacade.editCurrentUserPassword(ofType(CurrentUserPasswordEditDto::class)) } just Runs
 
             editCurrentUserPassword(passwordEdit(null, "a")).andExpectValidationError("currentPassword")
             editCurrentUserPassword(passwordEdit("oldPassword", "a")).andExpectValidationError("newPassword")

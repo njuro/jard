@@ -11,7 +11,7 @@ import lombok.Data;
 /** DTO for changing current user's password */
 @Data
 @Builder
-public class PasswordEditDto {
+public class CurrentUserPasswordEditDto {
 
   @NotNull private String currentPassword;
 

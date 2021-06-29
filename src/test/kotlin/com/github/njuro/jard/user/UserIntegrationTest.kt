@@ -3,7 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.*
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.user.dto.PasswordEditDto
+import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import io.kotest.matchers.collections.shouldHaveSize
@@ -92,7 +92,7 @@ internal class UserIntegrationTest : MockMvcTest() {
     @Nested
     @DisplayName("edit current user password")
     inner class EditUserCurrentUserPassword {
-        private fun editCurrentUserPassword(passwordEdit: PasswordEditDto) =
+        private fun editCurrentUserPassword(passwordEdit: CurrentUserPasswordEditDto) =
             mockMvc.patch("${Mappings.API_ROOT_USERS}/current/password") { body(passwordEdit) }
 
         @Test

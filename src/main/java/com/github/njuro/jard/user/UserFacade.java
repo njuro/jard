@@ -1,7 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseFacade;
-import com.github.njuro.jard.user.dto.PasswordEditDto;
+import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
 import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.user.dto.UserForm;
 import com.github.njuro.jard.utils.validation.FormValidationException;
@@ -111,7 +111,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * @throws FormValidationException when no user is logged in or given current password is
    *     incorrect
    */
-  public void editCurrentUserPassword(PasswordEditDto passwordChange) {
+  public void editCurrentUserPassword(CurrentUserPasswordEditDto passwordChange) {
     var currentUser = userService.getCurrentUser();
     if (currentUser == null) {
       throw new FormValidationException("No user is authenticated");

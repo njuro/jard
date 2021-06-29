@@ -2,7 +2,7 @@ package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
-import com.github.njuro.jard.user.dto.PasswordEditDto;
+import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
 import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.user.dto.UserForm;
 import com.jfilter.filter.FieldFilterSetting;
@@ -61,7 +61,7 @@ public class UserRestController {
 
   @PatchMapping("/current/password")
   public ResponseEntity<Object> editCurrentUserPassword(
-      @RequestBody @Valid PasswordEditDto passwordChange) {
+      @RequestBody @Valid CurrentUserPasswordEditDto passwordChange) {
     userFacade.editCurrentUserPassword(passwordChange);
     return ResponseEntity.ok().build();
   }
