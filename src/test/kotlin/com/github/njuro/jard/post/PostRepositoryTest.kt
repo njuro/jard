@@ -39,9 +39,11 @@ internal class PostRepositoryTest {
     @BeforeEach
     fun setUp() {
         board = boardRepository.save(board(label = "r"))
-        thread = threadRepository.save(thread(board).apply {
-            originalPost = postRepository.save(originalPost)
-        })
+        thread = threadRepository.save(
+            thread(board).apply {
+                originalPost = postRepository.save(originalPost)
+            }
+        )
     }
 
     @Test

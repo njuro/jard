@@ -73,6 +73,4 @@ internal class ThreadStatisticsTest {
 
         return postRepository.save(post)
     }
-
-
 }

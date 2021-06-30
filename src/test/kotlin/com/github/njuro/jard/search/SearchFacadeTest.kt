@@ -51,13 +51,17 @@ internal class SearchFacadeTest {
     fun `search posts`() {
         transactionTemplate.executeWithoutResult {
             val board = saveBoard(board(label = "r"))
-            val thread1 = saveThread(thread(board).apply {
-                originalPost.postNumber = 1L; originalPost.body = "This is the very first post"
-            })
+            val thread1 = saveThread(
+                thread(board).apply {
+                    originalPost.postNumber = 1L; originalPost.body = "This is the very first post"
+                }
+            )
             val thread2 =
-                saveThread(thread(board).apply {
-                    originalPost.postNumber = 2L; originalPost.body = "Second post"
-                })
+                saveThread(
+                    thread(board).apply {
+                        originalPost.postNumber = 2L; originalPost.body = "Second post"
+                    }
+                )
             val reply1 = saveReply(post(thread1, postNumber = 3L, body = "Unrelated reply"))
             val reply2 = saveReply(post(thread2, postNumber = 4L, body = "Forst (misspelled)"))
             val reply3 = saveReply(post(thread2, postNumber = 5L, body = "FIRST FIRST FIRST (upper-case)"))

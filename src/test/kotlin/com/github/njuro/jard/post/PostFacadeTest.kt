@@ -45,9 +45,11 @@ internal class PostFacadeTest : MapperTest() {
     @BeforeEach
     fun setUp() {
         board = spyk(boardRepository.save(board(label = "r")))
-        thread = threadRepository.save(thread(board).apply {
-            originalPost = postRepository.save(originalPost)
-        })
+        thread = threadRepository.save(
+            thread(board).apply {
+                originalPost = postRepository.save(originalPost)
+            }
+        )
 
         every { userFacade.currentUser } returns user(role = UserRole.ADMIN).toDto()
     }

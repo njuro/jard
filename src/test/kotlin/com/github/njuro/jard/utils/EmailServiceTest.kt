@@ -46,7 +46,6 @@ internal class EmailServiceTest {
         }
     }
 
-
     @Autowired
     private lateinit var emailService: EmailService
 
@@ -68,5 +67,4 @@ internal class EmailServiceTest {
             it.content.toString() shouldBe "$body\r\n"
         }
     }
-
 }

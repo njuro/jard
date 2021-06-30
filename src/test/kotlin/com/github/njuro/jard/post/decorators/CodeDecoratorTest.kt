@@ -28,7 +28,8 @@ internal class CodeDecoratorTest : PostDecoratorTest() {
             "[code]text[code]",
             "test[/code]",
             "[code] [/code]",
-            "text"]
+            "text"
+        ]
     )
     fun `invalid code block`(input: String) {
         decorate(input) shouldBe input

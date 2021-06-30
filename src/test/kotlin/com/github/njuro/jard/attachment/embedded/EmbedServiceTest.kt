@@ -32,7 +32,6 @@ internal class EmbedServiceTest {
     @Autowired
     private lateinit var embedService: EmbedService
 
-
     @Test
     fun `get handler existing embedded provider`() {
         embedService.getHandlerForProvider(MockEmbeddedAttachmentHandler.PROVIDER_NAME)
@@ -71,5 +70,4 @@ internal class EmbedServiceTest {
             embedService.processEmbedded(MockEmbeddedAttachmentHandler.SUPPORTED_URL, attachment)
         }
     }
-
 }

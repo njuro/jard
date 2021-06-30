@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
 import java.io.IOException
 
-
 @WithContainerDatabase
 internal class BoardControllerTest : MockMvcTest() {
 
@@ -95,15 +94,16 @@ internal class BoardControllerTest : MockMvcTest() {
         fun `don't create board with invalid default poster name`() {
             expectValidationError(
                 board(
-                    label = "r", settings = boardSettings(
+                    label = "r",
+                    settings = boardSettings(
                         defaultPosterName = randomString(
                             MAX_NAME_LENGTH + 1
                         )
                     )
-                ), "boardSettingsForm.defaultPosterName"
+                ),
+                "boardSettingsForm.defaultPosterName"
             )
         }
-
     }
 
     @Test
@@ -127,7 +127,7 @@ internal class BoardControllerTest : MockMvcTest() {
     @DisplayName("get board")
     inner class GetBoard {
         private fun getBoard(label: String, page: Int? = null) =
-            mockMvc.get("${Mappings.API_ROOT_BOARDS}/$label${if (page == null) "" else "?page=${page}"}") { setUp() }
+            mockMvc.get("${Mappings.API_ROOT_BOARDS}/$label${if (page == null) "" else "?page=$page"}") { setUp() }
 
         @Test
         fun `get existing board`() {
@@ -166,7 +166,6 @@ internal class BoardControllerTest : MockMvcTest() {
             pagination.captured.pageNumber shouldBe 2
         }
 
-
         @Test
         fun `don't get non-existing board`() {
             val label = "xxx"
@@ -191,7 +190,6 @@ internal class BoardControllerTest : MockMvcTest() {
         }.andReturnConverted<BoardDto>()
         response.label shouldBe board.label
         response.threads shouldHaveSize 2
-
     }
 
     @Nested
@@ -229,7 +227,6 @@ internal class BoardControllerTest : MockMvcTest() {
         }
     }
 
-
     @Nested
     @DisplayName("delete board")
     @WithMockJardUser(UserAuthority.MANAGE_BOARDS)
@@ -253,8 +250,5 @@ internal class BoardControllerTest : MockMvcTest() {
 
             deleteBoard(board.label).andExpect { status { isBadRequest() } }
         }
-
     }
-
-
 }

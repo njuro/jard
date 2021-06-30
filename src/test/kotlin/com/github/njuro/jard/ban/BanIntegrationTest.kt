@@ -63,7 +63,6 @@ internal class BanIntegrationTest : MockMvcTest() {
         }
     }
 
-
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP)
     fun `get all bans`() {
@@ -109,7 +108,6 @@ internal class BanIntegrationTest : MockMvcTest() {
         private fun unban(id: UUID, unbanForm: UnbanForm) =
             mockMvc.put("${Mappings.API_ROOT_BANS}/$id/unban") { body(unbanForm) }
 
-
         @Test
         fun `valid unban`() {
             val ban = banRepository.save(ban(status = BanStatus.ACTIVE))
@@ -132,5 +130,4 @@ internal class BanIntegrationTest : MockMvcTest() {
             banRepository.findById(ban.id).shouldBePresent { it.status shouldBe BanStatus.ACTIVE }
         }
     }
-
 }

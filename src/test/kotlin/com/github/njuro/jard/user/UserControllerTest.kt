@@ -76,7 +76,8 @@ internal class UserControllerTest : MockMvcTest() {
         fun `don't create user with non-matching password`() {
             createUser(
                 user().toForm()
-                    .apply { password = "firstpass"; passwordRepeated = "secondpass" })
+                    .apply { password = "firstpass"; passwordRepeated = "secondpass" }
+            )
                 .andExpectValidationError("passwordMatching")
         }
     }
@@ -189,7 +190,6 @@ internal class UserControllerTest : MockMvcTest() {
             ).andExpectValidationError("passwordMatching")
         }
     }
-
 
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)

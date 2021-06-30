@@ -168,14 +168,11 @@ internal class UserFacadeTest : MapperTest() {
                 userFacade.editCurrentUser(userEdit(user2.email))
             }
         }
-
-
     }
 
     @Nested
     @DisplayName("edit current user's password")
     inner class EditCurrentUserPassword {
-
 
         @Test
         fun `edit password if user is authenticated and current password is correct`() {
@@ -206,7 +203,5 @@ internal class UserFacadeTest : MapperTest() {
                 userFacade.editCurrentUserPassword(passwordEdit("wrongPassword", "newPassword"))
             }
         }
-
-
     }
 }

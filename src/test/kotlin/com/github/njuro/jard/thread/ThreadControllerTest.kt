@@ -60,7 +60,6 @@ internal class ThreadControllerTest : MockMvcTest() {
         unmockkStatic(HttpUtils::class)
     }
 
-
     @Nested
     @DisplayName("create thread")
     inner class CreateThread {
@@ -176,11 +175,13 @@ internal class ThreadControllerTest : MockMvcTest() {
 
         @Test
         fun `don't create reply with invalid password`() {
-            replyToThread(post(thread).toForm().apply {
-                password = randomString(
-                    MAX_TRIPCODE_PASSWORD_LENGTH + 1
-                )
-            }).andExpectValidationError("password")
+            replyToThread(
+                post(thread).toForm().apply {
+                    password = randomString(
+                        MAX_TRIPCODE_PASSWORD_LENGTH + 1
+                    )
+                }
+            ).andExpectValidationError("password")
         }
 
         @Test
@@ -208,7 +209,6 @@ internal class ThreadControllerTest : MockMvcTest() {
             replyToThread(post(thread).toForm(), attachment = null)
                 .andExpectValidationError("attachmentOrNonEmptyBody")
         }
-
     }
 
     @Nested
@@ -260,8 +260,7 @@ internal class ThreadControllerTest : MockMvcTest() {
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/new-replies?lastPost=3",
             board.label,
             thread.threadNumber
-        )
-        { setUp() }.andExpect {
+        ) { setUp() }.andExpect {
             status { isOk() }
             jsonPath("$[*].thread") { doesNotExist() }
             jsonPath("$[*].ip") { doesNotExist() }

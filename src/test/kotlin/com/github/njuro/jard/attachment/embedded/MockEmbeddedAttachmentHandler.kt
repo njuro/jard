@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.nio.file.Files
 
-
 @Component
 @Profile("test")
 internal class MockEmbeddedAttachmentHandler : EmbeddedAttachmentHandler {
@@ -20,7 +19,6 @@ internal class MockEmbeddedAttachmentHandler : EmbeddedAttachmentHandler {
 
     @Value("\${app.test.mockserver.port:0}")
     private val endpointPort: Int = 0
-
 
     companion object {
         internal const val PROVIDER_NAME = "mock-embedded-attachment-handler"

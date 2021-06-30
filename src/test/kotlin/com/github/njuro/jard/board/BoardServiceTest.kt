@@ -72,6 +72,4 @@ internal class BoardServiceTest {
         boardService.deleteBoard(board)
         boardRepository.findByLabel(board.label).shouldBeEmpty()
     }
-
-
 }

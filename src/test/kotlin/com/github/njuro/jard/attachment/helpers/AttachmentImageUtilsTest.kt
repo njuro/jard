@@ -67,7 +67,6 @@ internal class AttachmentImageUtilsTest {
         }
     }
 
-
     private fun createAndVerifyThumbnail(
         attachmentCategory: AttachmentCategory,
         mimeType: String,

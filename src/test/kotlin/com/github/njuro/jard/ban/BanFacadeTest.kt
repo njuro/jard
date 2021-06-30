@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
 import java.time.OffsetDateTime
 
-
 @WithContainerDatabase
 @Transactional
 internal class BanFacadeTest : MapperTest() {
@@ -175,5 +174,4 @@ internal class BanFacadeTest : MapperTest() {
                 .any { it.interval == interval }.shouldBeTrue()
         }
     }
-
 }

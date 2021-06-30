@@ -34,7 +34,6 @@ internal class SearchIntegrationTest : MockMvcTest() {
     @Autowired
     private lateinit var transactionTemplate: TransactionTemplate
 
-
     @Test
     @WithMockJardUser(UserAuthority.ACTUATOR_ACCESS)
     fun `rebuild indexes`() {
@@ -46,9 +45,11 @@ internal class SearchIntegrationTest : MockMvcTest() {
     fun `search posts`() {
         transactionTemplate.executeWithoutResult {
             val board = saveBoard(board(label = "r"))
-            val thread = saveThread(thread(board).apply {
-                originalPost.body = "initial post"
-            })
+            val thread = saveThread(
+                thread(board).apply {
+                    originalPost.body = "initial post"
+                }
+            )
         }
 
         mockMvc.get("${Mappings.API_ROOT_SEARCH}?query=initial") { setUp() }.andExpect { status { isOk() } }

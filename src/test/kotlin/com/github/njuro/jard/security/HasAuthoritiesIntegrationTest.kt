@@ -42,8 +42,6 @@ class HasAuthoritiesTest {
     fun `user is not authenticated`() {
         shouldThrow<AuthenticationCredentialsNotFoundException> { securedClass.securedMethod() }
     }
-
-
 }
 
 @Component

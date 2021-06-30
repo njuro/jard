@@ -114,6 +114,4 @@ internal class AuthenticationIntegrationTest : MockMvcTest() {
     fun `unauthenticated request`() {
         mockMvc.get("${Mappings.API_ROOT}/secured") { setUp() }.andExpect { status { isUnauthorized() } }
     }
-
-
 }

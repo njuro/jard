@@ -129,6 +129,4 @@ internal class DatabasePopulator {
             Files.readAllBytes(imagePath)
         )
     }
-
-
 }

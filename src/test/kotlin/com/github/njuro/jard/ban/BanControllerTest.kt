@@ -136,7 +136,6 @@ internal class BanControllerTest : MockMvcTest() {
             unban(ban().toUnbanForm()).andExpect { status { isNotFound() } }
         }
 
-
         @Test
         fun `unban with invalid ip`() {
             unban(ban(ip = "123.456").toUnbanForm()).andExpectValidationError("ip")

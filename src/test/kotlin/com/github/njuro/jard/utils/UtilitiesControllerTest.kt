@@ -24,5 +24,4 @@ internal class UtilitiesControllerTest : MockMvcTest() {
         mockMvc.get("${Mappings.API_ROOT}/input-constraints") { setUp() }.andExpect { status { isOk() } }
             .andReturnConverted<InputConstraints.Values>().shouldNotBeNull()
     }
-
 }

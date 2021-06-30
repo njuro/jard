@@ -27,10 +27,12 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @DataJpaTest(
-    includeFilters = [ComponentScan.Filter(Service::class), ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = [CrosslinkDecorator::class]
-    )]
+    includeFilters = [
+        ComponentScan.Filter(Service::class), ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            value = [CrosslinkDecorator::class]
+        )
+    ]
 )
 @WithContainerDatabase
 @Transactional

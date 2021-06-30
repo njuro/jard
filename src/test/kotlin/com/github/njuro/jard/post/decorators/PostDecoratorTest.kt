@@ -26,5 +26,4 @@ internal abstract class PostDecoratorTest {
         log.info { "$body -> ${post.body}" }
         return post.body
     }
-
 }

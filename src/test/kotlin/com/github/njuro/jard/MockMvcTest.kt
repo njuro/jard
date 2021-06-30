@@ -48,12 +48,10 @@ internal abstract class MockMvcTest : MapperTest() {
         with(csrf())
     }
 
-
     protected fun MockHttpServletRequestDsl.body(body: Any) {
         setUp()
         content = objectMapper.writeValueAsString(body)
     }
-
 
     protected fun MockMultipartHttpServletRequestDsl.part(name: String, requestBody: Any) {
         setUp()

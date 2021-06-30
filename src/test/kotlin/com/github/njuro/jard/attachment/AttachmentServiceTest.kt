@@ -82,7 +82,6 @@ internal class AttachmentServiceTest {
                 )
                 it.thumbnailFile.shouldMatchFile("attachment", "png")
             }
-
         }
 
         @Test
@@ -146,13 +145,11 @@ internal class AttachmentServiceTest {
             )
         val saved = attachmentService.saveAttachment(attachment, file)
 
-
         attachmentService.deleteAttachment(saved)
         attachmentRepository.findById(saved.id).shouldNotBePresent()
         attachment.file.shouldNotExist()
         attachment.thumbnailFile.shouldNotExist()
     }
-
 
     private fun File.shouldMatchFile(name: String, extension: String) = should {
         it.shouldExist()

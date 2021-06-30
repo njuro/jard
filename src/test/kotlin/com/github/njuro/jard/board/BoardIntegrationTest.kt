@@ -170,6 +170,4 @@ internal class BoardIntegrationTest : MockMvcTest() {
             boardRepository.findByLabel(board.label).shouldBeEmpty()
         }
     }
-
-
 }

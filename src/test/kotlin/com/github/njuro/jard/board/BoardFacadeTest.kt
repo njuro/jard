@@ -33,7 +33,6 @@ internal class BoardFacadeTest : MapperTest() {
     @Autowired
     private lateinit var boardFacade: BoardFacade
 
-
     @Test
     fun `create board`() {
         val boardForm = board(label = "r").toForm()
@@ -123,5 +122,4 @@ internal class BoardFacadeTest : MapperTest() {
         boardFacade.deleteBoard(board.toDto())
         boardRepository.findByLabel(board.label).shouldBeEmpty()
     }
-
 }

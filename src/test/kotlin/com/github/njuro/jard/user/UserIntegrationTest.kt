@@ -132,7 +132,6 @@ internal class UserIntegrationTest : MockMvcTest() {
         }
     }
 
-
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
     fun `delete user`() {
@@ -141,6 +140,4 @@ internal class UserIntegrationTest : MockMvcTest() {
         mockMvc.delete("${Mappings.API_ROOT_USERS}/${user.username}") { setUp() }.andExpect { status { isOk() } }
         userRepository.findById(user.id).shouldNotBePresent()
     }
-
-
 }

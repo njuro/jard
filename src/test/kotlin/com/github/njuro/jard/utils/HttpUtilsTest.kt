@@ -6,19 +6,22 @@ import org.springframework.mock.web.MockHttpServletRequest
 
 internal class HttpUtilsTest {
 
-
     @Test
     fun `get client ip from requests`() {
-        HttpUtils.getClientIp(MockHttpServletRequest().apply {
-            remoteAddr = "127.0.0.1"
-            addHeader("X-Forwarded-For", "unknown")
-            addHeader("HTTP_VIA", "127.0.0.2,127.0.0.3")
-        }) shouldBe "127.0.0.2"
+        HttpUtils.getClientIp(
+            MockHttpServletRequest().apply {
+                remoteAddr = "127.0.0.1"
+                addHeader("X-Forwarded-For", "unknown")
+                addHeader("HTTP_VIA", "127.0.0.2,127.0.0.3")
+            }
+        ) shouldBe "127.0.0.2"
 
-        HttpUtils.getClientIp(MockHttpServletRequest().apply {
-            remoteAddr = "127.0.0.1"
-            addHeader("X-Forwarded-For", "unknown")
-        }) shouldBe "127.0.0.1"
+        HttpUtils.getClientIp(
+            MockHttpServletRequest().apply {
+                remoteAddr = "127.0.0.1"
+                addHeader("X-Forwarded-For", "unknown")
+            }
+        ) shouldBe "127.0.0.1"
     }
 
     @Test

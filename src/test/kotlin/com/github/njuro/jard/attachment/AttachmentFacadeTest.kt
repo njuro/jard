@@ -41,7 +41,6 @@ internal class AttachmentFacadeTest : MapperTest() {
     @MockkBean
     private lateinit var embedService: EmbedService
 
-
     @Nested
     @DisplayName("create attachment")
     inner class CreateAttachment {
@@ -58,7 +57,6 @@ internal class AttachmentFacadeTest : MapperTest() {
             every { boardFacade.isMimeTypeSupported(ofType(BoardDto::class), ofType(String::class)) } returns true
         }
 
-
         @Test
         fun `create valid attachment`() {
             val file = multipartFile("attachment.png", TEST_ATTACHMENT_PNG)
@@ -66,9 +64,7 @@ internal class AttachmentFacadeTest : MapperTest() {
                 it.filename shouldMatch Regex("\\d+\\.png")
                 it.originalFilename shouldBe TEST_ATTACHMENT_PNG
                 it.metadata.mimeType shouldBe MediaType.IMAGE_PNG_VALUE
-
             }
-
         }
 
         @Test
@@ -151,5 +147,4 @@ internal class AttachmentFacadeTest : MapperTest() {
             }
         }
     }
-
 }

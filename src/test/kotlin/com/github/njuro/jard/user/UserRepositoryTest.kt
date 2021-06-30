@@ -32,5 +32,4 @@ internal class UserRepositoryTest {
 
         userRepository.findByEmailIgnoreCase(user.email.uppercase()).email shouldBe user.email
     }
-
 }

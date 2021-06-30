@@ -83,7 +83,6 @@ internal class ThreadRepositoryTest {
         threadRepository.countByBoardId(board.id) shouldBe 3
     }
 
-
     private fun saveThread(thread: Thread): Thread {
         val post = postRepository.save(thread.originalPost)
         return threadRepository.save(thread.apply { originalPost = post })

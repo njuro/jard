@@ -38,6 +38,4 @@ internal class SpringBootAdminAuthenticationTest : MockMvcTest() {
         mockMvc.get(sbaContextPath) { with(csrf()); header(SBA_SECRET_HEADER, "xxx") }
             .andExpect { status { isUnauthorized() } }
     }
-
-
 }

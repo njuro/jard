@@ -238,7 +238,6 @@ internal class ThreadFacadeTest : MapperTest() {
             threadFacade.replyToThread(postForm, updatedThread.toDto())
             getUpdatedThread(thread).shouldBePresent { it.lastBumpAt shouldBe originalLastBumpAt }
         }
-
     }
 
     @Test

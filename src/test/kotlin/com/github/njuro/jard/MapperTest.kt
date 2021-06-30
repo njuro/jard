@@ -49,9 +49,8 @@ internal abstract class MapperTest {
     fun Post.toDto(): PostDto = postMapper.toDto(this)
 
     fun Attachment.toDto(): AttachmentDto = attachmentMapper.toDto(this)
-    
+
     fun User.toDto(): UserDto = userMapper.toDto(this)
 
     fun Ban.toDto(): BanDto = banMapper.toDto(this)
-
 }

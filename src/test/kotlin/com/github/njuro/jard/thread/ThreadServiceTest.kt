@@ -83,11 +83,8 @@ internal class ThreadServiceTest {
         threadRepository.findById(thread.id).shouldBeEmpty()
     }
 
-
     private fun saveThread(thread: Thread): Thread {
         val post = postRepository.save(thread.originalPost)
         return threadRepository.save(thread.apply { originalPost = post })
     }
-
-
 }

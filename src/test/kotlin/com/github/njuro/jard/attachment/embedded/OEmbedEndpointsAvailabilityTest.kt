@@ -31,10 +31,13 @@ internal class OEmbedEndpointsAvailabilityTest {
 
     @Configuration
     @ComponentScan(
-        includeFilters = [ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            value = [EmbeddedAttachmentHandler::class]
-        )], useDefaultFilters = false
+        includeFilters = [
+            ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                value = [EmbeddedAttachmentHandler::class]
+            )
+        ],
+        useDefaultFilters = false
     )
     @Import(
         EmbedService::class
@@ -56,10 +59,8 @@ internal class OEmbedEndpointsAvailabilityTest {
         requiredThumbnail = false
     )
 
-
     @Test
     fun scribd() = testEmbed("https://www.scribd.com/document/357546412/Opinion-on-Sarah-Palin-lawsuit")
-
 
     @Test
     fun soundcloud() = testEmbed("https://soundcloud.com/pslwave/drowning")
@@ -72,14 +73,11 @@ internal class OEmbedEndpointsAvailabilityTest {
     @Test
     fun `tik tok`() = testEmbed("https://www.tiktok.com/@scout2015/video/6718335390845095173")
 
-
     @Test
     fun twitter() = testEmbed("https://twitter.com/elonmusk/status/1284291528328790016", requiredThumbnail = false)
 
-
     @Test
     fun vimeo() = testEmbed("https://vimeo.com/437808118", requiredThumbnail = false)
-
 
     @Test
     fun youtube() = testEmbed("https://www.youtube.com/watch?v=kJQP7kiw5Fk")

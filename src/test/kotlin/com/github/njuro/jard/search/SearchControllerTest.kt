@@ -56,5 +56,4 @@ internal class SearchControllerTest : MockMvcTest() {
             .andReturnConverted<SearchResultsDto<PostDto>>().shouldNotBeNull()
         query.captured shouldBe "test-query"
     }
-
 }

@@ -34,7 +34,6 @@ import org.springframework.test.web.servlet.patch
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-
 @WithContainerDatabase
 @Transactional
 internal class ThreadIntegrationTest : MockMvcTest() {
@@ -103,7 +102,6 @@ internal class ThreadIntegrationTest : MockMvcTest() {
                 if (attachment != null) file(attachment)
             }
 
-
         @Test
         fun `create valid reply`() {
             val thread = saveThread(thread(board))
@@ -120,7 +118,6 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
             replyToThread(postForm, thread).andExpect { status { isBadRequest() } }
         }
-
     }
 
     @Nested
@@ -131,7 +128,6 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             board.label,
             threadNumber
         ) { setUp() }
-
 
         @Test
         fun `get existing thread`() {
@@ -156,8 +152,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/new-replies?lastPost=1",
             board.label,
             thread.threadNumber
-        )
-        { setUp() }.andExpect { status { isOk() } }.andReturnConverted<List<PostDto>>() shouldHaveSize 2
+        ) { setUp() }.andExpect { status { isOk() } }.andReturnConverted<List<PostDto>>() shouldHaveSize 2
     }
 
     @Test
