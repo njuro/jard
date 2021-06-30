@@ -2,7 +2,7 @@
 
 ![jard](https://raw.githubusercontent.com/njuro/jard-client/master/public/assets/jard-logo-name.png)
 
-[![Build Status](https://travis-ci.org/njuro/jard.svg?branch=master)](https://travis-ci.org/njuro/jard)
+[![Build Status](https://circleci.com/gh/njuro/jard.svg?style=shield)](https://circleci.com/gh/njuro/jard)
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=njuro_jard&metric=alert_status)](https://sonarcloud.io/dashboard?id=njuro_jard)
 [![Sonarcloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=njuro_jard&metric=coverage)](https://sonarcloud.io/dashboard?id=njuro_jard)
 
