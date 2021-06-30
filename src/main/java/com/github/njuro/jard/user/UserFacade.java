@@ -6,6 +6,8 @@ import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
 import com.github.njuro.jard.user.dto.UserDto;
 import com.github.njuro.jard.user.dto.UserForm;
 import com.github.njuro.jard.utils.validation.FormValidationException;
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Component
 public class UserFacade extends BaseFacade<User, UserDto> implements UserDetailsService {

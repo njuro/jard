@@ -1,12 +1,11 @@
 package com.github.njuro.jard.user;
 
-import lombok.Getter;
+import static com.github.njuro.jard.user.UserAuthority.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.github.njuro.jard.user.UserAuthority.*;
+import lombok.Getter;
 
 /**
  * Enum representing active role of a {@link User}. Role is a wrapper for group of user authorities.
