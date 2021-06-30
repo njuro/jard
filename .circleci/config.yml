@@ -8,8 +8,20 @@ jobs:
       - restore_cache:
           key: jard
       - run:
-          name: Maven build and test
-          command: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar spring-boot:build-image -Dsonar.projectKey=njuro_jard -Dsonar.organization=jard -Dsonar.host.url=https://sonarcloud.io
+          name: Build project and run tests
+          command: mvn clean jacoco:prepare-agent install
+      - run:
+          name: Analyze main source files
+          command: mvn sonar:sonar
+      - run:
+          name: Analyze test source files
+          command: mvn sonar:sonar -Panalyze-test-classes
+      - run:
+          name: Build docker image
+          command: spring-boot:build-image
+      - run:
+          name: Deploy to docker hub
+          command: bash docker_push.sh
       - run:
           name: Remove jard files from cache
           command: rm -rf ~/.m2/repository/com/github/njuro
@@ -17,9 +29,7 @@ jobs:
           key: jard
           paths:
             - ~/.m2
-      - run:
-          name: Deploy to docker hub
-          command: bash docker_push.sh
+
 workflows:
   default:
     jobs:

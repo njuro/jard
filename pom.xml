@@ -30,6 +30,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <kotlin.version>1.5.20</kotlin.version>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>jard</sonar.organization>
+        <sonar.projectKey>njuro_jard</sonar.projectKey>
+        <sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
         <spring-boot-configuration-processor.version>2.5.0</spring-boot-configuration-processor.version>
         <jjwt.version>0.9.1</jjwt.version>
         <postgresql.version>42.2.20</postgresql.version>
@@ -71,6 +75,18 @@
         <greenmail.version>1.6.4</greenmail.version>
         <skipGitHooks>false</skipGitHooks>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>analyze-test-classes</id>
+            <properties>
+                <sonar.sources>src/test/kotlin</sonar.sources>
+                <sonar.tests></sonar.tests>
+                <sonar.projectName>${project.name}-tests</sonar.projectName>
+                <sonar.projectKey>${project.groupId}:${project.artifactId}-tests</sonar.projectKey>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <!-- CORE -->
@@ -468,6 +484,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
