@@ -1,21 +1,15 @@
 package com.github.njuro.jard.user;
 
-import static com.github.njuro.jard.user.UserAuthority.DELETE_POST;
-import static com.github.njuro.jard.user.UserAuthority.MANAGE_BANS;
-import static com.github.njuro.jard.user.UserAuthority.TOGGLE_LOCK_THREAD;
-import static com.github.njuro.jard.user.UserAuthority.TOGGLE_STICKY_THREAD;
-import static com.github.njuro.jard.user.UserAuthority.VIEW_IP;
-import static com.github.njuro.jard.user.UserAuthority.getAllAuthorities;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.Getter;
+
+import static com.github.njuro.jard.user.UserAuthority.*;
 
 /**
  * Enum representing active role of a {@link User}. Role is a wrapper for group of user authorities.
- *
- * <p>TODO: allow to dynamically add/update/remove roles
  *
  * @see UserAuthority
  */
