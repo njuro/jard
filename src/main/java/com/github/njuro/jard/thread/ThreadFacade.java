@@ -1,6 +1,7 @@
 package com.github.njuro.jard.thread;
 
 import com.github.njuro.jard.ban.BanFacade;
+import com.github.njuro.jard.ban.UserBannedException;
 import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.dto.BoardDto;
@@ -59,7 +60,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    */
   public ThreadDto createThread(@NotNull ThreadForm threadForm, BoardDto board) {
     if (banFacade.hasActiveBan(threadForm.getPostForm().getIp())) {
-      throw new FormValidationException("Your IP address is banned");
+      throw new UserBannedException("Your IP address is banned");
     }
 
     ThreadDto thread = threadForm.toDto();
@@ -106,7 +107,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    */
   public PostDto replyToThread(@NotNull PostForm postForm, ThreadDto thread) {
     if (banFacade.hasActiveBan(postForm.getIp())) {
-      throw new FormValidationException("Your IP address is banned");
+      throw new UserBannedException("Your IP address is banned");
     }
 
     if (thread.isLocked()) {

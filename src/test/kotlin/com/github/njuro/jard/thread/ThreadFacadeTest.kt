@@ -1,13 +1,20 @@
 package com.github.njuro.jard.thread
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.ban.BanFacade
+import com.github.njuro.jard.ban.UserBannedException
+import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardRepository
+import com.github.njuro.jard.boardSettings
 import com.github.njuro.jard.config.security.captcha.CaptchaProvider
+import com.github.njuro.jard.post
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.security.captcha.MockCaptchaVerificationResult
+import com.github.njuro.jard.thread
+import com.github.njuro.jard.toForm
 import com.github.njuro.jard.utils.validation.FormValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
@@ -30,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.Optional
 
 @WithContainerDatabase
 @Transactional
@@ -86,7 +93,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val board = saveBoard(board(label = "r"))
             val threadForm = thread(board).toForm()
 
-            shouldThrow<FormValidationException> { threadFacade.createThread(threadForm, board.toDto()) }
+            shouldThrow<UserBannedException> { threadFacade.createThread(threadForm, board.toDto()) }
         }
 
         @Test
@@ -165,7 +172,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val postForm = post(thread).toForm()
             every { banFacade.hasActiveBan(any()) } returns true
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<UserBannedException> {
                 threadFacade.replyToThread(postForm, thread.toDto())
             }
         }

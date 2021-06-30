@@ -1,16 +1,30 @@
 package com.github.njuro.jard.thread
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TEST_ATTACHMENT_PNG
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
+import com.github.njuro.jard.ban.UserBannedException
+import com.github.njuro.jard.board
 import com.github.njuro.jard.board.BoardFacade
 import com.github.njuro.jard.board.dto.BoardDto
-import com.github.njuro.jard.common.InputConstraints.*
+import com.github.njuro.jard.common.InputConstraints.MAX_ATTACHMENT_SIZE
+import com.github.njuro.jard.common.InputConstraints.MAX_NAME_LENGTH
+import com.github.njuro.jard.common.InputConstraints.MAX_POST_LENGTH
+import com.github.njuro.jard.common.InputConstraints.MAX_SUBJECT_LENGTH
+import com.github.njuro.jard.common.InputConstraints.MAX_TRIPCODE_PASSWORD_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.multipartFile
+import com.github.njuro.jard.post
 import com.github.njuro.jard.post.PostFacade
 import com.github.njuro.jard.post.dto.DeleteOwnPostDto
 import com.github.njuro.jard.post.dto.PostDto
 import com.github.njuro.jard.post.dto.PostForm
+import com.github.njuro.jard.randomString
+import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.dto.ThreadDto
 import com.github.njuro.jard.thread.dto.ThreadForm
+import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.utils.HttpUtils
 import com.github.njuro.jard.utils.validation.FormValidationException
@@ -21,8 +35,17 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
-import io.mockk.*
-import org.junit.jupiter.api.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkStatic
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -105,6 +128,19 @@ internal class ThreadControllerTest : MockMvcTest() {
         }
 
         @Test
+        fun `don't create thread when user is banned`() {
+            val thread = thread(board, subject = "Test thread")
+            every {
+                threadFacade.createThread(
+                    ofType(ThreadForm::class),
+                    ofType(BoardDto::class)
+                )
+            } throws UserBannedException()
+
+            createThread(thread.toForm()).andExpect { status { isForbidden() } }
+        }
+
+        @Test
         fun `don't create thread with invalid subject`() {
             createThread(
                 thread(
@@ -171,6 +207,19 @@ internal class ThreadControllerTest : MockMvcTest() {
         fun `don't create reply with invalid name`() {
             replyToThread(post(thread, name = randomString(MAX_NAME_LENGTH + 1)).toForm())
                 .andExpectValidationError("name")
+        }
+
+        @Test
+        fun `don't create reply when user is banned`() {
+            val post = post(thread, body = "test")
+            every {
+                threadFacade.replyToThread(
+                    ofType(PostForm::class),
+                    ofType(ThreadDto::class)
+                )
+            } throws UserBannedException()
+
+            replyToThread(post.toForm()).andExpect { status { isForbidden() } }
         }
 
         @Test
