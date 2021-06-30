@@ -50,11 +50,14 @@ heavily influenced by aforementioned imageboards.
 ### What technologies is jard built with?
 
 The backend is written in `Java 11`, with `Spring Boot 2.x` framework (powered by `Spring 5.x`), using `PostgreSQL` as
-relational database (tests uses containerized database run in Docker container) and `Hibernate` as ORM. Files uploaded
-by users are stored in `Amazon S3` bucket. Authentication is handled with JWT cookies (using `jjwt` library). Backend
-exposes REST API with protected endpoints. Full-text search is provided by `Hibernate Search` which makes use
-of `Apache Lucene`. CAPTCHA protection by `hCaptcha`. Several other libraries are used for different functionality, as
-described in *pom.xml* file.
+relational database and `Hibernate` as ORM framework. Files uploaded by users are stored in `Amazon S3` bucket.
+Authentication is handled with JWT cookies (using `jjwt` library). Backend exposes REST API with protected endpoints.
+Full-text search is provided by `Hibernate Search` which makes use of `Apache Lucene`. CAPTCHA protection by `hCaptcha`.
+Several other libraries are used for different functionality, as described in *pom.xml* file.
+
+Tests are written in `Kotlin` with `JUnit 5` framework using `Kotest` matchers and `Mockk`, `Mockwebserver`, `Greenmail`
+libraries for mocking and stubbing various components. Test PostgreSQL database is running as Docker container (
+provided by `Testcontainers`).
 
 `Circle CI` is used for building and testing pipelines and master branch is regularly deployed to `Heroku`. For frontend
 technologies see [jard-client](https://github.com/njuro/jard-client).
