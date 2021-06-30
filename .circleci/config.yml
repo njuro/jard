@@ -18,7 +18,7 @@ jobs:
           command: mvn sonar:sonar -Panalyze-test-classes
       - run:
           name: Build docker image
-          command: mvn spring-boot:build-image
+          command: mvn spring-boot:build-image -DskipTests
       - run:
           name: Deploy to docker hub
           command: bash docker_push.sh
