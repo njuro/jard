@@ -52,6 +52,18 @@ internal class UserTokenRepositoryTest {
 
     @Test
     @Suppress("UNUSED_VARIABLE")
+    fun `delete tokens for user`() {
+        val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
+        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
+        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
+
+        userTokenRepository.deleteByUser(user1)
+        userTokenRepository.findAll().map(UserToken::getValue)
+            .shouldContainExactlyInAnyOrder(token2.value)
+    }
+
+    @Test
+    @Suppress("UNUSED_VARIABLE")
     fun `delete expired tokens`() {
         val baseDate = OffsetDateTime.now()
         val token1 = userTokenRepository.save(userToken(user1, "aaa", expirationAt = baseDate.plusDays(1)))

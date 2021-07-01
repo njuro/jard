@@ -19,7 +19,7 @@ public class UserToken {
 
   @Id @EqualsAndHashCode.Include private String value;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @Fetch(FetchMode.JOIN)
   private User user;
 

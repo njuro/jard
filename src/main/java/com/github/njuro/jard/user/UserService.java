@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.ban.BanService;
+import com.github.njuro.jard.user.token.UserTokenService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,14 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final BanService banService;
+  private final UserTokenService userTokenService;
 
   @Autowired
-  public UserService(UserRepository userRepository, BanService banService) {
+  public UserService(
+      UserRepository userRepository, BanService banService, UserTokenService userTokenService) {
     this.userRepository = userRepository;
     this.banService = banService;
+    this.userTokenService = userTokenService;
   }
 
   /**
@@ -113,7 +117,7 @@ public class UserService {
 
   /**
    * Deletes given user. Also deletes him/her from all of the bans he/she created - however the bans
-   * remain active.
+   * remain active. Additionaly, deletes all tokens issued to given user.
    *
    * @param user user to delete
    */
@@ -125,6 +129,7 @@ public class UserService {
               ban.setBannedBy(null);
               banService.saveBan(ban);
             });
+    userTokenService.deleteTokensForUser(user);
     userRepository.delete(user);
   }
 }

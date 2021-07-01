@@ -1,7 +1,7 @@
 create table user_tokens
 (
     value         varchar(255) not null,
-    user_id       uuid,
+    user_id       uuid         not null,
     type          varchar(255),
     issued_at     timestamp    not null,
     expiration_at timestamp    not null,

@@ -44,6 +44,10 @@ public class UserTokenService {
     userTokenRepository.deleteByUserAndType(user, type);
   }
 
+  public void deleteTokensForUser(User user) {
+    userTokenRepository.deleteByUser(user);
+  }
+
   @Scheduled(fixedRateString = Constants.EXPIRED_USER_TOKENS_CHECK_PERIOD)
   public void deleteExpiredTokens() {
     userTokenRepository.deleteByExpirationAtBefore(OffsetDateTime.now());
