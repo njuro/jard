@@ -207,13 +207,13 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
   }
 
   public void resetPassword(ResetPasswordDto resetRequest) {
-    var user = userService.resolveUser(resetRequest.getUsername());
+    var token = userTokenService.resolveToken(resetRequest.getToken());
 
-    if (!userTokenService.validateToken(
-        user, resetRequest.getToken(), UserTokenType.PASSWORD_RECOVERY)) {
+    if (token == null || token.getType() != UserTokenType.PASSWORD_RECOVERY) {
       throw new FormValidationException("Invalid token");
     }
 
+    var user = token.getUser();
     log.info("Resetting password of user {}", user.getUsername());
     user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
     userService.saveUser(user);

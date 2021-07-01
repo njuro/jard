@@ -4,8 +4,10 @@ import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.common.Constants
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.UserRepository
+import com.github.njuro.jard.userToken
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.date.shouldBeAfter
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -28,6 +30,9 @@ internal class UserTokenServiceTest {
     private lateinit var userTokenService: UserTokenService
 
     @Autowired
+    private lateinit var userTokenRepository: UserTokenRepository
+
+    @Autowired
     private lateinit var userRepository: UserRepository
 
     @Autowired
@@ -45,6 +50,19 @@ internal class UserTokenServiceTest {
             it.expirationAt shouldBeAfter it.issuedAt
             it.user.username shouldBe user.username
         }
+    }
+
+    @Test
+    fun `resolve token`() {
+        val user = userRepository.save(user(username = "user"))
+        val token = userTokenRepository.save(userToken(user, "abcde"))
+
+        userTokenService.resolveToken(token.value).shouldNotBeNull()
+    }
+
+    @Test
+    fun `don't resolve non-existing token`() {
+        userTokenService.resolveToken("xxx").shouldBeNull()
     }
 
     @Test

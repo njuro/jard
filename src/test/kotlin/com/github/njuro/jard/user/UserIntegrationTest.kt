@@ -173,13 +173,7 @@ internal class UserIntegrationTest : MockMvcTest() {
         val token = userTokenRepository.save(userToken(user, "abcde", UserTokenType.PASSWORD_RECOVERY))
 
         mockMvc.post("${Mappings.API_ROOT_USERS}/reset-password") {
-            body(
-                resetPasswordRequest(
-                    user.username,
-                    token = token.value,
-                    password = "newPassword"
-                )
-            )
+            body(resetPasswordRequest(token = token.value, password = "newPassword"))
         }.andExpect { status { isOk() } }
     }
 

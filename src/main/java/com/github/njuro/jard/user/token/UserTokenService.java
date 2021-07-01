@@ -32,12 +32,12 @@ public class UserTokenService {
     return userTokenRepository.save(token);
   }
 
-  public boolean doesTokenForUserExists(User user, UserTokenType type) {
-    return userTokenRepository.findByUserAndType(user, type).isPresent();
+  public UserToken resolveToken(String value) {
+    return userTokenRepository.findById(value).orElse(null);
   }
 
-  public boolean validateToken(User user, String value, UserTokenType type) {
-    return userTokenRepository.findByUserAndValueAndType(user, value, type).isPresent();
+  public boolean doesTokenForUserExists(User user, UserTokenType type) {
+    return userTokenRepository.findByUserAndType(user, type).isPresent();
   }
 
   public void deleteToken(User user, UserTokenType type) {

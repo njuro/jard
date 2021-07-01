@@ -281,12 +281,10 @@ fun forgotPasswordRequest(
     .build()
 
 fun resetPasswordRequest(
-    username: String,
     password: String,
     passwordRepeated: String = password,
     token: String = ""
 ): ResetPasswordDto = ResetPasswordDto.builder()
-    .username(username)
     .password(password)
     .passwordRepeated(passwordRepeated)
     .token(token)

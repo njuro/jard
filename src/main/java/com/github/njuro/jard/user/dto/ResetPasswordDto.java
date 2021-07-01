@@ -11,8 +11,6 @@ import lombok.Data;
 @Builder
 public class ResetPasswordDto {
 
-  private String username;
-
   private String token;
 
   @Size(min = MIN_PASSWORD_LENGTH, message = "{validation.user.password.length}")

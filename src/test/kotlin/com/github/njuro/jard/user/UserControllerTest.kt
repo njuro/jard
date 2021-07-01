@@ -242,15 +242,15 @@ internal class UserControllerTest : MockMvcTest() {
 
         @Test
         fun `valid reset request`() {
-            resetPassword(resetPasswordRequest(username = "user", password = "newPassword"))
+            resetPassword(resetPasswordRequest(password = "newPassword"))
                 .andExpect { status { isOk() } }
         }
 
         @Test
         fun `invalid reset request`() {
-            resetPassword(resetPasswordRequest(username = "user", password = "newPassword", passwordRepeated = "xxx"))
+            resetPassword(resetPasswordRequest(password = "newPassword", passwordRepeated = "xxx"))
                 .andExpect { status { isBadRequest() } }
-            resetPassword(resetPasswordRequest(username = "user", password = "xxx"))
+            resetPassword(resetPasswordRequest(password = "xxx"))
                 .andExpect { status { isBadRequest() } }
         }
     }

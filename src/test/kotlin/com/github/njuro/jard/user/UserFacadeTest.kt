@@ -321,7 +321,7 @@ internal class UserFacadeTest : MapperTest() {
             val message = slot<String>()
             every { emailService.sendMail(capture(email), ofType(String::class), capture(message)) } just Runs
 
-            userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = token.value))
+            userFacade.resetPassword(resetPasswordRequest(password = "newPassword", token = token.value))
             userRepository.findById(user.id).shouldBePresent {
                 passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
             }
@@ -331,9 +331,12 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        fun `don't reset password if user doesn't exists`() {
-            shouldThrow<UserNotFoundException> {
-                userFacade.resetPassword(resetPasswordRequest("user", password = "newPassword"))
+        fun `don't reset password if token is of invalid type`() {
+            val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
+            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.EMAIL_VERIFICATION))
+
+            shouldThrow<FormValidationException> {
+                userFacade.resetPassword(resetPasswordRequest(user.username, "newPassword", token = token.value))
             }
             verify {
                 emailService wasNot Called
@@ -341,13 +344,11 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        @Suppress("UNUSED_VARIABLE")
-        fun `don't reset password if token is invalid`() {
+        fun `don't reset password if token is missing`() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
-            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
 
             shouldThrow<FormValidationException> {
-                userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = "xxx"))
+                userFacade.resetPassword(resetPasswordRequest(user.username, "newPassword", token = "xxx"))
             }
             verify {
                 emailService wasNot Called

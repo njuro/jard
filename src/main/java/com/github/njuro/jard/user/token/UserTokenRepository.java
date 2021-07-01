@@ -11,8 +11,6 @@ public interface UserTokenRepository extends JpaRepository<UserToken, String> {
 
   Optional<UserToken> findByUserAndType(User user, UserTokenType type);
 
-  Optional<UserToken> findByUserAndValueAndType(User user, String value, UserTokenType type);
-
   void deleteByUserAndType(User user, UserTokenType type);
 
   void deleteByExpirationAtBefore(OffsetDateTime timestamp);

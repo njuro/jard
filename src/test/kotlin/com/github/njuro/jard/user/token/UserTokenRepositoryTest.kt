@@ -52,19 +52,6 @@ internal class UserTokenRepositoryTest {
 
     @Test
     @Suppress("UNUSED_VARIABLE")
-    fun `find by user and type and value`() {
-        val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
-        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
-        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
-
-        userTokenRepository.findByUserAndValueAndType(user2, token2.value, UserTokenType.PASSWORD_RECOVERY)
-            .shouldBePresent()
-        userTokenRepository.findByUserAndValueAndType(user2, "xxx", UserTokenType.PASSWORD_RECOVERY)
-            .shouldNotBePresent()
-    }
-
-    @Test
-    @Suppress("UNUSED_VARIABLE")
     fun `delete expired tokens`() {
         val baseDate = OffsetDateTime.now()
         val token1 = userTokenRepository.save(userToken(user1, "aaa", expirationAt = baseDate.plusDays(1)))
