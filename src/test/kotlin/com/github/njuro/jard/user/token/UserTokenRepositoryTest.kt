@@ -75,4 +75,16 @@ internal class UserTokenRepositoryTest {
         userTokenRepository.findAll().map(UserToken::getValue)
             .shouldContainExactlyInAnyOrder(token1.value, token3.value)
     }
+
+    @Test
+    @Suppress("UNUSED_VARIABLE")
+    fun `delete tokens by user and type`() {
+        val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
+        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
+        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
+
+        userTokenRepository.deleteByUserAndType(user1, UserTokenType.PASSWORD_RECOVERY)
+        userTokenRepository.findAll().map(UserToken::getValue)
+            .shouldContainExactlyInAnyOrder(token1.value, token2.value)
+    }
 }

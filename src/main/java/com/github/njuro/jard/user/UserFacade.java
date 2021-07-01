@@ -210,6 +210,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     log.info("Resetting password of user {}", user.getUsername());
     user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
     userService.saveUser(user);
+    userTokenService.deleteToken(user, UserTokenType.PASSWORD_RECOVERY);
   }
 
   /** {@link UserService#deleteUser(User)} */

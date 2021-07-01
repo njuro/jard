@@ -40,8 +40,12 @@ public class UserTokenService {
     return userTokenRepository.findByUserAndValueAndType(user, value, type).isPresent();
   }
 
+  public void deleteToken(User user, UserTokenType type) {
+    userTokenRepository.deleteByUserAndType(user, type);
+  }
+
   @Scheduled(fixedRateString = Constants.EXPIRED_USER_TOKENS_CHECK_PERIOD)
-  public void removeExpiredTokens() {
+  public void deleteExpiredTokens() {
     userTokenRepository.deleteByExpirationAtBefore(OffsetDateTime.now());
   }
 }

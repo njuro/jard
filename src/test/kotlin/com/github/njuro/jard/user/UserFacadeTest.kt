@@ -20,6 +20,7 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldBePresent
+import io.kotest.matchers.optional.shouldNotBePresent
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -294,9 +295,10 @@ internal class UserFacadeTest : MapperTest() {
             val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
 
             userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = token.value))
-            userRepository.findByUsernameIgnoreCase(user.username).shouldBePresent {
+            userRepository.findById(user.id).shouldBePresent {
                 passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
             }
+            userTokenRepository.findById(token.value).shouldNotBePresent()
         }
 
         @Test
