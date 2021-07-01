@@ -207,9 +207,9 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
   }
 
   public void resetPassword(ResetPasswordDto resetRequest) {
-    var token = userTokenService.resolveToken(resetRequest.getToken());
-
-    if (token == null || token.getType() != UserTokenType.PASSWORD_RECOVERY) {
+    var token =
+        userTokenService.resolveToken(resetRequest.getToken(), UserTokenType.PASSWORD_RECOVERY);
+    if (token == null) {
       throw new FormValidationException("Invalid token");
     }
 

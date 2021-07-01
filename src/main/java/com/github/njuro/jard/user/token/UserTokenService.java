@@ -32,8 +32,8 @@ public class UserTokenService {
     return userTokenRepository.save(token);
   }
 
-  public UserToken resolveToken(String value) {
-    return userTokenRepository.findById(value).orElse(null);
+  public UserToken resolveToken(String value, UserTokenType type) {
+    return userTokenRepository.findByValueAndType(value, type).orElse(null);
   }
 
   public boolean doesTokenForUserExists(User user, UserTokenType type) {

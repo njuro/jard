@@ -55,14 +55,14 @@ internal class UserTokenServiceTest {
     @Test
     fun `resolve token`() {
         val user = userRepository.save(user(username = "user"))
-        val token = userTokenRepository.save(userToken(user, "abcde"))
+        val token = userTokenRepository.save(userToken(user, "abcde", UserTokenType.EMAIL_VERIFICATION))
 
-        userTokenService.resolveToken(token.value).shouldNotBeNull()
+        userTokenService.resolveToken(token.value, UserTokenType.EMAIL_VERIFICATION).shouldNotBeNull()
     }
 
     @Test
     fun `don't resolve non-existing token`() {
-        userTokenService.resolveToken("xxx").shouldBeNull()
+        userTokenService.resolveToken("xxx", UserTokenType.EMAIL_VERIFICATION).shouldBeNull()
     }
 
     @Test
