@@ -1,24 +1,44 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.*
-import com.github.njuro.jard.common.InputConstraints.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
+import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
+import com.github.njuro.jard.common.InputConstraints.MIN_PASSWORD_LENGTH
+import com.github.njuro.jard.common.InputConstraints.MIN_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.forgotPasswordRequest
+import com.github.njuro.jard.passwordEdit
+import com.github.njuro.jard.randomString
+import com.github.njuro.jard.resetPasswordRequest
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.user
 import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
+import com.github.njuro.jard.user.dto.ForgotPasswordDto
+import com.github.njuro.jard.user.dto.ResetPasswordDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
+import com.github.njuro.jard.userEdit
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.slot
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.springframework.test.web.servlet.*
+import org.springframework.http.HttpHeaders
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 @WithContainerDatabase
 internal class UserControllerTest : MockMvcTest() {
@@ -188,6 +208,50 @@ internal class UserControllerTest : MockMvcTest() {
                     newPasswordRepeated = "otherPassword"
                 )
             ).andExpectValidationError("passwordMatching")
+        }
+    }
+
+    @Test
+    fun `forgot password`() {
+        val request = slot<ForgotPasswordDto>()
+        every { userFacade.sendPasswordRecoveryLink(capture(request)) } just Runs
+
+        mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") {
+            body(forgotPasswordRequest("user", ip = "1.2.3.4", userAgent = "fake-ua"))
+            with { it.apply { remoteAddr = "127.0.0.1" } }
+            header(HttpHeaders.USER_AGENT, "test-user-agent")
+        }.andExpect { status { isOk() } }
+
+        request.captured.should {
+            it.username shouldBe "user"
+            it.ip shouldBe "127.0.0.1"
+            it.userAgent shouldBe "test-user-agent"
+        }
+    }
+
+    @Nested
+    @DisplayName("reset user password")
+    inner class ResetUserPassword {
+        private fun resetPassword(request: ResetPasswordDto) =
+            mockMvc.post("${Mappings.API_ROOT_USERS}/reset-password") { body(request) }
+
+        @BeforeEach
+        fun setUp() {
+            every { userFacade.resetPassword(ofType(ResetPasswordDto::class)) } just Runs
+        }
+
+        @Test
+        fun `valid reset request`() {
+            resetPassword(resetPasswordRequest(username = "user", password = "newPassword"))
+                .andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `invalid reset request`() {
+            resetPassword(resetPasswordRequest(username = "user", password = "newPassword", passwordRepeated = "xxx"))
+                .andExpect { status { isBadRequest() } }
+            resetPassword(resetPasswordRequest(username = "user", password = "xxx"))
+                .andExpect { status { isBadRequest() } }
         }
     }
 

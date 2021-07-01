@@ -23,7 +23,11 @@ import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.user.UserRole
 import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
+import com.github.njuro.jard.user.dto.ForgotPasswordDto
+import com.github.njuro.jard.user.dto.ResetPasswordDto
 import com.github.njuro.jard.user.dto.UserForm
+import com.github.njuro.jard.user.token.UserToken
+import com.github.njuro.jard.user.token.UserTokenType
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mock.web.MockMultipartFile
 import java.nio.file.Files
@@ -197,7 +201,7 @@ fun embedData(
 
 fun user(
     username: String = "user",
-    email: String = "",
+    email: String? = "",
     password: String = "verysecurepassword",
     lastLogin: OffsetDateTime = OffsetDateTime.now(),
     lastLoginIp: String = "",
@@ -217,6 +221,20 @@ fun user(
     .authorities(authorities)
     .role(role)
     .enabled(enabled)
+    .build()
+
+fun userToken(
+    user: User,
+    value: String,
+    type: UserTokenType = UserTokenType.PASSWORD_RECOVERY,
+    issuedAt: OffsetDateTime = OffsetDateTime.now(),
+    expirationAt: OffsetDateTime = OffsetDateTime.now(),
+): UserToken = UserToken.builder()
+    .value(value)
+    .user(user)
+    .type(type)
+    .issuedAt(issuedAt)
+    .expirationAt(expirationAt)
     .build()
 
 fun ban(
@@ -249,6 +267,28 @@ fun loginRequest(
         .password(password)
         .rememberMe(rememberMe)
         .build()
+
+fun forgotPasswordRequest(
+    username: String,
+    ip: String = "127.0.0.1",
+    userAgent: String = "test-user-agent"
+): ForgotPasswordDto = ForgotPasswordDto.builder()
+    .username(username)
+    .ip(ip)
+    .userAgent(userAgent)
+    .build()
+
+fun resetPasswordRequest(
+    username: String,
+    password: String,
+    passwordRepeated: String = password,
+    token: String = ""
+): ResetPasswordDto = ResetPasswordDto.builder()
+    .username(username)
+    .password(password)
+    .passwordRepeated(passwordRepeated)
+    .token(token)
+    .build()
 
 fun userEdit(email: String): CurrentUserEditDto = CurrentUserEditDto.builder().email(email).build()
 

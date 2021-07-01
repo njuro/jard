@@ -1,12 +1,24 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.forgotPasswordRequest
+import com.github.njuro.jard.passwordEdit
+import com.github.njuro.jard.randomString
+import com.github.njuro.jard.resetPasswordRequest
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.user
 import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
+import com.github.njuro.jard.user.token.UserTokenRepository
+import com.github.njuro.jard.user.token.UserTokenType
+import com.github.njuro.jard.userEdit
+import com.github.njuro.jard.userToken
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldNotBePresent
@@ -15,7 +27,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
 
 @WithContainerDatabase
@@ -24,6 +40,9 @@ internal class UserIntegrationTest : MockMvcTest() {
 
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var userTokenRepository: UserTokenRepository
 
     @Nested
     @DisplayName("create user")
@@ -130,6 +149,30 @@ internal class UserIntegrationTest : MockMvcTest() {
                 )
             ).andExpect { status { isBadRequest() } }
         }
+    }
+
+    @Test
+    fun `forgot password`() {
+        val user = userRepository.save(user(username = "user", email = "user@email.com"))
+
+        mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") { body(forgotPasswordRequest(user.username)) }
+            .andExpect { status { isOk() } }
+    }
+
+    @Test
+    fun `reset password`() {
+        val user = userRepository.save(user(username = "user", email = "user@email.com"))
+        val token = userTokenRepository.save(userToken(user, "abcde", UserTokenType.PASSWORD_RECOVERY))
+
+        mockMvc.post("${Mappings.API_ROOT_USERS}/reset-password") {
+            body(
+                resetPasswordRequest(
+                    user.username,
+                    token = token.value,
+                    password = "newPassword"
+                )
+            )
+        }.andExpect { status { isOk() } }
     }
 
     @Test

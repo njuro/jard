@@ -144,4 +144,11 @@ public class Constants {
 
   /** The highest allowed results count for entity search. */
   public static final int MAX_SEARCH_RESULTS_COUNT = 50;
+
+  /**
+   * How often should system check for expired user tokens.
+   *
+   * @see Scheduled#fixedRateString()
+   */
+  public static final String EXPIRED_USER_TOKENS_CHECK_PERIOD = "PT5M"; // every 5 minutes
 }

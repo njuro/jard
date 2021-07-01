@@ -1,7 +1,19 @@
 package com.github.njuro.jard.user
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.forgotPasswordRequest
+import com.github.njuro.jard.passwordEdit
+import com.github.njuro.jard.resetPasswordRequest
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.user
+import com.github.njuro.jard.user.token.UserTokenRepository
+import com.github.njuro.jard.user.token.UserTokenType
+import com.github.njuro.jard.userEdit
+import com.github.njuro.jard.userToken
+import com.github.njuro.jard.utils.EmailService
 import com.github.njuro.jard.utils.validation.FormValidationException
+import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -11,8 +23,14 @@ import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotBeBlank
+import io.mockk.Called
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,8 +48,14 @@ internal class UserFacadeTest : MapperTest() {
     @SpykBean
     private lateinit var userService: UserService
 
+    @MockkBean
+    private lateinit var emailService: EmailService
+
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var userTokenRepository: UserTokenRepository
 
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
@@ -201,6 +225,95 @@ internal class UserFacadeTest : MapperTest() {
 
             shouldThrow<FormValidationException> {
                 userFacade.editCurrentUserPassword(passwordEdit("wrongPassword", "newPassword"))
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("send password recovery link")
+    inner class SendPasswordRecoveryLink {
+        @Test
+        fun `send recovery link if user exists and has valid email`() {
+            val user = userRepository.save(user(username = "user", email = "user@mail.com"))
+
+            val email = slot<String>()
+            val message = slot<String>()
+            every { emailService.sendMail(capture(email), ofType(String::class), capture(message)) } just Runs
+
+            val forgotRequest = forgotPasswordRequest(user.username, ip = "127.0.0.1", userAgent = "test-user-agent")
+            userFacade.sendPasswordRecoveryLink(forgotRequest)
+
+            val token = userTokenRepository.findByUserAndType(user, UserTokenType.PASSWORD_RECOVERY).shouldBePresent()
+            email.captured shouldBe user.email
+            message.captured.should {
+                it shouldContain forgotRequest.username
+                it shouldContain forgotRequest.ip
+                it shouldContain forgotRequest.userAgent
+                it shouldContain token.value
+            }
+        }
+
+        @Test
+        fun `don't send recovery link if user doesn't exist`() {
+            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = "xxx"))
+
+            verify {
+                emailService wasNot Called
+            }
+        }
+
+        @Test
+        fun `don't send recovery link if recovery token already exists for user`() {
+            val user = userRepository.save(user(username = "user", email = "user@mail.com"))
+            userTokenRepository.save(userToken(user, "xxx", UserTokenType.PASSWORD_RECOVERY))
+            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+
+            verify {
+                emailService wasNot Called
+            }
+        }
+
+        @Test
+        fun `don't send recovery link if user doesn't have email`() {
+            val user = userRepository.save(user(username = "user", email = null))
+            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+
+            verify {
+                emailService wasNot Called
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("reset user password")
+    inner class ResetUserPassword {
+
+        @Test
+        fun `reset user password if token is valid`() {
+            val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
+            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
+
+            userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = token.value))
+            userRepository.findByUsernameIgnoreCase(user.username).shouldBePresent {
+                passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
+            }
+        }
+
+        @Test
+        fun `don't reset password if user doesn't exists`() {
+            shouldThrow<UserNotFoundException> {
+                userFacade.resetPassword(resetPasswordRequest("user", password = "newPassword"))
+            }
+        }
+
+        @Test
+        @Suppress("UNUSED_VARIABLE")
+        fun `don't reset password if token is invalid`() {
+            val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
+            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
+
+            shouldThrow<FormValidationException> {
+                userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = "xxx"))
             }
         }
     }

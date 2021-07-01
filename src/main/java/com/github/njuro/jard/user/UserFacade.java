@@ -1,14 +1,17 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseFacade;
-import com.github.njuro.jard.user.dto.CurrentUserEditDto;
-import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto;
-import com.github.njuro.jard.user.dto.UserDto;
-import com.github.njuro.jard.user.dto.UserForm;
+import com.github.njuro.jard.user.dto.*;
+import com.github.njuro.jard.user.token.UserToken;
+import com.github.njuro.jard.user.token.UserTokenService;
+import com.github.njuro.jard.user.token.UserTokenType;
+import com.github.njuro.jard.utils.EmailService;
 import com.github.njuro.jard.utils.validation.FormValidationException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,15 +20,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class UserFacade extends BaseFacade<User, UserDto> implements UserDetailsService {
 
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
+  private final UserTokenService userTokenService;
+  private final EmailService emailService;
+
+  @Value("${client.base.url:localhost}")
+  private String clientBaseUrl;
 
   @Autowired
-  public UserFacade(@Lazy PasswordEncoder passwordEncoder, UserService userService) {
+  public UserFacade(
+      @Lazy PasswordEncoder passwordEncoder,
+      UserService userService,
+      UserTokenService userTokenService,
+      EmailService emailService) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
+    this.userTokenService = userTokenService;
+    this.emailService = emailService;
   }
 
   /**
@@ -147,6 +162,54 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
 
     currentUser.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
     userService.saveUser(currentUser);
+  }
+
+  public void sendPasswordRecoveryLink(ForgotPasswordDto forgotRequest) {
+    log.info("Password recovery link requested by user {}", forgotRequest.getUsername());
+    User user;
+    try {
+      user = userService.resolveUser(forgotRequest.getUsername());
+    } catch (UserNotFoundException ex) {
+      log.error("User {} does not exists, not sending recovery link.", forgotRequest.getUsername());
+      return;
+    }
+
+    if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RECOVERY)) {
+      log.info("User {} already has valid password recovery token", user.getUsername());
+      return;
+    }
+
+    if (user.getEmail() == null) {
+      log.error("User {} does not have e-mail address set", user.getUsername());
+      return;
+    }
+
+    UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RECOVERY);
+
+    // TODO use template
+    emailService.sendMail(
+        user.getEmail(),
+        "Recovery password link",
+        String.format(
+            "Hey %s, Here is your recovery password link: %s/password-recovery?token=%s (request from IP %s with user agent %s)",
+            user.getUsername(),
+            clientBaseUrl,
+            token.getValue(),
+            forgotRequest.getIp(),
+            forgotRequest.getUserAgent()));
+  }
+
+  public void resetPassword(ResetPasswordDto resetRequest) {
+    var user = userService.resolveUser(resetRequest.getUsername());
+
+    if (!userTokenService.validateToken(
+        user, resetRequest.getToken(), UserTokenType.PASSWORD_RECOVERY)) {
+      throw new FormValidationException("Invalid token");
+    }
+
+    log.info("Resetting password of user {}", user.getUsername());
+    user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
+    userService.saveUser(user);
   }
 
   /** {@link UserService#deleteUser(User)} */
