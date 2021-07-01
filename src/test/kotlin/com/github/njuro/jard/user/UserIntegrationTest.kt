@@ -5,10 +5,12 @@ import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.config.security.captcha.CaptchaProvider
 import com.github.njuro.jard.forgotPasswordRequest
 import com.github.njuro.jard.passwordEdit
 import com.github.njuro.jard.randomString
 import com.github.njuro.jard.resetPasswordRequest
+import com.github.njuro.jard.security.captcha.MockCaptchaVerificationResult
 import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.dto.CurrentUserEditDto
@@ -19,10 +21,12 @@ import com.github.njuro.jard.user.token.UserTokenRepository
 import com.github.njuro.jard.user.token.UserTokenType
 import com.github.njuro.jard.userEdit
 import com.github.njuro.jard.userToken
+import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldNotBePresent
 import io.kotest.matchers.shouldBe
+import io.mockk.every
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -43,6 +47,9 @@ internal class UserIntegrationTest : MockMvcTest() {
 
     @Autowired
     private lateinit var userTokenRepository: UserTokenRepository
+
+    @MockkBean
+    private lateinit var captchaProvider: CaptchaProvider
 
     @Nested
     @DisplayName("create user")
@@ -154,6 +161,7 @@ internal class UserIntegrationTest : MockMvcTest() {
     @Test
     fun `forgot password`() {
         val user = userRepository.save(user(username = "user", email = "user@email.com"))
+        every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.VALID
 
         mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") { body(forgotPasswordRequest(user.username)) }
             .andExpect { status { isOk() } }

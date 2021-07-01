@@ -12,4 +12,6 @@ public class ForgotPasswordDto {
   private String ip;
 
   private String userAgent;
+
+  private String captchaToken;
 }

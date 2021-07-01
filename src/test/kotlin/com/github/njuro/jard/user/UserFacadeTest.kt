@@ -2,9 +2,11 @@ package com.github.njuro.jard.user
 
 import com.github.njuro.jard.MapperTest
 import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.config.security.captcha.CaptchaProvider
 import com.github.njuro.jard.forgotPasswordRequest
 import com.github.njuro.jard.passwordEdit
 import com.github.njuro.jard.resetPasswordRequest
+import com.github.njuro.jard.security.captcha.MockCaptchaVerificationResult
 import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.token.UserTokenRepository
@@ -32,6 +34,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -51,6 +54,9 @@ internal class UserFacadeTest : MapperTest() {
 
     @MockkBean
     private lateinit var emailService: EmailService
+
+    @MockkBean
+    private lateinit var captchaProvider: CaptchaProvider
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -233,6 +239,11 @@ internal class UserFacadeTest : MapperTest() {
     @Nested
     @DisplayName("send password recovery link")
     inner class SendPasswordRecoveryLink {
+        @BeforeEach
+        fun setUp() {
+            every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.VALID
+        }
+
         @Test
         fun `send recovery link if user exists and has valid email`() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
@@ -279,6 +290,19 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = null))
             userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
 
+            verify {
+                emailService wasNot Called
+            }
+        }
+
+        @Test
+        fun `don't send recovery link if captcha is invalid`() {
+            val user = userRepository.save(user(username = "user", email = "user@mail.com"))
+            every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
+
+            shouldThrow<FormValidationException> {
+                userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+            }
             verify {
                 emailService wasNot Called
             }

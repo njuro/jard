@@ -271,11 +271,13 @@ fun loginRequest(
 fun forgotPasswordRequest(
     username: String,
     ip: String = "127.0.0.1",
-    userAgent: String = "test-user-agent"
+    userAgent: String = "test-user-agent",
+    captchaToken: String = ""
 ): ForgotPasswordDto = ForgotPasswordDto.builder()
     .username(username)
     .ip(ip)
     .userAgent(userAgent)
+    .captchaToken(captchaToken)
     .build()
 
 fun resetPasswordRequest(

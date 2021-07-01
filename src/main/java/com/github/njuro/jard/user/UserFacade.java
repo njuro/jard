@@ -1,6 +1,8 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseFacade;
+import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationResult;
 import com.github.njuro.jard.user.dto.*;
 import com.github.njuro.jard.user.token.UserToken;
 import com.github.njuro.jard.user.token.UserTokenService;
@@ -27,6 +29,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
   private final PasswordEncoder passwordEncoder;
   private final UserTokenService userTokenService;
   private final EmailService emailService;
+  private final CaptchaProvider captchaProvider;
 
   @Value("${client.base.url:localhost}")
   private String clientBaseUrl;
@@ -36,11 +39,13 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       @Lazy PasswordEncoder passwordEncoder,
       UserService userService,
       UserTokenService userTokenService,
-      EmailService emailService) {
+      EmailService emailService,
+      CaptchaProvider captchaProvider) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
     this.userTokenService = userTokenService;
     this.emailService = emailService;
+    this.captchaProvider = captchaProvider;
   }
 
   /**
@@ -166,6 +171,8 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
 
   public void sendPasswordRecoveryLink(ForgotPasswordDto forgotRequest) {
     log.info("Password recovery link requested by user {}", forgotRequest.getUsername());
+    verifyCaptcha(forgotRequest.getCaptchaToken());
+
     User user;
     try {
       user = userService.resolveUser(forgotRequest.getUsername());
@@ -220,5 +227,21 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
   /** {@link UserService#deleteUser(User)} */
   public void deleteUser(UserDto user) {
     userService.deleteUser(toEntity(user));
+  }
+
+  /**
+   * Verifies CAPTCHA response token.
+   *
+   * @param captchaToken CAPTCHA response token to verify
+   * @throws FormValidationException if verification of token failed
+   */
+  private void verifyCaptcha(String captchaToken) {
+    CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
+    if (!result.isVerified()) {
+      log.warn(
+          String.format(
+              "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
+      throw new FormValidationException("Failed to verify captcha");
+    }
   }
 }
