@@ -214,7 +214,7 @@ internal class UserControllerTest : MockMvcTest() {
     @Test
     fun `forgot password`() {
         val request = slot<ForgotPasswordDto>()
-        every { userFacade.sendPasswordRecoveryLink(capture(request)) } just Runs
+        every { userFacade.sendPasswordResetLink(capture(request)) } just Runs
 
         mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") {
             body(forgotPasswordRequest("user", ip = "1.2.3.4", userAgent = "fake-ua"))

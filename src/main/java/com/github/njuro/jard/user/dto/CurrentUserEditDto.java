@@ -1,5 +1,6 @@
 package com.github.njuro.jard.user.dto;
 
+import com.github.njuro.jard.user.User;
 import javax.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SuppressWarnings("JavadocReference")
 public class CurrentUserEditDto {
 
+  /** {@link User#email } */
   @Email private String email;
 }

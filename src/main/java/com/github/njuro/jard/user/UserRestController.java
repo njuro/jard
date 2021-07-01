@@ -80,7 +80,7 @@ public class UserRestController {
       @RequestBody ForgotPasswordDto forgotRequest, HttpServletRequest httpRequest) {
     forgotRequest.setIp(HttpUtils.getClientIp(httpRequest));
     forgotRequest.setUserAgent(httpRequest.getHeader(HttpHeaders.USER_AGENT));
-    userFacade.sendPasswordRecoveryLink(forgotRequest);
+    userFacade.sendPasswordResetLink(forgotRequest);
     return ResponseEntity.ok().build();
   }
 

@@ -38,14 +38,14 @@ internal class UserTokenRepositoryTest {
     @Test
     fun `find by user and type`() {
         val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
-        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
-        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
+        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RESET))
+        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RESET))
 
-        userTokenRepository.findByUserAndType(user1, UserTokenType.PASSWORD_RECOVERY)
+        userTokenRepository.findByUserAndType(user1, UserTokenType.PASSWORD_RESET)
             .shouldBePresent { it.value shouldBe token3.value }
         userTokenRepository.findByUserAndType(user1, UserTokenType.EMAIL_VERIFICATION)
             .shouldBePresent { it.value shouldBe token1.value }
-        userTokenRepository.findByUserAndType(user2, UserTokenType.PASSWORD_RECOVERY)
+        userTokenRepository.findByUserAndType(user2, UserTokenType.PASSWORD_RESET)
             .shouldBePresent { it.value shouldBe token2.value }
         userTokenRepository.findByUserAndType(user2, UserTokenType.EMAIL_VERIFICATION).shouldNotBePresent()
     }
@@ -54,8 +54,8 @@ internal class UserTokenRepositoryTest {
     @Suppress("UNUSED_VARIABLE")
     fun `delete tokens for user`() {
         val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
-        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
-        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
+        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RESET))
+        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RESET))
 
         userTokenRepository.deleteByUser(user1)
         userTokenRepository.findAll().map(UserToken::getValue)
@@ -79,10 +79,10 @@ internal class UserTokenRepositoryTest {
     @Suppress("UNUSED_VARIABLE")
     fun `delete tokens by user and type`() {
         val token1 = userTokenRepository.save(userToken(user1, "aaa", type = UserTokenType.EMAIL_VERIFICATION))
-        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RECOVERY))
-        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RECOVERY))
+        val token2 = userTokenRepository.save(userToken(user2, "bbb", type = UserTokenType.PASSWORD_RESET))
+        val token3 = userTokenRepository.save(userToken(user1, "ccc", type = UserTokenType.PASSWORD_RESET))
 
-        userTokenRepository.deleteByUserAndType(user1, UserTokenType.PASSWORD_RECOVERY)
+        userTokenRepository.deleteByUserAndType(user1, UserTokenType.PASSWORD_RESET)
         userTokenRepository.findAll().map(UserToken::getValue)
             .shouldContainExactlyInAnyOrder(token1.value, token2.value)
     }

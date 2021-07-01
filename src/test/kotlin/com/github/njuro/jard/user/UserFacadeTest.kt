@@ -237,15 +237,15 @@ internal class UserFacadeTest : MapperTest() {
     }
 
     @Nested
-    @DisplayName("send password recovery link")
-    inner class SendPasswordRecoveryLink {
+    @DisplayName("send password reset link")
+    inner class SendPasswordResetLink {
         @BeforeEach
         fun setUp() {
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.VALID
         }
 
         @Test
-        fun `send recovery link if user exists and has valid email`() {
+        fun `send reset link if user exists and has valid email`() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
 
             val email = slot<String>()
@@ -253,9 +253,9 @@ internal class UserFacadeTest : MapperTest() {
             every { emailService.sendMail(capture(email), ofType(String::class), capture(message)) } just Runs
 
             val forgotRequest = forgotPasswordRequest(user.username, ip = "127.0.0.1", userAgent = "test-user-agent")
-            userFacade.sendPasswordRecoveryLink(forgotRequest)
+            userFacade.sendPasswordResetLink(forgotRequest)
 
-            val token = userTokenRepository.findByUserAndType(user, UserTokenType.PASSWORD_RECOVERY).shouldBePresent()
+            val token = userTokenRepository.findByUserAndType(user, UserTokenType.PASSWORD_RESET).shouldBePresent()
             email.captured shouldBe user.email
             message.captured.should {
                 it shouldContain forgotRequest.username
@@ -266,8 +266,8 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        fun `don't send recovery link if user doesn't exist`() {
-            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = "xxx"))
+        fun `don't send reset link if user doesn't exist`() {
+            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = "xxx"))
 
             verify {
                 emailService wasNot Called
@@ -275,10 +275,10 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        fun `don't send recovery link if recovery token already exists for user`() {
+        fun `don't send reset link if reset token already exists for user`() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
-            userTokenRepository.save(userToken(user, "xxx", UserTokenType.PASSWORD_RECOVERY))
-            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+            userTokenRepository.save(userToken(user, "xxx", UserTokenType.PASSWORD_RESET))
+            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
 
             verify {
                 emailService wasNot Called
@@ -286,9 +286,9 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        fun `don't send recovery link if user doesn't have email`() {
+        fun `don't send reset link if user doesn't have email`() {
             val user = userRepository.save(user(username = "user", email = null))
-            userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
 
             verify {
                 emailService wasNot Called
@@ -296,12 +296,12 @@ internal class UserFacadeTest : MapperTest() {
         }
 
         @Test
-        fun `don't send recovery link if captcha is invalid`() {
+        fun `don't send reset link if captcha is invalid`() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
             shouldThrow<FormValidationException> {
-                userFacade.sendPasswordRecoveryLink(forgotPasswordRequest(username = user.username))
+                userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
             }
             verify {
                 emailService wasNot Called
@@ -316,7 +316,7 @@ internal class UserFacadeTest : MapperTest() {
         @Test
         fun `reset user password if token is valid`() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
-            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
+            val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RESET))
             val email = slot<String>()
             val message = slot<String>()
             every { emailService.sendMail(capture(email), ofType(String::class), capture(message)) } just Runs

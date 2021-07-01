@@ -169,20 +169,27 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     userService.saveUser(currentUser);
   }
 
-  public void sendPasswordRecoveryLink(ForgotPasswordDto forgotRequest) {
-    log.info("Password recovery link requested by user {}", forgotRequest.getUsername());
+  /**
+   * Sends e-mail with link for password reset to given user.
+   *
+   * @param forgotRequest - metadata about reset request
+   * @throws FormValidationException if provided captcha token is invalid, user is not found, user
+   *     has already valid reset token, user doesn't have e-mail set or sending an e-mail failed.
+   */
+  public void sendPasswordResetLink(ForgotPasswordDto forgotRequest) {
+    log.info("Password reset link requested by user {}", forgotRequest.getUsername());
     verifyCaptcha(forgotRequest.getCaptchaToken());
 
     User user;
     try {
       user = userService.resolveUser(forgotRequest.getUsername());
     } catch (UserNotFoundException ex) {
-      log.error("User {} does not exists, not sending recovery link.", forgotRequest.getUsername());
+      log.error("User {} does not exists, not sending reset link.", forgotRequest.getUsername());
       return;
     }
 
-    if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RECOVERY)) {
-      log.info("User {} already has valid password recovery token", user.getUsername());
+    if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RESET)) {
+      log.info("User {} already has valid password reset token", user.getUsername());
       return;
     }
 
@@ -191,14 +198,14 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       return;
     }
 
-    UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RECOVERY);
+    UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET);
 
     // TODO use template
     emailService.sendMail(
         user.getEmail(),
-        "Recovery password link",
+        "Reset password link",
         String.format(
-            "Hey %s, here is your recovery password link: %s/password-recovery?token=%s (request from IP %s with user agent %s)",
+            "Hey %s, here is your reset password link: %s/password-reset?token=%s (request from IP %s with user agent %s)",
             user.getUsername(),
             clientBaseUrl,
             token.getValue(),
@@ -206,9 +213,15 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
             forgotRequest.getUserAgent()));
   }
 
+  /**
+   * Resets password for user.
+   *
+   * @param resetRequest - metadata about reset request
+   * @throws FormValidationException if provided token is invalid or sending the mail failed.
+   */
   public void resetPassword(ResetPasswordDto resetRequest) {
     var token =
-        userTokenService.resolveToken(resetRequest.getToken(), UserTokenType.PASSWORD_RECOVERY);
+        userTokenService.resolveToken(resetRequest.getToken(), UserTokenType.PASSWORD_RESET);
     if (token == null) {
       throw new FormValidationException("Invalid token");
     }
@@ -217,7 +230,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     log.info("Resetting password of user {}", user.getUsername());
     user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
     userService.saveUser(user);
-    userTokenService.deleteToken(user, UserTokenType.PASSWORD_RECOVERY);
+    userTokenService.deleteToken(user, UserTokenType.PASSWORD_RESET);
     emailService.sendMail(
         user.getEmail(),
         "Your password was changed",

@@ -42,9 +42,9 @@ internal class UserTokenServiceTest {
     fun `generate user token`() {
         val user = userRepository.save(user(username = "user"))
 
-        userTokenService.generateToken(user, UserTokenType.PASSWORD_RECOVERY).should {
+        userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET).should {
             it.value.shouldNotBeBlank()
-            it.type shouldBe UserTokenType.PASSWORD_RECOVERY
+            it.type shouldBe UserTokenType.PASSWORD_RESET
             it.issuedAt.shouldNotBeNull()
             it.expirationAt.shouldNotBeNull()
             it.expirationAt shouldBeAfter it.issuedAt

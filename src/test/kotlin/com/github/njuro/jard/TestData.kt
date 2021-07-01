@@ -226,7 +226,7 @@ fun user(
 fun userToken(
     user: User,
     value: String,
-    type: UserTokenType = UserTokenType.PASSWORD_RECOVERY,
+    type: UserTokenType = UserTokenType.PASSWORD_RESET,
     issuedAt: OffsetDateTime = OffsetDateTime.now(),
     expirationAt: OffsetDateTime = OffsetDateTime.now(),
 ): UserToken = UserToken.builder()
