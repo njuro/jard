@@ -4,11 +4,13 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.user.dto.*;
 import com.github.njuro.jard.utils.HttpUtils;
+import com.github.njuro.jard.utils.validation.FormValidationException;
 import com.jfilter.filter.FieldFilterSetting;
 import com.jfilter.filter.FilterBehaviour;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_USERS)
+@Slf4j
 public class UserRestController {
 
   private final UserFacade userFacade;
@@ -80,7 +83,13 @@ public class UserRestController {
       @RequestBody ForgotPasswordDto forgotRequest, HttpServletRequest httpRequest) {
     forgotRequest.setIp(HttpUtils.getClientIp(httpRequest));
     forgotRequest.setUserAgent(httpRequest.getHeader(HttpHeaders.USER_AGENT));
-    userFacade.sendPasswordResetLink(forgotRequest);
+    try {
+      userFacade.sendPasswordResetLink(forgotRequest);
+    } catch (FormValidationException | UserNotFoundException ex) {
+      // exception is silenced and not propagated to client for security reasons.
+      log.error("Request for password reset failed", ex);
+    }
+
     return ResponseEntity.ok().build();
   }
 

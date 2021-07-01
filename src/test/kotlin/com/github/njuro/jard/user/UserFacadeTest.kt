@@ -267,8 +267,9 @@ internal class UserFacadeTest : MapperTest() {
 
         @Test
         fun `don't send reset link if user doesn't exist`() {
-            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = "xxx"))
-
+            shouldThrow<UserNotFoundException> {
+                userFacade.sendPasswordResetLink(forgotPasswordRequest(username = "xxx"))
+            }
             verify {
                 emailService wasNot Called
             }
@@ -278,8 +279,10 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't send reset link if reset token already exists for user`() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
             userTokenRepository.save(userToken(user, "xxx", UserTokenType.PASSWORD_RESET))
-            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
 
+            shouldThrow<FormValidationException> {
+                userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
+            }
             verify {
                 emailService wasNot Called
             }
@@ -288,8 +291,10 @@ internal class UserFacadeTest : MapperTest() {
         @Test
         fun `don't send reset link if user doesn't have email`() {
             val user = userRepository.save(user(username = "user", email = null))
-            userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
 
+            shouldThrow<FormValidationException> {
+                userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
+            }
             verify {
                 emailService wasNot Called
             }

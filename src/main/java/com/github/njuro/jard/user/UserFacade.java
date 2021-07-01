@@ -180,22 +180,16 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     log.info("Password reset link requested by user {}", forgotRequest.getUsername());
     verifyCaptcha(forgotRequest.getCaptchaToken());
 
-    User user;
-    try {
-      user = userService.resolveUser(forgotRequest.getUsername());
-    } catch (UserNotFoundException ex) {
-      log.error("User {} does not exists, not sending reset link.", forgotRequest.getUsername());
-      return;
-    }
-
+    User user = userService.resolveUser(forgotRequest.getUsername());
     if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RESET)) {
-      log.info("User {} already has valid password reset token", user.getUsername());
-      return;
+      throw new FormValidationException(
+          String.format(
+              "User %s has already valid password reset token issued", user.getUsername()));
     }
 
     if (user.getEmail() == null) {
-      log.error("User {} does not have e-mail address set", user.getUsername());
-      return;
+      throw new FormValidationException(
+          String.format("User %s does not have e-mail address set", user.getUsername()));
     }
 
     UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET);

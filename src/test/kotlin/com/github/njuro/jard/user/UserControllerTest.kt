@@ -20,6 +20,7 @@ import com.github.njuro.jard.user.dto.ResetPasswordDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import com.github.njuro.jard.userEdit
+import com.github.njuro.jard.utils.validation.FormValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -211,21 +212,50 @@ internal class UserControllerTest : MockMvcTest() {
         }
     }
 
-    @Test
-    fun `forgot password`() {
-        val request = slot<ForgotPasswordDto>()
-        every { userFacade.sendPasswordResetLink(capture(request)) } just Runs
+    @Nested
+    @DisplayName("forgot password")
+    inner class ForgotPassword {
+        private fun forgotPassword(request: ForgotPasswordDto) =
+            mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") {
+                body(request)
+                with { it.apply { remoteAddr = "127.0.0.1" } }
+                header(HttpHeaders.USER_AGENT, "test-user-agent")
+            }
 
-        mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") {
-            body(forgotPasswordRequest("user", ip = "1.2.3.4", userAgent = "fake-ua"))
-            with { it.apply { remoteAddr = "127.0.0.1" } }
-            header(HttpHeaders.USER_AGENT, "test-user-agent")
-        }.andExpect { status { isOk() } }
+        @Test
+        fun `valid request`() {
+            val request = slot<ForgotPasswordDto>()
+            every { userFacade.sendPasswordResetLink(capture(request)) } just Runs
 
-        request.captured.should {
-            it.username shouldBe "user"
-            it.ip shouldBe "127.0.0.1"
-            it.userAgent shouldBe "test-user-agent"
+            forgotPassword(
+                forgotPasswordRequest(
+                    "user",
+                    ip = "1.2.3.4",
+                    userAgent = "fake-ua"
+                )
+            ).andExpect { status { isOk() } }
+
+            request.captured.should {
+                it.username shouldBe "user"
+                it.ip shouldBe "127.0.0.1"
+                it.userAgent shouldBe "test-user-agent"
+            }
+        }
+
+        @Test
+        fun `invalid request - validation exception`() {
+            every { userFacade.sendPasswordResetLink(any()) } throws FormValidationException("")
+
+            // we are expecting 200 despite exception (silenced for security reasons)
+            forgotPassword(forgotPasswordRequest("user")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `invalid request - user not found exception`() {
+            every { userFacade.sendPasswordResetLink(any()) } throws UserNotFoundException()
+
+            // we are expecting 200 despite exception (silenced for security reasons)
+            forgotPassword(forgotPasswordRequest("user")).andExpect { status { isOk() } }
         }
     }
 
