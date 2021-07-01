@@ -191,7 +191,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
         user.getEmail(),
         "Recovery password link",
         String.format(
-            "Hey %s, Here is your recovery password link: %s/password-recovery?token=%s (request from IP %s with user agent %s)",
+            "Hey %s, here is your recovery password link: %s/password-recovery?token=%s (request from IP %s with user agent %s)",
             user.getUsername(),
             clientBaseUrl,
             token.getValue(),
@@ -211,6 +211,10 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
     userService.saveUser(user);
     userTokenService.deleteToken(user, UserTokenType.PASSWORD_RECOVERY);
+    emailService.sendMail(
+        user.getEmail(),
+        "Your password was changed",
+        String.format("Hey %s, your password was changed", user.getUsername()));
   }
 
   /** {@link UserService#deleteUser(User)} */

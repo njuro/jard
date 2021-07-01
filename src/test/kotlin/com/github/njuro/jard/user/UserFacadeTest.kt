@@ -293,18 +293,26 @@ internal class UserFacadeTest : MapperTest() {
         fun `reset user password if token is valid`() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
             val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.PASSWORD_RECOVERY))
+            val email = slot<String>()
+            val message = slot<String>()
+            every { emailService.sendMail(capture(email), ofType(String::class), capture(message)) } just Runs
 
             userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = token.value))
             userRepository.findById(user.id).shouldBePresent {
                 passwordEncoder.matches("newPassword", it.password).shouldBeTrue()
             }
             userTokenRepository.findById(token.value).shouldNotBePresent()
+            email.captured shouldBe user.email
+            message.captured shouldContain user.username
         }
 
         @Test
         fun `don't reset password if user doesn't exists`() {
             shouldThrow<UserNotFoundException> {
                 userFacade.resetPassword(resetPasswordRequest("user", password = "newPassword"))
+            }
+            verify {
+                emailService wasNot Called
             }
         }
 
@@ -316,6 +324,9 @@ internal class UserFacadeTest : MapperTest() {
 
             shouldThrow<FormValidationException> {
                 userFacade.resetPassword(resetPasswordRequest(user.username, password = "newPassword", token = "xxx"))
+            }
+            verify {
+                emailService wasNot Called
             }
         }
     }
