@@ -201,7 +201,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
         user.getEmail(),
         "Reset password link",
         String.format(
-            "Hey %s, here is your reset password link: %s/password-reset?token=%s (request from IP %s with user agent %s)",
+            "Hey %s, here is your reset password link: %s/reset-password?token=%s (request from IP %s with user agent %s)",
             user.getUsername(),
             clientBaseUrl,
             token.getValue(),
