@@ -15,7 +15,7 @@ import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.post.dto.PostForm;
 import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.thread.dto.ThreadForm;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    * @param threadForm form with thread data
    * @param board board the thread belongs to
    * @return created thread
-   * @throws FormValidationException if poster IP is banned
+   * @throws PropertyValidationException if poster IP is banned
    */
   public ThreadDto createThread(@NotNull ThreadForm threadForm, BoardDto board) {
     if (banFacade.hasActiveBan(threadForm.getPostForm().getIp())) {
@@ -103,7 +103,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    * @param postForm form with {@link Post} data
    * @param thread thread this reply belongs to
    * @return created reply
-   * @throws FormValidationException if poster IP is banned or thread is locked
+   * @throws PropertyValidationException if poster IP is banned or thread is locked
    */
   public PostDto replyToThread(@NotNull PostForm postForm, ThreadDto thread) {
     if (banFacade.hasActiveBan(postForm.getIp())) {
@@ -111,7 +111,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
     }
 
     if (thread.isLocked()) {
-      throw new FormValidationException("Thread is locked");
+      throw new PropertyValidationException("Thread is locked");
     }
 
     if (thread.getBoard().getSettings().isCaptchaEnabled()) {
@@ -229,7 +229,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    * Verifies CAPTCHA response token.
    *
    * @param captchaToken CAPTCHA response token to verify
-   * @throws FormValidationException if verification of token failed
+   * @throws PropertyValidationException if verification of token failed
    */
   private void verifyCaptcha(String captchaToken) {
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
@@ -237,7 +237,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
       log.warn(
           String.format(
               "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
-      throw new FormValidationException("Failed to verify captcha");
+      throw new PropertyValidationException("Failed to verify captcha");
     }
   }
 }

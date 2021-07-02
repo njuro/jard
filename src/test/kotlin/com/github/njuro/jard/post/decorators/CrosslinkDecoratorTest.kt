@@ -20,20 +20,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
-import org.springframework.stereotype.Service
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 
-@DataJpaTest(
-    includeFilters = [
-        ComponentScan.Filter(Service::class), ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            value = [CrosslinkDecorator::class]
-        )
-    ]
-)
+@SpringBootTest
 @WithContainerDatabase
 @Transactional
 internal class CrosslinkDecoratorTest : PostDecoratorTest() {

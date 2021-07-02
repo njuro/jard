@@ -1,11 +1,16 @@
 package com.github.njuro.jard.attachment
 
 import ac.simons.oembed.OembedException
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.TEST_ATTACHMENT_PNG
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.attachment.embedded.EmbedService
+import com.github.njuro.jard.board
 import com.github.njuro.jard.board.BoardFacade
 import com.github.njuro.jard.board.dto.BoardDto
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.boardSettings
+import com.github.njuro.jard.multipartFile
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.should
@@ -72,7 +77,7 @@ internal class AttachmentFacadeTest : MapperTest() {
             val file = multipartFile("attachment.png", TEST_ATTACHMENT_PNG)
             every { boardFacade.isMimeTypeSupported(board, ofType(String::class)) } returns false
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 attachmentFacade.createAttachment(file, board)
             }
         }
@@ -81,7 +86,7 @@ internal class AttachmentFacadeTest : MapperTest() {
         fun `don't create attachment without extension`() {
             val file = multipartFile("attachment", TEST_ATTACHMENT_PNG, originalFilename = "attachment")
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 attachmentFacade.createAttachment(file, board)
             }
         }
@@ -91,7 +96,7 @@ internal class AttachmentFacadeTest : MapperTest() {
             val file = multipartFile("attachment.png", TEST_ATTACHMENT_PNG)
             every { attachmentService.saveAttachment(any(), any()) } throws IOException()
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 attachmentFacade.createAttachment(file, board)
             }
         }
@@ -124,7 +129,7 @@ internal class AttachmentFacadeTest : MapperTest() {
         fun `don't create embedded attachment when embedded content is not allowed on board`() {
             val board = board(label = "r", settings = boardSettings(attachmentCategories = emptySet())).toDto()
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 attachmentFacade.createEmbeddedAttachment("remote-url", board)
             }
         }
@@ -142,7 +147,7 @@ internal class AttachmentFacadeTest : MapperTest() {
                 settings = boardSettings(attachmentCategories = setOf(AttachmentCategory.EMBED))
             ).toDto()
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 attachmentFacade.createEmbeddedAttachment("remote-url", board)
             }
         }

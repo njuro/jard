@@ -14,7 +14,7 @@ import com.github.njuro.jard.user.token.UserTokenType
 import com.github.njuro.jard.userEdit
 import com.github.njuro.jard.userToken
 import com.github.njuro.jard.utils.EmailService
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.assertions.throwables.shouldThrow
@@ -86,7 +86,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't create user with duplicate username`() {
             val user = userRepository.save(user(username = "John"))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.createUser(user(username = user.username).toForm())
             }
         }
@@ -95,7 +95,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't create user with duplicate email`() {
             val user = userRepository.save(user(email = "john@mail.com"))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.createUser(user(email = user.email).toForm())
             }
         }
@@ -154,7 +154,7 @@ internal class UserFacadeTest : MapperTest() {
             val updatedUser =
                 originalUser.toForm().apply { password = "newPassword"; passwordRepeated = "anotherPassword" }
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.editUser(userRepository.save(originalUser).toDto(), updatedUser)
             }
         }
@@ -184,7 +184,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't edit if user is not authenticated`() {
             every { userService.currentUser } returns null
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.editCurrentUser(userEdit("new@mail.com"))
             }
         }
@@ -195,7 +195,7 @@ internal class UserFacadeTest : MapperTest() {
             val user2 = userRepository.save(user(username = "user2", email = "new@mail.com"))
             every { userService.currentUser } returns user1
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.editCurrentUser(userEdit(user2.email))
             }
         }
@@ -220,7 +220,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't edit if user is not authenticated`() {
             every { userService.currentUser } returns null
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.editCurrentUserPassword(passwordEdit("oldPassword", "newPassword"))
             }
         }
@@ -230,7 +230,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
             every { userService.currentUser } returns user
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.editCurrentUserPassword(passwordEdit("wrongPassword", "newPassword"))
             }
         }
@@ -280,7 +280,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
             userTokenRepository.save(userToken(user, "xxx", UserTokenType.PASSWORD_RESET))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
             }
             verify {
@@ -292,7 +292,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't send reset link if user doesn't have email`() {
             val user = userRepository.save(user(username = "user", email = null))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
             }
             verify {
@@ -305,7 +305,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
             }
             verify {
@@ -340,7 +340,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
             val token = userTokenRepository.save(userToken(user, "abcdef", UserTokenType.EMAIL_VERIFICATION))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.resetPassword(resetPasswordRequest(user.username, "newPassword", token = token.value))
             }
             verify {
@@ -352,7 +352,7 @@ internal class UserFacadeTest : MapperTest() {
         fun `don't reset password if token is missing`() {
             val user = userRepository.save(user(username = "user", password = passwordEncoder.encode("oldPassword")))
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 userFacade.resetPassword(resetPasswordRequest(user.username, "newPassword", token = "xxx"))
             }
             verify {

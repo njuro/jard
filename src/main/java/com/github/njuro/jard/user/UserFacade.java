@@ -8,7 +8,7 @@ import com.github.njuro.jard.user.token.UserToken;
 import com.github.njuro.jard.user.token.UserTokenService;
 import com.github.njuro.jard.user.token.UserTokenType;
 import com.github.njuro.jard.utils.EmailService;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -54,15 +54,15 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    *
    * @param userForm form with user data
    * @return created user
-   * @throws FormValidationException if user with such name or e-mail already exists
+   * @throws PropertyValidationException if user with such name or e-mail already exists
    */
   public UserDto createUser(@NotNull UserForm userForm) {
     if (userService.doesUserExists(userForm.getUsername())) {
-      throw new FormValidationException("User with this name already exists");
+      throw new PropertyValidationException("User with this name already exists");
     }
 
     if (userService.doesEmailExists(userForm.getEmail())) {
-      throw new FormValidationException("User with this e-mail already exists");
+      throw new PropertyValidationException("User with this e-mail already exists");
     }
 
     User user = userForm.toUser();
@@ -117,7 +117,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       if (updatedUser.isPasswordMatching()) {
         oldUserEntity.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
       } else {
-        throw new FormValidationException("Passwords do not match");
+        throw new PropertyValidationException("Passwords do not match");
       }
     }
 
@@ -128,13 +128,14 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Edits information of current user.
    *
    * @param userChange object with updated information.
-   * @throws FormValidationException when no user is logged in or updated email is already in use
+   * @throws PropertyValidationException when no user is logged in or updated email is already in
+   *     use
    * @return updated user
    */
   public UserDto editCurrentUser(CurrentUserEditDto userChange) {
     var currentUser = userService.getCurrentUser();
     if (currentUser == null) {
-      throw new FormValidationException("No user is authenticated");
+      throw new PropertyValidationException("No user is authenticated");
     }
 
     if (userChange.getEmail().equalsIgnoreCase(currentUser.getEmail())) {
@@ -142,7 +143,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     }
 
     if (userService.doesEmailExists(userChange.getEmail())) {
-      throw new FormValidationException("E-mail already in use by different user");
+      throw new PropertyValidationException("E-mail already in use by different user");
     }
 
     currentUser.setEmail(userChange.getEmail());
@@ -153,16 +154,16 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Edits password of current user.
    *
    * @param passwordChange object with new password
-   * @throws FormValidationException when no user is logged in or given current password is
+   * @throws PropertyValidationException when no user is logged in or given current password is
    *     incorrect
    */
   public void editCurrentUserPassword(CurrentUserPasswordEditDto passwordChange) {
     var currentUser = userService.getCurrentUser();
     if (currentUser == null) {
-      throw new FormValidationException("No user is authenticated");
+      throw new PropertyValidationException("No user is authenticated");
     }
     if (!passwordEncoder.matches(passwordChange.getCurrentPassword(), currentUser.getPassword())) {
-      throw new FormValidationException("Incorrect current password");
+      throw new PropertyValidationException("Incorrect current password");
     }
 
     currentUser.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
@@ -173,8 +174,9 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Sends e-mail with link for password reset to given user.
    *
    * @param forgotRequest - metadata about reset request
-   * @throws FormValidationException if provided captcha token is invalid, user is not found, user
-   *     has already valid reset token, user doesn't have e-mail set or sending an e-mail failed.
+   * @throws PropertyValidationException if provided captcha token is invalid, user is not found,
+   *     user has already valid reset token, user doesn't have e-mail set or sending an e-mail
+   *     failed.
    */
   public void sendPasswordResetLink(ForgotPasswordDto forgotRequest) {
     log.info("Password reset link requested by user {}", forgotRequest.getUsername());
@@ -182,13 +184,13 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
 
     User user = userService.resolveUser(forgotRequest.getUsername());
     if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RESET)) {
-      throw new FormValidationException(
+      throw new PropertyValidationException(
           String.format(
               "User %s has already valid password reset token issued", user.getUsername()));
     }
 
     if (user.getEmail() == null) {
-      throw new FormValidationException(
+      throw new PropertyValidationException(
           String.format("User %s does not have e-mail address set", user.getUsername()));
     }
 
@@ -211,13 +213,13 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Resets password for user.
    *
    * @param resetRequest - metadata about reset request
-   * @throws FormValidationException if provided token is invalid or sending the mail failed.
+   * @throws PropertyValidationException if provided token is invalid or sending the mail failed.
    */
   public void resetPassword(ResetPasswordDto resetRequest) {
     var token =
         userTokenService.resolveToken(resetRequest.getToken(), UserTokenType.PASSWORD_RESET);
     if (token == null) {
-      throw new FormValidationException("Invalid token");
+      throw new PropertyValidationException("Invalid token");
     }
 
     var user = token.getUser();
@@ -240,7 +242,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Verifies CAPTCHA response token.
    *
    * @param captchaToken CAPTCHA response token to verify
-   * @throws FormValidationException if verification of token failed
+   * @throws PropertyValidationException if verification of token failed
    */
   private void verifyCaptcha(String captchaToken) {
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
@@ -248,7 +250,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       log.warn(
           String.format(
               "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
-      throw new FormValidationException("Failed to verify captcha");
+      throw new PropertyValidationException("Failed to verify captcha");
     }
   }
 }

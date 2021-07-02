@@ -6,7 +6,7 @@ import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.dto.UserDto;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -33,17 +33,17 @@ public class BanFacade extends BaseFacade<Ban, BanDto> {
    *
    * @param banForm form with ban data
    * @return created ban
-   * @throws FormValidationException if no user is logged in or there is already active ban on given
-   *     IP
+   * @throws PropertyValidationException if no user is logged in or there is already active ban on
+   *     given IP
    */
   public BanDto createBan(BanForm banForm) {
     UserDto loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
-      throw new FormValidationException("No user is logged in");
+      throw new PropertyValidationException("No user is logged in");
     }
 
     if (banService.hasActiveBan(banForm.getIp())) {
-      throw new FormValidationException("There is already active ban on this IP");
+      throw new PropertyValidationException("There is already active ban on this IP");
     }
 
     BanDto ban = banForm.toDto();
@@ -99,16 +99,17 @@ public class BanFacade extends BaseFacade<Ban, BanDto> {
    * @param ban ban to invalidate
    * @param unbanForm form with details of invalidation
    * @return invalidated ban
-   * @throws FormValidationException if no user is logged in or there is no active ban on given IP
+   * @throws PropertyValidationException if no user is logged in or there is no active ban on given
+   *     IP
    */
   public BanDto unban(BanDto ban, UnbanForm unbanForm) {
     UserDto loggedUser = userFacade.getCurrentUser();
     if (loggedUser == null) {
-      throw new FormValidationException("No user is logged in!");
+      throw new PropertyValidationException("No user is logged in!");
     }
 
     if (ban == null || ban.getStatus() != BanStatus.ACTIVE) {
-      throw new FormValidationException("There is no active ban on this IP");
+      throw new PropertyValidationException("There is no active ban on this IP");
     }
 
     ban.setUnbannedBy(loggedUser);

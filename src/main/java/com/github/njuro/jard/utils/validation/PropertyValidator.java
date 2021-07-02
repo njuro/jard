@@ -23,13 +23,13 @@ public class PropertyValidator {
    * Validates JSR 303 annotations on given object.
    *
    * @param target object to validate
-   * @throws FormValidationException if validation fails
+   * @throws PropertyValidationException if validation fails
    */
-  public void validate(Object target) {
+  public void validateObject(Object target) {
     BindingResult bindingResult = new BeanPropertyBindingResult(target, "request");
     validator.validate(target, bindingResult);
     if (bindingResult.hasFieldErrors()) {
-      throw new FormValidationException(bindingResult);
+      throw new PropertyValidationException(bindingResult);
     }
   }
 
@@ -38,7 +38,7 @@ public class PropertyValidator {
    *
    * @param target object which contains property to be validated
    * @param property name of the property to be validated
-   * @throws FormValidationException if validation fails
+   * @throws PropertyValidationException if validation fails
    */
   public <T> void validateProperty(T target, String property) {
     Set<ConstraintViolation<T>> violations = validator.validateProperty(target, property);
@@ -47,7 +47,7 @@ public class PropertyValidator {
           violations.stream()
               .map(ConstraintViolation::getMessage)
               .collect(Collectors.joining(", "));
-      throw new FormValidationException(
+      throw new PropertyValidationException(
           String.format("Validation of property %s failed: %s", property, errors));
     }
   }

@@ -8,16 +8,16 @@ import org.springframework.validation.BindingResult;
  * Exception to be thrown when business validation of request object (such as form) fails. Handled
  * by {@link ValidationExceptionHandler}.
  */
-public class FormValidationException extends ValidationException {
+public class PropertyValidationException extends ValidationException {
 
   private static final long serialVersionUID = 8579539307467463861L;
   @Getter private final BindingResult bindingResult;
 
-  public FormValidationException(BindingResult bindingResult) {
+  public PropertyValidationException(BindingResult bindingResult) {
     this.bindingResult = bindingResult;
   }
 
-  public FormValidationException(String message) {
+  public PropertyValidationException(String message) {
     super(message);
     bindingResult = null;
   }

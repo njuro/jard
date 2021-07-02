@@ -51,7 +51,7 @@ public class ThreadRestController {
       HttpServletRequest request) {
     threadForm.getPostForm().setAttachment(attachment);
     threadForm.getPostForm().setIp(HttpUtils.getClientIp(request));
-    propertyValidator.validate(threadForm);
+    propertyValidator.validateObject(threadForm);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(threadFacade.createThread(threadForm, board));
@@ -66,7 +66,7 @@ public class ThreadRestController {
       HttpServletRequest request) {
     postForm.setAttachment(attachment);
     postForm.setIp(HttpUtils.getClientIp(request));
-    propertyValidator.validate(postForm);
+    propertyValidator.validateObject(postForm);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(threadFacade.replyToThread(postForm, thread));

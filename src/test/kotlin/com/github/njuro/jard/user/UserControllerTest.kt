@@ -20,7 +20,7 @@ import com.github.njuro.jard.user.dto.ResetPasswordDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
 import com.github.njuro.jard.userEdit
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -244,7 +244,9 @@ internal class UserControllerTest : MockMvcTest() {
 
         @Test
         fun `invalid request - validation exception`() {
-            every { userFacade.sendPasswordResetLink(any()) } throws FormValidationException("")
+            every { userFacade.sendPasswordResetLink(any()) } throws PropertyValidationException(
+                ""
+            )
 
             // we are expecting 200 despite exception (silenced for security reasons)
             forgotPassword(forgotPasswordRequest("user")).andExpect { status { isOk() } }

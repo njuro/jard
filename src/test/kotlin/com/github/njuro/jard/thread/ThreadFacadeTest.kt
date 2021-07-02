@@ -15,7 +15,7 @@ import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.security.captcha.MockCaptchaVerificationResult
 import com.github.njuro.jard.thread
 import com.github.njuro.jard.toForm
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -112,7 +112,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val threadForm = thread(board).toForm().apply { postForm = this.postForm.apply { captchaToken = "ABCDE" } }
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 threadFacade.createThread(threadForm, board.toDto())
             }
         }
@@ -183,7 +183,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val thread = saveThread(thread(board, locked = true))
             val postForm = post(thread).toForm()
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 threadFacade.replyToThread(postForm, thread.toDto())
             }
         }
@@ -206,7 +206,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val postForm = post(thread).toForm().apply { captchaToken = "ABCDE" }
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 threadFacade.replyToThread(postForm, thread.toDto())
             }
         }

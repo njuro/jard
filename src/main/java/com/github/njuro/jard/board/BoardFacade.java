@@ -7,7 +7,7 @@ import com.github.njuro.jard.board.dto.BoardForm;
 import com.github.njuro.jard.post.PostFacade;
 import com.github.njuro.jard.thread.ThreadFacade;
 import com.github.njuro.jard.thread.dto.ThreadDto;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -37,11 +37,11 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
    *
    * @param boardForm form with board data
    * @return created board
-   * @throws FormValidationException if board with such label already exists
+   * @throws PropertyValidationException if board with such label already exists
    */
   public BoardDto createBoard(BoardForm boardForm) {
     if (boardService.doesBoardExist(boardForm.getLabel())) {
-      throw new FormValidationException("Board with this label already exists");
+      throw new PropertyValidationException("Board with this label already exists");
     }
 
     return toDto(boardService.saveBoard(toEntity(boardForm.toDto())));

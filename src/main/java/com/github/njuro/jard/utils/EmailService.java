@@ -26,7 +26,7 @@ public class EmailService {
   public EmailService(
       @Autowired(required = false) JavaMailSenderImpl mailSender,
       PropertyValidator validator,
-      @Value("${app.mail.sender}") String senderAddress) {
+      @Value("${app.mail.sender:''}") String senderAddress) {
     this.mailSender = mailSender;
     this.validator = validator;
     this.senderAddress = senderAddress;

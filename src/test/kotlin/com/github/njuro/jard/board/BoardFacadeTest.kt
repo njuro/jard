@@ -1,10 +1,16 @@
 package com.github.njuro.jard.board
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.attachment.AttachmentCategory
+import com.github.njuro.jard.board
+import com.github.njuro.jard.boardSettings
+import com.github.njuro.jard.post
 import com.github.njuro.jard.post.PostFacade
+import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.ThreadFacade
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldHaveSize
@@ -46,7 +52,7 @@ internal class BoardFacadeTest : MapperTest() {
         val boardForm = board(label = "r").toForm()
 
         boardFacade.createBoard(boardForm)
-        shouldThrow<FormValidationException> {
+        shouldThrow<PropertyValidationException> {
             boardFacade.createBoard(boardForm)
         }
     }

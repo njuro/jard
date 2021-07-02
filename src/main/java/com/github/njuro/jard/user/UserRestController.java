@@ -4,7 +4,7 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.user.dto.*;
 import com.github.njuro.jard.utils.HttpUtils;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import com.jfilter.filter.FieldFilterSetting;
 import com.jfilter.filter.FilterBehaviour;
 import java.util.List;
@@ -85,7 +85,7 @@ public class UserRestController {
     forgotRequest.setUserAgent(httpRequest.getHeader(HttpHeaders.USER_AGENT));
     try {
       userFacade.sendPasswordResetLink(forgotRequest);
-    } catch (FormValidationException | UserNotFoundException ex) {
+    } catch (PropertyValidationException | UserNotFoundException ex) {
       // exception is silenced and not propagated to client for security reasons.
       log.error("Request for password reset failed", ex);
     }

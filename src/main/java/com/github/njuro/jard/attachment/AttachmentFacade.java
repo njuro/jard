@@ -7,7 +7,7 @@ import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.BoardFacade;
 import com.github.njuro.jard.board.dto.BoardDto;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,13 +44,13 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
    * @param file uploaded file
    * @param board {@link Board} to which the file was uploaded
    * @return created {@link Attachment}
-   * @throws FormValidationException if MIME type of uploaded file is not supported on given board
-   *     or saving of attachment fails
+   * @throws PropertyValidationException if MIME type of uploaded file is not supported on given
+   *     board or saving of attachment fails
    */
   public AttachmentDto createAttachment(MultipartFile file, BoardDto board) {
     String mimeType = detectMimeType(file);
     if (!boardFacade.isMimeTypeSupported(board, mimeType)) {
-      throw new FormValidationException("Uploaded file mime type not supported on this board");
+      throw new PropertyValidationException("Uploaded file mime type not supported on this board");
     }
 
     return createAttachment(file, mimeType, Paths.get(board.getLabel()));
@@ -62,7 +62,7 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
    * @param file uploaded file
    * @param folder path to folder where uploaded file should be stored
    * @return created {@link Attachment}
-   * @throws FormValidationException if saving of attachment fails
+   * @throws PropertyValidationException if saving of attachment fails
    */
   public AttachmentDto createAttachment(MultipartFile file, Path folder) {
     return createAttachment(file, detectMimeType(file), folder);
@@ -75,12 +75,12 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
    * @param mimeType MIME type of uploaded file
    * @param folder path to folder where uploaded file should be stored
    * @return created {@link Attachment}
-   * @throws FormValidationException if saving of attachment fails or filename has no extension
+   * @throws PropertyValidationException if saving of attachment fails or filename has no extension
    */
   private AttachmentDto createAttachment(MultipartFile file, String mimeType, Path folder) {
     String ext = FilenameUtils.getExtension(file.getOriginalFilename());
     if (ext == null || ext.isEmpty()) {
-      throw new FormValidationException("Name of uploaded file must have an extension");
+      throw new PropertyValidationException("Name of uploaded file must have an extension");
     }
 
     String generatedName = Instant.now().toEpochMilli() + "." + ext.toLowerCase();
@@ -97,7 +97,7 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
       return toDto(attachmentService.saveAttachment(attachment, file));
     } catch (IOException ex) {
       log.error("Saving of attachment failed", ex);
-      throw new FormValidationException("Saving of attachment failed");
+      throw new PropertyValidationException("Saving of attachment failed");
     }
   }
 
@@ -122,11 +122,11 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
    * @param embedUrl URL of content to be embedded.
    * @param board {@link Board} to which the file was uploaded
    * @return created {@link Attachment}
-   * @throws FormValidationException if embedded attachments are not allowed on given board
+   * @throws PropertyValidationException if embedded attachments are not allowed on given board
    */
   public AttachmentDto createEmbeddedAttachment(String embedUrl, BoardDto board) {
     if (!board.getSettings().getAttachmentCategories().contains(AttachmentCategory.EMBED)) {
-      throw new FormValidationException("Embedded attachments are not allowed for this board");
+      throw new PropertyValidationException("Embedded attachments are not allowed for this board");
     }
 
     var attachment = Attachment.builder().category(AttachmentCategory.EMBED).build();
@@ -134,7 +134,7 @@ public class AttachmentFacade extends BaseFacade<Attachment, AttachmentDto> {
       embedService.processEmbedded(embedUrl, attachment);
     } catch (IllegalArgumentException | OembedException ex) {
       log.error("Processing of embedded attachment failed", ex);
-      throw new FormValidationException("Processing of embedded attachment failed");
+      throw new PropertyValidationException("Processing of embedded attachment failed");
     }
 
     return toDto(attachmentService.saveEmbeddedAttachment(attachment));

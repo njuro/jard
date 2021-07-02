@@ -11,7 +11,7 @@ import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.user.UserFacade;
 import com.github.njuro.jard.user.dto.UserDto;
-import com.github.njuro.jard.utils.validation.FormValidationException;
+import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import com.github.tornaia.geoip.GeoIP;
 import com.github.tornaia.geoip.GeoIPProvider;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class PostFacade extends BaseFacade<Post, PostDto> {
    * @param postForm form with post
    * @param thread thread this post belongs to
    * @return created post
-   * @throws FormValidationException if post is not validated by business logic
+   * @throws PropertyValidationException if post is not validated by business logic
    */
   public PostDto createPost(@Valid @NotNull PostForm postForm, ThreadDto thread) {
     PostDto post = postForm.toDto();
@@ -129,28 +129,29 @@ public class PostFacade extends BaseFacade<Post, PostDto> {
    *
    * @param post post to delete
    * @param deletionCode deletion code for given post
-   * @throws FormValidationException if post does not have deletion code set, post its original post
-   *     in its thread, or the deletion code from the request does not match
+   * @throws PropertyValidationException if post does not have deletion code set, post its original
+   *     post in its thread, or the deletion code from the request does not match
    * @throws IOException if deletion of post attachment fails
    */
   public void deleteOwnPost(PostDto post, String deletionCode) throws IOException {
     if (post.getDeletionCode() == null || post.getDeletionCode().isBlank()) {
-      throw new FormValidationException("Post does not have deletion code and cannot be deleted");
+      throw new PropertyValidationException(
+          "Post does not have deletion code and cannot be deleted");
     }
 
     if (post.isOriginalPost()) {
-      throw new FormValidationException("Original (first) post in thread cannot be deleted");
+      throw new PropertyValidationException("Original (first) post in thread cannot be deleted");
     }
 
     if (Duration.between(post.getCreatedAt(), OffsetDateTime.now()).toMinutes()
         > Constants.OWN_POST_DELETION_TIME_LIMIT) {
-      throw new FormValidationException(
+      throw new PropertyValidationException(
           String.format(
               "Cannot delete post older than %d minutes", Constants.OWN_POST_DELETION_TIME_LIMIT));
     }
 
     if (!post.getDeletionCode().equals(deletionCode)) {
-      throw new FormValidationException("Invalid deletion code");
+      throw new PropertyValidationException("Invalid deletion code");
     }
 
     deletePost(post);

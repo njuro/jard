@@ -1,12 +1,17 @@
 package com.github.njuro.jard.ban
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.ban
 import com.github.njuro.jard.ban.dto.BanDto
 import com.github.njuro.jard.common.Constants
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.toUnbanForm
+import com.github.njuro.jard.user
 import com.github.njuro.jard.user.User
 import com.github.njuro.jard.user.UserFacade
 import com.github.njuro.jard.user.UserRepository
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -81,7 +86,7 @@ internal class BanFacadeTest : MapperTest() {
             val banForm = ban().toForm()
             every { userFacade.currentUser } returns null
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 banFacade.createBan(banForm)
             }
         }
@@ -91,7 +96,7 @@ internal class BanFacadeTest : MapperTest() {
             banRepository.save(ban(ip = "127.0.0.1"))
             val banForm = ban(ip = "127.0.0.1").toForm()
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 banFacade.createBan(banForm)
             }
         }
@@ -143,7 +148,7 @@ internal class BanFacadeTest : MapperTest() {
             val unbanForm = ban.toUnbanForm(unbanReason = "Mistake")
             every { userFacade.currentUser } returns null
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 banFacade.unban(ban.toDto(), unbanForm)
             }
         }
@@ -153,7 +158,7 @@ internal class BanFacadeTest : MapperTest() {
             val ban = banRepository.save(ban(status = BanStatus.EXPIRED))
             val unbanForm = ban.toUnbanForm(unbanReason = "Mistake")
 
-            shouldThrow<FormValidationException> {
+            shouldThrow<PropertyValidationException> {
                 banFacade.unban(ban.toDto(), unbanForm)
             }
         }

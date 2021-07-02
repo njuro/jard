@@ -27,7 +27,7 @@ import com.github.njuro.jard.thread.dto.ThreadForm
 import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user.UserAuthority
 import com.github.njuro.jard.utils.HttpUtils
-import com.github.njuro.jard.utils.validation.FormValidationException
+import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
@@ -393,7 +393,7 @@ internal class ThreadControllerTest : MockMvcTest() {
                     ofType(PostDto::class),
                     ofType(String::class)
                 )
-            } throws FormValidationException("")
+            } throws PropertyValidationException("")
 
             deleteOwnPost(post.postNumber).andExpect { status { isBadRequest() } }
         }

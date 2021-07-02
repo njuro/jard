@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /**
  * Handler for validation exceptions.
  *
- * @see FormValidationException
+ * @see PropertyValidationException
  */
 @RestControllerAdvice
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -28,8 +28,8 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(FormValidationException.class)
-  private ValidationErrors handleValidationException(FormValidationException ex) {
+  @ExceptionHandler(PropertyValidationException.class)
+  private ValidationErrors handleValidationException(PropertyValidationException ex) {
     return ex.getBindingResult() != null
         ? new ValidationErrors(ex.getBindingResult())
         : new ValidationErrors(ex.getMessage());
