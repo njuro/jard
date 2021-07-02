@@ -12,7 +12,7 @@ import com.github.njuro.jard.thread.dto.ThreadForm;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.utils.HttpUtils;
 import com.github.njuro.jard.utils.SensitiveDataFilter;
-import com.github.njuro.jard.utils.validation.RequestValidator;
+import com.github.njuro.jard.utils.validation.PropertyValidator;
 import com.jfilter.filter.DynamicFilter;
 import com.jfilter.filter.FieldFilterSetting;
 import java.io.IOException;
@@ -33,14 +33,14 @@ public class ThreadRestController {
 
   private final ThreadFacade threadFacade;
   private final PostFacade postFacade;
-  private final RequestValidator requestValidator;
+  private final PropertyValidator propertyValidator;
 
   @Autowired
   public ThreadRestController(
-      ThreadFacade threadFacade, PostFacade postFacade, RequestValidator requestValidator) {
+      ThreadFacade threadFacade, PostFacade postFacade, PropertyValidator propertyValidator) {
     this.threadFacade = threadFacade;
     this.postFacade = postFacade;
-    this.requestValidator = requestValidator;
+    this.propertyValidator = propertyValidator;
   }
 
   @PostMapping
@@ -51,7 +51,7 @@ public class ThreadRestController {
       HttpServletRequest request) {
     threadForm.getPostForm().setAttachment(attachment);
     threadForm.getPostForm().setIp(HttpUtils.getClientIp(request));
-    requestValidator.validate(threadForm);
+    propertyValidator.validate(threadForm);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(threadFacade.createThread(threadForm, board));
@@ -66,7 +66,7 @@ public class ThreadRestController {
       HttpServletRequest request) {
     postForm.setAttachment(attachment);
     postForm.setIp(HttpUtils.getClientIp(request));
-    requestValidator.validate(postForm);
+    propertyValidator.validate(postForm);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(threadFacade.replyToThread(postForm, thread));

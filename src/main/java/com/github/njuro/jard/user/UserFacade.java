@@ -39,7 +39,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       @Lazy PasswordEncoder passwordEncoder,
       UserService userService,
       UserTokenService userTokenService,
-      EmailService emailService,
+      @Lazy EmailService emailService,
       CaptchaProvider captchaProvider) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
