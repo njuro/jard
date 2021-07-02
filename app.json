@@ -86,6 +86,10 @@
       "description": "Sender e-mail for mails sent by application",
       "required": false
     },
+    "SMTP_SERVER_SENDER_ALIAS": {
+      "description": "Alias for sender-email",
+      "required": false
+    },
     "MAVEN_CUSTOM_OPTS": {
       "description": "Settings for Maven (Heroku specific - probably don't change)",
       "value": "-DskipTests=true -DskipGitHooks=true"

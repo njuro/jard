@@ -8,8 +8,12 @@ import com.github.njuro.jard.user.token.UserToken;
 import com.github.njuro.jard.user.token.UserTokenService;
 import com.github.njuro.jard.user.token.UserTokenType;
 import com.github.njuro.jard.utils.EmailService;
+import com.github.njuro.jard.utils.TemplateService;
 import com.github.njuro.jard.utils.validation.PropertyValidationException;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
   private final PasswordEncoder passwordEncoder;
   private final UserTokenService userTokenService;
   private final EmailService emailService;
+  private final TemplateService templateService;
   private final CaptchaProvider captchaProvider;
 
   @Value("${client.base.url:localhost}")
@@ -40,11 +45,13 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       UserService userService,
       UserTokenService userTokenService,
       @Lazy EmailService emailService,
+      TemplateService templateService,
       CaptchaProvider captchaProvider) {
     this.passwordEncoder = passwordEncoder;
     this.userService = userService;
     this.userTokenService = userTokenService;
     this.emailService = emailService;
+    this.templateService = templateService;
     this.captchaProvider = captchaProvider;
   }
 
@@ -196,17 +203,23 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
 
     UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET);
 
-    // TODO use template
-    emailService.sendMail(
-        user.getEmail(),
-        "Reset password link",
-        String.format(
-            "Hey %s, here is your reset password link: %s/reset-password?token=%s (request from IP %s with user agent %s)",
-            user.getUsername(),
-            clientBaseUrl,
-            token.getValue(),
-            forgotRequest.getIp(),
-            forgotRequest.getUserAgent()));
+    var message =
+        templateService.resolveTemplate(
+            "forgot_password",
+            Map.of(
+                "username",
+                user.getUsername(),
+                "clientUrl",
+                clientBaseUrl,
+                "token",
+                token.getValue(),
+                "ip",
+                forgotRequest.getIp(),
+                "userAgent",
+                Optional.ofNullable(forgotRequest.getUserAgent()).orElse("Unknown"),
+                "timestamp",
+                OffsetDateTime.now()));
+    emailService.sendMail(user.getEmail(), "Reset your password", message);
   }
 
   /**
@@ -227,10 +240,18 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     user.setPassword(passwordEncoder.encode(resetRequest.getPassword()));
     userService.saveUser(user);
     userTokenService.deleteToken(user, UserTokenType.PASSWORD_RESET);
-    emailService.sendMail(
-        user.getEmail(),
-        "Your password was changed",
-        String.format("Hey %s, your password was changed", user.getUsername()));
+
+    var message =
+        templateService.resolveTemplate(
+            "reset_password",
+            Map.of(
+                "username",
+                user.getUsername(),
+                "clientUrl",
+                clientBaseUrl,
+                "timestamp",
+                OffsetDateTime.now()));
+    emailService.sendMail(user.getEmail(), "Your password has been updated", message);
   }
 
   /** {@link UserService#deleteUser(User)} */

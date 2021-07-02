@@ -21,6 +21,7 @@ internal class EmailServiceTest {
         private const val systemEmail = "system@jard.localhost"
         private const val systemPassword = "email-password"
         private const val senderEmail = "hello@jard.localhost"
+        private const val senderEmailAlias = "jard-test"
 
         private val mailServer = GreenMail(ServerSetup.SMTP.dynamicPort()).apply {
             setUser(systemEmail, systemPassword)
@@ -35,6 +36,7 @@ internal class EmailServiceTest {
             registry.add("spring.mail.username") { systemEmail }
             registry.add("spring.mail.password") { systemPassword }
             registry.add("app.mail.sender") { senderEmail }
+            registry.add("app.mail.sender.alias") { senderEmailAlias }
         }
 
         @AfterAll
@@ -60,7 +62,7 @@ internal class EmailServiceTest {
         messages shouldHaveSize 1
         messages.first().should {
             it.from shouldHaveSize 1
-            it.from.first().toString() shouldBe senderEmail
+            it.from.first().toString() shouldBe "$senderEmailAlias <$senderEmail>"
             it.allRecipients shouldHaveSize 1
             it.allRecipients.first().toString() shouldBe recipientEmail
             it.subject shouldBe subject

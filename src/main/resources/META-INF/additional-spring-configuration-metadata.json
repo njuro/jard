@@ -74,6 +74,11 @@
       "name": "app.mail.sender",
       "type": "java.lang.String",
       "description": "Sender e-mail address for system mails (if SMTP server is configured)."
+    },
+    {
+      "name": "app.mail.sender.alias",
+      "type": "java.lang.String",
+      "description": "Alias for sender e-mail address (if SMTP server is configured)."
     }
   ]
 }
