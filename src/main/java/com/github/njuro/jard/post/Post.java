@@ -107,11 +107,16 @@ public class Post extends BaseEntity {
   /** Before inserting to database, set creation date to current date and time. */
   @PrePersist
   private void setCreatedAt() {
-    createdAt = OffsetDateTime.now();
+    if (createdAt == null) {
+      createdAt = OffsetDateTime.now();
+    }
   }
 
   /** @return true if this post is original post in its {@link Thread}, false otherwise */
   public boolean isOriginalPost() {
+    if (thread == null) {
+      return false;
+    }
     return equals(thread.getOriginalPost());
   }
 }
