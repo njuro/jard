@@ -33,7 +33,7 @@ public class ValidationMessageInterpolator implements MessageInterpolator {
 
   private String processMessage(String message) {
     // interpolate all custom variables
-    message = message.replaceAll("\\[MAX_ATTACHMENT_SIZE]", String.valueOf(MAX_ATTACHMENT_SIZE));
+    message = message.replace("\\[MAX_ATTACHMENT_SIZE]", String.valueOf(MAX_ATTACHMENT_SIZE));
 
     return message;
   }

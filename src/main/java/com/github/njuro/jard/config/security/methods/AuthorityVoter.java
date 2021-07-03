@@ -35,7 +35,7 @@ public class AuthorityVoter implements AccessDecisionVoter<MethodInvocation> {
       Collection<ConfigAttribute> attributes) {
     Set<String> requiredAuthorities =
         attributes.stream()
-            .filter(att -> att instanceof AuthorityAttribute)
+            .filter(AuthorityAttribute.class::isInstance)
             .map(AuthorityAttribute.class::cast)
             .map(AuthorityAttribute::getAuthority)
             .map(UserAuthority::getAuthority)

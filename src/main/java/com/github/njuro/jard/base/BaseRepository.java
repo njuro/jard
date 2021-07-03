@@ -6,4 +6,4 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /** Base repository for manipulating with JPA entites inheriting from {@link BaseEntity}. */
 @NoRepositoryBean
-public interface BaseRepository<ENTITY extends BaseEntity> extends JpaRepository<ENTITY, UUID> {}
+public interface BaseRepository<E extends BaseEntity> extends JpaRepository<E, UUID> {}
