@@ -6,6 +6,7 @@ import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException;
 import com.github.njuro.jard.config.security.captcha.CaptchaVerificationResult;
 import com.github.njuro.jard.post.HashGenerationUtils;
 import com.github.njuro.jard.post.Post;
@@ -229,7 +230,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
    * Verifies CAPTCHA response token.
    *
    * @param captchaToken CAPTCHA response token to verify
-   * @throws PropertyValidationException if verification of token failed
+   * @throws CaptchaVerificationException if verification of token failed
    */
   private void verifyCaptcha(String captchaToken) {
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
@@ -237,7 +238,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
       log.warn(
           String.format(
               "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
-      throw new PropertyValidationException("Failed to verify captcha");
+      throw new CaptchaVerificationException();
     }
   }
 }

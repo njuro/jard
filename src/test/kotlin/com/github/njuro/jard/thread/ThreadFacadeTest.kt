@@ -9,6 +9,7 @@ import com.github.njuro.jard.board.Board
 import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.boardSettings
 import com.github.njuro.jard.config.security.captcha.CaptchaProvider
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException
 import com.github.njuro.jard.post
 import com.github.njuro.jard.post.Post
 import com.github.njuro.jard.post.PostRepository
@@ -112,7 +113,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val threadForm = thread(board).toForm().apply { postForm = this.postForm.apply { captchaToken = "ABCDE" } }
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<PropertyValidationException> {
+            shouldThrow<CaptchaVerificationException> {
                 threadFacade.createThread(threadForm, board.toDto())
             }
         }
@@ -206,7 +207,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val postForm = post(thread).toForm().apply { captchaToken = "ABCDE" }
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<PropertyValidationException> {
+            shouldThrow<CaptchaVerificationException> {
                 threadFacade.replyToThread(postForm, thread.toDto())
             }
         }

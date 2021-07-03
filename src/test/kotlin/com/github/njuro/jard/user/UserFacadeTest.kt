@@ -3,6 +3,7 @@ package com.github.njuro.jard.user
 import com.github.njuro.jard.MapperTest
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.config.security.captcha.CaptchaProvider
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException
 import com.github.njuro.jard.forgotPasswordRequest
 import com.github.njuro.jard.passwordEdit
 import com.github.njuro.jard.resetPasswordRequest
@@ -305,7 +306,7 @@ internal class UserFacadeTest : MapperTest() {
             val user = userRepository.save(user(username = "user", email = "user@mail.com"))
             every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.INVALID
 
-            shouldThrow<PropertyValidationException> {
+            shouldThrow<CaptchaVerificationException> {
                 userFacade.sendPasswordResetLink(forgotPasswordRequest(username = user.username))
             }
             verify {

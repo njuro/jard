@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.common.Mappings;
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException;
 import com.github.njuro.jard.config.security.methods.HasAuthorities;
 import com.github.njuro.jard.user.dto.*;
 import com.github.njuro.jard.utils.HttpUtils;
@@ -85,6 +86,8 @@ public class UserRestController {
     forgotRequest.setUserAgent(httpRequest.getHeader(HttpHeaders.USER_AGENT));
     try {
       userFacade.sendPasswordResetLink(forgotRequest);
+    } catch (CaptchaVerificationException ex) {
+      throw ex;
     } catch (PropertyValidationException | UserNotFoundException ex) {
       // exception is silenced and not propagated to client for security reasons.
       log.error("Request for password reset failed", ex);

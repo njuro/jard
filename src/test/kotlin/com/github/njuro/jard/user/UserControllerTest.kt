@@ -7,6 +7,7 @@ import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
 import com.github.njuro.jard.common.InputConstraints.MIN_PASSWORD_LENGTH
 import com.github.njuro.jard.common.InputConstraints.MIN_USERNAME_LENGTH
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException
 import com.github.njuro.jard.forgotPasswordRequest
 import com.github.njuro.jard.passwordEdit
 import com.github.njuro.jard.randomString
@@ -258,6 +259,13 @@ internal class UserControllerTest : MockMvcTest() {
 
             // we are expecting 200 despite exception (silenced for security reasons)
             forgotPassword(forgotPasswordRequest("user")).andExpect { status { isOk() } }
+        }
+
+        @Test
+        fun `invalid request - captcha exception`() {
+            every { userFacade.sendPasswordResetLink(any()) } throws CaptchaVerificationException()
+
+            forgotPassword(forgotPasswordRequest("user")).andExpect { status { isBadRequest() } }
         }
     }
 

@@ -2,6 +2,7 @@ package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseFacade;
 import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
+import com.github.njuro.jard.config.security.captcha.CaptchaVerificationException;
 import com.github.njuro.jard.config.security.captcha.CaptchaVerificationResult;
 import com.github.njuro.jard.user.dto.*;
 import com.github.njuro.jard.user.token.UserToken;
@@ -263,7 +264,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
    * Verifies CAPTCHA response token.
    *
    * @param captchaToken CAPTCHA response token to verify
-   * @throws PropertyValidationException if verification of token failed
+   * @throws CaptchaVerificationException if verification of token failed
    */
   private void verifyCaptcha(String captchaToken) {
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
@@ -271,7 +272,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
       log.warn(
           String.format(
               "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
-      throw new PropertyValidationException("Failed to verify captcha");
+      throw new CaptchaVerificationException();
     }
   }
 }
