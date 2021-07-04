@@ -1,10 +1,10 @@
 package com.github.njuro.jard.thread
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithTestDataRepository
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
-import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.thread
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.optional.shouldBePresent
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
 @DataJpaTest
+@WithTestDataRepository
 @WithContainerDatabase
 @Transactional
 internal class ThreadRepositoryTest {
@@ -26,21 +27,18 @@ internal class ThreadRepositoryTest {
     private lateinit var threadRepository: ThreadRepository
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
     @BeforeEach
     fun initializeBoard() {
-        board = boardRepository.save(board(label = "r"))
+        board = db.insert(board(label = "r"))
     }
 
     @Test
     fun `find by board label and original post number`() {
-        val thread = saveThread(thread(board))
+        val thread = db.insert(thread(board))
 
         threadRepository.findByBoardLabelAndOriginalPostPostNumber(board.label, thread.originalPost.postNumber)
             .shouldBePresent {
@@ -51,11 +49,11 @@ internal class ThreadRepositoryTest {
     @Test
     fun `find by board id sorted by stickied status and last bump date`() {
         val baseTime = OffsetDateTime.now().minusWeeks(1)
-        val thread1 = saveThread(thread(board, lastBumpAt = baseTime))
-        val thread2 = saveThread(thread(board, lastBumpAt = baseTime.plusDays(1)))
-        val thread3 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(1)))
-        val thread4 = saveThread(thread(board, lastBumpAt = baseTime.plusDays(2), stickied = true))
-        val thread5 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(2), stickied = true))
+        val thread1 = db.insert(thread(board, lastBumpAt = baseTime), threadNumber = 1L)
+        val thread2 = db.insert(thread(board, lastBumpAt = baseTime.plusDays(1)), threadNumber = 2L)
+        val thread3 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(1)), threadNumber = 3L)
+        val thread4 = db.insert(thread(board, lastBumpAt = baseTime.plusDays(2), stickied = true), threadNumber = 4L)
+        val thread5 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(2), stickied = true), threadNumber = 5L)
 
         threadRepository.findByBoardIdOrderByStickiedDescLastBumpAtDesc(board.id, Pageable.unpaged()).map {
             it.id
@@ -66,9 +64,9 @@ internal class ThreadRepositoryTest {
     @Suppress("UNUSED_VARIABLE")
     fun `find non-stickied thread with least recent last bump date`() {
         val baseTime = OffsetDateTime.now().minusWeeks(1)
-        val thread1 = saveThread(thread(board, lastBumpAt = baseTime))
-        val thread2 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(1)))
-        val thread3 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(2), stickied = true))
+        val thread1 = db.insert(thread(board, lastBumpAt = baseTime), threadNumber = 1L)
+        val thread2 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(1)), threadNumber = 2L)
+        val thread3 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(2), stickied = true), threadNumber = 3L)
 
         threadRepository.findTopByBoardIdAndStickiedFalseOrderByLastBumpAtAsc(board.id)
             .shouldBePresent { it.id shouldBe thread2.id }
@@ -76,15 +74,10 @@ internal class ThreadRepositoryTest {
 
     @Test
     fun `count threads in board`() {
-        saveThread(thread(board))
-        saveThread(thread(board))
-        saveThread(thread(board))
+        db.insert(thread(board), threadNumber = 1L)
+        db.insert(thread(board), threadNumber = 2L)
+        db.insert(thread(board), threadNumber = 3L)
 
         threadRepository.countByBoardId(board.id) shouldBe 3
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
     }
 }

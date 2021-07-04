@@ -1,6 +1,7 @@
 package com.github.njuro.jard.board
 
 import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.attachment.AttachmentCategory
 import com.github.njuro.jard.board
@@ -27,9 +28,6 @@ import org.springframework.http.MediaType
 @WithContainerDatabase
 internal class BoardFacadeTest : MapperTest() {
 
-    @Autowired
-    private lateinit var boardRepository: BoardRepository
-
     @MockkBean
     private lateinit var threadFacade: ThreadFacade
 
@@ -38,6 +36,9 @@ internal class BoardFacadeTest : MapperTest() {
 
     @Autowired
     private lateinit var boardFacade: BoardFacade
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     @Test
     fun `create board`() {
@@ -59,7 +60,7 @@ internal class BoardFacadeTest : MapperTest() {
 
     @Test
     fun `get board with threads`() {
-        val board = boardRepository.save(board(label = "r"))
+        val board = db.insert(board(label = "r"))
         val thread = thread(board)
         val replies = listOf(post(thread).toDto(), post(thread).toDto())
 
@@ -94,7 +95,7 @@ internal class BoardFacadeTest : MapperTest() {
 
     @Test
     fun `determine if mime type of attachment is allowed on board`() {
-        val board = boardRepository.save(
+        val board = db.insert(
             board(
                 label = "r",
                 settings = boardSettings(attachmentCategories = setOf(AttachmentCategory.IMAGE))
@@ -110,7 +111,7 @@ internal class BoardFacadeTest : MapperTest() {
     @Test
     fun `edit board`() {
         val original =
-            boardRepository.save(board(label = "r", postCounter = 1L, settings = boardSettings(nsfw = false)))
+            db.insert(board(label = "r", postCounter = 1L, settings = boardSettings(nsfw = false)))
         val editForm =
             original.toForm().apply { name = "Updated name"; boardSettingsForm = boardSettings(nsfw = true).toForm() }
 
@@ -122,10 +123,10 @@ internal class BoardFacadeTest : MapperTest() {
 
     @Test
     fun `delete board`() {
-        val board = boardRepository.save(board(label = "r"))
+        val board = db.insert(board(label = "r"))
 
-        boardRepository.findByLabel(board.label).shouldBePresent()
+        db.select(board).shouldBePresent()
         boardFacade.deleteBoard(board.toDto())
-        boardRepository.findByLabel(board.label).shouldBeEmpty()
+        db.select(board).shouldBeEmpty()
     }
 }

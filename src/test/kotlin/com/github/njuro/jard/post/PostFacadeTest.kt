@@ -1,16 +1,15 @@
 package com.github.njuro.jard.post
 
 import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.boardSettings
 import com.github.njuro.jard.common.Constants
 import com.github.njuro.jard.post
 import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.Thread
-import com.github.njuro.jard.thread.ThreadRepository
 import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.UserFacade
@@ -43,13 +42,7 @@ internal class PostFacadeTest : MapperTest() {
     private lateinit var userFacade: UserFacade
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
@@ -57,12 +50,8 @@ internal class PostFacadeTest : MapperTest() {
 
     @BeforeEach
     fun setUp() {
-        board = spyk(boardRepository.save(board(label = "r")))
-        thread = threadRepository.save(
-            thread(board).apply {
-                originalPost = postRepository.save(originalPost.apply { deletionCode = "12345" })
-            }
-        )
+        board = spyk(db.insert(board(label = "r")))
+        thread = db.insert(thread(board).apply { originalPost.deletionCode = "12345" })
 
         every { userFacade.currentUser } returns user(role = UserRole.ADMIN).toDto()
     }
@@ -112,30 +101,30 @@ internal class PostFacadeTest : MapperTest() {
     inner class DeleteOwnPost {
         @Test
         fun `delete post with valid deletion code`() {
-            val reply = postRepository.save(post(thread, deletionCode = "abcde", postNumber = 2L))
+            val reply = db.insert(post(thread, deletionCode = "abcde", postNumber = 2L))
 
             postFacade.deleteOwnPost(reply.toDto(), "abcde")
-            postRepository.findById(reply.id).shouldNotBePresent()
+            db.select(reply).shouldNotBePresent()
         }
 
         @Test
         fun `don't delete post without deletion code`() {
-            val reply = postRepository.save(post(thread, deletionCode = "", postNumber = 2L))
+            val reply = db.insert(post(thread, deletionCode = "", postNumber = 2L))
 
             shouldThrow<PropertyValidationException> {
                 postFacade.deleteOwnPost(reply.toDto(), "")
             }
-            postRepository.findById(reply.id).shouldBePresent()
+            db.select(reply).shouldBePresent()
         }
 
         @Test
         fun `don't delete post with invalid deletion code`() {
-            val reply = postRepository.save(post(thread, deletionCode = "abcde", postNumber = 2L))
+            val reply = db.insert(post(thread, deletionCode = "abcde", postNumber = 2L))
 
             shouldThrow<PropertyValidationException> {
                 postFacade.deleteOwnPost(reply.toDto(), "xxxxx")
             }
-            postRepository.findById(reply.id).shouldBePresent()
+            db.select(reply).shouldBePresent()
         }
 
         @Test
@@ -143,19 +132,19 @@ internal class PostFacadeTest : MapperTest() {
             shouldThrow<PropertyValidationException> {
                 postFacade.deleteOwnPost(thread.originalPost.toDto(), thread.originalPost.deletionCode)
             }
-            postRepository.findById(thread.originalPost.id).shouldBePresent()
+            db.select(thread.originalPost).shouldBePresent()
         }
 
         @Test
         fun `don't delete post after limit`() {
             val createdAt = OffsetDateTime.now().minusMinutes(Constants.OWN_POST_DELETION_TIME_LIMIT + 1L)
             val reply =
-                postRepository.save(post(thread, deletionCode = "abcde", createdAt = createdAt, postNumber = 2L))
+                db.insert(post(thread, deletionCode = "abcde", createdAt = createdAt, postNumber = 2L))
 
             shouldThrow<PropertyValidationException> {
                 postFacade.deleteOwnPost(reply.toDto(), "abcde")
             }
-            postRepository.findById(reply.id).shouldBePresent()
+            db.select(reply).shouldBePresent()
         }
     }
 }

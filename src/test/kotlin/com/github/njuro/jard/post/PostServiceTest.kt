@@ -1,13 +1,12 @@
 package com.github.njuro.jard.post
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.post
 import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.Thread
-import com.github.njuro.jard.thread.ThreadRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -31,13 +30,10 @@ internal class PostServiceTest {
     private lateinit var postService: PostService
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
     private lateinit var postRepository: PostRepository
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
@@ -45,12 +41,8 @@ internal class PostServiceTest {
 
     @BeforeEach
     fun setUp() {
-        board = boardRepository.save(board(label = "r"))
-        thread = threadRepository.save(
-            thread(board).apply {
-                originalPost = postRepository.save(originalPost)
-            }
-        )
+        board = db.insert(board(label = "r"))
+        thread = db.insert(thread(board))
     }
 
     @Test
@@ -66,7 +58,7 @@ internal class PostServiceTest {
 
     @Test
     fun `resolve post`() {
-        val post = postRepository.save(post(thread, postNumber = 2L))
+        val post = db.insert(post(thread, postNumber = 2L))
 
         postService.resolvePost(board.label, post.postNumber).postNumber shouldBe post.postNumber
     }
@@ -80,7 +72,7 @@ internal class PostServiceTest {
 
     @Test
     fun `get latest replies for thread`() {
-        (2L..8L).forEach { postRepository.save(post(thread, postNumber = it)) }
+        (2L..8L).forEach { db.insert(post(thread, postNumber = it)) }
 
         postService.getLatestRepliesForThread(thread.id, thread.originalPost.id).map(Post::getPostNumber)
             .shouldContainExactly(4L, 5L, 6L, 7L, 8L)
@@ -88,16 +80,16 @@ internal class PostServiceTest {
 
     @Test
     fun `delete single post`() {
-        val reply = postRepository.save(post(thread, postNumber = 2L))
+        val reply = db.insert(post(thread, postNumber = 2L))
 
-        postRepository.findById(reply.id).shouldBePresent()
+        db.select(reply).shouldBePresent()
         postService.deletePost(reply)
-        postRepository.findById(reply.id).shouldNotBePresent()
+        db.select(reply).shouldNotBePresent()
     }
 
     @Test
     fun `delete multiple posts`() {
-        val replies = (2L..5L).map { postRepository.save(post(thread, postNumber = it)) }
+        val replies = (2L..5L).map { db.insert(post(thread, postNumber = it)) }
 
         postRepository.countByThreadId(thread.id) shouldBe 5L
         postService.deletePosts(replies)

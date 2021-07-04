@@ -1,9 +1,9 @@
 package com.github.njuro.jard.user.token
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.common.Constants
 import com.github.njuro.jard.user
-import com.github.njuro.jard.user.UserRepository
 import com.github.njuro.jard.userToken
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.date.shouldBeAfter
@@ -30,17 +30,14 @@ internal class UserTokenServiceTest {
     private lateinit var userTokenService: UserTokenService
 
     @Autowired
-    private lateinit var userTokenRepository: UserTokenRepository
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
     private lateinit var scheduledTaskHolder: ScheduledTaskHolder
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     @Test
     fun `generate user token`() {
-        val user = userRepository.save(user(username = "user"))
+        val user = db.insert(user(username = "user"))
 
         userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET).should {
             it.value.shouldNotBeBlank()
@@ -54,8 +51,8 @@ internal class UserTokenServiceTest {
 
     @Test
     fun `resolve token`() {
-        val user = userRepository.save(user(username = "user"))
-        val token = userTokenRepository.save(userToken(user, "abcde", UserTokenType.EMAIL_VERIFICATION))
+        val user = db.insert(user(username = "user"))
+        val token = db.insert(userToken(user, "abcde", UserTokenType.EMAIL_VERIFICATION))
 
         userTokenService.resolveToken(token.value, UserTokenType.EMAIL_VERIFICATION).shouldNotBeNull()
     }

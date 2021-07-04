@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user
 
 import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.common.InputConstraints.MAX_USERNAME_LENGTH
@@ -17,7 +18,6 @@ import com.github.njuro.jard.user.dto.CurrentUserEditDto
 import com.github.njuro.jard.user.dto.CurrentUserPasswordEditDto
 import com.github.njuro.jard.user.dto.UserDto
 import com.github.njuro.jard.user.dto.UserForm
-import com.github.njuro.jard.user.token.UserTokenRepository
 import com.github.njuro.jard.user.token.UserTokenType
 import com.github.njuro.jard.userEdit
 import com.github.njuro.jard.userToken
@@ -42,14 +42,11 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 internal class UserIntegrationTest : MockMvcTest() {
 
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var userTokenRepository: UserTokenRepository
-
     @MockkBean
     private lateinit var captchaProvider: CaptchaProvider
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     @Nested
     @DisplayName("create user")
@@ -72,7 +69,7 @@ internal class UserIntegrationTest : MockMvcTest() {
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
     fun `get all users`() {
-        (1..3).forEach { userRepository.save(user(username = "User $it", email = "user$it@mail.com")) }
+        (1..3).forEach { db.insert(user(username = "User $it", email = "user$it@mail.com")) }
 
         mockMvc.get(Mappings.API_ROOT_USERS) { setUp() }.andExpect { status { isOk() } }
             .andReturnConverted<List<UserDto>>() shouldHaveSize 3
@@ -104,7 +101,7 @@ internal class UserIntegrationTest : MockMvcTest() {
 
         @Test
         fun `edit user`() {
-            val user = userRepository.save(user(role = UserRole.MODERATOR))
+            val user = db.insert(user(role = UserRole.MODERATOR))
 
             editUser(user.username, user.toForm().apply { role = UserRole.ADMIN }).andExpect { status { isOk() } }
                 .andReturnConverted<UserDto>().role shouldBe UserRole.ADMIN
@@ -160,7 +157,7 @@ internal class UserIntegrationTest : MockMvcTest() {
 
     @Test
     fun `forgot password`() {
-        val user = userRepository.save(user(username = "user", email = "user@email.com"))
+        val user = db.insert(user(username = "user", email = "user@email.com"))
         every { captchaProvider.verifyCaptchaToken(any()) } returns MockCaptchaVerificationResult.VALID
 
         mockMvc.post("${Mappings.API_ROOT_USERS}/forgot-password") { body(forgotPasswordRequest(user.username)) }
@@ -169,8 +166,8 @@ internal class UserIntegrationTest : MockMvcTest() {
 
     @Test
     fun `reset password`() {
-        val user = userRepository.save(user(username = "user", email = "user@email.com"))
-        val token = userTokenRepository.save(userToken(user, "abcde", UserTokenType.PASSWORD_RESET))
+        val user = db.insert(user(username = "user", email = "user@email.com"))
+        val token = db.insert(userToken(user, "abcde", UserTokenType.PASSWORD_RESET))
 
         mockMvc.post("${Mappings.API_ROOT_USERS}/reset-password") {
             body(resetPasswordRequest(token = token.value, password = "newPassword"))
@@ -180,9 +177,9 @@ internal class UserIntegrationTest : MockMvcTest() {
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_USERS)
     fun `delete user`() {
-        val user = userRepository.save(user())
+        val user = db.insert(user())
 
         mockMvc.delete("${Mappings.API_ROOT_USERS}/${user.username}") { setUp() }.andExpect { status { isOk() } }
-        userRepository.findById(user.id).shouldNotBePresent()
+        db.select(user).shouldNotBePresent()
     }
 }

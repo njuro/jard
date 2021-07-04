@@ -1,13 +1,13 @@
 package com.github.njuro.jard.post
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithTestDataRepository
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.post
 import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.Thread
-import com.github.njuro.jard.thread.ThreadRepository
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.optional.shouldBeEmpty
 import io.kotest.matchers.optional.shouldBePresent
@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.transaction.annotation.Transactional
 
 @DataJpaTest
+@WithTestDataRepository
 @WithContainerDatabase
 @Transactional
 internal class PostRepositoryTest {
@@ -27,10 +28,7 @@ internal class PostRepositoryTest {
     private lateinit var postRepository: PostRepository
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
@@ -38,12 +36,8 @@ internal class PostRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        board = boardRepository.save(board(label = "r"))
-        thread = threadRepository.save(
-            thread(board).apply {
-                originalPost = postRepository.save(originalPost)
-            }
-        )
+        board = db.insert(board(label = "r"))
+        thread = db.insert(thread(board))
     }
 
     @Test

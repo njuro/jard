@@ -1,9 +1,10 @@
 package com.github.njuro.jard.user.token
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithTestDataRepository
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.User
-import com.github.njuro.jard.user.UserRepository
 import com.github.njuro.jard.userToken
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.optional.shouldBePresent
@@ -16,23 +17,24 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import java.time.OffsetDateTime
 
 @DataJpaTest
+@WithTestDataRepository
 @WithContainerDatabase
 internal class UserTokenRepositoryTest {
 
     @Autowired
     private lateinit var userTokenRepository: UserTokenRepository
 
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
     private lateinit var user1: User
 
     private lateinit var user2: User
 
+    @Autowired
+    private lateinit var db: TestDataRepository
+
     @BeforeEach
     fun setUp() {
-        user1 = userRepository.save(user(username = "user1", email = "user1@mail.com"))
-        user2 = userRepository.save(user(username = "user2", email = "user2@mail.com"))
+        user1 = db.insert(user(username = "user1", email = "user1@mail.com"))
+        user2 = db.insert(user(username = "user2", email = "user2@mail.com"))
     }
 
     @Test

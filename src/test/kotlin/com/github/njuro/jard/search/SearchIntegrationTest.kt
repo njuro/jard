@@ -1,14 +1,14 @@
 package com.github.njuro.jard.search
 
-import com.github.njuro.jard.*
-import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TestDataRepository
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
+import com.github.njuro.jard.board
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.post.dto.PostDto
 import com.github.njuro.jard.search.dto.SearchResultsDto
-import com.github.njuro.jard.thread.Thread
-import com.github.njuro.jard.thread.ThreadRepository
+import com.github.njuro.jard.thread
 import com.github.njuro.jard.user.UserAuthority
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.should
@@ -23,16 +23,10 @@ import org.springframework.transaction.support.TransactionTemplate
 internal class SearchIntegrationTest : MockMvcTest() {
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
-
-    @Autowired
     private lateinit var transactionTemplate: TransactionTemplate
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     @Test
     @WithMockJardUser(UserAuthority.ACTUATOR_ACCESS)
@@ -44,8 +38,8 @@ internal class SearchIntegrationTest : MockMvcTest() {
     @Suppress("UNUSED_VARIABLE")
     fun `search posts`() {
         transactionTemplate.executeWithoutResult {
-            val board = saveBoard(board(label = "r"))
-            val thread = saveThread(
+            val board = db.insert(board(label = "r"))
+            val thread = db.insert(
                 thread(board).apply {
                     originalPost.body = "initial post"
                 }
@@ -56,14 +50,5 @@ internal class SearchIntegrationTest : MockMvcTest() {
             .andReturnConverted<SearchResultsDto<PostDto>>().should {
                 it.resultList shouldHaveSize 1
             }
-    }
-
-    private fun saveBoard(board: Board): Board {
-        return boardRepository.save(board)
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
     }
 }

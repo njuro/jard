@@ -42,15 +42,15 @@ internal abstract class MapperTest {
     @Autowired
     protected lateinit var banMapper: BanMapper
 
-    fun Board.toDto(): BoardDto = boardMapper.toDto(this)
+    protected fun Board.toDto(): BoardDto = boardMapper.toDto(this)
 
-    fun Thread.toDto(): ThreadDto = threadMapper.toDto(this)
+    protected fun Thread.toDto(): ThreadDto = threadMapper.toDto(this)
 
-    fun Post.toDto(): PostDto = postMapper.toDto(this)
+    protected fun Post.toDto(): PostDto = postMapper.toDto(this)
 
-    fun Attachment.toDto(): AttachmentDto = attachmentMapper.toDto(this)
+    protected fun Attachment.toDto(): AttachmentDto = attachmentMapper.toDto(this)
 
-    fun User.toDto(): UserDto = userMapper.toDto(this)
+    protected fun User.toDto(): UserDto = userMapper.toDto(this)
 
-    fun Ban.toDto(): BanDto = banMapper.toDto(this)
+    protected fun Ban.toDto(): BanDto = banMapper.toDto(this)
 }

@@ -1,5 +1,6 @@
 package com.github.njuro.jard.board
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import io.kotest.assertions.throwables.shouldThrow
@@ -18,10 +19,10 @@ import java.time.OffsetDateTime
 internal class BoardServiceTest {
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
+    private lateinit var boardService: BoardService
 
     @Autowired
-    private lateinit var boardService: BoardService
+    private lateinit var db: TestDataRepository
 
     @Test
     fun `save board`() {
@@ -36,16 +37,16 @@ internal class BoardServiceTest {
     @Test
     fun `find all boards sorted by creation date`() {
         val baseDate = OffsetDateTime.now()
-        val first = boardRepository.save(board(label = "r", createdAt = baseDate))
-        val second = boardRepository.save(board(label = "sp", createdAt = baseDate.plusDays(1)))
-        val third = boardRepository.save(board(label = "fit", createdAt = baseDate.minusDays(1)))
+        val first = db.insert(board(label = "r", createdAt = baseDate))
+        val second = db.insert(board(label = "sp", createdAt = baseDate.plusDays(1)))
+        val third = db.insert(board(label = "fit", createdAt = baseDate.minusDays(1)))
 
         boardService.allBoards.shouldContainInOrder(third, first, second)
     }
 
     @Test
     fun `resolve board by label`() {
-        val board = boardRepository.save(board(label = "r"))
+        val board = db.insert(board(label = "r"))
 
         boardService.resolveBoard(board.label) shouldBe board
     }
@@ -59,17 +60,17 @@ internal class BoardServiceTest {
 
     @Test
     fun `register new post`() {
-        val board = boardRepository.save(board(label = "r", postCounter = 5L))
+        val board = db.insert(board(label = "r", postCounter = 5L))
 
         boardService.registerNewPost(board) shouldBe board.postCounter
-        boardRepository.findByLabel(board.label).shouldBePresent { it.postCounter shouldBe board.postCounter + 1 }
+        db.select(board).shouldBePresent { it.postCounter shouldBe board.postCounter + 1 }
     }
 
     @Test
     fun `delete board`() {
-        val board = boardRepository.save(board(label = "r"))
+        val board = db.insert(board(label = "r"))
 
         boardService.deleteBoard(board)
-        boardRepository.findByLabel(board.label).shouldBeEmpty()
+        db.select(board).shouldBeEmpty()
     }
 }

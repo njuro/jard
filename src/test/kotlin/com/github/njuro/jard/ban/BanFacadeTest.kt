@@ -1,6 +1,7 @@
 package com.github.njuro.jard.ban
 
 import com.github.njuro.jard.MapperTest
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.ban
 import com.github.njuro.jard.ban.dto.BanDto
@@ -10,7 +11,6 @@ import com.github.njuro.jard.toUnbanForm
 import com.github.njuro.jard.user
 import com.github.njuro.jard.user.User
 import com.github.njuro.jard.user.UserFacade
-import com.github.njuro.jard.user.UserRepository
 import com.github.njuro.jard.utils.validation.PropertyValidationException
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.assertions.throwables.shouldThrow
@@ -42,22 +42,19 @@ internal class BanFacadeTest : MapperTest() {
     private lateinit var banFacade: BanFacade
 
     @Autowired
-    private lateinit var banRepository: BanRepository
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
     private lateinit var scheduledTaskHolder: ScheduledTaskHolder
 
     @MockkBean
     private lateinit var userFacade: UserFacade
 
+    @Autowired
+    private lateinit var db: TestDataRepository
+
     private lateinit var user: User
 
     @BeforeEach
     fun setUp() {
-        user = userRepository.save(user(username = "user"))
+        user = db.insert(user(username = "user"))
         every { userFacade.currentUser } returns user.toDto()
     }
 
@@ -93,7 +90,7 @@ internal class BanFacadeTest : MapperTest() {
 
         @Test
         fun `don't create duplicate ban`() {
-            banRepository.save(ban(ip = "127.0.0.1"))
+            db.insert(ban(ip = "127.0.0.1"))
             val banForm = ban(ip = "127.0.0.1").toForm()
 
             shouldThrow<PropertyValidationException> {
@@ -105,22 +102,22 @@ internal class BanFacadeTest : MapperTest() {
     @Test
     fun `get all bans sorted by start date`() {
         val baseDate = OffsetDateTime.now()
-        val ban1 = banRepository.save(ban(validFrom = baseDate.minusDays(2)))
-        val ban2 = banRepository.save(ban(validFrom = baseDate.plusDays(1)))
-        val ban3 = banRepository.save(ban(validFrom = baseDate.minusDays(1)))
+        val ban1 = db.insert(ban(validFrom = baseDate.minusDays(2)))
+        val ban2 = db.insert(ban(validFrom = baseDate.plusDays(1)))
+        val ban3 = db.insert(ban(validFrom = baseDate.minusDays(1)))
 
         banFacade.allBans.map(BanDto::getId).shouldContainExactly(ban2.id, ban3.id, ban1.id)
     }
 
     @Test
     fun `edit ban`() {
-        val ban = banRepository.save(ban(ip = "127.0.0.1", reason = "Spam", validTo = OffsetDateTime.now().plusDays(1)))
+        val ban = db.insert(ban(ip = "127.0.0.1", reason = "Spam", validTo = OffsetDateTime.now().plusDays(1)))
         val updatedReason = "Offtopic"
         val updatedExpiration = OffsetDateTime.now().plusDays(10)
         val editForm = ban.toForm().apply { reason = updatedReason; validTo = updatedExpiration; ip = "127.0.0.2" }
 
         banFacade.editBan(ban.toDto(), editForm)
-        banRepository.findById(ban.id).shouldBePresent {
+        db.select(ban).shouldBePresent {
             it.ip shouldBe ban.ip
             it.reason shouldBe updatedReason
             it.validTo shouldBe updatedExpiration
@@ -132,7 +129,7 @@ internal class BanFacadeTest : MapperTest() {
     inner class Unban {
         @Test
         fun `valid unban`() {
-            val ban = banRepository.save(ban(status = BanStatus.ACTIVE))
+            val ban = db.insert(ban(status = BanStatus.ACTIVE))
             val unbanForm = ban.toUnbanForm(unbanReason = "Mistake")
 
             banFacade.unban(ban.toDto(), unbanForm).should {
@@ -144,7 +141,7 @@ internal class BanFacadeTest : MapperTest() {
 
         @Test
         fun `don't unban when no user is logged in`() {
-            val ban = banRepository.save(ban(status = BanStatus.ACTIVE))
+            val ban = db.insert(ban(status = BanStatus.ACTIVE))
             val unbanForm = ban.toUnbanForm(unbanReason = "Mistake")
             every { userFacade.currentUser } returns null
 
@@ -155,7 +152,7 @@ internal class BanFacadeTest : MapperTest() {
 
         @Test
         fun `don't unban when there is no active ban on ip`() {
-            val ban = banRepository.save(ban(status = BanStatus.EXPIRED))
+            val ban = db.insert(ban(status = BanStatus.EXPIRED))
             val unbanForm = ban.toUnbanForm(unbanReason = "Mistake")
 
             shouldThrow<PropertyValidationException> {
@@ -165,10 +162,10 @@ internal class BanFacadeTest : MapperTest() {
 
         @Test
         fun `unban expired bans`() {
-            val ban = banRepository.save(ban(status = BanStatus.ACTIVE, validTo = OffsetDateTime.now().minusDays(1L)))
+            val ban = db.insert(ban(status = BanStatus.ACTIVE, validTo = OffsetDateTime.now().minusDays(1L)))
 
             banFacade.unbanExpired()
-            banRepository.findById(ban.id).shouldBePresent { it.status shouldBe BanStatus.EXPIRED }
+            db.select(ban).shouldBePresent { it.status shouldBe BanStatus.EXPIRED }
         }
 
         @Test

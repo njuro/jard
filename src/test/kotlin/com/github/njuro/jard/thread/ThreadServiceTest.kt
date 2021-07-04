@@ -1,10 +1,9 @@
 package com.github.njuro.jard.thread
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
-import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.thread
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -27,26 +26,20 @@ internal class ThreadServiceTest {
     private lateinit var threadService: ThreadService
 
     @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
-
-    @Autowired
-    private lateinit var boardRepository: BoardRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
     @BeforeEach
     fun initializeBoard() {
-        board = boardRepository.save(board(label = "r"))
+        board = db.insert(board(label = "r"))
     }
 
     @Test
     fun `create thread`() {
         val thread = threadService.saveThread(thread(board))
 
-        threadRepository.findById(thread.id).shouldBePresent()
+        db.select(thread).shouldBePresent()
     }
 
     @Test
@@ -67,24 +60,20 @@ internal class ThreadServiceTest {
     @Suppress("UNUSED_VARIABLE")
     fun `delete stalest thread from board`() {
         val baseTime = OffsetDateTime.now().minusWeeks(1)
-        val thread1 = saveThread(thread(board, lastBumpAt = baseTime, stickied = true))
-        val thread2 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(1)))
-        val thread3 = saveThread(thread(board, lastBumpAt = baseTime.minusDays(2)))
+        val thread1 = db.insert(thread(board, lastBumpAt = baseTime, stickied = true), threadNumber = 1L)
+        val thread2 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(1)), threadNumber = 2L)
+        val thread3 = db.insert(thread(board, lastBumpAt = baseTime.minusDays(2)), threadNumber = 3L)
 
         threadService.deleteStalestThread(board.id)
-        threadRepository.findAll().map { it.id }.shouldContainExactlyInAnyOrder(thread1.id, thread2.id)
+        threadService.getAllThreadsFromBoard(board.id).map(Thread::getId)
+            .shouldContainExactlyInAnyOrder(thread1.id, thread2.id)
     }
 
     @Test
     fun `delete thread by id`() {
-        val thread = saveThread(thread(board))
+        val thread = db.insert(thread(board))
 
         threadService.deleteThread(thread)
-        threadRepository.findById(thread.id).shouldBeEmpty()
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
+        db.select(thread).shouldBeEmpty()
     }
 }

@@ -1,9 +1,15 @@
 package com.github.njuro.jard.ban
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TestDataRepository
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
+import com.github.njuro.jard.ban
 import com.github.njuro.jard.ban.dto.BanDto
 import com.github.njuro.jard.ban.dto.BanForm
 import com.github.njuro.jard.common.Mappings
+import com.github.njuro.jard.toForm
+import com.github.njuro.jard.toUnbanForm
 import com.github.njuro.jard.user.UserAuthority
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -18,14 +24,14 @@ import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.UUID
 
 @WithContainerDatabase
 @Transactional
 internal class BanIntegrationTest : MockMvcTest() {
 
     @Autowired
-    private lateinit var banRepository: BanRepository
+    private lateinit var db: TestDataRepository
 
     @Nested
     @DisplayName("create ban")
@@ -53,7 +59,7 @@ internal class BanIntegrationTest : MockMvcTest() {
 
         @Test
         fun `active ban exists`() {
-            val ban = banRepository.save(ban(ip = "127.0.0.1"))
+            val ban = db.insert(ban(ip = "127.0.0.1"))
             getOwnBan(ban.ip).andExpect { status { isOk() } }.andReturnConverted<BanDto>().shouldNotBeNull()
         }
 
@@ -66,7 +72,7 @@ internal class BanIntegrationTest : MockMvcTest() {
     @Test
     @WithMockJardUser(UserAuthority.MANAGE_BANS, UserAuthority.VIEW_IP)
     fun `get all bans`() {
-        (1..3).forEach { banRepository.save(ban(ip = "127.0.0.$it")) }
+        (1..3).forEach { db.insert(ban(ip = "127.0.0.$it")) }
         mockMvc.get(Mappings.API_ROOT_BANS) { setUp() }.andExpect { status { isOk() } }
             .andReturnConverted<List<BanDto>>() shouldHaveSize 3
     }
@@ -80,11 +86,11 @@ internal class BanIntegrationTest : MockMvcTest() {
 
         @Test
         fun `edit valid ban`() {
-            val ban = banRepository.save(ban())
+            val ban = db.insert(ban())
             val editForm = ban.toForm().apply { reason = "Updated reason" }
 
             editBan(ban.id, editForm).andExpect { status { isOk() } }.andReturnConverted<BanDto>().shouldNotBeNull()
-            banRepository.findById(ban.id).shouldBePresent { it.reason shouldBe editForm.reason }
+            db.select(ban).shouldBePresent { it.reason shouldBe editForm.reason }
         }
 
         @Test
@@ -94,7 +100,7 @@ internal class BanIntegrationTest : MockMvcTest() {
 
         @Test
         fun `don't edit invalid ban`() {
-            val ban = banRepository.save(ban())
+            val ban = db.insert(ban())
             val editForm = ban.toForm().apply { validTo = OffsetDateTime.now().minusDays(1) }
 
             editBan(ban.id, editForm).andExpect { status { isBadRequest() } }
@@ -110,11 +116,11 @@ internal class BanIntegrationTest : MockMvcTest() {
 
         @Test
         fun `valid unban`() {
-            val ban = banRepository.save(ban(status = BanStatus.ACTIVE))
+            val ban = db.insert(ban(status = BanStatus.ACTIVE))
 
             unban(ban.id, ban.toUnbanForm(unbanReason = "OK")).andExpect { status { isOk() } }
                 .andReturnConverted<BanDto>().shouldNotBeNull()
-            banRepository.findById(ban.id).shouldBePresent { it.status shouldBe BanStatus.UNBANNED }
+            db.select(ban).shouldBePresent { it.status shouldBe BanStatus.UNBANNED }
         }
 
         @Test
@@ -124,10 +130,10 @@ internal class BanIntegrationTest : MockMvcTest() {
 
         @Test
         fun `invalid unban`() {
-            val ban = banRepository.save(ban(status = BanStatus.ACTIVE))
+            val ban = db.insert(ban(status = BanStatus.ACTIVE))
 
             unban(ban.id, ban.toUnbanForm().apply { ip = "123.456" }).andExpect { status { isBadRequest() } }
-            banRepository.findById(ban.id).shouldBePresent { it.status shouldBe BanStatus.ACTIVE }
+            db.select(ban).shouldBePresent { it.status shouldBe BanStatus.ACTIVE }
         }
     }
 }

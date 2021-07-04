@@ -1,5 +1,6 @@
 package com.github.njuro.jard.user
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.user
@@ -23,7 +24,7 @@ internal class UserServiceTest {
     private lateinit var userService: UserService
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var db: TestDataRepository
 
     @Test
     fun `save user`() {
@@ -34,14 +35,14 @@ internal class UserServiceTest {
 
     @Test
     fun `get all users`() {
-        repeat(3) { userRepository.save(user(username = "User $it", email = "user$it@email.com")) }
+        repeat(3) { db.insert(user(username = "User $it", email = "user$it@email.com")) }
 
         userService.allUsers shouldHaveSize 3
     }
 
     @Test
     fun `check that user exists`() {
-        val user = userRepository.save(user(username = "Anonymous"))
+        val user = db.insert(user(username = "Anonymous"))
 
         userService.doesUserExists(user.username).shouldBeTrue()
         userService.doesUserExists("other").shouldBeFalse()
@@ -63,10 +64,10 @@ internal class UserServiceTest {
 
     @Test
     fun `delete user`() {
-        val user = userRepository.save(user(username = "Anonymous"))
+        val user = db.insert(user(username = "Anonymous"))
 
-        userRepository.findById(user.id).shouldBePresent()
+        db.select(user).shouldBePresent()
         userService.deleteUser(user)
-        userRepository.findById(user.id).shouldBeEmpty()
+        db.select(user).shouldBeEmpty()
     }
 }

@@ -2,10 +2,11 @@
 
 package com.github.njuro.jard.ban
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithTestDataRepository
 import com.github.njuro.jard.ban
 import com.github.njuro.jard.user
-import com.github.njuro.jard.user.UserRepository
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.optional.shouldBePresent
 import io.kotest.matchers.optional.shouldNotBePresent
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
 @DataJpaTest
+@WithTestDataRepository
 @WithContainerDatabase
 @Transactional
 internal class BanRepositoryTest {
@@ -24,7 +26,7 @@ internal class BanRepositoryTest {
     private lateinit var banRepository: BanRepository
 
     @Autowired
-    private lateinit var userRepository: UserRepository
+    private lateinit var db: TestDataRepository
 
     @Test
     fun `find by ip`() {
@@ -56,8 +58,8 @@ internal class BanRepositoryTest {
 
     @Test
     fun `find by banned by`() {
-        val user1 = userRepository.save(user(username = "First", email = "first@mail.com"))
-        val user2 = userRepository.save(user(username = "Second", email = "second@mail.com"))
+        val user1 = db.insert(user(username = "First", email = "first@mail.com"))
+        val user2 = db.insert(user(username = "Second", email = "second@mail.com"))
         val ban1 = banRepository.save(ban(bannedBy = user1))
         val ban2 = banRepository.save(ban(bannedBy = user1))
         val ban3 = banRepository.save(ban(bannedBy = user2))

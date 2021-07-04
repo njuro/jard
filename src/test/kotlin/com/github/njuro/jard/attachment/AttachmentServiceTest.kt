@@ -1,12 +1,28 @@
 package com.github.njuro.jard.attachment
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.TEST_ATTACHMENT_AVI
+import com.github.njuro.jard.TEST_ATTACHMENT_DOCX
+import com.github.njuro.jard.TEST_ATTACHMENT_PNG
+import com.github.njuro.jard.TEST_FOLDER_NAME
+import com.github.njuro.jard.TestDataRepository
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.attachment
 import com.github.njuro.jard.attachment.storage.RemoteStorageService
+import com.github.njuro.jard.attachmentPath
 import com.github.njuro.jard.common.Constants.DEFAULT_THUMBNAIL_EXTENSION
 import com.github.njuro.jard.common.Constants.THUMBNAIL_FOLDER_NAME
+import com.github.njuro.jard.embedData
+import com.github.njuro.jard.metadata
+import com.github.njuro.jard.multipartFile
 import com.ninjasquad.springmockk.MockkBean
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.file.*
+import io.kotest.matchers.file.shouldBeAFile
+import io.kotest.matchers.file.shouldBeReadable
+import io.kotest.matchers.file.shouldExist
+import io.kotest.matchers.file.shouldHaveExtension
+import io.kotest.matchers.file.shouldHaveNameWithoutExtension
+import io.kotest.matchers.file.shouldNotBeEmpty
+import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.optional.shouldNotBePresent
@@ -16,7 +32,11 @@ import io.kotest.matchers.string.shouldNotBeBlank
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
@@ -30,11 +50,11 @@ internal class AttachmentServiceTest {
     @Autowired
     private lateinit var attachmentService: AttachmentService
 
-    @Autowired
-    private lateinit var attachmentRepository: AttachmentRepository
-
     @MockkBean
     private lateinit var remoteStorageService: RemoteStorageService
+
+    @Autowired
+    private lateinit var db: TestDataRepository
 
     @BeforeEach
     @AfterEach
@@ -146,7 +166,7 @@ internal class AttachmentServiceTest {
         val saved = attachmentService.saveAttachment(attachment, file)
 
         attachmentService.deleteAttachment(saved)
-        attachmentRepository.findById(saved.id).shouldNotBePresent()
+        db.select(saved).shouldNotBePresent()
         attachment.file.shouldNotExist()
         attachment.thumbnailFile.shouldNotExist()
     }

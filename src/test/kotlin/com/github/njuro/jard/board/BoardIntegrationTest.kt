@@ -1,13 +1,18 @@
 package com.github.njuro.jard.board
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TestDataRepository
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.attachment.AttachmentCategory
+import com.github.njuro.jard.board
 import com.github.njuro.jard.board.dto.BoardDto
 import com.github.njuro.jard.board.dto.BoardForm
 import com.github.njuro.jard.common.InputConstraints.MAX_BOARD_NAME_LENGTH
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.post.PostRepository
-import com.github.njuro.jard.thread.ThreadRepository
+import com.github.njuro.jard.randomString
+import com.github.njuro.jard.thread
+import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user.UserAuthority
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
@@ -29,13 +34,7 @@ import org.springframework.transaction.annotation.Transactional
 internal class BoardIntegrationTest : MockMvcTest() {
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var db: TestDataRepository
 
     @Nested
     @DisplayName("create board")
@@ -50,7 +49,6 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
             val response = createBoard(boardForm).andExpect { status { isCreated() } }.andReturnConverted<BoardDto>()
             response.label shouldBe boardForm.label
-            boardRepository.findByLabel(boardForm.label).shouldBePresent()
         }
 
         @Test
@@ -58,7 +56,6 @@ internal class BoardIntegrationTest : MockMvcTest() {
             val boardForm = board(label = "r", name = randomString(MAX_BOARD_NAME_LENGTH + 1)).toForm()
 
             createBoard(boardForm).andExpect { status { isBadRequest() } }
-            boardRepository.findByLabel(boardForm.label).shouldBeEmpty()
         }
     }
 
@@ -71,7 +68,9 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
     @Test
     fun `get all boards`() {
-        boardRepository.saveAll(listOf(board(label = "r"), board(label = "fit"), board(label = "sp")))
+        db.insert(board(label = "r"))
+        db.insert(board(label = "fit"))
+        db.insert(board(label = "sp"))
         mockMvc.get(Mappings.API_ROOT_BOARDS) { setUp() }.andExpect { status { isOk() } }
             .andReturnConverted<List<BoardDto>>() shouldHaveSize 3
     }
@@ -83,7 +82,7 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
         @Test
         fun `get existing board`() {
-            val board = boardRepository.save(board(label = "r"))
+            val board = db.insert(board(label = "r"))
 
             getBoard(board.label).andExpect { status { isOk() } }
                 .andReturnConverted<BoardDto>().label shouldBe board.label
@@ -102,11 +101,10 @@ internal class BoardIntegrationTest : MockMvcTest() {
             mockMvc.get("${Mappings.API_ROOT_BOARDS}/$label/catalog") { setUp() }
 
         @Test
+        @Suppress("UNUSED_VARIABLE")
         fun `get existing board catalog`() {
-            val board = boardRepository.save(board(label = "r"))
-            val thread = thread(board)
-            val post = postRepository.save(thread.originalPost)
-            threadRepository.save(thread.apply { originalPost = post })
+            val board = db.insert(board(label = "r"))
+            val thread = db.insert(thread(board))
 
             val response = getBoardCatalog(board.label).andExpect { status { isOk() } }.andReturnConverted<BoardDto>()
             response.label shouldBe board.label
@@ -128,14 +126,13 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
         @Test
         fun `edit valid board`() {
-            val board = board(label = "r", name = "random")
-            boardRepository.save(board)
-
+            val board = db.insert(board(label = "r", name = "random"))
             val updatedName = "Updated"
+
             val response = editBoard(board.apply { name = updatedName }.toForm()).andExpect { status { isOk() } }
                 .andReturnConverted<BoardDto>()
             response.name shouldBe updatedName
-            boardRepository.findByLabel(board.label).shouldBePresent { it.name shouldBe updatedName }
+            db.select(board).shouldBePresent { it.name shouldBe updatedName }
         }
 
         @Test
@@ -145,14 +142,13 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
         @Test
         fun `don't edit invalid board`() {
-            val board = board(label = "r", name = "random")
-            boardRepository.save(board)
+            val board = db.insert(board(label = "r", name = "random"))
 
             editBoard(
                 board(label = board.label, name = randomString(MAX_BOARD_NAME_LENGTH + 1))
                     .toForm()
             ).andExpect { status { isBadRequest() } }
-            boardRepository.findByLabel(board.label).shouldBePresent { it.name shouldBe board.name }
+            db.select(board).shouldBePresent { it.name shouldBe board.name }
         }
     }
 
@@ -164,10 +160,10 @@ internal class BoardIntegrationTest : MockMvcTest() {
 
         @Test
         fun `delete existing board`() {
-            val board = boardRepository.save(board(label = "r"))
+            val board = db.insert(board(label = "r"))
 
             deleteBoard(board.label).andExpect { status { isOk() } }
-            boardRepository.findByLabel(board.label).shouldBeEmpty()
+            db.select(board).shouldBeEmpty()
         }
     }
 }

@@ -49,12 +49,21 @@ public class UserTokenService {
   }
 
   /**
+   * Resolves token with given user and type.
+   *
+   * @return resolved token or {@code null} if none was found.
+   */
+  public UserToken resolveToken(User user, UserTokenType type) {
+    return userTokenRepository.findByUserAndType(user, type).orElse(null);
+  }
+
+  /**
    * Checks if token of given type exists for given user.
    *
    * @return true if token exists, false otherwise.
    */
   public boolean doesTokenForUserExists(User user, UserTokenType type) {
-    return userTokenRepository.findByUserAndType(user, type).isPresent();
+    return resolveToken(user, type) != null;
   }
 
   /**

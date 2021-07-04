@@ -1,19 +1,27 @@
 package com.github.njuro.jard.thread
 
-import com.github.njuro.jard.*
+import com.github.njuro.jard.MockMvcTest
+import com.github.njuro.jard.TEST_ATTACHMENT_PNG
+import com.github.njuro.jard.TestDataRepository
+import com.github.njuro.jard.WithContainerDatabase
+import com.github.njuro.jard.WithMockJardUser
 import com.github.njuro.jard.attachment.AttachmentCategory
+import com.github.njuro.jard.board
 import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
+import com.github.njuro.jard.boardSettings
 import com.github.njuro.jard.common.InputConstraints.MAX_NAME_LENGTH
 import com.github.njuro.jard.common.InputConstraints.MAX_SUBJECT_LENGTH
 import com.github.njuro.jard.common.Mappings
-import com.github.njuro.jard.post.Post
-import com.github.njuro.jard.post.PostRepository
+import com.github.njuro.jard.multipartFile
+import com.github.njuro.jard.post
 import com.github.njuro.jard.post.dto.DeleteOwnPostDto
 import com.github.njuro.jard.post.dto.PostDto
 import com.github.njuro.jard.post.dto.PostForm
+import com.github.njuro.jard.randomString
+import com.github.njuro.jard.thread
 import com.github.njuro.jard.thread.dto.ThreadDto
 import com.github.njuro.jard.thread.dto.ThreadForm
+import com.github.njuro.jard.toForm
 import com.github.njuro.jard.user.UserAuthority
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -32,26 +40,19 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.multipart
 import org.springframework.test.web.servlet.patch
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @WithContainerDatabase
 @Transactional
 internal class ThreadIntegrationTest : MockMvcTest() {
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var board: Board
 
     @BeforeEach
     fun createBoard() {
-        board = boardRepository.save(
+        board = db.insert(
             board(
                 label = "r",
                 settings = boardSettings(attachmentCategories = mutableSetOf(AttachmentCategory.IMAGE))
@@ -104,7 +105,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `create valid reply`() {
-            val thread = saveThread(thread(board))
+            val thread = db.insert(thread(board))
             val postForm = post(thread).toForm()
 
             replyToThread(postForm, thread).andExpect { status { isCreated() } }
@@ -113,7 +114,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `don't create invalid reply`() {
-            val thread = saveThread(thread(board))
+            val thread = db.insert(thread(board))
             val postForm = post(thread, name = randomString(MAX_NAME_LENGTH + 1)).toForm()
 
             replyToThread(postForm, thread).andExpect { status { isBadRequest() } }
@@ -131,7 +132,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `get existing thread`() {
-            val thread = saveThread(thread(board))
+            val thread = db.insert(thread(board))
             getThread(thread.threadNumber).andExpect { status { isOk() } }
                 .andReturnConverted<ThreadDto>().threadNumber shouldBe 1L
         }
@@ -144,9 +145,9 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
     @Test
     fun `get new replies for thread`() {
-        val thread = saveThread(thread(board))
-        saveReply(post(thread, postNumber = 2L))
-        saveReply(post(thread, postNumber = 3L))
+        val thread = db.insert(thread(board))
+        db.insert(post(thread, postNumber = 2L))
+        db.insert(post(thread, postNumber = 3L))
 
         mockMvc.get(
             "${Mappings.API_ROOT_THREADS}/${Mappings.PATH_VARIABLE_THREAD}/new-replies?lastPost=1",
@@ -158,7 +159,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
     @Test
     @WithMockJardUser(UserAuthority.TOGGLE_STICKY_THREAD)
     fun `toggle sticky on thread`() {
-        val thread = saveThread(thread(board))
+        val thread = db.insert(thread(board))
 
         thread.isStickied.shouldBeFalse()
         mockMvc.patch(
@@ -166,13 +167,13 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             board.label,
             thread.threadNumber
         ) { setUp() }.andExpect { status { isOk() } }
-        getUpdatedThread(thread).shouldBePresent { it.isStickied.shouldBeTrue() }
+        db.select(thread).shouldBePresent { it.isStickied.shouldBeTrue() }
     }
 
     @Test
     @WithMockJardUser(UserAuthority.TOGGLE_LOCK_THREAD)
     fun `toggle lock on thread`() {
-        val thread = saveThread(thread(board))
+        val thread = db.insert(thread(board))
 
         thread.isLocked.shouldBeFalse()
         mockMvc.patch(
@@ -180,7 +181,7 @@ internal class ThreadIntegrationTest : MockMvcTest() {
             board.label,
             thread.threadNumber
         ) { setUp() }.andExpect { status { isOk() } }
-        getUpdatedThread(thread).shouldBePresent { it.isLocked.shouldBeTrue() }
+        db.select(thread).shouldBePresent { it.isLocked.shouldBeTrue() }
     }
 
     @Nested
@@ -196,10 +197,10 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `delete post`() {
-            val thread = saveThread(thread(board))
+            val thread = db.insert(thread(board))
 
             deletePost(thread.originalPost.postNumber, thread.threadNumber).andExpect { status { isOk() } }
-            getUpdatedThread(thread).shouldBeEmpty()
+            db.select(thread).shouldBeEmpty()
         }
     }
 
@@ -215,39 +216,22 @@ internal class ThreadIntegrationTest : MockMvcTest() {
 
         @Test
         fun `delete own post`() {
-            val thread = saveThread(thread(board))
-            val reply = saveReply(post(thread, deletionCode = "abcde", postNumber = 2L))
+            val thread = db.insert(thread(board))
+            val reply = db.insert(post(thread, deletionCode = "abcde", postNumber = 2L))
 
-            getUpdatedPost(reply).shouldBePresent()
+            db.select(reply).shouldBePresent()
             deleteOwnPost(reply.postNumber, thread.threadNumber, "abcde").andExpect { status { isOk() } }
-            getUpdatedPost(reply).shouldBeEmpty()
+            db.select(reply).shouldBeEmpty()
         }
 
         @Test
         fun `don't delete own post with incorrect deletion code`() {
-            val thread = saveThread(thread(board))
-            val reply = saveReply(post(thread, deletionCode = "abcde", postNumber = 2L))
+            val thread = db.insert(thread(board))
+            val reply = db.insert(post(thread, deletionCode = "abcde", postNumber = 2L))
 
-            getUpdatedPost(reply).shouldBePresent()
+            db.select(reply).shouldBePresent()
             deleteOwnPost(reply.postNumber, thread.threadNumber, "ghfij").andExpect { status { isBadRequest() } }
-            getUpdatedPost(reply).shouldBePresent()
+            db.select(reply).shouldBePresent()
         }
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
-    }
-
-    private fun saveReply(post: Post): Post {
-        return postRepository.save(post)
-    }
-
-    private fun getUpdatedThread(thread: Thread): Optional<Thread> {
-        return threadRepository.findById(thread.id)
-    }
-
-    private fun getUpdatedPost(post: Post): Optional<Post> {
-        return postRepository.findById(post.id)
     }
 }

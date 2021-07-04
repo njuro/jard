@@ -1,16 +1,12 @@
 package com.github.njuro.jard.post.decorators
 
+import com.github.njuro.jard.TestDataRepository
 import com.github.njuro.jard.WithContainerDatabase
 import com.github.njuro.jard.board
-import com.github.njuro.jard.board.Board
-import com.github.njuro.jard.board.BoardRepository
 import com.github.njuro.jard.common.Constants
 import com.github.njuro.jard.post
 import com.github.njuro.jard.post.Post
-import com.github.njuro.jard.post.PostRepository
 import com.github.njuro.jard.thread
-import com.github.njuro.jard.thread.Thread
-import com.github.njuro.jard.thread.ThreadRepository
 import io.kotest.matchers.should
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldContainInOrder
@@ -31,13 +27,7 @@ internal class CrosslinkDecoratorTest : PostDecoratorTest() {
     private lateinit var decorator: CrosslinkDecorator
 
     @Autowired
-    private lateinit var boardRepository: BoardRepository
-
-    @Autowired
-    private lateinit var threadRepository: ThreadRepository
-
-    @Autowired
-    private lateinit var postRepository: PostRepository
+    private lateinit var db: TestDataRepository
 
     private lateinit var postRandom: Post
 
@@ -48,13 +38,13 @@ internal class CrosslinkDecoratorTest : PostDecoratorTest() {
     @BeforeEach
     @Suppress("UNUSED_VARIABLE")
     fun `initialize data`() {
-        val boardRandom = saveBoard(board(label = "r"))
-        val boardFitness = saveBoard(board(label = "fit"))
-        val threadRandom1 = saveThread(thread(boardRandom).apply { originalPost.postNumber = 1L })
-        val threadRandom2 = saveThread(thread(boardRandom).apply { originalPost.postNumber = 2L })
-        val threadRandom3 = saveThread(thread(boardRandom).apply { originalPost.postNumber = 3L })
-        val threadFitness1 = saveThread(thread(boardFitness).apply { originalPost.postNumber = 1L })
-        val replyRandom3 = saveReply(post(threadRandom3, postNumber = 4))
+        val boardRandom = db.insert(board(label = "r"))
+        val boardFitness = db.insert(board(label = "fit"))
+        val threadRandom1 = db.insert(thread(boardRandom), threadNumber = 1L)
+        val threadRandom2 = db.insert(thread(boardRandom), threadNumber = 2L)
+        val threadRandom3 = db.insert(thread(boardRandom), threadNumber = 3L)
+        val threadFitness1 = db.insert(thread(boardFitness), threadNumber = 1L)
+        val replyRandom3 = db.insert(post(threadRandom3, postNumber = 4L))
 
         postRandom = threadRandom1.originalPost
         postFitness = threadFitness1.originalPost
@@ -121,18 +111,5 @@ internal class CrosslinkDecoratorTest : PostDecoratorTest() {
             it.shouldNotContain(Constants.CROSSLINK_CLASS_VALID)
             it.shouldNotContain(Constants.CROSSLINK_CLASS_INVALID)
         }
-    }
-
-    private fun saveBoard(board: Board): Board {
-        return boardRepository.save(board)
-    }
-
-    private fun saveThread(thread: Thread): Thread {
-        val post = postRepository.save(thread.originalPost)
-        return threadRepository.save(thread.apply { originalPost = post })
-    }
-
-    private fun saveReply(post: Post): Post {
-        return postRepository.save(post)
     }
 }
