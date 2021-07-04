@@ -40,7 +40,9 @@ public class Board extends BaseEntity {
    * each page is determined by {@link Constants#MAX_THREADS_PER_PAGE}
    */
   @Formula(
-      "(SELECT CEIL(COUNT(*) / " + MAX_THREADS_PER_PAGE + ") FROM threads t WHERE t.board_id = id)")
+      "(SELECT CEIL(COUNT(*)::float / "
+          + MAX_THREADS_PER_PAGE
+          + ") FROM threads t WHERE t.board_id = id)")
   private int pageCount;
 
   /** The {@link Post#postNumber} of next post on this board. */
