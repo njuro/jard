@@ -4,6 +4,7 @@ target/
 .env
 *.log
 /lucene_index
+/src/main/resources/application-custom.properties
 
 ### STS ###
 .apt_generated
