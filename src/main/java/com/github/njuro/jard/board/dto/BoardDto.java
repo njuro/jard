@@ -37,7 +37,8 @@ public class BoardDto extends BaseDto {
   private OffsetDateTime createdAt;
 
   /**
-   * (Sub)collection of active threads on this board. Fetched by different services when needed.
+   * (Sub)collection of active threads on this board. Fetched by different services based on various
+   * parameters (depending on need of the given API).
    *
    * @see ThreadDto
    */

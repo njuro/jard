@@ -30,7 +30,7 @@ public class BoardSettingsDto implements Serializable {
   @JsonSerialize(contentUsing = AttachmentCategory.AttachmentCategorySerializer.class)
   private Set<AttachmentCategory> attachmentCategories = new HashSet<>();
 
-  /** {@link BoardSettings#attachmentCategories} */
+  /** {@link BoardSettings#threadLimit} */
   @Positive(message = "{validation.board.threadlimit.positive}")
   @Max(value = MAX_THREAD_LIMIT, message = "{validation.board.threadlimit.max}")
   private int threadLimit;

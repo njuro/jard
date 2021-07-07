@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
-/** Form for creating and updating {@link Board}. */
+/** Form for creating and editing {@link Board}. */
 @Data
 @Builder
 @SuppressWarnings("JavadocReference")
@@ -30,7 +30,7 @@ public class BoardForm {
   /** {@link BoardSettingsDto } */
   @Valid @NotNull private BoardSettingsDto boardSettingsForm;
 
-  /** @return {@link BoardDto} created from values of this form */
+  /** @return {@link BoardDto} created from values of this form. */
   public BoardDto toDto() {
     return BoardDto.builder().label(label).name(name).settings(boardSettingsForm).build();
   }

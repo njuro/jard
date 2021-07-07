@@ -1,7 +1,5 @@
 package com.github.njuro.jard.board;
 
-import com.github.njuro.jard.post.Post;
-import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.thread.ThreadService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,24 +25,30 @@ public class BoardService {
   }
 
   /**
-   * Saves board and its settings and sets its post counter to initial value.
+   * Saves board and its settings to database and sets its post counter ({@link Board#postCounter})
+   * to initial value (1).
    *
    * @param board board to be saved
    * @return saved board
    */
+  @SuppressWarnings("JavadocReference")
   public Board saveBoard(Board board) {
     board.setPostCounter(1L);
     board.getSettings().setBoard(board);
     return boardRepository.save(board);
   }
 
-  /** @return all active boards sorted from least to most recent. */
+  /**
+   * Retrieves all active boards.
+   *
+   * @return all active boards sorted by creation date (from least to most recent).
+   */
   public List<Board> getAllBoards() {
     return new ArrayList<>(boardRepository.findAll(Sort.by(Board_.CREATED_AT).ascending()));
   }
 
   /**
-   * Resolves board by given identifier.
+   * Resolves board with given label.
    *
    * @param label board label
    * @return resolved board
@@ -55,6 +59,8 @@ public class BoardService {
   }
 
   /**
+   * Checks, if board with given label exists.
+   *
    * @param label board label
    * @return true if board with such label exists, false otherwise
    */
@@ -63,19 +69,26 @@ public class BoardService {
   }
 
   /**
+   * Retrieves post counter for given board.
+   *
    * @param board board to get post counter for
    * @return post counter for given board
+   * @see Board#postCounter
    */
+  @SuppressWarnings("JavadocReference")
   public Long getPostCounter(Board board) {
     return boardRepository.getPostCounter(board.getLabel());
   }
 
   /**
-   * Generates number for new {@link Post} on the board and increments its post counter.
+   * Generates post number for new post on given board (last value of board's post counter) and
+   * increases post counter of that board.
    *
-   * @param board board to register new board on
-   * @return generated number for new post
+   * @param board board to register new post on
+   * @return generated post number for new post
+   * @see Board#postCounter
    */
+  @SuppressWarnings("JavadocReference")
   public Long registerNewPost(Board board) {
     Long newPostNumber = getPostCounter(board);
     boardRepository.increasePostNumber(board.getLabel());
@@ -83,10 +96,10 @@ public class BoardService {
   }
 
   /**
-   * Updates board and its settings.
+   * Saves updated board to database.
    *
-   * @param board board to update
-   * @return updated board
+   * @param board updated board.
+   * @return saved updated board
    */
   public Board updateBoard(Board board) {
     board.getSettings().setBoardId(board.getId());
@@ -94,11 +107,12 @@ public class BoardService {
   }
 
   /**
-   * Deletes board. This means also deleting all of its threads. What constitutes for deleting a
-   * thread is explained in documentation of {@link ThreadService#deleteThread(Thread)}.
+   * Deletes board from database.
+   *
+   * <p>This also includes deleting all threads, posts and attachments from given board.
    *
    * @param board board to delete
-   * @throws IOException when deletion of one of the attachments' file fails
+   * @throws IOException if deletion of one of the attachments' file fails
    */
   public void deleteBoard(Board board) throws IOException {
     threadService.deleteThreads(threadService.getAllThreadsFromBoard(board.getId()));

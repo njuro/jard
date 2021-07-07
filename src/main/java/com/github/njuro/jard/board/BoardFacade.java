@@ -33,7 +33,7 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   }
 
   /**
-   * Creates and save new board.
+   * Creates and saves new board.
    *
    * @param boardForm form with board data
    * @return created board
@@ -53,11 +53,12 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   }
 
   /**
-   * Retrieves board with (sub)collection of its threads. Each retrieved thread has set original
-   * post and up to 5 most recent replies.
+   * Retrieves board with (sub)collection of its threads (depending on pagination parameters).
    *
-   * @param board board to get
-   * @param pagination parameter specifying pagination of threads
+   * <p>Each retrieved thread has set original post and up to 5 most recent replies.
+   *
+   * @param board board to retrieve
+   * @param pagination pagination parameters for threads
    */
   public BoardDto getBoard(BoardDto board, Pageable pagination) {
     List<ThreadDto> threads = threadFacade.getThreadsFromBoard(board, pagination);
@@ -75,8 +76,11 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   /**
    * Retrieves board's catalog.
    *
+   * <p>Catalog is like a overview of board - it includes all threads on given board, but only with
+   * their first (original) posts. Replies are not retrieved in this case.
+   *
    * @param board board to get catalog for
-   * @return board with all of its threads (each thread has only original post set - not replies)
+   * @return board with all threads and their original posts.
    */
   public BoardDto getBoardCatalog(BoardDto board) {
     board.setThreads(threadFacade.getAllThreadsFromBoard(board));
@@ -84,8 +88,10 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   }
 
   /**
-   * @return all attachment categories mapped to their previews
-   * @see AttachmentCategory
+   * Retrieves previews of all possible attachment categories which can be enabled on the board.
+   *
+   * @return previews of all attachment categories
+   * @see AttachmentCategory.Preview
    */
   public Set<AttachmentCategory.Preview> getAttachmentCategories() {
     return Arrays.stream(AttachmentCategory.values())
@@ -94,10 +100,12 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   }
 
   /**
-   * Checks if given MIME type is supported on given board based on allowed attachment categories on
-   * this board.
+   * Checks if given MIME type (for example {@code image/jpeg}) is supported on given board.
    *
-   * @param board Board to check MIME type on
+   * <p>MIME type is supported on board when it belongs to one of the attachment categories and that
+   * category is enabled for given board.
+   *
+   * @param board board to check MIME type on
    * @param mimeType MIME type to check - case insensitive
    * @return true if MIME type is supported on given board, false otherwise
    * @see AttachmentCategory
@@ -110,18 +118,20 @@ public class BoardFacade extends BaseFacade<Board, BoardDto> {
   }
 
   /**
-   * Edits a board. Only board's name and its settings can be edited.
+   * Edits a board.
    *
-   * @param oldBoard board to edit
-   * @param updatedBoard form with new values
+   * <p>Only board's name and its settings can be edited.
+   *
+   * @param board board to edit
+   * @param editForm form with new values
    * @return edited board
    * @see BoardSettings
    */
-  public BoardDto editBoard(BoardDto oldBoard, BoardForm updatedBoard) {
-    oldBoard.setName(updatedBoard.getName());
-    oldBoard.setSettings(updatedBoard.getBoardSettingsForm());
+  public BoardDto editBoard(BoardDto board, BoardForm editForm) {
+    board.setName(editForm.getName());
+    board.setSettings(editForm.getBoardSettingsForm());
 
-    return toDto(boardService.updateBoard(toEntity(oldBoard)));
+    return toDto(boardService.updateBoard(toEntity(board)));
   }
 
   /** {@link BoardService#deleteBoard(Board)} */
