@@ -4,6 +4,7 @@ import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -24,9 +25,9 @@ public class BoardResolver implements PathVariableArgumentResolver {
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
+      @NotNull MethodParameter parameter,
       ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
+      @NotNull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     String label = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
 
