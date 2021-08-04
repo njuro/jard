@@ -26,8 +26,8 @@ public class EmbeddedYoutubeHandler implements EmbeddedAttachmentHandler {
     oembed.setEndpoint("https://youtube.com/oembed");
     oembed.setUrlSchemes(
         Arrays.asList(
-            "https?://(?:[^\\.]+\\.)?youtube\\.com/watch/?\\?(?:.+&)?v=([^&]+)",
-            "https?://(?:[^\\.]+\\.)?(?:youtu\\.be|youtube\\.com/embed)/([a-zA-Z0-9_-]+)"));
+            "https?://(?:[^.]+\\.)?youtube\\.com/watch/?\\?(?:.+&)?v=([^&]+)",
+            "https?://(?:[^.]+\\.)?(?:youtu\\.be|youtube\\.com/embed)/([a-zA-Z0-9_-]+)"));
     return oembed;
   }
 
@@ -35,9 +35,7 @@ public class EmbeddedYoutubeHandler implements EmbeddedAttachmentHandler {
   public void setEmbedData(OembedResponse oembedResponse, String embedUrl, Attachment attachment) {
     // use privacy respecting domain for embedding
     oembedResponse.setHtml(
-        oembedResponse
-            .getHtml()
-            .replaceAll("(?:youtu\\.be|youtube\\.com)", "youtube-nocookie.com"));
+        oembedResponse.getHtml().replaceAll("youtu\\.be|youtube\\.com", "youtube-nocookie.com"));
 
     var iframe = Jsoup.parseBodyFragment(oembedResponse.getHtml()).body().child(0);
     iframe.attr(

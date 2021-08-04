@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_BANS)
+@SuppressWarnings("MVCPathVariableInspection")
 public class BanRestController {
 
   private final BanFacade banFacade;

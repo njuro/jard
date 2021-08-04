@@ -3,7 +3,7 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import ac.simons.oembed.OembedResponse.Format;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Handler for embedding tweets from Twitter. */
@@ -22,8 +22,7 @@ public class EmbeddedTwitterHandler implements EmbeddedAttachmentHandler {
     oembed.setFormat(Format.json);
     oembed.setEndpoint("https://publish.twitter.com/oembed?dnt=true&hide_thread=true");
     oembed.setUrlSchemes(
-        Arrays.asList(
-            "https?://(?:www|mobile\\.)?twitter\\.com/(?:#!/)?([^/]+)/status(?:es)?/(\\d+)"));
+        List.of("https?://(?:www|mobile\\.)?twitter\\.com/(?:#!/)?([^/]+)/status(?:es)?/(\\d+)"));
     return oembed;
   }
 

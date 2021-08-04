@@ -3,7 +3,7 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import com.github.njuro.jard.attachment.Attachment;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Handler for embedding videos from Vimeo. */
@@ -21,7 +21,7 @@ public class EmbeddedVimeoHandler implements EmbeddedAttachmentHandler {
     oembed.setName(getProviderName());
     oembed.setFormat(OembedResponse.Format.json);
     oembed.setEndpoint("https://vimeo.com/api/oembed.json?autoplay=true&dnt=true");
-    oembed.setUrlSchemes(Arrays.asList("https?://(?:www\\.)?vimeo\\.com/(channels/.+/)?\\d+"));
+    oembed.setUrlSchemes(List.of("https?://(?:www\\.)?vimeo\\.com/(channels/.+/)?\\d+"));
     return oembed;
   }
 

@@ -3,7 +3,7 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import com.github.njuro.jard.attachment.Attachment;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Handler for embedding code from CodePen. */
@@ -21,7 +21,7 @@ public class EmbeddedCodePenHandler implements EmbeddedAttachmentHandler {
     oembed.setName(getProviderName());
     oembed.setFormat(OembedResponse.Format.json);
     oembed.setEndpoint("https://codepen.io/api/oembed");
-    oembed.setUrlSchemes(Arrays.asList("https?://codepen\\.io/.+/pen/.+"));
+    oembed.setUrlSchemes(List.of("https?://codepen\\.io/.+/pen/.+"));
     return oembed;
   }
 

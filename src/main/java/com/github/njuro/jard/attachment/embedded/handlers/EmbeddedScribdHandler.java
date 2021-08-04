@@ -2,7 +2,7 @@ package com.github.njuro.jard.attachment.embedded.handlers;
 
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
-import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** Handler for embedding documents from Scribd. */
@@ -20,7 +20,7 @@ public class EmbeddedScribdHandler implements EmbeddedAttachmentHandler {
     oembed.setName(getProviderName());
     oembed.setFormat(OembedResponse.Format.json);
     oembed.setEndpoint("https://www.scribd.com/services/oembed");
-    oembed.setUrlSchemes(Arrays.asList("https?://(www\\.)?scribd.com(/mobile/)?/doc(ument)?s?/.+"));
+    oembed.setUrlSchemes(List.of("https?://(www\\.)?scribd.com(/mobile/)?/doc(ument)?s?/.+"));
     return oembed;
   }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(Mappings.API_ROOT_USERS)
+@SuppressWarnings("MVCPathVariableInspection")
 @Slf4j
 public class UserRestController {
 

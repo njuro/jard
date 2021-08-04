@@ -6,6 +6,7 @@ import de.codecentric.boot.admin.client.config.ClientProperties;
 import de.codecentric.boot.admin.client.registration.BlockingRegistrationClient;
 import de.codecentric.boot.admin.server.web.client.HttpHeadersProvider;
 import java.util.Collections;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -56,6 +57,7 @@ public class SpringBootAdminSecurityConfig {
             .build();
 
     return new BlockingRegistrationClient(template) {
+      @NotNull
       @Override
       protected HttpHeaders createRequestHeaders() {
         HttpHeaders headers = new HttpHeaders();

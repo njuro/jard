@@ -1,7 +1,6 @@
 package com.github.njuro.jard.config.security.jwt;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -17,7 +16,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
       HttpServletRequest httpServletRequest,
       HttpServletResponse httpServletResponse,
       AuthenticationException e)
-      throws IOException, ServletException {
+      throws IOException {
     httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
   }
 }

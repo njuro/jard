@@ -4,7 +4,7 @@ import ac.simons.oembed.DefaultRequestProvider;
 import ac.simons.oembed.OembedEndpoint;
 import ac.simons.oembed.OembedResponse;
 import java.net.URI;
-import java.util.Arrays;
+import java.util.List;
 import org.apache.http.client.methods.HttpGet;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class EmbeddedRedditHandler implements EmbeddedAttachmentHandler {
     oembed.setName(getProviderName());
     oembed.setFormat(OembedResponse.Format.json);
     oembed.setEndpoint("https://reddit.com/oembed?parent=true&live=false");
-    oembed.setUrlSchemes(Arrays.asList("https?://(old\\.)?reddit\\.com/r/.*/comments/.*/.*"));
+    oembed.setUrlSchemes(List.of("https?://(old\\.)?reddit\\.com/r/.*/comments/.*/.*"));
     oembed.setRequestProviderClass(RedditRequestProvider.class);
     return oembed;
   }

@@ -108,7 +108,7 @@ public class Constants {
   /** Pattern for detecting hyperlink. */
   public static final Pattern HYPERLINK_PATTERN =
       Pattern.compile(
-          "(?<href>https?:\\/\\/(www\\.)?[-a-z0-9@:%._\\+~#=]{1,256}\\.[a-z0-9()]{1,6}\\b([-a-z0-9()@:%_\\+.~#?&//=]*))",
+          "(?<href>https?://(www\\.)?[-a-z0-9@:%._+~#=]{1,256}\\.[a-z0-9()]{1,6}\\b([-a-z0-9()@:%_+.~#?&/=]*))",
           Pattern.CASE_INSENSITIVE);
 
   /** Tag to put at the beginning of hyperlink. */

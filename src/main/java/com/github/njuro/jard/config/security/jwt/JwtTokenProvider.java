@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     User user = (User) authentication.getPrincipal();
 
     var now = new Date();
-    var expiryDate = new Date(now.getTime() + jwtExpiration * 1000);
+    var expiryDate = new Date(now.getTime() + jwtExpiration * 1000L);
 
     return Jwts.builder()
         .setSubject(user.getUsername())

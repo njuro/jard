@@ -196,8 +196,8 @@ public class PostService {
 
     var attachments =
         posts.stream()
-            .filter(post -> post.getAttachment() != null)
             .map(Post::getAttachment)
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
     attachmentService.deleteAttachments(attachments);
 

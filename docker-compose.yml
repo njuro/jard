@@ -11,7 +11,7 @@ services:
       - database
     tty: true
     ports:
-      - 8081:8081
+      - "8081:8081"
     env_file:
       - .env
     environment:
@@ -27,7 +27,7 @@ services:
     container_name: jard-client
     tty: true
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       PORT: 3000
       REACT_APP_API_URL: "http://server:8081/api"
@@ -38,7 +38,7 @@ services:
     image: library/postgres:12.3
     container_name: jard-database
     ports:
-      - 5433:5432
+      - "5433:5432"
     tty: true
     volumes:
       - type: volume

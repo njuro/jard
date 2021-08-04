@@ -5,6 +5,7 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -25,9 +26,9 @@ public class BanResolver implements PathVariableArgumentResolver {
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
+      @NotNull MethodParameter parameter,
       ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
+      @NotNull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     String id = getPathVariable(Mappings.PLACEHOLDER_BAN, webRequest);
 

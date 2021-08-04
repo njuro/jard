@@ -1,5 +1,6 @@
 package com.github.njuro.jard.utils.validation;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
+  @NotNull
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
-      HttpHeaders headers,
-      HttpStatus status,
-      WebRequest request) {
+      @NotNull HttpHeaders headers,
+      @NotNull HttpStatus status,
+      @NotNull WebRequest request) {
     return new ResponseEntity<>(new ValidationErrors(ex.getBindingResult()), headers, status);
   }
 
