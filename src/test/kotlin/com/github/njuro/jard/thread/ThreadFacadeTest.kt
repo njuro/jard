@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
+import java.time.temporal.ChronoUnit
 
 @WithContainerDatabase
 @Transactional
@@ -216,7 +217,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val postForm = post(thread, sage = true).toForm()
 
             threadFacade.replyToThread(postForm, thread.toDto())
-            db.select(thread).shouldBePresent { it.lastBumpAt shouldBe originalLastBumpAt }
+            db.select(thread).shouldBePresent { it.lastBumpAt shouldHaveSameMillisAs originalLastBumpAt }
         }
 
         @Test
@@ -231,7 +232,7 @@ internal class ThreadFacadeTest : MapperTest() {
             val postForm = post(updatedThread).toForm()
 
             threadFacade.replyToThread(postForm, updatedThread.toDto())
-            db.select(thread).shouldBePresent { it.lastBumpAt shouldBe originalLastBumpAt }
+            db.select(thread).shouldBePresent { it.lastBumpAt shouldHaveSameMillisAs originalLastBumpAt }
         }
     }
 
@@ -288,4 +289,7 @@ internal class ThreadFacadeTest : MapperTest() {
         db.select(thread).shouldBePresent()
         threadFacade.getThread(thread.toDto()).replies.shouldBeEmpty()
     }
+
+    private infix fun OffsetDateTime.shouldHaveSameMillisAs(other: OffsetDateTime) =
+        this.truncatedTo(ChronoUnit.MILLIS) shouldBe other.truncatedTo(ChronoUnit.MILLIS)
 }
