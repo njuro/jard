@@ -9,7 +9,7 @@ jobs:
       - checkout
       - restore_cache:
           key: jard
-      - openjdk:
+      - openjdk-install/openjdk:
           version: 17
       - run:
           name: Build project and run tests
