@@ -23,7 +23,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
       HttpServletRequest request, HttpServletResponse response) {
     try {
       LoginRequest login = objectMapper.readValue(request.getReader(), LoginRequest.class);
-      UsernamePasswordAuthenticationToken authRequest =
+      var authRequest =
           new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
 
       setDetails(request, authRequest);

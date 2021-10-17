@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.board.Board;
 import com.github.njuro.jard.thread.dto.ThreadDto;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.*;
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(onlyExplicitlyIncluded = true)
 public class BoardDto extends BaseDto {
 
-  private static final long serialVersionUID = -1195236367042529548L;
+  @Serial private static final long serialVersionUID = -1195236367042529548L;
 
   /** {@link Board#label} */
   @EqualsAndHashCode.Include @ToString.Include private String label;

@@ -7,6 +7,7 @@ import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.user.UserAuthority;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import javax.persistence.*;
 import lombok.*;
@@ -44,7 +45,7 @@ import org.hibernate.annotations.Formula;
 @SuppressWarnings("JavadocReference")
 public class Board extends BaseEntity {
 
-  private static final long serialVersionUID = -5779444327889471582L;
+  @Serial private static final long serialVersionUID = -5779444327889471582L;
 
   /**
    * Short, unique public identifier/abbreviation of this board. Used in URLs belonging to board.

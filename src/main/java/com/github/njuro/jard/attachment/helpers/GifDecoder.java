@@ -49,6 +49,7 @@ import java.util.List;
  * @author Dhyan Blum
  * @version 1.09 November 2017
  */
+@SuppressWarnings("ALL")
 public final class GifDecoder {
 
   static final class BitReader {

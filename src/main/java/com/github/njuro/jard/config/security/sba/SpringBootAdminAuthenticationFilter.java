@@ -59,7 +59,7 @@ public class SpringBootAdminAuthenticationFilter extends OncePerRequestFilter {
     try {
       String secret = request.getHeader(SBA_SECRET_HEADER);
       if (secret != null && secret.equals(sbaSecret)) {
-        UsernamePasswordAuthenticationToken authentication =
+        var authentication =
             new UsernamePasswordAuthenticationToken(
                 "SBA_USER", null, Collections.singletonList(UserAuthority.ACTUATOR_ACCESS));
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

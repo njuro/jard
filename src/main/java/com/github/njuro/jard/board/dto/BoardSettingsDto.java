@@ -5,6 +5,7 @@ import static com.github.njuro.jard.common.InputConstraints.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.board.BoardSettings;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,7 @@ import lombok.*;
 @ToString(onlyExplicitlyIncluded = true)
 public class BoardSettingsDto implements Serializable {
 
-  private static final long serialVersionUID = 6562925928863515257L;
+  @Serial private static final long serialVersionUID = 6562925928863515257L;
 
   /** {@link BoardSettings#attachmentCategories} */
   @Builder.Default

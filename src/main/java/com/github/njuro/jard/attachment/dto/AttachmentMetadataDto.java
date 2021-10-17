@@ -1,6 +1,7 @@
 package com.github.njuro.jard.attachment.dto;
 
 import com.github.njuro.jard.attachment.AttachmentMetadata;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class AttachmentMetadataDto implements Serializable {
-  private static final long serialVersionUID = -85086973234896633L;
+  @Serial private static final long serialVersionUID = -85086973234896633L;
 
   /** {@link AttachmentMetadata#mimeType } */
   private String mimeType;

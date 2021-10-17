@@ -4,6 +4,7 @@ import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.common.Constants;
 import com.github.njuro.jard.post.Post;
 import java.io.File;
+import java.io.Serial;
 import java.nio.file.Paths;
 import javax.persistence.*;
 import lombok.*;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.FetchMode;
 @ToString(onlyExplicitlyIncluded = true)
 public class Attachment extends BaseEntity {
 
-  private static final long serialVersionUID = -751675348099883626L;
+  @Serial private static final long serialVersionUID = -751675348099883626L;
 
   /**
    * Category this attachment belongs to.

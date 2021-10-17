@@ -1,5 +1,6 @@
 package com.github.njuro.jard.ban;
 
+import java.io.Serial;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.FORBIDDEN)
 @NoArgsConstructor
 public class UserBannedException extends RuntimeException {
-  private static final long serialVersionUID = 8772236780722701190L;
+  @Serial private static final long serialVersionUID = 8772236780722701190L;
 
   public UserBannedException(String message) {
     super(message);

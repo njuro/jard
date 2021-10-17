@@ -1,5 +1,6 @@
 package com.github.njuro.jard.ban;
 
+import java.io.Serial;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -11,5 +12,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Ban not found")
 public class BanNotFoundException extends RuntimeException {
 
-  private static final long serialVersionUID = 717247300800921506L;
+  @Serial private static final long serialVersionUID = 717247300800921506L;
 }

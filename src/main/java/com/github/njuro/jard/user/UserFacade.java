@@ -193,13 +193,12 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     User user = userService.resolveUser(forgotRequest.getUsername());
     if (userTokenService.doesTokenForUserExists(user, UserTokenType.PASSWORD_RESET)) {
       throw new PropertyValidationException(
-          String.format(
-              "User %s has already valid password reset token issued", user.getUsername()));
+          "User %s has already valid password reset token issued".formatted(user.getUsername()));
     }
 
     if (user.getEmail() == null) {
       throw new PropertyValidationException(
-          String.format("User %s does not have e-mail address set", user.getUsername()));
+          "User %s does not have e-mail address set".formatted(user.getUsername()));
     }
 
     UserToken token = userTokenService.generateToken(user, UserTokenType.PASSWORD_RESET);
@@ -270,8 +269,7 @@ public class UserFacade extends BaseFacade<User, UserDto> implements UserDetails
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
     if (!result.isVerified()) {
       log.warn(
-          String.format(
-              "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
+          "Captcha verification failed: [%s]".formatted(String.join(", ", result.getErrors())));
       throw new CaptchaVerificationException();
     }
   }

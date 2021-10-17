@@ -47,7 +47,7 @@ public class HCaptchaProvider implements CaptchaProvider {
       return new HCaptchaVerificationResult("Missing hCaptcha secret");
     }
 
-    String payload = String.format("response=%s&secret=%s", captchaToken, hCaptchaSecret);
+    String payload = "response=%s&secret=%s".formatted(captchaToken, hCaptchaSecret);
     var request =
         HttpRequest.newBuilder()
             .timeout(Duration.ofSeconds(5))

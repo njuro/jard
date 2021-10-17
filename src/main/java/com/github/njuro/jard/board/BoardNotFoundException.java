@@ -1,5 +1,6 @@
 package com.github.njuro.jard.board;
 
+import java.io.Serial;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -12,5 +13,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Board not found")
 public class BoardNotFoundException extends RuntimeException {
 
-  private static final long serialVersionUID = 2693252281905504956L;
+  @Serial private static final long serialVersionUID = 2693252281905504956L;
 }

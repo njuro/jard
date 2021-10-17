@@ -2,6 +2,7 @@ package com.github.njuro.jard.ban;
 
 import com.github.njuro.jard.base.BaseEntity;
 import com.github.njuro.jard.user.User;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import javax.persistence.*;
 import lombok.*;
@@ -23,7 +24,7 @@ import org.hibernate.annotations.FetchMode;
 @ToString(onlyExplicitlyIncluded = true)
 public class Ban extends BaseEntity {
 
-  private static final long serialVersionUID = -3032088825735160580L;
+  @Serial private static final long serialVersionUID = -3032088825735160580L;
 
   /** Banned IP (e.g. {@code 127.0.0.1}) */
   @Basic

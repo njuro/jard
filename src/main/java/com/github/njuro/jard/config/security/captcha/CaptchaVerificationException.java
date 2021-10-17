@@ -2,6 +2,7 @@ package com.github.njuro.jard.config.security.captcha;
 
 import com.github.njuro.jard.utils.validation.PropertyValidationException;
 import com.github.njuro.jard.utils.validation.ValidationExceptionHandler;
+import java.io.Serial;
 
 /**
  * Exception to be thrown when captcha verification fails. Handled by {@link
@@ -12,7 +13,7 @@ import com.github.njuro.jard.utils.validation.ValidationExceptionHandler;
  */
 public class CaptchaVerificationException extends PropertyValidationException {
 
-  private static final long serialVersionUID = 3101215952448563829L;
+  @Serial private static final long serialVersionUID = 3101215952448563829L;
 
   public CaptchaVerificationException() {
     super("Captcha verification failed");

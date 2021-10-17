@@ -146,8 +146,8 @@ public class PostFacade extends BaseFacade<Post, PostDto> {
     if (Duration.between(post.getCreatedAt(), OffsetDateTime.now()).toMinutes()
         > Constants.OWN_POST_DELETION_TIME_LIMIT) {
       throw new PropertyValidationException(
-          String.format(
-              "Cannot delete post older than %d minutes", Constants.OWN_POST_DELETION_TIME_LIMIT));
+          "Cannot delete post older than %d minutes"
+              .formatted(Constants.OWN_POST_DELETION_TIME_LIMIT));
     }
 
     if (!post.getDeletionCode().equals(deletionCode)) {

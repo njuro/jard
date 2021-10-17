@@ -4,6 +4,7 @@ import com.github.njuro.jard.common.Mappings;
 import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.utils.PathVariableArgumentResolver;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -27,9 +28,9 @@ public class ThreadResolver implements PathVariableArgumentResolver {
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
+      @NotNull MethodParameter parameter,
       ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
+      @NotNull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     String board = getPathVariable(Mappings.PLACEHOLDER_BOARD, webRequest);
     Long threadNumber = Long.valueOf(getPathVariable(Mappings.PLACEHOLDER_THREAD, webRequest));

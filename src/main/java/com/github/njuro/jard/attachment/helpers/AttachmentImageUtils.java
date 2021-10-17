@@ -134,17 +134,13 @@ public class AttachmentImageUtils {
    * @throws IllegalArgumentException when reading image data fails
    */
   BufferedImage getImageFromAttachment(Attachment attachment) {
-    switch (attachment.getCategory()) {
-      case IMAGE:
-        return getImageFromImageAttachment(attachment);
-      case VIDEO:
-        return getImageFromVideoAttachment(attachment);
-      case PDF:
-        return getImageFromPdfAttachment(attachment);
-      default:
-        throw new IllegalArgumentException(
-            "Cannot get image from attachment category " + attachment.getCategory().name());
-    }
+    return switch (attachment.getCategory()) {
+      case IMAGE -> getImageFromImageAttachment(attachment);
+      case VIDEO -> getImageFromVideoAttachment(attachment);
+      case PDF -> getImageFromPdfAttachment(attachment);
+      default -> throw new IllegalArgumentException(
+          "Cannot get image from attachment category " + attachment.getCategory().name());
+    };
   }
 
   /**

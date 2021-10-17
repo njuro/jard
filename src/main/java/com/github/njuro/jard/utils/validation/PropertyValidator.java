@@ -48,7 +48,7 @@ public class PropertyValidator {
               .map(ConstraintViolation::getMessage)
               .collect(Collectors.joining(", "));
       throw new PropertyValidationException(
-          String.format("Validation of property %s failed: %s", property, errors));
+          "Validation of property %s failed: %s".formatted(property, errors));
     }
   }
 }

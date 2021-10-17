@@ -92,12 +92,11 @@ public class UserService {
       return null;
     }
 
-    Object principal = authentication.getPrincipal();
-    if (!(principal instanceof User)) {
-      return null;
+    if (authentication.getPrincipal() instanceof User user) {
+      return user;
     }
 
-    return (User) principal;
+    return null;
   }
 
   /**

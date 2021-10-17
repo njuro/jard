@@ -6,6 +6,7 @@ import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.thread.dto.ThreadDto;
 import com.github.njuro.jard.user.UserRole;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -20,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(onlyExplicitlyIncluded = true)
 public class PostDto extends BaseDto {
 
-  private static final long serialVersionUID = 9093403208940606160L;
+  @Serial private static final long serialVersionUID = 9093403208940606160L;
 
   /** {@link Post#postNumber } */
   @ToString.Include @EqualsAndHashCode.Include private Long postNumber;

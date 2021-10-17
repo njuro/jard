@@ -5,6 +5,7 @@ import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.user.User;
 import com.github.njuro.jard.user.UserAuthority;
 import com.github.njuro.jard.user.UserRole;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.*;
@@ -19,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
 public class UserDto extends BaseDto {
-  private static final long serialVersionUID = -4790800488577238707L;
+  @Serial private static final long serialVersionUID = -4790800488577238707L;
 
   /** {@link User#username } */
   @JsonView(PublicView.class)

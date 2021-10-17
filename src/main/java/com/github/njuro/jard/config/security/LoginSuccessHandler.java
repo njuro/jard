@@ -50,7 +50,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   public void onAuthenticationSuccess(
       HttpServletRequest request, HttpServletResponse response, Authentication authentication)
       throws IOException, ServletException {
-    User user = (User) authentication.getPrincipal();
+    var user = (User) authentication.getPrincipal();
     user.setLastLoginIp(request.getRemoteAddr());
     user.setLastLogin(OffsetDateTime.now());
     userService.saveUser(user);

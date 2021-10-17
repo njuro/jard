@@ -5,7 +5,6 @@ import io.humble.video.Demuxer;
 import io.humble.video.MediaDescriptor.Type;
 import io.humble.video.MediaPacket;
 import io.humble.video.MediaPicture;
-import io.humble.video.awt.MediaPictureConverter;
 import io.humble.video.awt.MediaPictureConverterFactory;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class VideoThumbnailMaker {
     demuxer.open(pathToFile, null, false, true, null, null);
 
     for (int i = 0; i < demuxer.getNumStreams(); i++) {
-      Decoder decoder = demuxer.getStream(i).getDecoder();
+      var decoder = demuxer.getStream(i).getDecoder();
       if (decoder != null && decoder.getCodecType() == Type.MEDIA_VIDEO) {
         return getImageFromVideoStream(decoder, i);
       }
@@ -52,13 +51,13 @@ public class VideoThumbnailMaker {
   private BufferedImage getImageFromVideoStream(Decoder decoder, int streamIndex)
       throws IOException, InterruptedException {
     decoder.open(null, null);
-    MediaPicture picture =
+    var picture =
         MediaPicture.make(decoder.getWidth(), decoder.getHeight(), decoder.getPixelFormat());
-    MediaPictureConverter converter =
+    var converter =
         MediaPictureConverterFactory.createConverter(
             MediaPictureConverterFactory.HUMBLE_BGR_24, picture);
 
-    MediaPacket packet = MediaPacket.make();
+    var packet = MediaPacket.make();
     while (demuxer.read(packet) >= 0) {
       if (packet.getStreamIndex() != streamIndex) {
         continue;

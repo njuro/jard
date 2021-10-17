@@ -173,8 +173,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    */
   @Bean
   public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordFilter() throws Exception {
-    JsonUsernamePasswordAuthenticationFilter filter =
-        new JsonUsernamePasswordAuthenticationFilter();
+    var filter = new JsonUsernamePasswordAuthenticationFilter();
     filter.setAuthenticationManager(authenticationManagerBean());
     filter.setAuthenticationSuccessHandler(loginSuccessHandler);
     filter.setAuthenticationFailureHandler(loginFailureHandler);

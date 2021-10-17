@@ -1,6 +1,7 @@
 package com.github.njuro.jard.attachment.dto;
 
 import com.github.njuro.jard.attachment.EmbedData;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EmbedDataDto implements Serializable {
-  private static final long serialVersionUID = 5556727553556549679L;
+  @Serial private static final long serialVersionUID = 5556727553556549679L;
 
   /** {@link EmbedData#embedUrl} */
   private String embedUrl;

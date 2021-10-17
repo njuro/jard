@@ -13,7 +13,7 @@ public class HyperlinkDecorator implements PostDecorator {
   @Override
   public void decorate(Post post) {
     Matcher matcher = HYPERLINK_PATTERN.matcher(post.getBody());
-    StringBuilder sb = new StringBuilder(post.getBody().length());
+    var sb = new StringBuilder(post.getBody().length());
     while (matcher.find()) {
       String href = matcher.group("href");
       matcher.appendReplacement(

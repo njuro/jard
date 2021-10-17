@@ -33,7 +33,7 @@ public class CrosslinkDecorator implements PostDecorator {
   @Override
   public void decorate(Post post) {
     Matcher matcher = CROSSLINK_PATTERN.matcher(post.getBody());
-    StringBuilder sb = new StringBuilder(post.getBody().length());
+    var sb = new StringBuilder(post.getBody().length());
 
     while (matcher.find()) {
       String boardLabel =

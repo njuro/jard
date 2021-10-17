@@ -1,5 +1,6 @@
 package com.github.njuro.jard.attachment;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.*;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AttachmentMetadata implements Serializable {
 
-  private static final long serialVersionUID = -8455977079986712310L;
+  @Serial private static final long serialVersionUID = -8455977079986712310L;
 
   /** Identifier of these metadata. Equals to primary key of owning {@link #attachment}. */
   @Id private UUID attachmentId;

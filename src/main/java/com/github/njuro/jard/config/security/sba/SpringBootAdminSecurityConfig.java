@@ -39,7 +39,7 @@ public class SpringBootAdminSecurityConfig {
   @Bean
   public HttpHeadersProvider httpHeadersProvider() {
     return (instance -> {
-      HttpHeaders httpHeaders = new HttpHeaders();
+      var httpHeaders = new HttpHeaders();
       httpHeaders.add(SBA_SECRET_HEADER, sbaSecret);
       return httpHeaders;
     });
@@ -60,7 +60,7 @@ public class SpringBootAdminSecurityConfig {
       @NotNull
       @Override
       protected HttpHeaders createRequestHeaders() {
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add(SBA_SECRET_HEADER, sbaSecret);

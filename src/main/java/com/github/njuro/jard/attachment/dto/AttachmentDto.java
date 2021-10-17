@@ -5,6 +5,7 @@ import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.AttachmentCategory.AttachmentCategorySerializer;
 import com.github.njuro.jard.base.BaseDto;
+import java.io.Serial;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
 public class AttachmentDto extends BaseDto {
-  private static final long serialVersionUID = -9156850050978422063L;
+  @Serial private static final long serialVersionUID = -9156850050978422063L;
 
   /** {@link Attachment#category */
   @JsonSerialize(using = AttachmentCategorySerializer.class)

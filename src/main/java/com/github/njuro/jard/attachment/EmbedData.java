@@ -1,6 +1,7 @@
 package com.github.njuro.jard.attachment;
 
 import com.github.njuro.jard.attachment.embedded.handlers.EmbeddedAttachmentHandler;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EmbedData implements Serializable {
 
-  private static final long serialVersionUID = -6639106432940190340L;
+  @Serial private static final long serialVersionUID = -6639106432940190340L;
 
   /** Identifier of these embed data. Equals to primary key of owning {@link #attachment}. */
   @Id private UUID attachmentId;

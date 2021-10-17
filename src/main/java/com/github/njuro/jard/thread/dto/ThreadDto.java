@@ -5,6 +5,7 @@ import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.board.dto.BoardDto;
 import com.github.njuro.jard.post.dto.PostDto;
 import com.github.njuro.jard.thread.Thread;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import java.util.List;
 import javax.persistence.Transient;
@@ -20,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(onlyExplicitlyIncluded = true)
 public class ThreadDto extends BaseDto {
-  private static final long serialVersionUID = -2107575988634432522L;
+  @Serial private static final long serialVersionUID = -2107575988634432522L;
 
   /** {@link Thread#getThreadNumber()} */
   @EqualsAndHashCode.Include private Long threadNumber;
@@ -55,7 +56,8 @@ public class ThreadDto extends BaseDto {
   private ThreadStatisticsDto statistics;
 
   /**
-   * (Sub)collection of replies to this thread. Fetched by different services when needed.
+   * (Sub)collection of replies for this thread. Fetched by different services based on various
+   * parameters (depending on need of the given API).
    *
    * @see PostDto
    */

@@ -1,6 +1,7 @@
 package com.github.njuro.jard.user;
 
 import com.github.njuro.jard.base.BaseEntity;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -23,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ToString(onlyExplicitlyIncluded = true)
 public class User extends BaseEntity implements UserDetails {
 
-  private static final long serialVersionUID = -6709426435122012297L;
+  @Serial private static final long serialVersionUID = -6709426435122012297L;
 
   /** Unique username of this user. */
   @Basic

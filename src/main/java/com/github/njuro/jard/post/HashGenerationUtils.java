@@ -61,11 +61,11 @@ public class HashGenerationUtils {
     }
 
     try {
-      MessageDigest md = MessageDigest.getInstance("SHA-512");
+      var md = MessageDigest.getInstance("SHA-512");
       md.update(input.getBytes());
       byte[] byteData = md.digest();
 
-      StringBuilder result = new StringBuilder();
+      var result = new StringBuilder();
       for (byte byteValue : byteData) {
         result.append(Integer.toString((byteValue & 0xff) + 0x100, 16).substring(1));
       }

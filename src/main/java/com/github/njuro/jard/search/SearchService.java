@@ -110,9 +110,7 @@ public class SearchService {
         .unwrap(LuceneBackend.class)
         .analyzer(analyzerName)
         .orElseThrow(
-            () ->
-                new IllegalStateException(
-                    String.format("Analyzer %s is not defined", analyzerName)));
+            () -> new IllegalStateException("Analyzer %s is not defined".formatted(analyzerName)));
   }
 
   private Highlighter getHighlighter(SearchPredicate predicate) {

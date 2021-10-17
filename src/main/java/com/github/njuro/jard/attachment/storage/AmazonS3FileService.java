@@ -70,7 +70,7 @@ public class AmazonS3FileService implements RemoteStorageService {
   @Override
   public String uploadFile(String folder, String filename, File file) {
     try {
-      String key = Paths.get(folder, filename).toString();
+      var key = Paths.get(folder, filename).toString();
       awsClient.putObject(
           new PutObjectRequest(bucket, key, file)
               .withCannedAcl(CannedAccessControlList.PublicRead));
@@ -84,7 +84,7 @@ public class AmazonS3FileService implements RemoteStorageService {
   @Override
   public void deleteFile(String folder, String filename) {
     try {
-      String key = Paths.get(folder, filename).toString();
+      var key = Paths.get(folder, filename).toString();
       awsClient.deleteObject(bucket, key);
     } catch (AmazonClientException ex) {
       throw new IllegalArgumentException("Deletion of file from Amazon S3 bucket failed", ex);

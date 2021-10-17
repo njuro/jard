@@ -53,7 +53,8 @@ public class ThreadService {
    * Retrieves all threads from given board.
    *
    * @param boardId ID of board to get threads from
-   * @return all threads from given board, ordered by stickied status and last bump timestamp
+   * @return all threads from given board, ordered by stickied status (stickied first) and last bump
+   *     timestamp (from most recent bump to least recent)
    */
   public List<Thread> getAllThreadsFromBoard(UUID boardId) {
     return getThreadsFromBoard(boardId, Pageable.unpaged());
@@ -64,13 +65,16 @@ public class ThreadService {
    *
    * @param boardId ID of board to get threads from
    * @param pageRequest parameter specifying paging (requested page number and size of each page)
-   * @return threads from given board, ordered by stickied status and last bump timestamp
+   * @return threads from given board, ordered by stickied status (stickied first) and last bump *
+   *     timestamp (from most recent bump to least recent)
    */
   public List<Thread> getThreadsFromBoard(UUID boardId, Pageable pageRequest) {
     return threadRepository.findByBoardIdOrderByStickiedDescLastBumpAtDesc(boardId, pageRequest);
   }
 
   /**
+   * Counts number of threads on board.
+   *
    * @param boardId ID of board to get threads from
    * @return number of active threads on given board
    */
@@ -120,8 +124,10 @@ public class ThreadService {
   }
 
   /**
-   * Delete all threads from given thread list. What constitutes deleting thread is explained in
-   * documentation of {@link #deleteThread(Thread)}.
+   * Delete all threads from given thread list.
+   *
+   * <p>What constitutes deleting thread is explained in documentation of {@link
+   * #deleteThread(Thread)}.
    *
    * @param threads list of threads to delete
    * @throws IOException if deletion of one of the attachments' file fails

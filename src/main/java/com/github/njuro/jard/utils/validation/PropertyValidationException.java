@@ -1,5 +1,6 @@
 package com.github.njuro.jard.utils.validation;
 
+import java.io.Serial;
 import javax.validation.ValidationException;
 import lombok.Getter;
 import org.springframework.validation.BindingResult;
@@ -10,8 +11,9 @@ import org.springframework.validation.BindingResult;
  */
 public class PropertyValidationException extends ValidationException {
 
-  private static final long serialVersionUID = 8579539307467463861L;
-  @Getter private final BindingResult bindingResult;
+  @Serial private static final long serialVersionUID = 8579539307467463861L;
+
+  @Getter private final transient BindingResult bindingResult;
 
   public PropertyValidationException(BindingResult bindingResult) {
     this.bindingResult = bindingResult;

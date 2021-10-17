@@ -30,7 +30,7 @@ public class ThreadForm {
   private boolean locked;
 
   /**
-   * Form for original (first) post of this thread
+   * Form for original (first) post of this thread.
    *
    * @see PostForm
    */
@@ -43,7 +43,7 @@ public class ThreadForm {
         && (postForm.getBody() == null || postForm.getBody().trim().isEmpty());
   }
 
-  /** Validates that original post has non-empty attachment. */
+  /** Validates that original post has non-empty attachment, or non-empty embed url. */
   @AssertTrue(message = "{validation.thread.first.post.attachment}")
   public boolean isUploadedAttachment() {
     return (postForm.getEmbedUrl() != null && !postForm.getEmbedUrl().isBlank())

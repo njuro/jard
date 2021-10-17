@@ -5,6 +5,7 @@ import com.github.njuro.jard.ban.Ban;
 import com.github.njuro.jard.ban.BanStatus;
 import com.github.njuro.jard.base.BaseDto;
 import com.github.njuro.jard.user.dto.UserDto;
+import java.io.Serial;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.*;
@@ -20,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(onlyExplicitlyIncluded = true)
 public class BanDto extends BaseDto {
 
-  private static final long serialVersionUID = 6304040047249821945L;
+  @Serial private static final long serialVersionUID = 6304040047249821945L;
 
   @Override
   @JsonProperty("id")

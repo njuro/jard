@@ -5,7 +5,6 @@ import static com.github.njuro.jard.common.Constants.CODE_PATTERN;
 import static com.github.njuro.jard.common.Constants.CODE_START;
 
 import com.github.njuro.jard.post.Post;
-import java.util.regex.Matcher;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +16,7 @@ public class CodeDecorator implements PostDecorator {
 
   @Override
   public void decorate(Post post) {
-    Matcher matcher = CODE_PATTERN.matcher(post.getBody());
+    var matcher = CODE_PATTERN.matcher(post.getBody());
     post.setBody(matcher.replaceAll(CODE_START + "${content}" + CODE_END));
   }
 }

@@ -1,6 +1,7 @@
 package com.github.njuro.jard.thread.dto;
 
 import com.github.njuro.jard.thread.ThreadStatistics;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ThreadStatisticsDto implements Serializable {
-  private static final long serialVersionUID = -5954407958269958234L;
+  @Serial private static final long serialVersionUID = -5954407958269958234L;
 
   /** {@link ThreadStatistics#replyCount} */
   private int replyCount;

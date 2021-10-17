@@ -5,6 +5,7 @@ import com.github.njuro.jard.config.security.captcha.CaptchaProvider;
 import com.github.njuro.jard.post.Post;
 import com.github.njuro.jard.thread.Thread;
 import com.github.njuro.jard.user.UserAuthority;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +37,7 @@ import org.hibernate.annotations.ColumnDefault;
 @SuppressWarnings("JavadocReference")
 public class BoardSettings implements Serializable {
 
-  private static final long serialVersionUID = 7024830970057024626L;
+  @Serial private static final long serialVersionUID = 7024830970057024626L;
 
   /** Id of {@link Board} these settings belong to. */
   @Id private UUID boardId;

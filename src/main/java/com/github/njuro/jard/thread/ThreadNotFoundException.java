@@ -1,5 +1,6 @@
 package com.github.njuro.jard.thread;
 
+import java.io.Serial;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -11,5 +12,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Thread not found")
 public class ThreadNotFoundException extends RuntimeException {
 
-  private static final long serialVersionUID = 4281510962414008488L;
+  @Serial private static final long serialVersionUID = 4281510962414008488L;
 }

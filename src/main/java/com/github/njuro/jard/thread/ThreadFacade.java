@@ -51,8 +51,10 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
   }
 
   /**
-   * Creates and save new {@link Thread} and its original post. Also deletes the stalest thread from
-   * containing {@link Board} if its thread limit is surpassed.
+   * Creates and saves new {@link Thread} and its original post.
+   *
+   * <p>Also deletes the stalest thread from containing {@link Board} if its thread limit is
+   * surpassed.
    *
    * @param threadForm form with thread data
    * @param board board the thread belongs to
@@ -236,8 +238,7 @@ public class ThreadFacade extends BaseFacade<Thread, ThreadDto> {
     CaptchaVerificationResult result = captchaProvider.verifyCaptchaToken(captchaToken);
     if (!result.isVerified()) {
       log.warn(
-          String.format(
-              "Captcha verification failed: [%s]", String.join(", ", result.getErrors())));
+          "Captcha verification failed: [%s]".formatted(String.join(", ", result.getErrors())));
       throw new CaptchaVerificationException();
     }
   }

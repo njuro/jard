@@ -5,7 +5,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import com.github.njuro.jard.attachment.Attachment;
 import com.github.njuro.jard.attachment.AttachmentCategory;
 import com.github.njuro.jard.attachment.AttachmentMetadata;
-import io.humble.video.Decoder;
 import io.humble.video.Demuxer;
 import io.humble.video.MediaDescriptor.Type;
 import java.awt.image.BufferedImage;
@@ -40,17 +39,9 @@ public class AttachmentMetadataUtils {
     setAttachmentCategory(attachment);
 
     switch (attachment.getCategory()) {
-      case IMAGE:
-        setImageMetadata(attachment);
-        break;
-      case VIDEO:
-        setVideoMetadata(attachment);
-        break;
-      case AUDIO:
-        setAudioMetadata(attachment);
-        break;
-      default:
-        break;
+      case IMAGE -> setImageMetadata(attachment);
+      case VIDEO -> setVideoMetadata(attachment);
+      case AUDIO -> setAudioMetadata(attachment);
     }
 
     setFileMetadata(attachment);
@@ -96,12 +87,12 @@ public class AttachmentMetadataUtils {
    */
   private void setVideoMetadata(Attachment attachment) {
     try {
-      Demuxer demuxer = Demuxer.make();
+      var demuxer = Demuxer.make();
       demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
       attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
 
       for (int i = 0; i < demuxer.getNumStreams(); i++) {
-        Decoder decoder = demuxer.getStream(i).getDecoder();
+        var decoder = demuxer.getStream(i).getDecoder();
         if (decoder.getCodecType() == Type.MEDIA_VIDEO) {
           attachment.getMetadata().setWidth(decoder.getWidth());
           attachment.getMetadata().setHeight(decoder.getHeight());
@@ -125,7 +116,7 @@ public class AttachmentMetadataUtils {
    */
   private void setAudioMetadata(Attachment attachment) {
     try {
-      Demuxer demuxer = Demuxer.make();
+      var demuxer = Demuxer.make();
       demuxer.open(attachment.getFile().toPath().toString(), null, false, true, null, null);
       attachment.getMetadata().setDuration(convertDuration(demuxer.getDuration()));
       demuxer.close();
@@ -144,11 +135,11 @@ public class AttachmentMetadataUtils {
    */
   private String convertDuration(long duration) {
     long ms = duration / 1000;
-    return String.format(
-        "%02d:%02d:%02d",
-        MILLISECONDS.toHours(ms),
-        MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(MILLISECONDS.toHours(ms)),
-        MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(MILLISECONDS.toMinutes(ms)));
+    return "%02d:%02d:%02d"
+        .formatted(
+            MILLISECONDS.toHours(ms),
+            MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(MILLISECONDS.toHours(ms)),
+            MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(MILLISECONDS.toMinutes(ms)));
   }
 
   /**
