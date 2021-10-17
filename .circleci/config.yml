@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  openjdk-install: cloudesire/openjdk-install@1.2.3
 jobs:
   build:
     machine:
@@ -7,6 +9,8 @@ jobs:
       - checkout
       - restore_cache:
           key: jard
+      - openjdk:
+          version: 17
       - run:
           name: Build project and run tests
           command: mvn clean jacoco:prepare-agent install
