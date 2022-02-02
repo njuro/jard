@@ -36,7 +36,7 @@
         <sonar.projectKey>njuro_jard</sonar.projectKey>
         <sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <postgresql.version>42.2.24</postgresql.version>
+        <postgresql.version>42.2.25</postgresql.version>
         <hibernate.version>5.6.0.Final</hibernate.version>
         <aws-sdk-s3.version>1.12.89</aws-sdk-s3.version>
         <tika.version>2.1.0</tika.version>
