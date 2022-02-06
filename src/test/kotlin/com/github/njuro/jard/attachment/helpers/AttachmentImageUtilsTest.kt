@@ -10,6 +10,8 @@ import io.kotest.matchers.should
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 import java.awt.image.RenderedImage
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -41,6 +43,7 @@ internal class AttachmentImageUtilsTest {
         createAndVerifyThumbnail(AttachmentCategory.IMAGE, "image/gif", TEST_ATTACHMENT_GIF_CORRUPTED)
 
     @Test
+    @DisabledOnOs(OS.MAC, disabledReason = "humble-video not available for macOS M1")
     fun `create thumbnail for video attachment`() =
         createAndVerifyThumbnail(AttachmentCategory.VIDEO, "video/avi", TEST_ATTACHMENT_AVI)
 

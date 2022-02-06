@@ -37,6 +37,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
@@ -105,6 +107,7 @@ internal class AttachmentServiceTest {
         }
 
         @Test
+        @DisabledOnOs(OS.MAC, disabledReason = "humble-video not available for macOS M1")
         fun `save non-image attachment with thumbnail`() {
             val file = multipartFile("attachment.avi", TEST_ATTACHMENT_AVI)
             val attachment =

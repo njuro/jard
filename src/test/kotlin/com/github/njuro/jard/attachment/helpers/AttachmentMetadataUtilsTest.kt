@@ -12,6 +12,8 @@ import io.kotest.matchers.string.shouldNotBeBlank
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
@@ -46,6 +48,7 @@ internal class AttachmentMetadataUtilsTest {
     }
 
     @Test
+    @DisabledOnOs(OS.MAC, disabledReason = "humble-video not available for macOS M1")
     fun `set video metadata`() {
         val attachment = prepareAttachment(TEST_ATTACHMENT_AVI, "video/avi")
 
@@ -58,6 +61,7 @@ internal class AttachmentMetadataUtilsTest {
     }
 
     @Test
+    @DisabledOnOs(OS.MAC, disabledReason = "humble-video not available for macOS M1")
     fun `set audio metadata`() {
         val attachment = prepareAttachment(TEST_ATTACHMENT_MP3, "audio/mpeg3")
 

@@ -69,6 +69,7 @@
         <mockk.version>1.12.0</mockk.version>
         <springmockk.version>3.0.1</springmockk.version>
         <zonky-embedded.version>2.1.0</zonky-embedded.version>
+        <jna.version>5.9.0</jna.version>
         <flyway-spring-test.version>7.0.0</flyway-spring-test.version>
         <mockwebserver.version>4.9.2</mockwebserver.version>
         <greenmail.version>1.6.5</greenmail.version>
@@ -359,6 +360,12 @@
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
             <version>${zonky-embedded.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId> <!-- Required for running Docker in tests on macOS -->
+            <version>${jna.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

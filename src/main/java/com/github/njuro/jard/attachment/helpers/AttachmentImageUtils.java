@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
 import net.coobird.thumbnailator.Thumbnails;
@@ -153,7 +154,7 @@ public class AttachmentImageUtils {
   private BufferedImage getImageFromImageAttachment(Attachment attachment) {
     try {
       return ImageIO.read(attachment.getFile());
-    } catch (ArrayIndexOutOfBoundsException ex) {
+    } catch (ArrayIndexOutOfBoundsException | IIOException ex) {
       // bug in JDK see documentation of method below
       return getImageFromGifAttachment(attachment);
     } catch (IOException ex) {
