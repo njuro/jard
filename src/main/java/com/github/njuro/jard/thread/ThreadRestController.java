@@ -101,7 +101,7 @@ public class ThreadRestController {
     return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST)
+  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + Mappings.PATH_VARIABLE_POST)
   @HasAuthorities(UserAuthority.DELETE_POST)
   public ResponseEntity<Object> deletePost(ThreadDto thread, PostDto post) {
     try {
@@ -113,7 +113,7 @@ public class ThreadRestController {
     }
   }
 
-  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + "/" + Mappings.PATH_VARIABLE_POST + "/delete-own")
+  @DeleteMapping(Mappings.PATH_VARIABLE_THREAD + Mappings.PATH_VARIABLE_POST + "/delete-own")
   public ResponseEntity<Object> deleteOwnPost(
       PostDto post, @RequestBody DeleteOwnPostDto deleteRequest) {
     try {
