@@ -6,8 +6,10 @@ import java.time.OffsetDateTime
 /** Class for encapsulating validation errors and sending them to client.  */
 @Suppress("unused")
 class ValidationErrors {
+    /** When the error occurred. */
     private val timestamp = OffsetDateTime.now()
 
+    /** Map of the errors - key is name of invalid field, value is the field value. */
     private val errors: Map<String, String?>
 
     constructor(validationResult: BindingResult) {

@@ -8,7 +8,6 @@ import org.springframework.mail.MailException
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
-import javax.mail.MessagingException
 
 /**
  * Service for sending e-mail. SMTP server must be configured in order for e-mails to be sent
@@ -45,36 +44,21 @@ class EmailService(
         logger.info("Sending mail to $recipient...")
 
         val message = mailSender.createMimeMessage()
-
-        try {
-            val alias = senderAddressAlias.takeUnless { it.isBlank() } ?: senderAddress
-            MimeMessageHelper(message).apply {
-                setFrom(senderAddress, alias)
-                setTo(recipient)
-                setSubject(subject)
-                setText(body, true)
-            }
-        } catch (ex: MessagingException) {
-            throw IllegalArgumentException("Preparation of e-mail failed", ex)
+        val alias = senderAddressAlias.takeUnless { it.isBlank() } ?: senderAddress
+        MimeMessageHelper(message).apply {
+            setFrom(senderAddress, alias)
+            setTo(recipient)
+            setSubject(subject)
+            setText(body, true)
         }
-
-        try {
-            mailSender.send(message)
-        } catch (ex: MailException) {
-            logger.error("Failed to send email to $recipient", ex)
-            throw ex
-        }
+        mailSender.send(message)
     }
 
     private fun validateConnection() {
-        try {
-            if (mailSender != null) {
-                logger.info("Detected SMTP server configuration, validating connection...")
-                mailSender.testConnection()
-                logger.info("Connection to SMTP server validated.")
-            }
-        } catch (ex: MessagingException) {
-            throw IllegalStateException("Mail server is not available", ex)
+        if (mailSender != null) {
+            logger.info("Detected SMTP server configuration, validating connection...")
+            mailSender.testConnection()
+            logger.info("Connection to SMTP server validated.")
         }
     }
 

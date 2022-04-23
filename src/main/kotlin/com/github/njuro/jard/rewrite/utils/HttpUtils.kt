@@ -46,7 +46,7 @@ fun HttpServletResponse.writeJson(mapper: ObjectMapper, body: Any, view: Class<A
 fun getOriginUrl(url: String): String = try {
     URL(url).getOrigin()
 } catch (ex: MalformedURLException) {
-    logger.error { "Invalid URL string passed" }
+    logger.error { "Invalid URL string passed: $url" }
     url
 }
 
@@ -64,7 +64,7 @@ fun getDomain(url: String): String {
     val host = try {
         URL(url).host
     } catch (ex: MalformedURLException) {
-        logger.error { "Invalid URL string passed" }
+        logger.error { "Invalid URL string passed: $url" }
         url
     }
 
