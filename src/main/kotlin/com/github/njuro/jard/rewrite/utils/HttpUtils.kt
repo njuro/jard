@@ -28,7 +28,7 @@ fun HttpServletRequest.getClientIp() =
  * @param object object to serialize
  * @throws IOException if serializing or writing to response fails
  */
-fun HttpServletResponse.writeJson(mapper: ObjectMapper, body: Any, view: Class<Any>? = null) {
+fun HttpServletResponse.writeJson(mapper: ObjectMapper, body: Any, view: Class<*>? = null) {
     val objectWriter: ObjectWriter = if (view == null) mapper.writer() else mapper.writerWithView(view)
     contentType = APPLICATION_JSON_VALUE
     with(writer) {
